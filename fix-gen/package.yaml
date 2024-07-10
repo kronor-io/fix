@@ -10,6 +10,8 @@ extra-source-files:
 library:
   source-dirs: src
   dependencies:
+  - QuickCheck
+  - bytestring
   - fix
   - genvalidity
   - genvalidity-bytestring
@@ -24,6 +26,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - bytestring
     - fix
     - fix-gen
     - genvalidity-sydtest

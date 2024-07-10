@@ -7,6 +7,8 @@ cabal-version: 1.12
 name:           fix-gen
 version:        0.0.0.0
 build-type:     Simple
+extra-source-files:
+    test_resources/messages/example.tagvalue
 
 library
   exposed-modules:
@@ -16,7 +18,9 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
+    , bytestring
     , fix
     , genvalidity
     , genvalidity-bytestring
@@ -35,6 +39,7 @@ test-suite fix-test
       sydtest-discover:sydtest-discover
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , fix
     , fix-gen
     , genvalidity-sydtest
