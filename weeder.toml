@@ -4,7 +4,12 @@ roots = [
   # General
   "^Main.main$",
   # Generated
-  "Paths_"
+  "Paths_",
+  "FIX.Conduit",
+  "FIX.Components",
+  "FIX.Fields",
+  "FIX.Groups",
+  "FIX.Messages",
 ]
 root-instances = [
 ]

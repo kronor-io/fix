@@ -1,0 +1,118 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           fix-codegen
+version:        0.0.0.0
+build-type:     Simple
+data-files:
+    data/fix-spec-gen/default.nix
+    data/fix-spec-gen/fix-spec-gen.cabal
+    data/fix-spec-gen/package.yaml
+    data/fix-spec-gen/src/FIX/Components/TestUtils.hs
+    data/fix-spec-gen/src/FIX/Groups/TestUtils.hs
+    data/fix-spec-gen/src/FIX/Messages/TestUtils.hs
+    data/fix-spec-gen/test/FIX/AnyFieldSpec.hs
+    data/fix-spec-gen/test/FIX/AnyMessageSpec.hs
+    data/fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs
+    data/fix-spec-gen/test/Spec.hs
+    data/fix-spec-gen/test_resources/messages/BusinessMessageReject/envelope/360t.tagvalue
+    data/fix-spec-gen/test_resources/messages/ExecutionReport/envelope/360t.tagvalue
+    data/fix-spec-gen/test_resources/messages/Heartbeat/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logon/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logon/envelope/t360.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logout/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/News/contents/example-8-1.tagvalue
+    data/fix-spec-gen/test_resources/messages/News/contents/example-8-2.tagvalue
+    data/fix-spec-gen/test_resources/messages/Quote/envelope/2024-10-01_test.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-10.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-11.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-12.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-3.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-4.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-5.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-6.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-7.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-8.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-9.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequestReject/contents/example-8-13.tagvalue
+    data/fix-spec-gen/test_resources/messages/ResendRequest/envelope/360t.tagvalue
+    data/fix-spec/default.nix
+    data/fix-spec/fix-spec.cabal
+    data/fix-spec/package.yaml
+    data/fix-spec/src/FIX/Components/Class.hs
+    data/fix-spec/src/FIX/Groups/Class.hs
+    data/fix-spec/src/FIX/Messages/Class.hs
+    data/fix-spec/src/FIX/Messages/Envelope.hs
+    data/pdf-examples/BusinessMessageReject/contents/8-14.txt
+    data/pdf-examples/ExecutionReport/contents/8-31.txt
+    data/pdf-examples/ExecutionReport/contents/8-32.txt
+    data/pdf-examples/NewOrderMultiLeg/contents/8-29.txt
+    data/pdf-examples/NewOrderMultiLeg/contents/8-30.txt
+    data/pdf-examples/NewOrderSingle/contents/8-22.txt
+    data/pdf-examples/NewOrderSingle/contents/8-23.txt
+    data/pdf-examples/NewOrderSingle/contents/8-24.txt
+    data/pdf-examples/NewOrderSingle/contents/8-25.txt
+    data/pdf-examples/NewOrderSingle/contents/8-26.txt
+    data/pdf-examples/NewOrderSingle/contents/8-27.txt
+    data/pdf-examples/NewOrderSingle/contents/8-28.txt
+    data/pdf-examples/News/contents/8-1.txt
+    data/pdf-examples/News/contents/8-2.txt
+    data/pdf-examples/Quote/contents/8-15.txt
+    data/pdf-examples/Quote/contents/8-16.txt
+    data/pdf-examples/Quote/contents/8-17.txt
+    data/pdf-examples/Quote/contents/8-18.txt
+    data/pdf-examples/Quote/contents/8-19.txt
+    data/pdf-examples/QuoteCancel/contents/8-20.txt
+    data/pdf-examples/QuoteCancel/contents/8-21.txt
+    data/pdf-examples/QuoteRequest/contents/8-3.txt
+    data/pdf-examples/QuoteRequest/contents/8-4.txt
+    data/pdf-examples/QuoteRequest/contents/8-5.txt
+    data/pdf-examples/QuoteRequest/contents/8-6.txt
+    data/pdf-examples/QuoteRequest/contents/8-7.txt
+    data/pdf-examples/QuoteRequest/contents/8-8.txt
+    data/pdf-examples/QuoteRequest/contents/8.10.txt
+    data/pdf-examples/QuoteRequest/contents/8.11.txt
+    data/pdf-examples/QuoteRequest/contents/8.12.txt
+    data/pdf-examples/QuoteRequest/contents/8.9.txt
+    data/pdf-examples/QuoteRequestReject/contents/8.13.txt
+    data/pdf-examples/SecurityDefinition/contents/8-34.txt
+    data/pdf-examples/SecurityDefinitionRequest/contents/8-33.txt
+
+library
+  exposed-modules:
+      FIX.CodeGen
+      FIX.CodeGen.Code
+      FIX.CodeGen.OptParse
+      FIX.CodeGen.Spec
+  other-modules:
+      Paths_fix_codegen
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , containers
+    , opt-env-conf
+    , path
+    , path-io
+    , pretty-show
+    , process
+    , template-haskell
+    , text
+    , unliftio
+    , xml-conduit
+  default-language: Haskell2010
+
+executable fix-codegen
+  main-is: Main.hs
+  other-modules:
+      Paths_fix_codegen
+  hs-source-dirs:
+      app
+  build-depends:
+      base >=4.7 && <5
+    , fix-codegen
+  default-language: Haskell2010

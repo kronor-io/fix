@@ -1,7 +1,48 @@
 resolver: lts-22.22
 packages:
-- fix
-- fix-gen
+- fix-codegen
+- fix-core
+- fix-core-gen
+- fix-spec
+- fix-spec-gen
+- fix-app
+
+extra-deps:
+- github: NorfairKing/sydtest
+  commit: 6043db95040af3de2df159f768df0639e042e930 
+  subdirs:
+    - sydtest
+    - sydtest-aeson
+    - sydtest-discover
+    - sydtest-persistent
+    - sydtest-persistent-sqlite
+    - sydtest-process
+    - sydtest-typed-process
+    - sydtest-wai
+    - sydtest-webdriver
+    - sydtest-webdriver-screenshot
+    - sydtest-webdriver-yesod
+    - sydtest-yesod
+- github: NorfairKing/opt-env-conf
+  commit: aca7601a7bf2e322318acb600d91586441fc027c
+  subdirs:
+    - opt-env-conf
+    - opt-env-conf-test
+- github: NorfairKing/autodocodec
+  commit: f2c0551cdb3f9829b97f76b927d0c83833f9ef7f
+  subdirs:
+    - autodocodec
+    - autodocodec-nix
+    - autodocodec-schema
+    - autodocodec-yaml
+- github: NorfairKing/safe-coloured-text
+  commit: 26b7657428f277f819a0831cbddddb7f4c5408f9
+  subdirs:
+    - safe-coloured-text
+    - safe-coloured-text-layout
+    - safe-coloured-text-terminfo
+
+
 
 # These are duplicated in nix/overlay.nix
 ghc-options:

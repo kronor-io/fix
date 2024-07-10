@@ -1,0 +1,12 @@
+35MsgTypeS
+38OrderQty0
+55SymbolEUR/USD
+106IssuerMarketData
+117QuoteIDMyQuoteReq-98765-000005
+131QuoteReqIDMyQuoteReq-98765
+132BidPx1.416989
+133OfferPx1.1.417064
+188BidSpotRate1.4172
+190OfferSpotRate1.4173
+537QuoteType0
+7070RefSpotDate20110720

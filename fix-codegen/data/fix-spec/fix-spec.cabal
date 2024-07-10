@@ -1,0 +1,30 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           fix-spec
+version:        0.0.0.0
+build-type:     Simple
+
+library
+  exposed-modules:
+      FIX.Components.Class
+      FIX.Groups.Class
+      FIX.Messages.Class
+      FIX.Messages.Envelope
+  other-modules:
+      Paths_fix_spec
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , dlist
+    , fix-core
+    , megaparsec
+    , mtl
+    , text
+    , validity
+  default-language: Haskell2010

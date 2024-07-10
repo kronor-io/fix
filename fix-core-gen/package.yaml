@@ -1,0 +1,37 @@
+name: fix-core-gen
+version: 0.0.0.0
+
+dependencies:
+- base >= 4.7 && < 5
+
+extra-source-files:
+- test_resources/**/*
+
+library:
+  source-dirs: src
+  dependencies:
+  - QuickCheck
+  - bytestring
+  - fix-core
+  - genvalidity
+  - genvalidity-bytestring
+  - genvalidity-sydtest
+  - genvalidity-text
+  - genvalidity-time
+  - sydtest
+
+tests:
+  fix-core-test:
+    main: Spec.hs
+    source-dirs: test
+    build-tools: sydtest-discover
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - bytestring
+    - fix-core
+    - fix-core-gen
+    - sydtest
+    - time

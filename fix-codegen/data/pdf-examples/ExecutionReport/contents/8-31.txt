@@ -1,0 +1,19 @@
+35MsgType8
+1AccountACME
+6AvgPx0
+11ClOrdIDLO-0190CM00011208L0000002009
+14CumQty0
+15CurrencyEUR
+17ExecID0
+32LastQty0
+37OrderID2051231234
+38OrderQty100000
+39OrdStatus0
+40OrdTypeD
+44Price0
+54Side1
+55SymbolEUR/JPY
+58TextNewOrderSingle message has been received
+64SettlDate20110910
+150ExecType0
+151LeavesQty0

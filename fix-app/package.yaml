@@ -1,0 +1,20 @@
+name: fix-app
+version: 0.0.0.0
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - conduit
+  - conduit-extra
+  - fix-spec
+  - megaparsec
+  - network
+  - pretty-show
+  - stm-chans
+  - stm-conduit
+  - text
+  - unliftio

@@ -1,0 +1,16 @@
+name: fix-spec
+version: 0.0.0.0
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - dlist
+  - fix-core
+  - megaparsec
+  - mtl
+  - text
+  - validity

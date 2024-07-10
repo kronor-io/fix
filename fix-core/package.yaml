@@ -1,0 +1,17 @@
+name: fix-core
+version: 0.0.0.0
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - megaparsec
+  - text
+  - time
+  - validity
+  - validity-bytestring
+  - validity-text
+  - validity-time

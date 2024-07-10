@@ -8,3 +8,4 @@
 - ignore: { name: "Use <$>" }
 - ignore: { name: "Use unless" }
 - ignore: { name: "Fuse mapM/map" }
+- ignore: { name: "Evaluate" }

@@ -1,0 +1,31 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           fix-app
+version:        0.0.0.0
+build-type:     Simple
+
+library
+  exposed-modules:
+      FIX.Conduit
+  other-modules:
+      Paths_fix_app
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , conduit
+    , conduit-extra
+    , fix-spec
+    , megaparsec
+    , network
+    , pretty-show
+    , stm-chans
+    , stm-conduit
+    , text
+    , unliftio
+  default-language: Haskell2010

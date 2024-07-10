@@ -1,0 +1,6 @@
+35MsgTypej
+45RefSeqNum45
+58TextException while processing the request.
+372RefMsgTypeR
+379BusinessRejectRefIDMyQuoteReqID-12345
+380BusinessRejectReason0

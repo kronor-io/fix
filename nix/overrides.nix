@@ -33,13 +33,17 @@ let
               ];
               # Ugly hack because we can't just add flags to the 'test' invocation.
               # Show test output as we go, instead of all at once afterwards.
-              testTarget = (old.testTarget or "") + " --show-details=direct";
+              testTarget = (old.testTarget or "") + " --show-details=direct --test-options='--max-shrinks 0'";
             })
         );
     in
     {
-      fix = fixPkg "fix";
-      fix-gen = fixPkg "fix-gen";
+      fix-core = fixPkg "fix-core";
+      fix-core-gen = fixPkg "fix-core-gen";
+      fix-codegen = fixPkg "fix-codegen";
+      fix-spec = fixPkg "fix-spec";
+      fix-spec-gen = fixPkg "fix-spec-gen";
+      fix-app = fixPkg "fix-app";
     };
 in
 {

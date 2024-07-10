@@ -1,0 +1,4 @@
+35MsgTypeB
+148HeadlineBank Basket
+33LinesOfText1
+58TextACME

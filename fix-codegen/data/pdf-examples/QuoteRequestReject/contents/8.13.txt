@@ -1,0 +1,8 @@
+35MsgTypeAG
+131QuoteReqIDMyQuoteReqID-12345
+658QuoteRequestRejectReason 99
+146NoRelatedSym1
+55SymbolEUR/USD
+15CurrencyEUR
+7071ProductTypeFX-STD
+58TextExpireTime is in the past.

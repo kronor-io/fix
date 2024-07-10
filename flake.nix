@@ -14,6 +14,8 @@
     fast-myers-diff.flake = false;
     sydtest.url = "github:NorfairKing/sydtest";
     sydtest.flake = false;
+    opt-env-conf.url = "github:NorfairKing/opt-env-conf";
+    opt-env-conf.flake = false;
     dekking.url = "github:NorfairKing/dekking";
     dekking.flake = false;
     weeder-nix.url = "github:NorfairKing/weeder-nix";
@@ -29,6 +31,7 @@
     , autodocodec
     , fast-myers-diff
     , sydtest
+    , opt-env-conf
     , dekking
     , weeder-nix
     }:
@@ -47,6 +50,7 @@
         (pkgs.callPackage (safe-coloured-text + "/nix/overrides.nix") { })
         (pkgs.callPackage (fast-myers-diff + "/nix/overrides.nix") { })
         (pkgs.callPackage (sydtest + "/nix/overrides.nix") { })
+        (pkgs.callPackage (opt-env-conf + "/nix/overrides.nix") { })
         (pkgs.callPackage (dekking + "/nix/overrides.nix") { })
         self.overrides.${system}
       ];
@@ -61,10 +65,12 @@
         coverage-report = haskellPackages.dekking.makeCoverageReport {
           name = "test-coverage-report";
           packages = [
-            "fix"
+            "fix-core"
+            "fix-spec"
           ];
           coverage = [
-            "fix-gen"
+            "fix-core-gen"
+            "fix-spec-gen"
           ];
         };
         weeder-check = pkgs.weeder-nix.makeWeederCheck {
@@ -93,6 +99,7 @@
           cabal-install
           zlib
         ] ++ self.checks.${system}.pre-commit.enabledPackages;
+        FIX_SPEC_FILE = "./360t.xml";
         shellHook = self.checks.${system}.pre-commit.shellHook;
       };
     };

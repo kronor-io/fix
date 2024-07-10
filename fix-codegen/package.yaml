@@ -1,0 +1,31 @@
+name: fix-codegen
+version: 0.0.0.0
+
+data-files:
+- data/**/*
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - containers
+  - opt-env-conf
+  - path
+  - path-io
+  - pretty-show
+  - process
+  - template-haskell
+  - text
+  - unliftio
+  - xml-conduit
+
+executables:
+  fix-codegen:
+    main: Main.hs
+    source-dirs: app
+    dependencies:
+    - fix-codegen
+
