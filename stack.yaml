@@ -1,0 +1,14 @@
+resolver: lts-22.22
+packages:
+- fix
+- fix-gen
+
+# These are duplicated in nix/overlay.nix
+ghc-options:
+  "$locals": -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Widentities -Wredundant-constraints -Wcpp-undef -Wunused-packages
+
+
+system-ghc: true
+nix:
+  enable: false
+with-hpack: hpack
