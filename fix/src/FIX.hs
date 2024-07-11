@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module FIX where
 
@@ -82,8 +83,14 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
 
 class IsMessage a where
   messageType :: Proxy a -> ByteString
-  toMessage :: a -> Message
+  toMessageFields :: a -> [(Tag, ByteString)]
   fromMessage :: Message -> Maybe a
+
+toMessage :: forall a. (IsMessage a) => a -> Message
+toMessage =
+  Message
+    . ((35, messageType (Proxy :: Proxy a)) :)
+    . toMessageFields
 
 class IsField a where
   fieldTag :: Proxy a -> Tag
@@ -136,14 +143,10 @@ instance Validity LogonMessage where
 
 instance IsMessage LogonMessage where
   messageType Proxy = "A"
-  toMessage LogonMessage {..} =
-    Message
-      { messageFields =
-          [ (35, "A"),
-            (98, logonMessageEncryptMethod),
-            (108, logonMessageHeartBeatInterval)
-          ]
-      }
+  toMessageFields LogonMessage {..} =
+    [ (98, logonMessageEncryptMethod),
+      (108, logonMessageHeartBeatInterval)
+    ]
   fromMessage (Message fields) = do
     logonMessageEncryptMethod <- lookup 98 fields
     logonMessageHeartBeatInterval <- lookup 108 fields
@@ -158,14 +161,8 @@ instance Validity HeartbeatMessage
 
 instance IsMessage HeartbeatMessage where
   messageType Proxy = "0"
-  toMessage HeartbeatMessage {..} =
-    Message
-      { messageFields =
-          concat
-            [ [(35, "0")],
-              [(112, toValue testRequestId) | testRequestId <- maybeToList heartbeatMessageTestRequestId]
-            ]
-      }
+  toMessageFields HeartbeatMessage {..} =
+    [(112, toValue testRequestId) | testRequestId <- maybeToList heartbeatMessageTestRequestId]
   fromMessage (Message fields) = do
     heartbeatMessageTestRequestId <- optional $ lookup 112 fields >>= fromValue
     pure HeartbeatMessage {..}
