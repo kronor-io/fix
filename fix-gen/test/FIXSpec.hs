@@ -33,10 +33,32 @@ spec = do
 
   describe "TestRequestId" $ do
     fieldSpec @TestRequestId
+  describe "EncryptionMethod" $ do
+    fieldSpec @EncryptionMethod
+
   describe "HeartbeatMessage" $ do
     messageSpec @HeartbeatMessage "heartbeat"
   describe "LogonMessage" $ do
     messageSpec @LogonMessage "logon"
+
+fieldSpec ::
+  forall a.
+  ( Show a,
+    Eq a,
+    GenValid a,
+    IsField a
+  ) =>
+  Spec
+fieldSpec =
+  describe "fromValue" $ do
+    it "roundtrips with toValue" $
+      forAllValid $ \a -> do
+        let rendered = toValue (a :: a)
+        context (ppShow rendered) $ case fromValue rendered of
+          Nothing -> expectationFailure "Failed to parse message."
+          Just a' -> a' `shouldBe` a
+    it "renders to valid messages" $
+      producesValid (toValue :: a -> ByteString)
 
 messageSpec ::
   forall a.
@@ -75,22 +97,3 @@ messageSpec dir =
                 -- let renderedBytes = renderMessage renderedMessage
                 -- renderedBytes `shouldBe` content
                 pure ()
-
-fieldSpec ::
-  forall a.
-  ( Show a,
-    Eq a,
-    GenValid a,
-    IsField a
-  ) =>
-  Spec
-fieldSpec =
-  describe "fromValue" $ do
-    it "roundtrips with toValue" $
-      forAllValid $ \a -> do
-        let rendered = toValue (a :: a)
-        context (ppShow rendered) $ case fromValue rendered of
-          Nothing -> expectationFailure "Failed to parse message."
-          Just a' -> a' `shouldBe` a
-    it "renders to valid messages" $
-      producesValid (toValue :: a -> ByteString)

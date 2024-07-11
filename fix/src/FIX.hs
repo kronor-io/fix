@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -119,9 +120,41 @@ instance IsField TestRequestId where
   toValue = unTestRequestId
   fromValue = constructValid . TestRequestId
 
+data EncryptionMethod
+  = EncryptionMethodNoneOther
+  | EncryptionMethodPKCS
+  | EncryptionMethodDESECB
+  | EncryptionMethodPKCSDES
+  | EncryptionMethodPGPDES
+  | EncryptionMethodPGPDESMD5
+  | EncryptionMethodPEMDESMD5
+  deriving (Show, Eq, Generic)
+
+instance Validity EncryptionMethod
+
+instance IsField EncryptionMethod where
+  fieldTag Proxy = 98
+  toValue = \case
+    EncryptionMethodNoneOther -> "0"
+    EncryptionMethodPKCS -> "1"
+    EncryptionMethodDESECB -> "2"
+    EncryptionMethodPKCSDES -> "3"
+    EncryptionMethodPGPDES -> "4"
+    EncryptionMethodPGPDESMD5 -> "5"
+    EncryptionMethodPEMDESMD5 -> "6"
+  fromValue = \case
+    "0" -> Just EncryptionMethodNoneOther
+    "1" -> Just EncryptionMethodPKCS
+    "2" -> Just EncryptionMethodDESECB
+    "3" -> Just EncryptionMethodPKCSDES
+    "4" -> Just EncryptionMethodPGPDES
+    "5" -> Just EncryptionMethodPGPDESMD5
+    "6" -> Just EncryptionMethodPEMDESMD5
+    _ -> Nothing
+
 data LogonMessage = LogonMessage
-  { logonMessageEncryptMethod :: ByteString,
-    logonMessageHeartBeatInterval :: ByteString
+  { logonMessageEncryptMethod :: !EncryptionMethod,
+    logonMessageHeartBeatInterval :: !ByteString
   }
   deriving (Show, Eq, Generic)
 
@@ -129,11 +162,6 @@ instance Validity LogonMessage where
   validate lm@LogonMessage {..} =
     mconcat
       [ genericValidate lm,
-        declare "The encrypt method is nonempty" $ not $ SB.null logonMessageEncryptMethod,
-        decorate "The encrypt method has no '\\SOH' characters" $
-          decorateList (SB.unpack logonMessageEncryptMethod) $ \w ->
-            declare "The value is not '\\SOH'" $
-              w /= 1,
         declare "The heartbeat interval is nonempty" $ not $ SB.null logonMessageHeartBeatInterval,
         decorate "The heartbeat interval has no '\\SOH' characters" $
           decorateList (SB.unpack logonMessageHeartBeatInterval) $ \w ->
@@ -144,11 +172,11 @@ instance Validity LogonMessage where
 instance IsMessage LogonMessage where
   messageType Proxy = "A"
   toMessageFields LogonMessage {..} =
-    [ (98, logonMessageEncryptMethod),
+    [ (98, toValue logonMessageEncryptMethod),
       (108, logonMessageHeartBeatInterval)
     ]
   fromMessage (Message fields) = do
-    logonMessageEncryptMethod <- lookup 98 fields
+    logonMessageEncryptMethod <- lookup 98 fields >>= fromValue
     logonMessageHeartBeatInterval <- lookup 108 fields
     pure LogonMessage {..}
 

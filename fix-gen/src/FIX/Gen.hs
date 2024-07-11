@@ -19,6 +19,8 @@ instance GenValid Message where
 
 instance GenValid TestRequestId
 
+instance GenValid EncryptionMethod
+
 instance GenValid HeartbeatMessage
 
 instance GenValid LogonMessage
