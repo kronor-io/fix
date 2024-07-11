@@ -173,6 +173,23 @@ instance IsField BodyLength where
   fieldToValue = toValue . unBodyLength
   fieldFromValue = fromValue >=> constructValid . BodyLength
 
+newtype CheckSum = CheckSum {unCheckSum :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity CheckSum where
+  validate trid@CheckSum {..} =
+    mconcat
+      [ genericValidate trid,
+        validateByteStringValue unCheckSum,
+        declare "The checksum is exactly bytes long" $
+          SB.length unCheckSum == 3
+      ]
+
+instance IsField CheckSum where
+  fieldTag Proxy = 10
+  fieldToValue = unCheckSum
+  fieldFromValue = constructValid . CheckSum
+
 newtype MessageSequenceNumber = MessageSequenceNumber {unMessageSequenceNumber :: Word}
   deriving (Show, Eq, Generic)
 
@@ -406,6 +423,25 @@ requiredFieldP fields = lookup (fieldTag (Proxy :: Proxy a)) fields >>= fieldFro
 
 optionalFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe (Maybe a)
 optionalFieldP fields = optional $ requiredFieldP fields
+
+data MessageHeader = MessageHeader
+  { messageHeaderBeginString :: BeginString,
+    messageHeaderBodyLength :: BodyLength,
+    messageHeaderMessageType :: MessageType,
+    messageHeaderSender :: SenderCompId,
+    messageHeaderTarget :: TargetCompId,
+    messageHeaderMessageSequenceNumber :: MessageSequenceNumber
+  }
+
+parseMessageHeader :: [(Tag, ByteString)] -> Maybe MessageHeader
+parseMessageHeader fields = do
+  messageHeaderBeginString <- requiredFieldP fields
+  messageHeaderBodyLength <- requiredFieldP fields
+  messageHeaderMessageType <- requiredFieldP fields
+  messageHeaderSender <- requiredFieldP fields
+  messageHeaderTarget <- requiredFieldP fields
+  messageHeaderMessageSequenceNumber <- requiredFieldP fields
+  pure MessageHeader {..}
 
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
