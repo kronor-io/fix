@@ -81,6 +81,7 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
     ]
 
 class IsMessage a where
+  messageType :: Proxy a -> ByteString
   toMessage :: a -> Message
   fromMessage :: Message -> Maybe a
 
@@ -134,6 +135,7 @@ instance Validity LogonMessage where
       ]
 
 instance IsMessage LogonMessage where
+  messageType Proxy = "A"
   toMessage LogonMessage {..} =
     Message
       { messageFields =
@@ -155,6 +157,7 @@ data HeartbeatMessage = HeartbeatMessage
 instance Validity HeartbeatMessage
 
 instance IsMessage HeartbeatMessage where
+  messageType Proxy = "0"
   toMessage HeartbeatMessage {..} =
     Message
       { messageFields =
