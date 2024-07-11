@@ -52,15 +52,15 @@ fieldSpec ::
   ) =>
   Spec
 fieldSpec =
-  describe "fromValue" $ do
-    it "roundtrips with toValue" $
+  describe "fieldFromValue" $ do
+    it "roundtrips with fieldToValue" $
       forAllValid $ \a -> do
-        let rendered = toValue (a :: a)
-        context (ppShow rendered) $ case fromValue rendered of
+        let rendered = fieldToValue (a :: a)
+        context (ppShow rendered) $ case fieldFromValue rendered of
           Nothing -> expectationFailure "Failed to parse message."
           Just a' -> a' `shouldBe` a
     it "renders to valid messages" $
-      producesValid (toValue :: a -> ByteString)
+      producesValid (fieldToValue :: a -> ByteString)
 
 messageSpec ::
   forall a.

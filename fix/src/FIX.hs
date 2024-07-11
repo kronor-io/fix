@@ -87,8 +87,8 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
 
 class IsField a where
   fieldTag :: Proxy a -> Tag
-  toValue :: a -> ByteString
-  fromValue :: ByteString -> Maybe a
+  fieldToValue :: a -> ByteString
+  fieldFromValue :: ByteString -> Maybe a
 
 newtype TestRequestId = TestRequestId
   { unTestRequestId :: ByteString
@@ -109,8 +109,8 @@ instance Validity TestRequestId where
 
 instance IsField TestRequestId where
   fieldTag Proxy = 112
-  toValue = unTestRequestId
-  fromValue = constructValid . TestRequestId
+  fieldToValue = unTestRequestId
+  fieldFromValue = constructValid . TestRequestId
 
 data EncryptionMethod
   = EncryptionMethodNoneOther
@@ -126,7 +126,7 @@ instance Validity EncryptionMethod
 
 instance IsField EncryptionMethod where
   fieldTag Proxy = 98
-  toValue = \case
+  fieldToValue = \case
     EncryptionMethodNoneOther -> "0"
     EncryptionMethodPKCS -> "1"
     EncryptionMethodDESECB -> "2"
@@ -134,7 +134,7 @@ instance IsField EncryptionMethod where
     EncryptionMethodPGPDES -> "4"
     EncryptionMethodPGPDESMD5 -> "5"
     EncryptionMethodPEMDESMD5 -> "6"
-  fromValue = \case
+  fieldFromValue = \case
     "0" -> Just EncryptionMethodNoneOther
     "1" -> Just EncryptionMethodPKCS
     "2" -> Just EncryptionMethodDESECB
@@ -151,8 +151,8 @@ instance Validity HeartbeatInterval
 
 instance IsField HeartbeatInterval where
   fieldTag Proxy = 108
-  toValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
-  fromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
+  fieldToValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
+  fieldFromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
 
 class IsMessage a where
   messageType :: Proxy a -> ByteString
@@ -166,13 +166,13 @@ toMessage =
     . toMessageFields
 
 requiredFieldB :: forall a. (IsField a) => a -> Maybe (Tag, ByteString)
-requiredFieldB a = Just (fieldTag (Proxy :: Proxy a), toValue a)
+requiredFieldB a = Just (fieldTag (Proxy :: Proxy a), fieldToValue a)
 
 optionalFieldB :: (IsField a) => Maybe a -> Maybe (Tag, ByteString)
 optionalFieldB = (>>= requiredFieldB)
 
 requiredFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe a
-requiredFieldP fields = lookup (fieldTag (Proxy :: Proxy a)) fields >>= fromValue
+requiredFieldP fields = lookup (fieldTag (Proxy :: Proxy a)) fields >>= fieldFromValue
 
 optionalFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe (Maybe a)
 optionalFieldP fields = optional $ requiredFieldP fields
