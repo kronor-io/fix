@@ -35,6 +35,8 @@ spec = do
     fieldSpec @TestRequestId
   describe "EncryptionMethod" $ do
     fieldSpec @EncryptionMethod
+  describe "HeartbeatInterval" $ do
+    fieldSpec @HeartbeatInterval
 
   describe "HeartbeatMessage" $ do
     messageSpec @HeartbeatMessage "heartbeat"

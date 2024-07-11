@@ -9,6 +9,7 @@ library:
   dependencies:
   - bytestring
   - megaparsec
+  - text
   - validity
   - validity-bytestring
   - validity-text

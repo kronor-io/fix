@@ -21,6 +21,8 @@ instance GenValid TestRequestId
 
 instance GenValid EncryptionMethod
 
+instance GenValid HeartbeatInterval
+
 instance GenValid HeartbeatMessage
 
 instance GenValid LogonMessage

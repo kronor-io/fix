@@ -15,6 +15,8 @@ import qualified Data.ByteString.Builder as ByteString
 import qualified Data.ByteString.Lazy as LB
 import Data.Maybe
 import Data.Proxy
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
 import Data.Validity
 import Data.Validity.ByteString ()
 import Data.Validity.Text ()
@@ -23,6 +25,7 @@ import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
+import Text.Read
 
 type Tag = Word
 
@@ -152,36 +155,37 @@ instance IsField EncryptionMethod where
     "6" -> Just EncryptionMethodPEMDESMD5
     _ -> Nothing
 
+newtype HeartbeatInterval = HeartbeatInterval {unHeartbeatInterval :: Int}
+  deriving (Show, Eq, Generic)
+
+instance Validity HeartbeatInterval
+
+instance IsField HeartbeatInterval where
+  fieldTag Proxy = 108
+  toValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
+  fromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
+
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
-    logonMessageHeartBeatInterval :: !ByteString
+    logonMessageHeartBeatInterval :: !HeartbeatInterval
   }
   deriving (Show, Eq, Generic)
 
-instance Validity LogonMessage where
-  validate lm@LogonMessage {..} =
-    mconcat
-      [ genericValidate lm,
-        declare "The heartbeat interval is nonempty" $ not $ SB.null logonMessageHeartBeatInterval,
-        decorate "The heartbeat interval has no '\\SOH' characters" $
-          decorateList (SB.unpack logonMessageHeartBeatInterval) $ \w ->
-            declare "The value is not '\\SOH'" $
-              w /= 1
-      ]
+instance Validity LogonMessage
 
 instance IsMessage LogonMessage where
   messageType Proxy = "A"
   toMessageFields LogonMessage {..} =
     [ (98, toValue logonMessageEncryptMethod),
-      (108, logonMessageHeartBeatInterval)
+      (108, toValue logonMessageHeartBeatInterval)
     ]
   fromMessage (Message fields) = do
     logonMessageEncryptMethod <- lookup 98 fields >>= fromValue
-    logonMessageHeartBeatInterval <- lookup 108 fields
+    logonMessageHeartBeatInterval <- lookup 108 fields >>= fromValue
     pure LogonMessage {..}
 
 data HeartbeatMessage = HeartbeatMessage
-  { heartbeatMessageTestRequestId :: Maybe TestRequestId
+  { heartbeatMessageTestRequestId :: !(Maybe TestRequestId)
   }
   deriving (Show, Eq, Generic)
 
