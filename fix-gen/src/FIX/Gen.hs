@@ -19,6 +19,6 @@ instance GenValid Message where
 
 instance GenValid TestRequestId
 
-instance GenValid LogonMessage
-
 instance GenValid HeartbeatMessage
+
+instance GenValid LogonMessage
