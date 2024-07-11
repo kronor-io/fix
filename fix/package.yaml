@@ -11,3 +11,4 @@ library:
   - megaparsec
   - validity
   - validity-bytestring
+  - validity-text

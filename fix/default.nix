@@ -1,5 +1,5 @@
 { mkDerivation, base, bytestring, lib, megaparsec, validity
-, validity-bytestring
+, validity-bytestring, validity-text
 }:
 mkDerivation {
   pname = "fix";
@@ -7,6 +7,7 @@ mkDerivation {
   src = ./.;
   libraryHaskellDepends = [
     base bytestring megaparsec validity validity-bytestring
+    validity-text
   ];
   license = "unknown";
 }

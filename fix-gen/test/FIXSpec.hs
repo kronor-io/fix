@@ -24,3 +24,14 @@ spec = do
         Right message -> do
           let rendered = renderMessage message
           rendered `shouldBe` contents
+
+  describe "LogonMessage" $
+    describe "fromMessage" $ do
+      it "roundtrips with toMessage" $
+        forAllValid $ \a -> do
+          let rendered = toMessage (a :: LogonMessage)
+          context (ppShow rendered) $ case fromMessage rendered of
+            Nothing -> expectationFailure "Failed to parse message."
+            Just a' -> a' `shouldBe` a
+      it "renders to valid messages" $
+        producesValid (toMessage :: LogonMessage -> Message)

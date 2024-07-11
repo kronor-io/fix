@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module FIX where
 
@@ -10,8 +11,10 @@ import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Builder as ByteString
 import qualified Data.ByteString.Lazy as LB
+import Data.Maybe
 import Data.Validity
 import Data.Validity.ByteString ()
+import Data.Validity.Text ()
 import Data.Void
 import GHC.Generics (Generic)
 import Text.Megaparsec
@@ -73,3 +76,78 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
       BB.byteString bs,
       BB.char7 '\SOH'
     ]
+
+class IsMessage a where
+  toMessage :: a -> Message
+  fromMessage :: Message -> Maybe a
+
+data LogonMessage = LogonMessage
+  { logonMessageEncryptMethod :: ByteString,
+    logonMessageHeartBeatInterval :: ByteString
+  }
+  deriving (Show, Eq, Generic)
+
+instance Validity LogonMessage where
+  validate lm@LogonMessage {..} =
+    mconcat
+      [ genericValidate lm,
+        declare "The encrypt method is nonempty" $ not $ SB.null logonMessageEncryptMethod,
+        decorate "The encrypt method has no '\\SOH' characters" $
+          decorateList (SB.unpack logonMessageEncryptMethod) $ \w ->
+            declare "The value is not '\\SOH'" $
+              w /= 1,
+        declare "The heartbeat interval is nonempty" $ not $ SB.null logonMessageHeartBeatInterval,
+        decorate "The heartbeat interval has no '\\SOH' characters" $
+          decorateList (SB.unpack logonMessageHeartBeatInterval) $ \w ->
+            declare "The value is not '\\SOH'" $
+              w /= 1
+      ]
+
+instance IsMessage LogonMessage where
+  toMessage LogonMessage {..} =
+    Message
+      { messageFields =
+          [ (35, "A"),
+            (98, logonMessageEncryptMethod),
+            (108, logonMessageHeartBeatInterval)
+          ]
+      }
+  fromMessage (Message fields) = do
+    logonMessageEncryptMethod <- lookup 98 fields
+    logonMessageHeartBeatInterval <- lookup 108 fields
+    pure LogonMessage {..}
+
+data HeartbeatMessage = HeartbeatMessage
+  { heartbeatMessageTestRequestId :: Maybe ByteString
+  }
+  deriving (Show, Eq, Generic)
+
+instance Validity HeartbeatMessage where
+  validate hbm@HeartbeatMessage {..} =
+    mconcat
+      [ genericValidate hbm,
+        case heartbeatMessageTestRequestId of
+          Nothing -> valid
+          Just i ->
+            mconcat
+              [ declare "The test request id is nonempty" $
+                  not $
+                    SB.null i,
+                decorateList (SB.unpack i) $ \w ->
+                  declare "The value is not '\\SOH'" $
+                    w /= 1
+              ]
+      ]
+
+instance IsMessage HeartbeatMessage where
+  toMessage HeartbeatMessage {..} =
+    Message
+      { messageFields =
+          concat
+            [ [(35, "0")],
+              [(112, testRequestId) | testRequestId <- maybeToList heartbeatMessageTestRequestId]
+            ]
+      }
+  fromMessage (Message fields) = do
+    heartbeatMessageTestRequestId <- optional $ lookup 112 fields
+    pure HeartbeatMessage {..}
