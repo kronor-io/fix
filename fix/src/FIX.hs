@@ -425,12 +425,12 @@ optionalFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe (Maybe a
 optionalFieldP fields = optional $ requiredFieldP fields
 
 data MessageHeader = MessageHeader
-  { messageHeaderBeginString :: BeginString,
-    messageHeaderBodyLength :: BodyLength,
-    messageHeaderMessageType :: MessageType,
-    messageHeaderSender :: SenderCompId,
-    messageHeaderTarget :: TargetCompId,
-    messageHeaderMessageSequenceNumber :: MessageSequenceNumber
+  { messageHeaderBeginString :: !BeginString,
+    messageHeaderBodyLength :: !BodyLength,
+    messageHeaderMessageType :: !MessageType,
+    messageHeaderSender :: !SenderCompId,
+    messageHeaderTarget :: !TargetCompId,
+    messageHeaderMessageSequenceNumber :: !MessageSequenceNumber
   }
 
 parseMessageHeader :: [(Tag, ByteString)] -> Maybe MessageHeader
@@ -442,6 +442,15 @@ parseMessageHeader fields = do
   messageHeaderTarget <- requiredFieldP fields
   messageHeaderMessageSequenceNumber <- requiredFieldP fields
   pure MessageHeader {..}
+
+data MessageTrailer = MessageTrailer
+  { messageTrailerCheckSum :: !CheckSum
+  }
+
+parseMessageTrailer :: [(Tag, ByteString)] -> Maybe MessageTrailer
+parseMessageTrailer fields = do
+  messageTrailerCheckSum <- requiredFieldP fields
+  pure MessageTrailer {..}
 
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
