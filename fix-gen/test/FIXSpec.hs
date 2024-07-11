@@ -34,13 +34,24 @@ spec = do
 
   fieldTypeSpec @ByteString
   fieldTypeSpec @Int
+  fieldTypeSpec @Word
 
-  describe "TestRequestId" $ do
-    fieldSpec @TestRequestId
+  describe "BeginString" $ do
+    fieldSpec @BeginString
+  describe "BodyLength" $ do
+    fieldSpec @BodyLength
+  describe "MessageType" $ do
+    fieldSpec @MessageType
+  describe "SenderCompId" $ do
+    fieldSpec @SenderCompId
+  describe "TargetCompId" $ do
+    fieldSpec @TargetCompId
   describe "EncryptionMethod" $ do
     fieldSpec @EncryptionMethod
   describe "HeartbeatInterval" $ do
     fieldSpec @HeartbeatInterval
+  describe "TestRequestId" $ do
+    fieldSpec @TestRequestId
 
   describe "HeartbeatMessage" $ do
     messageSpec @HeartbeatMessage "heartbeat"

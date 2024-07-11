@@ -17,6 +17,17 @@ instance GenValid Message where
             <*> (genStrictByteStringBy (genValid `suchThat` (/= 1)) `suchThat` (not . SB.null))
         )
 
+instance GenValid BeginString
+
+instance GenValid BodyLength where
+  genValid = BodyLength <$> choose (0, 9999)
+
+instance GenValid MessageType
+
+instance GenValid SenderCompId
+
+instance GenValid TargetCompId
+
 instance GenValid TestRequestId
 
 instance GenValid EncryptionMethod

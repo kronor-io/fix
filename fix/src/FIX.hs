@@ -93,6 +93,21 @@ instance IsFieldType ByteString where
   toValue = id
   fromValue = Just
 
+validateByteStringValue :: ByteString -> Validation
+validateByteStringValue value =
+  mconcat
+    [ declare "The value is nonempty" $
+        not $
+          SB.null value,
+      decorateList (SB.unpack value) $ \w ->
+        declare "The value is not '\\SOH'" $
+          w /= 1
+    ]
+
+instance IsFieldType Word where
+  toValue = TE.encodeUtf8 . T.pack . show
+  fromValue = readMaybe . T.unpack . TE.decodeLatin1
+
 instance IsFieldType Int where
   toValue = TE.encodeUtf8 . T.pack . show
   fromValue = readMaybe . T.unpack . TE.decodeLatin1
@@ -102,27 +117,157 @@ class IsField a where
   fieldToValue :: a -> ByteString
   fieldFromValue :: ByteString -> Maybe a
 
-newtype TestRequestId = TestRequestId
-  { unTestRequestId :: ByteString
-  }
+newtype BeginString = BeginString {unBeginString :: ByteString}
   deriving (Show, Eq, Generic)
 
-instance Validity TestRequestId where
-  validate trid@TestRequestId {..} =
+instance Validity BeginString where
+  validate trid@BeginString {..} =
     mconcat
       [ genericValidate trid,
-        declare "The value is nonempty" $
-          not $
-            SB.null unTestRequestId,
-        decorateList (SB.unpack unTestRequestId) $ \w ->
-          declare "The value is not '\\SOH'" $
-            w /= 1
+        validateByteStringValue unBeginString
       ]
 
-instance IsField TestRequestId where
-  fieldTag Proxy = 112
-  fieldToValue = unTestRequestId
-  fieldFromValue = constructValid . TestRequestId
+instance IsField BeginString where
+  fieldTag Proxy = 8
+  fieldToValue = unBeginString
+  fieldFromValue = constructValid . BeginString
+
+newtype BodyLength = BodyLength {unBodyLength :: Word}
+  deriving (Show, Eq, Generic)
+
+instance Validity BodyLength where
+  validate trid@BodyLength {..} =
+    mconcat
+      [ genericValidate trid,
+        declare "The body length is less than 10k" $ unBodyLength < 10000
+      ]
+
+instance IsField BodyLength where
+  fieldTag Proxy = 9
+  fieldToValue = toValue . unBodyLength
+  fieldFromValue = fromValue >=> constructValid . BodyLength
+
+data MessageType
+  = MessageTypeHeartbeat
+  | MessageTypeTestRequest -- 1
+  | MessageTypeResendRequest -- 2
+  | MessageTypeReject -- 3
+  | MessageTypeSequenceReset -- 4
+  | MessageTypeLogout -- 5
+  | MessageTypeIndicationofInterest -- 6
+  | MessageTypeAdvertisement -- 7
+  | MessageTypeExecutionReport -- 8
+  | MessageTypeOrderCancelReject -- 9
+  | MessageTypeLogon -- A
+  | MessageTypeNews -- B
+  | MessageTypeEmail -- C
+  | MessageTypeNewOrderSingle -- D
+  | MessageTypeNewOrderList -- E
+  | MessageTypeOrderCancelRequest -- F
+  | MessageTypeOrderCancelReplaceRequest -- G
+  | MessageTypeOrderStatusRequest -- H
+  | MessageTypeAllocation -- J
+  | MessageTypeListCancelRequest -- K
+  | MessageTypeListExecute -- L
+  | MessageTypeListStatusRequest -- M
+  | MessageTypeListStatus -- N
+  | MessageTypeAllocationACK -- P
+  | MessageTypeDontKnowTrade -- Q
+  | MessageTypeQuoteRequest -- R
+  | MessageTypeQuote -- S
+  deriving (Show, Eq, Generic)
+
+instance Validity MessageType
+
+instance IsField MessageType where
+  fieldTag Proxy = 35
+  fieldFromValue = \case
+    "0" -> Just MessageTypeHeartbeat
+    "1" -> Just MessageTypeTestRequest
+    "2" -> Just MessageTypeResendRequest
+    "3" -> Just MessageTypeReject
+    "4" -> Just MessageTypeSequenceReset
+    "5" -> Just MessageTypeLogout
+    "6" -> Just MessageTypeIndicationofInterest
+    "7" -> Just MessageTypeAdvertisement
+    "8" -> Just MessageTypeExecutionReport
+    "9" -> Just MessageTypeOrderCancelReject
+    "A" -> Just MessageTypeLogon
+    "B" -> Just MessageTypeNews
+    "C" -> Just MessageTypeEmail
+    "D" -> Just MessageTypeNewOrderSingle
+    "E" -> Just MessageTypeNewOrderList
+    "F" -> Just MessageTypeOrderCancelRequest
+    "G" -> Just MessageTypeOrderCancelReplaceRequest
+    "H" -> Just MessageTypeOrderStatusRequest
+    "J" -> Just MessageTypeAllocation
+    "K" -> Just MessageTypeListCancelRequest
+    "L" -> Just MessageTypeListExecute
+    "M" -> Just MessageTypeListStatusRequest
+    "N" -> Just MessageTypeListStatus
+    "P" -> Just MessageTypeAllocationACK
+    "Q" -> Just MessageTypeDontKnowTrade
+    "R" -> Just MessageTypeQuoteRequest
+    "S" -> Just MessageTypeQuote
+    _ -> Nothing
+  fieldToValue = \case
+    MessageTypeHeartbeat -> "0"
+    MessageTypeTestRequest -> "1"
+    MessageTypeResendRequest -> "2"
+    MessageTypeReject -> "3"
+    MessageTypeSequenceReset -> "4"
+    MessageTypeLogout -> "5"
+    MessageTypeIndicationofInterest -> "6"
+    MessageTypeAdvertisement -> "7"
+    MessageTypeExecutionReport -> "8"
+    MessageTypeOrderCancelReject -> "9"
+    MessageTypeLogon -> "A"
+    MessageTypeNews -> "B"
+    MessageTypeEmail -> "C"
+    MessageTypeNewOrderSingle -> "D"
+    MessageTypeNewOrderList -> "E"
+    MessageTypeOrderCancelRequest -> "F"
+    MessageTypeOrderCancelReplaceRequest -> "G"
+    MessageTypeOrderStatusRequest -> "H"
+    MessageTypeAllocation -> "J"
+    MessageTypeListCancelRequest -> "K"
+    MessageTypeListExecute -> "L"
+    MessageTypeListStatusRequest -> "M"
+    MessageTypeListStatus -> "N"
+    MessageTypeAllocationACK -> "P"
+    MessageTypeDontKnowTrade -> "Q"
+    MessageTypeQuoteRequest -> "R"
+    MessageTypeQuote -> "S"
+
+newtype SenderCompId = SenderCompId {unSenderCompId :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity SenderCompId where
+  validate trid@SenderCompId {..} =
+    mconcat
+      [ genericValidate trid,
+        validateByteStringValue unSenderCompId
+      ]
+
+instance IsField SenderCompId where
+  fieldTag Proxy = 49
+  fieldToValue = unSenderCompId
+  fieldFromValue = constructValid . SenderCompId
+
+newtype TargetCompId = TargetCompId {unTargetCompId :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity TargetCompId where
+  validate trid@TargetCompId {..} =
+    mconcat
+      [ genericValidate trid,
+        validateByteStringValue unTargetCompId
+      ]
+
+instance IsField TargetCompId where
+  fieldTag Proxy = 56
+  fieldToValue = unTargetCompId
+  fieldFromValue = constructValid . TargetCompId
 
 data EncryptionMethod
   = EncryptionMethodNoneOther
@@ -165,6 +310,23 @@ instance IsField HeartbeatInterval where
   fieldTag Proxy = 108
   fieldToValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
   fieldFromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
+
+newtype TestRequestId = TestRequestId
+  { unTestRequestId :: ByteString
+  }
+  deriving (Show, Eq, Generic)
+
+instance Validity TestRequestId where
+  validate trid@TestRequestId {..} =
+    mconcat
+      [ genericValidate trid,
+        validateByteStringValue unTestRequestId
+      ]
+
+instance IsField TestRequestId where
+  fieldTag Proxy = 112
+  fieldToValue = unTestRequestId
+  fieldFromValue = constructValid . TestRequestId
 
 class IsMessage a where
   messageType :: Proxy a -> ByteString
