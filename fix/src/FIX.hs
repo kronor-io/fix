@@ -12,6 +12,7 @@ import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Builder as ByteString
 import qualified Data.ByteString.Lazy as LB
 import Data.Maybe
+import Data.Proxy
 import Data.Validity
 import Data.Validity.ByteString ()
 import Data.Validity.Text ()
@@ -21,8 +22,10 @@ import Text.Megaparsec
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
 
+type Tag = Word
+
 newtype Message = Message
-  { messageFields :: [(Word, ByteString)]
+  { messageFields :: [(Tag, ByteString)]
   }
   deriving (Show, Eq, Generic)
 
@@ -81,6 +84,33 @@ class IsMessage a where
   toMessage :: a -> Message
   fromMessage :: Message -> Maybe a
 
+class IsField a where
+  fieldTag :: Proxy a -> Tag
+  toValue :: a -> ByteString
+  fromValue :: ByteString -> Maybe a
+
+newtype TestRequestId = TestRequestId
+  { unTestRequestId :: ByteString
+  }
+  deriving (Show, Eq, Generic)
+
+instance Validity TestRequestId where
+  validate trid@TestRequestId {..} =
+    mconcat
+      [ genericValidate trid,
+        declare "The value is nonempty" $
+          not $
+            SB.null unTestRequestId,
+        decorateList (SB.unpack unTestRequestId) $ \w ->
+          declare "The value is not '\\SOH'" $
+            w /= 1
+      ]
+
+instance IsField TestRequestId where
+  fieldTag Proxy = 112
+  toValue = unTestRequestId
+  fromValue = constructValid . TestRequestId
+
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: ByteString,
     logonMessageHeartBeatInterval :: ByteString
@@ -118,26 +148,11 @@ instance IsMessage LogonMessage where
     pure LogonMessage {..}
 
 data HeartbeatMessage = HeartbeatMessage
-  { heartbeatMessageTestRequestId :: Maybe ByteString
+  { heartbeatMessageTestRequestId :: Maybe TestRequestId
   }
   deriving (Show, Eq, Generic)
 
-instance Validity HeartbeatMessage where
-  validate hbm@HeartbeatMessage {..} =
-    mconcat
-      [ genericValidate hbm,
-        case heartbeatMessageTestRequestId of
-          Nothing -> valid
-          Just i ->
-            mconcat
-              [ declare "The test request id is nonempty" $
-                  not $
-                    SB.null i,
-                decorateList (SB.unpack i) $ \w ->
-                  declare "The value is not '\\SOH'" $
-                    w /= 1
-              ]
-      ]
+instance Validity HeartbeatMessage
 
 instance IsMessage HeartbeatMessage where
   toMessage HeartbeatMessage {..} =
@@ -145,9 +160,9 @@ instance IsMessage HeartbeatMessage where
       { messageFields =
           concat
             [ [(35, "0")],
-              [(112, testRequestId) | testRequestId <- maybeToList heartbeatMessageTestRequestId]
+              [(112, toValue testRequestId) | testRequestId <- maybeToList heartbeatMessageTestRequestId]
             ]
       }
   fromMessage (Message fields) = do
-    heartbeatMessageTestRequestId <- optional $ lookup 112 fields
+    heartbeatMessageTestRequestId <- optional $ lookup 112 fields >>= fromValue
     pure HeartbeatMessage {..}

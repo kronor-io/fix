@@ -17,6 +17,8 @@ instance GenValid Message where
             <*> (genStrictByteStringBy (genValid `suchThat` (/= 1)) `suchThat` (not . SB.null))
         )
 
+instance GenValid TestRequestId
+
 instance GenValid LogonMessage
 
 instance GenValid HeartbeatMessage
