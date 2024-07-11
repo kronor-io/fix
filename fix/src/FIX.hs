@@ -17,9 +17,11 @@ import Data.Maybe
 import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
+import Data.Time
 import Data.Validity
 import Data.Validity.ByteString ()
 import Data.Validity.Text ()
+import Data.Validity.Time ()
 import Data.Void
 import GHC.Generics (Generic)
 import Text.Megaparsec
@@ -112,6 +114,30 @@ instance IsFieldType Int where
   toValue = TE.encodeUtf8 . T.pack . show
   fromValue = readMaybe . T.unpack . TE.decodeLatin1
 
+instance IsFieldType UTCTime where
+  toValue = TE.encodeUtf8 . T.pack . formatTime defaultTimeLocale utcTimeFormat
+  fromValue = parseTimeM False defaultTimeLocale utcTimeFormat . T.unpack . TE.decodeLatin1
+
+utcTimeFormat :: String
+utcTimeFormat = "%Y%m%d-%X"
+
+mkImpreciseUTCTime :: UTCTime -> UTCTime
+mkImpreciseUTCTime u = u {utctDayTime = fromIntegral (floor (utctDayTime u) :: Word)}
+
+validateImpreciseUTCTime :: UTCTime -> Validation
+validateImpreciseUTCTime = validateImpreciseLocalTime . utcToLocalTime utc
+
+validateImpreciseLocalTime :: LocalTime -> Validation
+validateImpreciseLocalTime lt =
+  let tod = localTimeOfDay lt
+   in validateImpreciseTimeOfDay tod
+
+validateImpreciseTimeOfDay :: TimeOfDay -> Validation
+validateImpreciseTimeOfDay tod =
+  declare "The number of seconds is integer" $
+    let sec = todSec tod
+     in ceiling sec == (floor sec :: Int)
+
 class IsField a where
   fieldTag :: Proxy a -> Tag
   fieldToValue :: a -> ByteString
@@ -147,34 +173,49 @@ instance IsField BodyLength where
   fieldToValue = toValue . unBodyLength
   fieldFromValue = fromValue >=> constructValid . BodyLength
 
+newtype MessageSequenceNumber = MessageSequenceNumber {unMessageSequenceNumber :: Word}
+  deriving (Show, Eq, Generic)
+
+instance Validity MessageSequenceNumber where
+  validate trid@MessageSequenceNumber {..} =
+    mconcat
+      [ genericValidate trid,
+        declare "The body length is less than 100k" $ unMessageSequenceNumber < 100000
+      ]
+
+instance IsField MessageSequenceNumber where
+  fieldTag Proxy = 34
+  fieldToValue = toValue . unMessageSequenceNumber
+  fieldFromValue = fromValue >=> constructValid . MessageSequenceNumber
+
 data MessageType
   = MessageTypeHeartbeat
-  | MessageTypeTestRequest -- 1
-  | MessageTypeResendRequest -- 2
-  | MessageTypeReject -- 3
-  | MessageTypeSequenceReset -- 4
-  | MessageTypeLogout -- 5
-  | MessageTypeIndicationofInterest -- 6
-  | MessageTypeAdvertisement -- 7
-  | MessageTypeExecutionReport -- 8
-  | MessageTypeOrderCancelReject -- 9
-  | MessageTypeLogon -- A
-  | MessageTypeNews -- B
-  | MessageTypeEmail -- C
-  | MessageTypeNewOrderSingle -- D
-  | MessageTypeNewOrderList -- E
-  | MessageTypeOrderCancelRequest -- F
-  | MessageTypeOrderCancelReplaceRequest -- G
-  | MessageTypeOrderStatusRequest -- H
-  | MessageTypeAllocation -- J
-  | MessageTypeListCancelRequest -- K
-  | MessageTypeListExecute -- L
-  | MessageTypeListStatusRequest -- M
-  | MessageTypeListStatus -- N
-  | MessageTypeAllocationACK -- P
-  | MessageTypeDontKnowTrade -- Q
-  | MessageTypeQuoteRequest -- R
-  | MessageTypeQuote -- S
+  | MessageTypeTestRequest
+  | MessageTypeResendRequest
+  | MessageTypeReject
+  | MessageTypeSequenceReset
+  | MessageTypeLogout
+  | MessageTypeIndicationofInterest
+  | MessageTypeAdvertisement
+  | MessageTypeExecutionReport
+  | MessageTypeOrderCancelReject
+  | MessageTypeLogon
+  | MessageTypeNews
+  | MessageTypeEmail
+  | MessageTypeNewOrderSingle
+  | MessageTypeNewOrderList
+  | MessageTypeOrderCancelRequest
+  | MessageTypeOrderCancelReplaceRequest
+  | MessageTypeOrderStatusRequest
+  | MessageTypeAllocation
+  | MessageTypeListCancelRequest
+  | MessageTypeListExecute
+  | MessageTypeListStatusRequest
+  | MessageTypeListStatus
+  | MessageTypeAllocationACK
+  | MessageTypeDontKnowTrade
+  | MessageTypeQuoteRequest
+  | MessageTypeQuote
   deriving (Show, Eq, Generic)
 
 instance Validity MessageType
@@ -263,6 +304,21 @@ instance Validity TargetCompId where
       [ genericValidate trid,
         validateByteStringValue unTargetCompId
       ]
+
+newtype SendingTime = SendingTime {unSendingTime :: UTCTime}
+  deriving (Show, Eq, Generic)
+
+instance Validity SendingTime where
+  validate st@SendingTime {..} =
+    mconcat
+      [ genericValidate st,
+        validateImpreciseUTCTime unSendingTime
+      ]
+
+instance IsField SendingTime where
+  fieldTag Proxy = 52
+  fieldToValue = toValue . unSendingTime
+  fieldFromValue = fromValue >=> constructValid . SendingTime
 
 instance IsField TargetCompId where
   fieldTag Proxy = 56

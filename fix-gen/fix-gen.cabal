@@ -26,6 +26,8 @@ library
     , fix
     , genvalidity
     , genvalidity-bytestring
+    , genvalidity-text
+    , genvalidity-time
   default-language: Haskell2010
 
 test-suite fix-test

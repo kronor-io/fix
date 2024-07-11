@@ -40,12 +40,16 @@ spec = do
     fieldSpec @BeginString
   describe "BodyLength" $ do
     fieldSpec @BodyLength
+  describe "MessageSequenceNumber" $ do
+    fieldSpec @MessageSequenceNumber
   describe "MessageType" $ do
     fieldSpec @MessageType
   describe "SenderCompId" $ do
     fieldSpec @SenderCompId
   describe "TargetCompId" $ do
     fieldSpec @TargetCompId
+  describe "SendingTime" $ do
+    fieldSpec @SendingTime
   describe "EncryptionMethod" $ do
     fieldSpec @EncryptionMethod
   describe "HeartbeatInterval" $ do

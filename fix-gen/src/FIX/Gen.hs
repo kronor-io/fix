@@ -5,6 +5,8 @@ module FIX.Gen where
 import qualified Data.ByteString as SB
 import Data.GenValidity
 import Data.GenValidity.ByteString
+import Data.GenValidity.Text ()
+import Data.GenValidity.Time ()
 import FIX
 import Test.QuickCheck
 
@@ -24,11 +26,16 @@ instance GenValid BodyLength where
 
 instance GenValid MessageType
 
+instance GenValid MessageSequenceNumber
+
 instance GenValid SenderCompId
 
 instance GenValid TargetCompId
 
 instance GenValid TestRequestId
+
+instance GenValid SendingTime where
+  genValid = SendingTime . mkImpreciseUTCTime <$> genValid
 
 instance GenValid EncryptionMethod
 

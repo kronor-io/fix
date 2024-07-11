@@ -10,6 +10,8 @@ library:
   - bytestring
   - megaparsec
   - text
+  - time
   - validity
   - validity-bytestring
+  - validity-time
   - validity-text
