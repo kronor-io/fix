@@ -31,8 +31,10 @@ import Text.Read
 
 type Tag = Word
 
+type Value = ByteString
+
 newtype Message = Message
-  { messageFields :: [(Tag, ByteString)]
+  { messageFields :: [(Tag, Value)]
   }
   deriving (Show, Eq, Generic)
 
@@ -88,8 +90,8 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
     ]
 
 class IsFieldType a where
-  toValue :: a -> ByteString
-  fromValue :: ByteString -> Maybe a
+  toValue :: a -> Value
+  fromValue :: Value -> Maybe a
 
 instance IsFieldType ByteString where
   toValue = id
@@ -140,8 +142,8 @@ validateImpreciseTimeOfDay tod =
 
 class IsField a where
   fieldTag :: Proxy a -> Tag
-  fieldToValue :: a -> ByteString
-  fieldFromValue :: ByteString -> Maybe a
+  fieldToValue :: a -> Value
+  fieldFromValue :: Value -> Maybe a
 
 newtype BeginString = BeginString {unBeginString :: ByteString}
   deriving (Show, Eq, Generic)
@@ -412,16 +414,16 @@ toMessage =
     . ((35, messageType (Proxy :: Proxy a)) :)
     . toMessageFields
 
-requiredFieldB :: forall a. (IsField a) => a -> Maybe (Tag, ByteString)
+requiredFieldB :: forall a. (IsField a) => a -> Maybe (Tag, Value)
 requiredFieldB a = Just (fieldTag (Proxy :: Proxy a), fieldToValue a)
 
-optionalFieldB :: (IsField a) => Maybe a -> Maybe (Tag, ByteString)
+optionalFieldB :: (IsField a) => Maybe a -> Maybe (Tag, Value)
 optionalFieldB = (>>= requiredFieldB)
 
-requiredFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe a
+requiredFieldP :: forall a. (IsField a) => [(Tag, Value)] -> Maybe a
 requiredFieldP fields = lookup (fieldTag (Proxy :: Proxy a)) fields >>= fieldFromValue
 
-optionalFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe (Maybe a)
+optionalFieldP :: forall a. (IsField a) => [(Tag, Value)] -> Maybe (Maybe a)
 optionalFieldP fields = optional $ requiredFieldP fields
 
 data MessageHeader = MessageHeader
@@ -433,7 +435,7 @@ data MessageHeader = MessageHeader
     messageHeaderMessageSequenceNumber :: !MessageSequenceNumber
   }
 
-parseMessageHeader :: [(Tag, ByteString)] -> Maybe MessageHeader
+parseMessageHeader :: [(Tag, Value)] -> Maybe MessageHeader
 parseMessageHeader fields = do
   messageHeaderBeginString <- requiredFieldP fields
   messageHeaderBodyLength <- requiredFieldP fields
@@ -447,7 +449,7 @@ data MessageTrailer = MessageTrailer
   { messageTrailerCheckSum :: !CheckSum
   }
 
-parseMessageTrailer :: [(Tag, ByteString)] -> Maybe MessageTrailer
+parseMessageTrailer :: [(Tag, Value)] -> Maybe MessageTrailer
 parseMessageTrailer fields = do
   messageTrailerCheckSum <- requiredFieldP fields
   pure MessageTrailer {..}
