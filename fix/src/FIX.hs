@@ -85,17 +85,6 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
       BB.char7 '\SOH'
     ]
 
-class IsMessage a where
-  messageType :: Proxy a -> ByteString
-  toMessageFields :: a -> [(Tag, ByteString)]
-  fromMessage :: Message -> Maybe a
-
-toMessage :: forall a. (IsMessage a) => a -> Message
-toMessage =
-  Message
-    . ((35, messageType (Proxy :: Proxy a)) :)
-    . toMessageFields
-
 class IsField a where
   fieldTag :: Proxy a -> Tag
   toValue :: a -> ByteString
@@ -165,6 +154,29 @@ instance IsField HeartbeatInterval where
   toValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
   fromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
 
+class IsMessage a where
+  messageType :: Proxy a -> ByteString
+  toMessageFields :: a -> [(Tag, ByteString)]
+  fromMessage :: Message -> Maybe a
+
+toMessage :: forall a. (IsMessage a) => a -> Message
+toMessage =
+  Message
+    . ((35, messageType (Proxy :: Proxy a)) :)
+    . toMessageFields
+
+requiredFieldB :: forall a. (IsField a) => a -> Maybe (Tag, ByteString)
+requiredFieldB a = Just (fieldTag (Proxy :: Proxy a), toValue a)
+
+optionalFieldB :: (IsField a) => Maybe a -> Maybe (Tag, ByteString)
+optionalFieldB = (>>= requiredFieldB)
+
+requiredFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe a
+requiredFieldP fields = lookup (fieldTag (Proxy :: Proxy a)) fields >>= fromValue
+
+optionalFieldP :: forall a. (IsField a) => [(Tag, ByteString)] -> Maybe (Maybe a)
+optionalFieldP fields = optional $ requiredFieldP fields
+
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
     logonMessageHeartBeatInterval :: !HeartbeatInterval
@@ -176,12 +188,13 @@ instance Validity LogonMessage
 instance IsMessage LogonMessage where
   messageType Proxy = "A"
   toMessageFields LogonMessage {..} =
-    [ (98, toValue logonMessageEncryptMethod),
-      (108, toValue logonMessageHeartBeatInterval)
-    ]
+    catMaybes
+      [ requiredFieldB logonMessageEncryptMethod,
+        requiredFieldB logonMessageHeartBeatInterval
+      ]
   fromMessage (Message fields) = do
-    logonMessageEncryptMethod <- lookup 98 fields >>= fromValue
-    logonMessageHeartBeatInterval <- lookup 108 fields >>= fromValue
+    logonMessageEncryptMethod <- requiredFieldP fields
+    logonMessageHeartBeatInterval <- requiredFieldP fields
     pure LogonMessage {..}
 
 data HeartbeatMessage = HeartbeatMessage
@@ -194,7 +207,9 @@ instance Validity HeartbeatMessage
 instance IsMessage HeartbeatMessage where
   messageType Proxy = "0"
   toMessageFields HeartbeatMessage {..} =
-    [(112, toValue testRequestId) | testRequestId <- maybeToList heartbeatMessageTestRequestId]
+    catMaybes
+      [ optionalFieldB heartbeatMessageTestRequestId
+      ]
   fromMessage (Message fields) = do
-    heartbeatMessageTestRequestId <- optional $ lookup 112 fields >>= fromValue
+    heartbeatMessageTestRequestId <- optionalFieldP fields
     pure HeartbeatMessage {..}
