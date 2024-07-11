@@ -4,6 +4,7 @@
 
 module FIXSpec (spec) where
 
+import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import FIX
 import FIX.Gen ()
@@ -27,7 +28,9 @@ spec = do
           let rendered = renderMessage message
           rendered `shouldBe` contents
 
-  describe "LogonMessage" $ do
+  describe "TestRequestId" $ do
+    fieldSpec @TestRequestId
+  describe "HeartbeatMessage" $ do
     messageSpec @HeartbeatMessage
   describe "LogonMessage" $ do
     messageSpec @LogonMessage
@@ -50,3 +53,22 @@ messageSpec =
           Just a' -> a' `shouldBe` a
     it "renders to valid messages" $
       producesValid (toMessage :: a -> Message)
+
+fieldSpec ::
+  forall a.
+  ( Show a,
+    Eq a,
+    GenValid a,
+    IsField a
+  ) =>
+  Spec
+fieldSpec =
+  describe "fromValue" $ do
+    it "roundtrips with toValue" $
+      forAllValid $ \a -> do
+        let rendered = toValue (a :: a)
+        context (ppShow rendered) $ case fromValue rendered of
+          Nothing -> expectationFailure "Failed to parse message."
+          Just a' -> a' `shouldBe` a
+    it "renders to valid messages" $
+      producesValid (toValue :: a -> ByteString)
