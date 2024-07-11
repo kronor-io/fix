@@ -33,23 +33,42 @@ type Tag = Word
 
 type Value = ByteString
 
+data Field
+  = FieldSimple
+      -- Tag of the field
+      Tag
+      -- Value, may not contain SOH chars.
+      Value
+  | FieldData
+      -- Tag of the length field
+      -- Tag of the value field will be one more
+      Tag
+      -- Value, may contain SOH chars.
+      ByteString
+  deriving (Show, Eq, Generic)
+
+instance Validity Field where
+  validate f =
+    mconcat
+      [ genericValidate f,
+        case f of
+          FieldSimple _ v ->
+            concat
+              [ declare "The value is nonempty" $ not (SB.null v),
+                decorateList (SB.unpack value) $ \w ->
+                  declare "The value is not '\\SOH'" $
+                    w /= 1
+              ]
+          FieldData _ d ->
+            declare "The value is nonempty" $ not (SB.null v)
+      ]
+
 newtype Message = Message
-  { messageFields :: [(Tag, Value)]
+  { messageFields :: [Field]
   }
   deriving (Show, Eq, Generic)
 
-instance Validity Message where
-  validate m@(Message fields) =
-    mconcat
-      [ genericValidate m,
-        decorateList fields $ \(_, value) ->
-          mconcat
-            [ declare "The value is nonempty" $ not (SB.null value),
-              decorateList (SB.unpack value) $ \w ->
-                declare "The value is not '\\SOH'" $
-                  w /= 1
-            ]
-      ]
+instance Validity Message
 
 parseMessage :: ByteString -> Either String Message
 parseMessage = left errorBundlePretty . parse messageP "<pure>"
