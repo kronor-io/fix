@@ -4,10 +4,13 @@
 
 module FIXSpec (spec) where
 
+import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import FIX
 import FIX.Gen ()
+import Path
+import Path.IO
 import Test.Syd
 import Test.Syd.Validity
 
@@ -31,9 +34,9 @@ spec = do
   describe "TestRequestId" $ do
     fieldSpec @TestRequestId
   describe "HeartbeatMessage" $ do
-    messageSpec @HeartbeatMessage
+    messageSpec @HeartbeatMessage "heartbeat"
   describe "LogonMessage" $ do
-    messageSpec @LogonMessage
+    messageSpec @LogonMessage "logon"
 
 messageSpec ::
   forall a.
@@ -42,8 +45,9 @@ messageSpec ::
     GenValid a,
     IsMessage a
   ) =>
+  FilePath ->
   Spec
-messageSpec =
+messageSpec dir =
   describe "fromMessage" $ do
     it "roundtrips with toMessage" $
       forAllValid $ \a -> do
@@ -53,6 +57,24 @@ messageSpec =
           Just a' -> a' `shouldBe` a
     it "renders to valid messages" $
       producesValid (toMessage :: a -> Message)
+
+    scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
+      af <- resolveFile' fp
+      when (fileExtension af == Just ".tagvalue") $
+        it "can parse this message and roundtrip it" $ do
+          contents <- SB.readFile (fromAbsFile af)
+          case parseMessage contents of
+            Left err -> expectationFailure err
+            Right message -> case fromMessage message of
+              Nothing -> expectationFailure "Could not parse typed message from untyped message"
+              Just a -> do
+                shouldBeValid (a :: a)
+                -- TODO include these tests too:
+                -- let renderedMessage = toMessage a
+                -- renderedMessage `shouldBe` message
+                -- let renderedBytes = renderMessage renderedMessage
+                -- renderedBytes `shouldBe` content
+                pure ()
 
 fieldSpec ::
   forall a.

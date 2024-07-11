@@ -9,6 +9,8 @@ version:        0.0.0.0
 build-type:     Simple
 extra-source-files:
     test_resources/messages/example.tagvalue
+    test_resources/messages/heartbeat/example.tagvalue
+    test_resources/messages/logon/example.tagvalue
 
 library
   exposed-modules:
@@ -43,5 +45,7 @@ test-suite fix-test
     , fix
     , fix-gen
     , genvalidity-sydtest
+    , path
+    , path-io
     , sydtest
   default-language: Haskell2010
