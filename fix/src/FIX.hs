@@ -85,6 +85,18 @@ buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
       BB.char7 '\SOH'
     ]
 
+class IsFieldType a where
+  toValue :: a -> ByteString
+  fromValue :: ByteString -> Maybe a
+
+instance IsFieldType ByteString where
+  toValue = id
+  fromValue = Just
+
+instance IsFieldType Int where
+  toValue = TE.encodeUtf8 . T.pack . show
+  fromValue = readMaybe . T.unpack . TE.decodeLatin1
+
 class IsField a where
   fieldTag :: Proxy a -> Tag
   fieldToValue :: a -> ByteString
