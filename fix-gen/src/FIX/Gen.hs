@@ -39,6 +39,12 @@ instance GenValid Field where
 
 instance GenValid Message
 
+instance GenValid MessageHeader
+
+instance GenValid MessageTrailer
+
+instance (GenValid a) => GenValid (Envelope a)
+
 instance GenValid BeginString
 
 instance GenValid CheckSum where

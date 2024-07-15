@@ -29,8 +29,28 @@ spec = do
       case parseMessage contents of
         Left err -> expectationFailure err
         Right message -> do
+          shouldBeValid message
           let rendered = renderMessage message
           rendered `shouldBe` contents
+
+  xdescribe "Doesn't hold yet because we don't consume fields" $ do
+    describe "envelopeToMessage" $
+      it "roundtrips with envelopeFromMessage" $
+        forAllValid $ \envelope ->
+          envelopeFromMessage (envelopeToMessage envelope) `shouldBe` Just envelope
+    describe "envelopeFromMessage" $ do
+      it "can roundtrip this message" $ do
+        contents <- SB.readFile "test_resources/messages/example.tagvalue"
+        case parseMessage contents of
+          Left err -> expectationFailure err
+          Right message -> case envelopeFromMessage message of
+            Nothing -> expectationFailure "Failed to parse envelope"
+            Just envelope -> do
+              shouldBeValid envelope
+              let renderedMessage = envelopeToMessage envelope
+              renderedMessage `shouldBe` message
+              let rendered = renderMessage message
+              rendered `shouldBe` contents
 
   fieldTypeSpec @ByteString
   fieldTypeSpec @Int
@@ -139,13 +159,20 @@ messageSpec dir = do
         contents <- SB.readFile (fromAbsFile af)
         case parseMessage contents of
           Left err -> expectationFailure err
-          Right message -> case fromMessage message of
-            Nothing -> expectationFailure "Could not parse typed message from untyped message"
-            Just a -> do
-              shouldBeValid (a :: a)
-              -- TODO include these tests too:
-              -- let renderedMessage = toMessage a
-              -- renderedMessage `shouldBe` message
-              -- let renderedBytes = renderMessage renderedMessage
-              -- renderedBytes `shouldBe` content
-              pure ()
+          Right message -> case envelopeFromMessage message of
+            Nothing -> expectationFailure "Could not parse message envelope from untyped message"
+            Just envelope -> case fromMessageEnvelope envelope of
+              Nothing -> expectationFailure "Could not parse typed message from untyped message"
+              Just a -> do
+                shouldBeValid (a :: Envelope a)
+                -- TODO include these tests too:
+                let renderedEnvelope = toMessageEnvelope a
+                shouldBeValid renderedEnvelope
+                -- renderedEnvelope `shouldBe` envelope
+                let renderedMessage = envelopeToMessage renderedEnvelope
+                shouldBeValid renderedMessage
+                -- renderedMessage `shouldBe` message
+                let renderedBytes = renderMessage renderedMessage
+                shouldBeValid renderedBytes
+                -- renderedBytes `shouldBe` contents
+                pure ()

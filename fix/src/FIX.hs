@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -174,6 +175,24 @@ data Envelope a = Envelope
     envelopeContents :: a,
     envelopeTrailer :: MessageTrailer
   }
+  deriving (Show, Eq, Functor, Foldable, Traversable, Generic)
+
+instance (Validity a) => Validity (Envelope a)
+
+envelopeFromMessage :: Message -> Maybe (Envelope Message)
+envelopeFromMessage m =
+  -- TODO consume fields
+  Envelope
+    <$> parseMessageHeader (messageFields m)
+    <*> pure m
+    <*> parseMessageTrailer (messageFields m)
+
+envelopeToMessage :: Envelope Message -> Message
+envelopeToMessage Envelope {..} =
+  Message $
+    renderMessageHeader envelopeHeader
+      <> messageFields envelopeContents
+      <> renderMessageTrailer envelopeTrailer
 
 class IsFieldType a where
   toValue :: a -> ByteString
@@ -502,31 +521,42 @@ instance IsField TestRequestId where
   fieldFromValue = constructValid . TestRequestId
 
 class IsMessage a where
-  messageType :: Proxy a -> ByteString
+  messageType :: Proxy a -> MessageType
   toMessageFields :: a -> [Field]
   fromMessageFields :: [Field] -> Maybe a
 
 toMessage :: forall a. (IsMessage a) => a -> Message
 toMessage =
   Message
-    . (Field 35 (ValueSimple (messageType (Proxy :: Proxy a))) :)
+    . (fieldB (messageType (Proxy :: Proxy a)) :)
     . toMessageFields
 
 fromMessage :: forall a. (IsMessage a) => Message -> Maybe a
 fromMessage = fromMessageFields . messageFields
 
-requiredFieldB :: forall a. (IsField a) => a -> Maybe Field
-requiredFieldB a =
+toMessageEnvelope :: (IsMessage a) => Envelope a -> Envelope Message
+toMessageEnvelope = fmap toMessage
+
+fromMessageEnvelope :: forall a. (IsMessage a) => Envelope Message -> Maybe (Envelope a)
+fromMessageEnvelope envelope =
+  if messageHeaderMessageType (envelopeHeader envelope) == messageType (Proxy :: Proxy a)
+    then traverse fromMessage envelope
+    else Nothing
+
+fieldB :: forall a. (IsField a) => a -> Field
+fieldB a =
   let p = (Proxy :: Proxy a)
-   in Just $
-        Field
-          (fieldTag p)
-          ( ( if fieldIsData p
-                then ValueData
-                else ValueSimple
-            )
-              (fieldToValue a)
+   in Field
+        (fieldTag p)
+        ( ( if fieldIsData p
+              then ValueData
+              else ValueSimple
           )
+            (fieldToValue a)
+        )
+
+requiredFieldB :: (IsField a) => a -> Maybe Field
+requiredFieldB = Just . fieldB
 
 optionalFieldB :: (IsField a) => Maybe a -> Maybe Field
 optionalFieldB = (>>= requiredFieldB)
@@ -547,6 +577,9 @@ data MessageHeader = MessageHeader
     messageHeaderTarget :: !TargetCompId,
     messageHeaderMessageSequenceNumber :: !MessageSequenceNumber
   }
+  deriving (Show, Eq, Generic)
+
+instance Validity MessageHeader
 
 parseMessageHeader :: [Field] -> Maybe MessageHeader
 parseMessageHeader fields = do
@@ -558,14 +591,34 @@ parseMessageHeader fields = do
   messageHeaderMessageSequenceNumber <- requiredFieldP fields
   pure MessageHeader {..}
 
+renderMessageHeader :: MessageHeader -> [Field]
+renderMessageHeader MessageHeader {..} =
+  catMaybes
+    [ requiredFieldB messageHeaderBeginString,
+      requiredFieldB messageHeaderBodyLength,
+      requiredFieldB messageHeaderMessageType,
+      requiredFieldB messageHeaderSender,
+      requiredFieldB messageHeaderTarget,
+      requiredFieldB messageHeaderMessageSequenceNumber
+    ]
+
 data MessageTrailer = MessageTrailer
   { messageTrailerCheckSum :: !CheckSum
   }
+  deriving (Show, Eq, Generic)
+
+instance Validity MessageTrailer
 
 parseMessageTrailer :: [Field] -> Maybe MessageTrailer
 parseMessageTrailer fields = do
   messageTrailerCheckSum <- requiredFieldP fields
   pure MessageTrailer {..}
+
+renderMessageTrailer :: MessageTrailer -> [Field]
+renderMessageTrailer MessageTrailer {..} =
+  catMaybes
+    [ requiredFieldB messageTrailerCheckSum
+    ]
 
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
@@ -576,7 +629,7 @@ data LogonMessage = LogonMessage
 instance Validity LogonMessage
 
 instance IsMessage LogonMessage where
-  messageType Proxy = "A"
+  messageType Proxy = MessageTypeLogon
   toMessageFields LogonMessage {..} =
     catMaybes
       [ requiredFieldB logonMessageEncryptMethod,
@@ -595,7 +648,7 @@ data HeartbeatMessage = HeartbeatMessage
 instance Validity HeartbeatMessage
 
 instance IsMessage HeartbeatMessage where
-  messageType Proxy = "0"
+  messageType Proxy = MessageTypeHeartbeat
   toMessageFields HeartbeatMessage {..} =
     catMaybes
       [ optionalFieldB heartbeatMessageTestRequestId
