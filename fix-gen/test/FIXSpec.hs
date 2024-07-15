@@ -124,7 +124,7 @@ messageSpec dir = do
     it "roundtrips with toMessage" $
       forAllValid $ \a -> do
         let rendered = toMessage (a :: a)
-        context (ppShow rendered) $ case fromMessage (messageFields rendered) of
+        context (ppShow rendered) $ case fromMessage rendered of
           Nothing -> expectationFailure "Failed to parse message."
           Just a' -> a' `shouldBe` a
 
@@ -139,7 +139,7 @@ messageSpec dir = do
         contents <- SB.readFile (fromAbsFile af)
         case parseMessage contents of
           Left err -> expectationFailure err
-          Right message -> case fromMessage (messageFields message) of
+          Right message -> case fromMessage message of
             Nothing -> expectationFailure "Could not parse typed message from untyped message"
             Just a -> do
               shouldBeValid (a :: a)

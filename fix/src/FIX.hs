@@ -169,6 +169,12 @@ buildMessage (Message fields) = flip foldMap fields $ \(Field w v) ->
           BB.char7 '\SOH'
         ]
 
+data Envelope a = Envelope
+  { envelopeHeader :: MessageHeader,
+    envelopeContents :: a,
+    envelopeTrailer :: MessageTrailer
+  }
+
 class IsFieldType a where
   toValue :: a -> ByteString
   fromValue :: ByteString -> Maybe a
@@ -498,13 +504,16 @@ instance IsField TestRequestId where
 class IsMessage a where
   messageType :: Proxy a -> ByteString
   toMessageFields :: a -> [Field]
-  fromMessage :: [Field] -> Maybe a
+  fromMessageFields :: [Field] -> Maybe a
 
 toMessage :: forall a. (IsMessage a) => a -> Message
 toMessage =
   Message
     . (Field 35 (ValueSimple (messageType (Proxy :: Proxy a))) :)
     . toMessageFields
+
+fromMessage :: forall a. (IsMessage a) => Message -> Maybe a
+fromMessage = fromMessageFields . messageFields
 
 requiredFieldB :: forall a. (IsField a) => a -> Maybe Field
 requiredFieldB a =
@@ -573,7 +582,7 @@ instance IsMessage LogonMessage where
       [ requiredFieldB logonMessageEncryptMethod,
         requiredFieldB logonMessageHeartBeatInterval
       ]
-  fromMessage fields = do
+  fromMessageFields fields = do
     logonMessageEncryptMethod <- requiredFieldP fields
     logonMessageHeartBeatInterval <- requiredFieldP fields
     pure LogonMessage {..}
@@ -591,6 +600,6 @@ instance IsMessage HeartbeatMessage where
     catMaybes
       [ optionalFieldB heartbeatMessageTestRequestId
       ]
-  fromMessage fields = do
+  fromMessageFields fields = do
     heartbeatMessageTestRequestId <- optionalFieldP fields
     pure HeartbeatMessage {..}
