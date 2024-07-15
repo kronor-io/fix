@@ -13,6 +13,7 @@ import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Builder as ByteString
 import qualified Data.ByteString.Lazy as LB
+import Data.List (find)
 import Data.Maybe
 import Data.Proxy
 import qualified Data.Text as T
@@ -31,36 +32,56 @@ import Text.Read
 
 type Tag = Word
 
-type Value = ByteString
+data Value
+  = -- Simple value
+    -- May not be empty
+    -- May not contain SOH chars
 
-data Field
-  = FieldSimple
-      -- Tag of the field
-      Tag
-      -- Value, may not contain SOH chars.
-      Value
-  | FieldData
-      -- Tag of the length field
-      -- Tag of the value field will be one more
-      Tag
-      -- Value, may contain SOH chars.
-      ByteString
+    ValueSimple ByteString
+  | -- Data value
+    -- May not be empty
+    -- May not contain SOH chars
+    ValueData ByteString
   deriving (Show, Eq, Generic)
 
-instance Validity Field where
-  validate f =
+instance Validity Value where
+  validate v =
     mconcat
-      [ genericValidate f,
-        case f of
-          FieldSimple _ v ->
-            concat
-              [ declare "The value is nonempty" $ not (SB.null v),
-                decorateList (SB.unpack value) $ \w ->
+      [ genericValidate v,
+        case v of
+          ValueSimple d ->
+            mconcat
+              [ declare "The value is nonempty" $ not (SB.null d),
+                decorateList (SB.unpack d) $ \w ->
                   declare "The value is not '\\SOH'" $
                     w /= 1
               ]
-          FieldData _ d ->
-            declare "The value is nonempty" $ not (SB.null v)
+          ValueData d ->
+            declare "The value is nonempty" $ not (SB.null d)
+      ]
+
+valueByteString :: Value -> ByteString
+valueByteString = \case
+  ValueSimple bs -> bs
+  ValueData bs -> bs
+
+-- TODO use a boolean instead
+
+data Field
+  = Field
+      -- If the value is ValueSimple, this is the field tag.
+      -- If the value is ValueData, this is the length field tag.
+      !Tag
+      !Value
+  deriving (Show, Eq, Generic)
+
+instance Validity Field where
+  validate f@(Field t v) =
+    mconcat
+      [ genericValidate f,
+        case v of
+          ValueSimple _ -> declare "The tag is not a length tag" $ not $ tagIsLen t
+          ValueData _ -> declare "The tag is a length tag" $ tagIsLen t
       ]
 
 newtype Message = Message
@@ -92,25 +113,65 @@ messageP = Message <$> many fieldP
     fieldP = do
       tag <- decimal
       void $ char 61 -- '='
-      value <- SB.pack <$> many (noneOf [1])
-      void $ char 1 -- 'SOH'
-      pure (tag, value)
+      if tagIsLen tag
+        then do
+          len <- decimal
+          void $ char 1 -- 'SOH'
+          dataTag <- decimal
+          guard $ dataTag == succ tag
+          void $ char 61 -- '='
+          value <- takeP (Just "octet") len
+          pure $ Field tag $ ValueData value
+        else do
+          value <- SB.pack <$> many (noneOf [1])
+          void $ char 1 -- 'SOH'
+          pure $ Field tag $ ValueSimple value
+
+-- TODO Generate this?
+tagIsLen :: Tag -> Bool
+tagIsLen = \case
+  90 -> True
+  360 -> True
+  358 -> True
+  348 -> True
+  618 -> True
+  352 -> True
+  445 -> True
+  350 -> True
+  356 -> True
+  354 -> True
+  362 -> True
+  364 -> True
+  _ -> False
 
 renderMessage :: Message -> ByteString
 renderMessage = LB.toStrict . BB.toLazyByteString . buildMessage
 
 buildMessage :: Message -> ByteString.Builder
-buildMessage (Message fields) = flip foldMap fields $ \(w, bs) ->
-  mconcat
-    [ BB.wordDec w,
-      BB.char7 '=',
-      BB.byteString bs,
-      BB.char7 '\SOH'
-    ]
+buildMessage (Message fields) = flip foldMap fields $ \(Field w v) ->
+  case v of
+    ValueSimple bs ->
+      mconcat
+        [ BB.wordDec w,
+          BB.char7 '=',
+          BB.byteString bs,
+          BB.char7 '\SOH'
+        ]
+    ValueData bs ->
+      mconcat
+        [ BB.wordDec w,
+          BB.char7 '=',
+          BB.intDec $ SB.length bs,
+          BB.char7 '\SOH',
+          BB.wordDec (succ w),
+          BB.char7 '=',
+          BB.byteString bs,
+          BB.char7 '\SOH'
+        ]
 
 class IsFieldType a where
-  toValue :: a -> Value
-  fromValue :: Value -> Maybe a
+  toValue :: a -> ByteString
+  fromValue :: ByteString -> Maybe a
 
 instance IsFieldType ByteString where
   toValue = id
@@ -161,8 +222,9 @@ validateImpreciseTimeOfDay tod =
 
 class IsField a where
   fieldTag :: Proxy a -> Tag
-  fieldToValue :: a -> Value
-  fieldFromValue :: Value -> Maybe a
+  fieldIsData :: Proxy a -> Bool
+  fieldToValue :: a -> ByteString
+  fieldFromValue :: ByteString -> Maybe a
 
 newtype BeginString = BeginString {unBeginString :: ByteString}
   deriving (Show, Eq, Generic)
@@ -176,6 +238,7 @@ instance Validity BeginString where
 
 instance IsField BeginString where
   fieldTag Proxy = 8
+  fieldIsData Proxy = False
   fieldToValue = unBeginString
   fieldFromValue = constructValid . BeginString
 
@@ -191,6 +254,7 @@ instance Validity BodyLength where
 
 instance IsField BodyLength where
   fieldTag Proxy = 9
+  fieldIsData Proxy = False
   fieldToValue = toValue . unBodyLength
   fieldFromValue = fromValue >=> constructValid . BodyLength
 
@@ -208,6 +272,7 @@ instance Validity CheckSum where
 
 instance IsField CheckSum where
   fieldTag Proxy = 10
+  fieldIsData Proxy = False
   fieldToValue = unCheckSum
   fieldFromValue = constructValid . CheckSum
 
@@ -223,6 +288,7 @@ instance Validity MessageSequenceNumber where
 
 instance IsField MessageSequenceNumber where
   fieldTag Proxy = 34
+  fieldIsData Proxy = False
   fieldToValue = toValue . unMessageSequenceNumber
   fieldFromValue = fromValue >=> constructValid . MessageSequenceNumber
 
@@ -260,6 +326,7 @@ instance Validity MessageType
 
 instance IsField MessageType where
   fieldTag Proxy = 35
+  fieldIsData Proxy = False
   fieldFromValue = \case
     "0" -> Just MessageTypeHeartbeat
     "1" -> Just MessageTypeTestRequest
@@ -330,6 +397,7 @@ instance Validity SenderCompId where
 
 instance IsField SenderCompId where
   fieldTag Proxy = 49
+  fieldIsData Proxy = False
   fieldToValue = unSenderCompId
   fieldFromValue = constructValid . SenderCompId
 
@@ -355,11 +423,13 @@ instance Validity SendingTime where
 
 instance IsField SendingTime where
   fieldTag Proxy = 52
+  fieldIsData Proxy = False
   fieldToValue = toValue . unSendingTime
   fieldFromValue = fromValue >=> constructValid . SendingTime
 
 instance IsField TargetCompId where
   fieldTag Proxy = 56
+  fieldIsData Proxy = False
   fieldToValue = unTargetCompId
   fieldFromValue = constructValid . TargetCompId
 
@@ -377,6 +447,7 @@ instance Validity EncryptionMethod
 
 instance IsField EncryptionMethod where
   fieldTag Proxy = 98
+  fieldIsData Proxy = False
   fieldToValue = \case
     EncryptionMethodNoneOther -> "0"
     EncryptionMethodPKCS -> "1"
@@ -402,6 +473,7 @@ instance Validity HeartbeatInterval
 
 instance IsField HeartbeatInterval where
   fieldTag Proxy = 108
+  fieldIsData Proxy = False
   fieldToValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
   fieldFromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
 
@@ -419,30 +491,43 @@ instance Validity TestRequestId where
 
 instance IsField TestRequestId where
   fieldTag Proxy = 112
+  fieldIsData Proxy = False
   fieldToValue = unTestRequestId
   fieldFromValue = constructValid . TestRequestId
 
 class IsMessage a where
   messageType :: Proxy a -> ByteString
-  toMessageFields :: a -> [(Tag, ByteString)]
-  fromMessage :: Message -> Maybe a
+  toMessageFields :: a -> [Field]
+  fromMessage :: [Field] -> Maybe a
 
 toMessage :: forall a. (IsMessage a) => a -> Message
 toMessage =
   Message
-    . ((35, messageType (Proxy :: Proxy a)) :)
+    . (Field 35 (ValueSimple (messageType (Proxy :: Proxy a))) :)
     . toMessageFields
 
-requiredFieldB :: forall a. (IsField a) => a -> Maybe (Tag, Value)
-requiredFieldB a = Just (fieldTag (Proxy :: Proxy a), fieldToValue a)
+requiredFieldB :: forall a. (IsField a) => a -> Maybe Field
+requiredFieldB a =
+  let p = (Proxy :: Proxy a)
+   in Just $
+        Field
+          (fieldTag p)
+          ( ( if fieldIsData p
+                then ValueData
+                else ValueSimple
+            )
+              (fieldToValue a)
+          )
 
-optionalFieldB :: (IsField a) => Maybe a -> Maybe (Tag, Value)
+optionalFieldB :: (IsField a) => Maybe a -> Maybe Field
 optionalFieldB = (>>= requiredFieldB)
 
-requiredFieldP :: forall a. (IsField a) => [(Tag, Value)] -> Maybe a
-requiredFieldP fields = lookup (fieldTag (Proxy :: Proxy a)) fields >>= fieldFromValue
+requiredFieldP :: forall a. (IsField a) => [Field] -> Maybe a
+requiredFieldP fields =
+  find (\(Field t _) -> t == fieldTag (Proxy :: Proxy a)) fields
+    >>= fieldFromValue . (\(Field _ v) -> valueByteString v)
 
-optionalFieldP :: forall a. (IsField a) => [(Tag, Value)] -> Maybe (Maybe a)
+optionalFieldP :: forall a. (IsField a) => [Field] -> Maybe (Maybe a)
 optionalFieldP fields = optional $ requiredFieldP fields
 
 data MessageHeader = MessageHeader
@@ -454,7 +539,7 @@ data MessageHeader = MessageHeader
     messageHeaderMessageSequenceNumber :: !MessageSequenceNumber
   }
 
-parseMessageHeader :: [(Tag, Value)] -> Maybe MessageHeader
+parseMessageHeader :: [Field] -> Maybe MessageHeader
 parseMessageHeader fields = do
   messageHeaderBeginString <- requiredFieldP fields
   messageHeaderBodyLength <- requiredFieldP fields
@@ -468,7 +553,7 @@ data MessageTrailer = MessageTrailer
   { messageTrailerCheckSum :: !CheckSum
   }
 
-parseMessageTrailer :: [(Tag, Value)] -> Maybe MessageTrailer
+parseMessageTrailer :: [Field] -> Maybe MessageTrailer
 parseMessageTrailer fields = do
   messageTrailerCheckSum <- requiredFieldP fields
   pure MessageTrailer {..}
@@ -488,7 +573,7 @@ instance IsMessage LogonMessage where
       [ requiredFieldB logonMessageEncryptMethod,
         requiredFieldB logonMessageHeartBeatInterval
       ]
-  fromMessage (Message fields) = do
+  fromMessage fields = do
     logonMessageEncryptMethod <- requiredFieldP fields
     logonMessageHeartBeatInterval <- requiredFieldP fields
     pure LogonMessage {..}
@@ -506,6 +591,6 @@ instance IsMessage HeartbeatMessage where
     catMaybes
       [ optionalFieldB heartbeatMessageTestRequestId
       ]
-  fromMessage (Message fields) = do
+  fromMessage fields = do
     heartbeatMessageTestRequestId <- optionalFieldP fields
     pure HeartbeatMessage {..}
