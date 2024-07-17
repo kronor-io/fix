@@ -1,4 +1,5 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
@@ -7,6 +8,7 @@ module FIXSpec (spec) where
 import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
+import Data.Time
 import Data.Typeable
 import FIX
 import FIX.Gen ()
@@ -33,28 +35,17 @@ spec = do
           let rendered = renderMessage message
           rendered `shouldBe` contents
 
-  xdescribe "Doesn't hold yet because we don't consume fields" $ do
-    describe "envelopeToMessage" $
-      it "roundtrips with envelopeFromMessage" $
-        forAllValid $ \envelope ->
-          envelopeFromMessage (envelopeToMessage envelope) `shouldBe` Just envelope
-    describe "envelopeFromMessage" $ do
-      it "can roundtrip this message" $ do
-        contents <- SB.readFile "test_resources/messages/example.tagvalue"
-        case parseMessage contents of
-          Left err -> expectationFailure err
-          Right message -> case envelopeFromMessage message of
-            Nothing -> expectationFailure "Failed to parse envelope"
-            Just envelope -> do
-              shouldBeValid envelope
-              let renderedMessage = envelopeToMessage envelope
-              renderedMessage `shouldBe` message
-              let rendered = renderMessage message
-              rendered `shouldBe` contents
-
   fieldTypeSpec @ByteString
   fieldTypeSpec @Int
   fieldTypeSpec @Word
+  describe "UTCTime" $ do
+    fieldTypeExampleSpec
+      "20190605-11:57:29.363"
+      (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.363)))
+    fieldTypeExampleSpec
+      "20190605-11:57:29.360"
+      (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.360)))
+    fieldTypeSpec @UTCTime
 
   describe "BeginString" $ do
     fieldSpec @BeginString
@@ -100,11 +91,30 @@ fieldTypeSpec = do
       forAllValid $ \a -> do
         let rendered = toValue (a :: a)
         context (ppShow rendered) $ case fromValue rendered of
-          Nothing -> expectationFailure "Failed to parse field type value."
-          Just a' -> a' `shouldBe` a
+          Left err ->
+            expectationFailure $
+              unlines
+                [ "Failed to parse field type value:",
+                  err
+                ]
+          Right a' -> a' `shouldBe` a
   describe "toValue" $ do
     it "renders to valid messages" $
       producesValid (toValue :: a -> ByteString)
+
+fieldTypeExampleSpec ::
+  forall a.
+  (Show a, Eq a, IsFieldType a) =>
+  ByteString ->
+  a ->
+  Spec
+fieldTypeExampleSpec rendered parsed = do
+  it (unwords ["can render", show parsed, "to", show rendered]) $
+    toValue parsed `shouldBe` rendered
+  it (unwords ["can parse", show rendered, "to", show parsed]) $
+    case fromValue rendered of
+      Left err -> expectationFailure $ "Failed to parse: " <> err
+      Right actual -> actual `shouldBe` parsed
 
 fieldSpec ::
   forall a.
@@ -122,8 +132,13 @@ fieldSpec = do
       forAllValid $ \a -> do
         let rendered = fieldToValue (a :: a)
         context (ppShow rendered) $ case fieldFromValue rendered of
-          Nothing -> expectationFailure "Failed to parse field."
-          Just a' -> a' `shouldBe` a
+          Left err ->
+            expectationFailure $
+              unlines
+                [ "Failed to parse field.",
+                  err
+                ]
+          Right a' -> a' `shouldBe` a
   describe "fieldToValue" $ do
     it "renders to valid messages" $
       producesValid (fieldToValue :: a -> ByteString)
@@ -142,15 +157,21 @@ messageSpec dir = do
   genValidSpec @a
   describe "fromMessage" $ do
     it "roundtrips with toMessage" $
-      forAllValid $ \a -> do
-        let rendered = toMessage (a :: a)
+      forAllValid $ \envelopePrototype -> do
+        let envelope = envelopePrototype {envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}}
+        let rendered = toMessage (envelope :: Envelope a)
         context (ppShow rendered) $ case fromMessage rendered of
-          Nothing -> expectationFailure "Failed to parse message."
-          Just a' -> a' `shouldBe` a
+          Left parseErr ->
+            expectationFailure $
+              unlines
+                [ "Failed to parse message.",
+                  show parseErr
+                ]
+          Right envelope' -> envelope' `shouldBe` envelope
 
   describe "toMessage" $ do
     it "renders to valid messages" $
-      producesValid (toMessage :: a -> Message)
+      producesValid (toMessage :: Envelope a -> Message)
 
   scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
     af <- resolveFile' fp
@@ -159,20 +180,18 @@ messageSpec dir = do
         contents <- SB.readFile (fromAbsFile af)
         case parseMessage contents of
           Left err -> expectationFailure err
-          Right message -> case envelopeFromMessage message of
-            Nothing -> expectationFailure "Could not parse message envelope from untyped message"
-            Just envelope -> case fromMessageEnvelope envelope of
-              Nothing -> expectationFailure "Could not parse typed message from untyped message"
-              Just a -> do
-                shouldBeValid (a :: Envelope a)
-                -- TODO include these tests too:
-                let renderedEnvelope = toMessageEnvelope a
-                shouldBeValid renderedEnvelope
-                -- renderedEnvelope `shouldBe` envelope
-                let renderedMessage = envelopeToMessage renderedEnvelope
-                shouldBeValid renderedMessage
-                -- renderedMessage `shouldBe` message
-                let renderedBytes = renderMessage renderedMessage
-                shouldBeValid renderedBytes
-                -- renderedBytes `shouldBe` contents
-                pure ()
+          Right message -> case fromMessage message of
+            Left parseErr ->
+              expectationFailure $
+                unlines
+                  [ "Could not parse message envelope from untyped message:",
+                    show parseErr
+                  ]
+            Right a -> do
+              shouldBeValid (a :: Envelope a)
+              let renderedMessage = toMessage a
+              shouldBeValid renderedMessage
+              renderedMessage `shouldBe` message
+              let renderedBytes = renderMessage renderedMessage
+              shouldBeValid renderedBytes
+              renderedBytes `shouldBe` contents

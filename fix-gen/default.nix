@@ -1,7 +1,7 @@
 { mkDerivation, base, bytestring, fix, genvalidity
 , genvalidity-bytestring, genvalidity-sydtest, genvalidity-text
 , genvalidity-time, lib, path, path-io, QuickCheck, sydtest
-, sydtest-discover
+, sydtest-discover, time
 }:
 mkDerivation {
   pname = "fix-gen";
@@ -12,7 +12,7 @@ mkDerivation {
     genvalidity-text genvalidity-time QuickCheck
   ];
   testHaskellDepends = [
-    base bytestring fix genvalidity-sydtest path path-io sydtest
+    base bytestring fix genvalidity-sydtest path path-io sydtest time
   ];
   testToolDepends = [ sydtest-discover ];
   license = "unknown";

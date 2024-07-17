@@ -67,6 +67,8 @@ instance GenValid TargetCompId
 
 instance GenValid TestRequestId
 
+instance GenValid ResetSequenceNumbersFlag
+
 instance GenValid SendingTime where
   genValid = SendingTime . mkImpreciseUTCTime <$> genValid
 

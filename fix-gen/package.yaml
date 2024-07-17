@@ -32,6 +32,7 @@ tests:
     - fix
     - fix-gen
     - genvalidity-sydtest
-    - sydtest
     - path
     - path-io
+    - sydtest
+    - time

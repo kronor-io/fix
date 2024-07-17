@@ -50,4 +50,5 @@ test-suite fix-test
     , path
     , path-io
     , sydtest
+    , time
   default-language: Haskell2010

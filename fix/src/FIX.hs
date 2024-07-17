@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -7,14 +6,15 @@
 
 module FIX where
 
-import Control.Arrow (left)
+import Control.Arrow (left, second)
 import Control.Monad
+import Control.Monad.Except
+import Control.Monad.State
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Builder as ByteString
 import qualified Data.ByteString.Lazy as LB
-import Data.List (find)
 import Data.Maybe
 import Data.Proxy
 import qualified Data.Text as T
@@ -29,7 +29,7 @@ import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
-import Text.Read
+import Text.Read (readMaybe)
 
 type Tag = Word
 
@@ -175,32 +175,26 @@ data Envelope a = Envelope
     envelopeContents :: a,
     envelopeTrailer :: MessageTrailer
   }
-  deriving (Show, Eq, Functor, Foldable, Traversable, Generic)
+  deriving (Show, Eq, Generic)
 
 instance (Validity a) => Validity (Envelope a)
 
-envelopeFromMessage :: Message -> Maybe (Envelope Message)
-envelopeFromMessage m =
-  -- TODO consume fields
-  Envelope
-    <$> parseMessageHeader (messageFields m)
-    <*> pure m
-    <*> parseMessageTrailer (messageFields m)
-
-envelopeToMessage :: Envelope Message -> Message
-envelopeToMessage Envelope {..} =
-  Message $
-    renderMessageHeader envelopeHeader
-      <> messageFields envelopeContents
-      <> renderMessageTrailer envelopeTrailer
-
 class IsFieldType a where
   toValue :: a -> ByteString
-  fromValue :: ByteString -> Maybe a
+  fromValue :: ByteString -> Either String a
+
+instance IsFieldType Bool where
+  toValue = \case
+    True -> "Y"
+    False -> "N"
+  fromValue = \case
+    "Y" -> Right True
+    "N" -> Right False
+    s -> Left $ "Could not Read Bool: " <> show s
 
 instance IsFieldType ByteString where
   toValue = id
-  fromValue = Just
+  fromValue = Right
 
 validateByteStringValue :: ByteString -> Validation
 validateByteStringValue value =
@@ -215,18 +209,34 @@ validateByteStringValue value =
 
 instance IsFieldType Word where
   toValue = TE.encodeUtf8 . T.pack . show
-  fromValue = readMaybe . T.unpack . TE.decodeLatin1
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Word from String: " <> show s
+          Just w -> Right w
 
 instance IsFieldType Int where
   toValue = TE.encodeUtf8 . T.pack . show
-  fromValue = readMaybe . T.unpack . TE.decodeLatin1
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Int from String: " <> show s
+          Just w -> Right w
 
 instance IsFieldType UTCTime where
-  toValue = TE.encodeUtf8 . T.pack . formatTime defaultTimeLocale utcTimeFormat
-  fromValue = parseTimeM False defaultTimeLocale utcTimeFormat . T.unpack . TE.decodeLatin1
+  toValue = TE.encodeUtf8 . T.pack . formatTime defaultTimeLocale "%Y%m%d-%H:%M:%S%03Q"
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case parseTimeM False defaultTimeLocale utcTimeFormatExact s
+          <|> parseTimeM False defaultTimeLocale utcTimeFormat s of
+          Nothing -> Left $ "Could not Read UTCTime from String: " <> show s
+          Just u -> Right u
 
 utcTimeFormat :: String
 utcTimeFormat = "%Y%m%d-%X"
+
+utcTimeFormatExact :: String
+utcTimeFormatExact = "%Y%m%d-%H:%M:%S%Q"
 
 mkImpreciseUTCTime :: UTCTime -> UTCTime
 mkImpreciseUTCTime u = u {utctDayTime = fromIntegral (floor (utctDayTime u) :: Word)}
@@ -241,15 +251,15 @@ validateImpreciseLocalTime lt =
 
 validateImpreciseTimeOfDay :: TimeOfDay -> Validation
 validateImpreciseTimeOfDay tod =
-  declare "The number of seconds is integer" $
-    let sec = todSec tod
+  declare "The number of seconds has at most three digits" $
+    let sec = todSec tod * 1000
      in ceiling sec == (floor sec :: Int)
 
 class IsField a where
   fieldTag :: Proxy a -> Tag
   fieldIsData :: Proxy a -> Bool
   fieldToValue :: a -> ByteString
-  fieldFromValue :: ByteString -> Maybe a
+  fieldFromValue :: ByteString -> Either String a
 
 newtype BeginString = BeginString {unBeginString :: ByteString}
   deriving (Show, Eq, Generic)
@@ -265,7 +275,7 @@ instance IsField BeginString where
   fieldTag Proxy = 8
   fieldIsData Proxy = False
   fieldToValue = unBeginString
-  fieldFromValue = constructValid . BeginString
+  fieldFromValue = prettyValidate . BeginString
 
 newtype BodyLength = BodyLength {unBodyLength :: Word}
   deriving (Show, Eq, Generic)
@@ -281,7 +291,7 @@ instance IsField BodyLength where
   fieldTag Proxy = 9
   fieldIsData Proxy = False
   fieldToValue = toValue . unBodyLength
-  fieldFromValue = fromValue >=> constructValid . BodyLength
+  fieldFromValue = fromValue >=> prettyValidate . BodyLength
 
 newtype CheckSum = CheckSum {unCheckSum :: ByteString}
   deriving (Show, Eq, Generic)
@@ -299,7 +309,7 @@ instance IsField CheckSum where
   fieldTag Proxy = 10
   fieldIsData Proxy = False
   fieldToValue = unCheckSum
-  fieldFromValue = constructValid . CheckSum
+  fieldFromValue = prettyValidate . CheckSum
 
 newtype MessageSequenceNumber = MessageSequenceNumber {unMessageSequenceNumber :: Word}
   deriving (Show, Eq, Generic)
@@ -315,7 +325,7 @@ instance IsField MessageSequenceNumber where
   fieldTag Proxy = 34
   fieldIsData Proxy = False
   fieldToValue = toValue . unMessageSequenceNumber
-  fieldFromValue = fromValue >=> constructValid . MessageSequenceNumber
+  fieldFromValue = fromValue >=> prettyValidate . MessageSequenceNumber
 
 data MessageType
   = MessageTypeHeartbeat
@@ -353,34 +363,34 @@ instance IsField MessageType where
   fieldTag Proxy = 35
   fieldIsData Proxy = False
   fieldFromValue = \case
-    "0" -> Just MessageTypeHeartbeat
-    "1" -> Just MessageTypeTestRequest
-    "2" -> Just MessageTypeResendRequest
-    "3" -> Just MessageTypeReject
-    "4" -> Just MessageTypeSequenceReset
-    "5" -> Just MessageTypeLogout
-    "6" -> Just MessageTypeIndicationofInterest
-    "7" -> Just MessageTypeAdvertisement
-    "8" -> Just MessageTypeExecutionReport
-    "9" -> Just MessageTypeOrderCancelReject
-    "A" -> Just MessageTypeLogon
-    "B" -> Just MessageTypeNews
-    "C" -> Just MessageTypeEmail
-    "D" -> Just MessageTypeNewOrderSingle
-    "E" -> Just MessageTypeNewOrderList
-    "F" -> Just MessageTypeOrderCancelRequest
-    "G" -> Just MessageTypeOrderCancelReplaceRequest
-    "H" -> Just MessageTypeOrderStatusRequest
-    "J" -> Just MessageTypeAllocation
-    "K" -> Just MessageTypeListCancelRequest
-    "L" -> Just MessageTypeListExecute
-    "M" -> Just MessageTypeListStatusRequest
-    "N" -> Just MessageTypeListStatus
-    "P" -> Just MessageTypeAllocationACK
-    "Q" -> Just MessageTypeDontKnowTrade
-    "R" -> Just MessageTypeQuoteRequest
-    "S" -> Just MessageTypeQuote
-    _ -> Nothing
+    "0" -> Right MessageTypeHeartbeat
+    "1" -> Right MessageTypeTestRequest
+    "2" -> Right MessageTypeResendRequest
+    "3" -> Right MessageTypeReject
+    "4" -> Right MessageTypeSequenceReset
+    "5" -> Right MessageTypeLogout
+    "6" -> Right MessageTypeIndicationofInterest
+    "7" -> Right MessageTypeAdvertisement
+    "8" -> Right MessageTypeExecutionReport
+    "9" -> Right MessageTypeOrderCancelReject
+    "A" -> Right MessageTypeLogon
+    "B" -> Right MessageTypeNews
+    "C" -> Right MessageTypeEmail
+    "D" -> Right MessageTypeNewOrderSingle
+    "E" -> Right MessageTypeNewOrderList
+    "F" -> Right MessageTypeOrderCancelRequest
+    "G" -> Right MessageTypeOrderCancelReplaceRequest
+    "H" -> Right MessageTypeOrderStatusRequest
+    "J" -> Right MessageTypeAllocation
+    "K" -> Right MessageTypeListCancelRequest
+    "L" -> Right MessageTypeListExecute
+    "M" -> Right MessageTypeListStatusRequest
+    "N" -> Right MessageTypeListStatus
+    "P" -> Right MessageTypeAllocationACK
+    "Q" -> Right MessageTypeDontKnowTrade
+    "R" -> Right MessageTypeQuoteRequest
+    "S" -> Right MessageTypeQuote
+    s -> Left $ "Unknown MessageType: " <> show s
   fieldToValue = \case
     MessageTypeHeartbeat -> "0"
     MessageTypeTestRequest -> "1"
@@ -424,7 +434,7 @@ instance IsField SenderCompId where
   fieldTag Proxy = 49
   fieldIsData Proxy = False
   fieldToValue = unSenderCompId
-  fieldFromValue = constructValid . SenderCompId
+  fieldFromValue = prettyValidate . SenderCompId
 
 newtype TargetCompId = TargetCompId {unTargetCompId :: ByteString}
   deriving (Show, Eq, Generic)
@@ -450,13 +460,13 @@ instance IsField SendingTime where
   fieldTag Proxy = 52
   fieldIsData Proxy = False
   fieldToValue = toValue . unSendingTime
-  fieldFromValue = fromValue >=> constructValid . SendingTime
+  fieldFromValue = fromValue >=> prettyValidate . SendingTime
 
 instance IsField TargetCompId where
   fieldTag Proxy = 56
   fieldIsData Proxy = False
   fieldToValue = unTargetCompId
-  fieldFromValue = constructValid . TargetCompId
+  fieldFromValue = prettyValidate . TargetCompId
 
 data EncryptionMethod
   = EncryptionMethodNoneOther
@@ -482,14 +492,14 @@ instance IsField EncryptionMethod where
     EncryptionMethodPGPDESMD5 -> "5"
     EncryptionMethodPEMDESMD5 -> "6"
   fieldFromValue = \case
-    "0" -> Just EncryptionMethodNoneOther
-    "1" -> Just EncryptionMethodPKCS
-    "2" -> Just EncryptionMethodDESECB
-    "3" -> Just EncryptionMethodPKCSDES
-    "4" -> Just EncryptionMethodPGPDES
-    "5" -> Just EncryptionMethodPGPDESMD5
-    "6" -> Just EncryptionMethodPEMDESMD5
-    _ -> Nothing
+    "0" -> Right EncryptionMethodNoneOther
+    "1" -> Right EncryptionMethodPKCS
+    "2" -> Right EncryptionMethodDESECB
+    "3" -> Right EncryptionMethodPKCSDES
+    "4" -> Right EncryptionMethodPGPDES
+    "5" -> Right EncryptionMethodPGPDESMD5
+    "6" -> Right EncryptionMethodPEMDESMD5
+    s -> Left $ "Unknown EncryptionMethod: " <> show s
 
 newtype HeartbeatInterval = HeartbeatInterval {unHeartbeatInterval :: Int}
   deriving (Show, Eq, Generic)
@@ -499,8 +509,8 @@ instance Validity HeartbeatInterval
 instance IsField HeartbeatInterval where
   fieldTag Proxy = 108
   fieldIsData Proxy = False
-  fieldToValue = TE.encodeUtf8 . T.pack . show . unHeartbeatInterval
-  fieldFromValue = fmap HeartbeatInterval . readMaybe . T.unpack . TE.decodeLatin1
+  fieldToValue = toValue . unHeartbeatInterval
+  fieldFromValue = fromValue >=> prettyValidate . HeartbeatInterval
 
 newtype TestRequestId = TestRequestId
   { unTestRequestId :: ByteString
@@ -518,30 +528,88 @@ instance IsField TestRequestId where
   fieldTag Proxy = 112
   fieldIsData Proxy = False
   fieldToValue = unTestRequestId
-  fieldFromValue = constructValid . TestRequestId
+  fieldFromValue = prettyValidate . TestRequestId
+
+newtype ResetSequenceNumbersFlag = ResetSequenceNumbersFlag
+  { unResetSequenceNumbersFlag :: Bool
+  }
+  deriving (Show, Eq, Generic)
+
+instance Validity ResetSequenceNumbersFlag
+
+instance IsField ResetSequenceNumbersFlag where
+  fieldTag Proxy = 141
+  fieldIsData Proxy = False
+  fieldToValue = toValue . unResetSequenceNumbersFlag
+  fieldFromValue = fromValue >=> prettyValidate . ResetSequenceNumbersFlag
+
+type MessageP a = StateT [Field] (Except MessageParseError) a
+
+data MessageParseError
+  = MessageParseErrorMessageTypeMismatch !MessageType !MessageType
+  | MessageParseErrorMissingField !Tag
+  | MessageParseErrorFieldParseError !Tag !String
+  deriving (Show)
+
+requiredFieldP :: forall a. (IsField a) => MessageP a
+requiredFieldP = do
+  let tag = fieldTag (Proxy :: Proxy a)
+  mA <- optionalFieldP
+  case mA of
+    Nothing -> throwError $ MessageParseErrorMissingField tag
+    Just a -> pure a
+
+optionalFieldP :: forall a. (IsField a) => MessageP (Maybe a)
+optionalFieldP = do
+  fields <- get
+  let tag = fieldTag (Proxy :: Proxy a)
+  let go = \case
+        [] -> Nothing
+        (f@(Field t v) : fs) ->
+          if t == tag
+            then pure (v, fs)
+            else second (f :) <$> go fs
+
+  case go fields of
+    Nothing -> pure Nothing
+    Just (b, fields') -> case fieldFromValue (valueByteString b) of
+      Left err -> throwError $ MessageParseErrorFieldParseError tag err
+      Right v -> do
+        put fields'
+        pure (Just v)
 
 class IsMessage a where
   messageType :: Proxy a -> MessageType
   toMessageFields :: a -> [Field]
-  fromMessageFields :: [Field] -> Maybe a
+  fromMessageFields :: MessageP a
 
-toMessage :: forall a. (IsMessage a) => a -> Message
-toMessage =
+toMessage :: forall a. (IsMessage a) => Envelope a -> Message
+toMessage Envelope {..} =
   Message
-    . (fieldB (messageType (Proxy :: Proxy a)) :)
-    . toMessageFields
+    { messageFields =
+        concat
+          -- TODO figure out what to do about the message type being in the
+          -- header already
+          [ renderMessageHeader (envelopeHeader {messageHeaderMessageType = messageType (Proxy :: Proxy a)}),
+            toMessageFields envelopeContents,
+            renderMessageTrailer envelopeTrailer
+          ]
+    }
 
-fromMessage :: forall a. (IsMessage a) => Message -> Maybe a
-fromMessage = fromMessageFields . messageFields
-
-toMessageEnvelope :: (IsMessage a) => Envelope a -> Envelope Message
-toMessageEnvelope = fmap toMessage
-
-fromMessageEnvelope :: forall a. (IsMessage a) => Envelope Message -> Maybe (Envelope a)
-fromMessageEnvelope envelope =
-  if messageHeaderMessageType (envelopeHeader envelope) == messageType (Proxy :: Proxy a)
-    then traverse fromMessage envelope
-    else Nothing
+fromMessage ::
+  forall a.
+  (IsMessage a) =>
+  Message ->
+  Either MessageParseError (Envelope a)
+fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
+  -- TODO consider erroring on unexpected fields?
+  envelopeHeader <- parseMessageHeader
+  let actualTag = messageHeaderMessageType envelopeHeader
+  let expectedTag = messageType (Proxy :: Proxy a)
+  when (actualTag /= expectedTag) $ throwError $ MessageParseErrorMessageTypeMismatch actualTag expectedTag
+  envelopeContents <- fromMessageFields
+  envelopeTrailer <- parseMessageTrailer
+  pure Envelope {..}
 
 fieldB :: forall a. (IsField a) => a -> Field
 fieldB a =
@@ -561,34 +629,28 @@ requiredFieldB = Just . fieldB
 optionalFieldB :: (IsField a) => Maybe a -> Maybe Field
 optionalFieldB = (>>= requiredFieldB)
 
-requiredFieldP :: forall a. (IsField a) => [Field] -> Maybe a
-requiredFieldP fields =
-  find (\(Field t _) -> t == fieldTag (Proxy :: Proxy a)) fields
-    >>= fieldFromValue . (\(Field _ v) -> valueByteString v)
-
-optionalFieldP :: forall a. (IsField a) => [Field] -> Maybe (Maybe a)
-optionalFieldP fields = optional $ requiredFieldP fields
-
 data MessageHeader = MessageHeader
   { messageHeaderBeginString :: !BeginString,
     messageHeaderBodyLength :: !BodyLength,
     messageHeaderMessageType :: !MessageType,
     messageHeaderSender :: !SenderCompId,
     messageHeaderTarget :: !TargetCompId,
-    messageHeaderMessageSequenceNumber :: !MessageSequenceNumber
+    messageHeaderMessageSequenceNumber :: !MessageSequenceNumber,
+    messageHeaderSendingTime :: !SendingTime
   }
   deriving (Show, Eq, Generic)
 
 instance Validity MessageHeader
 
-parseMessageHeader :: [Field] -> Maybe MessageHeader
-parseMessageHeader fields = do
-  messageHeaderBeginString <- requiredFieldP fields
-  messageHeaderBodyLength <- requiredFieldP fields
-  messageHeaderMessageType <- requiredFieldP fields
-  messageHeaderSender <- requiredFieldP fields
-  messageHeaderTarget <- requiredFieldP fields
-  messageHeaderMessageSequenceNumber <- requiredFieldP fields
+parseMessageHeader :: MessageP MessageHeader
+parseMessageHeader = do
+  messageHeaderBeginString <- requiredFieldP
+  messageHeaderBodyLength <- requiredFieldP
+  messageHeaderMessageType <- requiredFieldP
+  messageHeaderSender <- requiredFieldP
+  messageHeaderTarget <- requiredFieldP
+  messageHeaderMessageSequenceNumber <- requiredFieldP
+  messageHeaderSendingTime <- requiredFieldP
   pure MessageHeader {..}
 
 renderMessageHeader :: MessageHeader -> [Field]
@@ -599,7 +661,8 @@ renderMessageHeader MessageHeader {..} =
       requiredFieldB messageHeaderMessageType,
       requiredFieldB messageHeaderSender,
       requiredFieldB messageHeaderTarget,
-      requiredFieldB messageHeaderMessageSequenceNumber
+      requiredFieldB messageHeaderMessageSequenceNumber,
+      requiredFieldB messageHeaderSendingTime
     ]
 
 data MessageTrailer = MessageTrailer
@@ -609,9 +672,9 @@ data MessageTrailer = MessageTrailer
 
 instance Validity MessageTrailer
 
-parseMessageTrailer :: [Field] -> Maybe MessageTrailer
-parseMessageTrailer fields = do
-  messageTrailerCheckSum <- requiredFieldP fields
+parseMessageTrailer :: MessageP MessageTrailer
+parseMessageTrailer = do
+  messageTrailerCheckSum <- requiredFieldP
   pure MessageTrailer {..}
 
 renderMessageTrailer :: MessageTrailer -> [Field]
@@ -622,7 +685,8 @@ renderMessageTrailer MessageTrailer {..} =
 
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
-    logonMessageHeartBeatInterval :: !HeartbeatInterval
+    logonMessageHeartBeatInterval :: !HeartbeatInterval,
+    logonMessageResetSequenceNumbersFlag :: !(Maybe ResetSequenceNumbersFlag)
   }
   deriving (Show, Eq, Generic)
 
@@ -633,11 +697,13 @@ instance IsMessage LogonMessage where
   toMessageFields LogonMessage {..} =
     catMaybes
       [ requiredFieldB logonMessageEncryptMethod,
-        requiredFieldB logonMessageHeartBeatInterval
+        requiredFieldB logonMessageHeartBeatInterval,
+        optionalFieldB logonMessageResetSequenceNumbersFlag
       ]
-  fromMessageFields fields = do
-    logonMessageEncryptMethod <- requiredFieldP fields
-    logonMessageHeartBeatInterval <- requiredFieldP fields
+  fromMessageFields = do
+    logonMessageEncryptMethod <- requiredFieldP
+    logonMessageHeartBeatInterval <- requiredFieldP
+    logonMessageResetSequenceNumbersFlag <- optionalFieldP
     pure LogonMessage {..}
 
 data HeartbeatMessage = HeartbeatMessage
@@ -653,6 +719,6 @@ instance IsMessage HeartbeatMessage where
     catMaybes
       [ optionalFieldB heartbeatMessageTestRequestId
       ]
-  fromMessageFields fields = do
-    heartbeatMessageTestRequestId <- optionalFieldP fields
+  fromMessageFields = do
+    heartbeatMessageTestRequestId <- optionalFieldP
     pure HeartbeatMessage {..}
