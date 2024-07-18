@@ -25,10 +25,12 @@ import Data.Validity.ByteString ()
 import Data.Validity.Text ()
 import Data.Validity.Time ()
 import Data.Void
+import Data.Word
 import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
+import Text.Printf
 import Text.Read (readMaybe)
 
 type Tag = Word
@@ -215,6 +217,14 @@ instance IsFieldType Word where
           Nothing -> Left $ "Could not Read Word from String: " <> show s
           Just w -> Right w
 
+instance IsFieldType Word8 where
+  toValue = TE.encodeUtf8 . T.pack . show
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Word from String: " <> show s
+          Just w -> Right w
+
 instance IsFieldType Int where
   toValue = TE.encodeUtf8 . T.pack . show
   fromValue sb =
@@ -293,23 +303,16 @@ instance IsField BodyLength where
   fieldToValue = toValue . unBodyLength
   fieldFromValue = fromValue >=> prettyValidate . BodyLength
 
-newtype CheckSum = CheckSum {unCheckSum :: ByteString}
+newtype CheckSum = CheckSum {unCheckSum :: Word8}
   deriving (Show, Eq, Generic)
 
-instance Validity CheckSum where
-  validate trid@CheckSum {..} =
-    mconcat
-      [ genericValidate trid,
-        validateByteStringValue unCheckSum,
-        declare "The checksum is exactly bytes long" $
-          SB.length unCheckSum == 3
-      ]
+instance Validity CheckSum
 
 instance IsField CheckSum where
   fieldTag Proxy = 10
   fieldIsData Proxy = False
-  fieldToValue = unCheckSum
-  fieldFromValue = prettyValidate . CheckSum
+  fieldToValue = TE.encodeUtf8 . T.pack . printf "%03d" . unCheckSum
+  fieldFromValue = fromValue >=> prettyValidate . CheckSum
 
 newtype MessageSequenceNumber = MessageSequenceNumber {unMessageSequenceNumber :: Word}
   deriving (Show, Eq, Generic)
@@ -584,17 +587,38 @@ class IsMessage a where
   fromMessageFields :: MessageP a
 
 toMessage :: forall a. (IsMessage a) => Envelope a -> Message
-toMessage Envelope {..} =
-  Message
-    { messageFields =
+toMessage e'' =
+  let h = (envelopeHeader e'') {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
+      e' = e'' {envelopeHeader = h}
+      e = fixEnvelopeCheckSum e'
+   in Message
+        { messageFields =
+            concat
+              -- TODO figure out what to do about the message type being in the
+              -- header already
+              [ renderMessageHeader (envelopeHeader e),
+                toMessageFields (envelopeContents e),
+                renderMessageTrailer (envelopeTrailer e)
+              ]
+        }
+
+fixEnvelopeCheckSum :: forall a. (IsMessage a) => Envelope a -> Envelope a
+fixEnvelopeCheckSum e@Envelope {..} =
+  let fieldsUntilCheckSum =
         concat
           -- TODO figure out what to do about the message type being in the
           -- header already
           [ renderMessageHeader (envelopeHeader {messageHeaderMessageType = messageType (Proxy :: Proxy a)}),
-            toMessageFields envelopeContents,
-            renderMessageTrailer envelopeTrailer
+            toMessageFields envelopeContents
           ]
-    }
+      checkSum = computeCheckSum fieldsUntilCheckSum
+   in e {envelopeTrailer = envelopeTrailer {messageTrailerCheckSum = checkSum}}
+
+computeCheckSum :: [Field] -> CheckSum
+computeCheckSum fields =
+  let bytes = renderMessage (Message {messageFields = fields})
+      w = sum $ SB.unpack bytes
+   in CheckSum w
 
 fromMessage ::
   forall a.

@@ -47,12 +47,7 @@ instance (GenValid a) => GenValid (Envelope a)
 
 instance GenValid BeginString
 
-instance GenValid CheckSum where
-  genValid = fmap CheckSum $ do
-    w1 <- genNonSOHWord8
-    w2 <- genNonSOHWord8
-    w3 <- genNonSOHWord8
-    pure $ SB.pack [w1, w2, w3]
+instance GenValid CheckSum
 
 instance GenValid BodyLength where
   genValid = BodyLength <$> choose (0, 9999)

@@ -158,7 +158,11 @@ messageSpec dir = do
   describe "fromMessage" $ do
     it "roundtrips with toMessage" $
       forAllValid $ \envelopePrototype -> do
-        let envelope = envelopePrototype {envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}}
+        let envelope =
+              fixEnvelopeCheckSum $
+                envelopePrototype
+                  { envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
+                  }
         let rendered = toMessage (envelope :: Envelope a)
         context (ppShow rendered) $ case fromMessage rendered of
           Left parseErr ->
