@@ -160,9 +160,10 @@ messageSpec dir = do
       forAllValid $ \envelopePrototype -> do
         let envelope =
               fixEnvelopeCheckSum $
-                envelopePrototype
-                  { envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
-                  }
+                fixEnvelopeBodyLength $
+                  envelopePrototype
+                    { envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
+                    }
         let rendered = toMessage (envelope :: Envelope a)
         context (ppShow rendered) $ case fromMessage rendered of
           Left parseErr ->

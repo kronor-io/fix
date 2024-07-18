@@ -590,7 +590,7 @@ toMessage :: forall a. (IsMessage a) => Envelope a -> Message
 toMessage e'' =
   let h = (envelopeHeader e'') {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
       e' = e'' {envelopeHeader = h}
-      e = fixEnvelopeCheckSum e'
+      e = fixEnvelopeCheckSum $ fixEnvelopeBodyLength e'
    in Message
         { messageFields =
             concat
@@ -602,13 +602,43 @@ toMessage e'' =
               ]
         }
 
-fixEnvelopeCheckSum :: forall a. (IsMessage a) => Envelope a -> Envelope a
+-- Has to happen _before_ fixEnvelopeCheckSum
+fixEnvelopeBodyLength :: (IsMessage a) => Envelope a -> Envelope a
+fixEnvelopeBodyLength e =
+  let bodyLength = computeBodyLength e
+   in e {envelopeHeader = (envelopeHeader e) {messageHeaderBodyLength = bodyLength}}
+
+computeBodyLength :: (IsMessage a) => Envelope a -> BodyLength
+computeBodyLength Envelope {..} =
+  let bytesBeforeBodyLength =
+        computeFieldsLength
+          [ fieldB $ messageHeaderBeginString envelopeHeader,
+            fieldB $ messageHeaderBodyLength envelopeHeader
+          ]
+      allFields =
+        concat
+          [ renderMessageHeader envelopeHeader,
+            toMessageFields envelopeContents,
+            renderMessageTrailer envelopeTrailer
+          ]
+      bytesFromCheckSum = computeFieldsLength [fieldB $ messageTrailerCheckSum envelopeTrailer]
+   in BodyLength $
+        computeFieldsLength allFields
+          - bytesBeforeBodyLength
+          - bytesFromCheckSum
+
+computeFieldsLength :: [Field] -> Word
+computeFieldsLength fields =
+  let bytes = renderMessage (Message {messageFields = fields})
+   in fromIntegral $ SB.length bytes
+
+fixEnvelopeCheckSum :: (IsMessage a) => Envelope a -> Envelope a
 fixEnvelopeCheckSum e@Envelope {..} =
   let fieldsUntilCheckSum =
         concat
           -- TODO figure out what to do about the message type being in the
           -- header already
-          [ renderMessageHeader (envelopeHeader {messageHeaderMessageType = messageType (Proxy :: Proxy a)}),
+          [ renderMessageHeader envelopeHeader,
             toMessageFields envelopeContents
           ]
       checkSum = computeCheckSum fieldsUntilCheckSum
