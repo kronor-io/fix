@@ -59,6 +59,8 @@ spec = do
     fieldSpec @MessageType
   describe "SenderCompId" $ do
     fieldSpec @SenderCompId
+  describe "SenderSubId" $ do
+    fieldSpec @SenderSubId
   describe "TargetCompId" $ do
     fieldSpec @TargetCompId
   describe "SendingTime" $ do
@@ -69,6 +71,8 @@ spec = do
     fieldSpec @HeartbeatInterval
   describe "TestRequestId" $ do
     fieldSpec @TestRequestId
+  describe "Password" $ do
+    fieldSpec @Password
 
   describe "HeartbeatMessage" $ do
     messageSpec @HeartbeatMessage "heartbeat"

@@ -439,6 +439,22 @@ instance IsField SenderCompId where
   fieldToValue = unSenderCompId
   fieldFromValue = prettyValidate . SenderCompId
 
+newtype SenderSubId = SenderSubId {unSenderSubId :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity SenderSubId where
+  validate trid@SenderSubId {..} =
+    mconcat
+      [ genericValidate trid,
+        validateByteStringValue unSenderSubId
+      ]
+
+instance IsField SenderSubId where
+  fieldTag Proxy = 50
+  fieldIsData Proxy = False
+  fieldToValue = unSenderSubId
+  fieldFromValue = prettyValidate . SenderSubId
+
 newtype TargetCompId = TargetCompId {unTargetCompId :: ByteString}
   deriving (Show, Eq, Generic)
 
@@ -545,6 +561,24 @@ instance IsField ResetSequenceNumbersFlag where
   fieldIsData Proxy = False
   fieldToValue = toValue . unResetSequenceNumbersFlag
   fieldFromValue = fromValue >=> prettyValidate . ResetSequenceNumbersFlag
+
+newtype Password = Password
+  { unPassword :: ByteString
+  }
+  deriving (Show, Eq, Generic)
+
+instance Validity Password where
+  validate trid@Password {..} =
+    mconcat
+      [ genericValidate trid,
+        validateByteStringValue unPassword
+      ]
+
+instance IsField Password where
+  fieldTag Proxy = 554
+  fieldIsData Proxy = False
+  fieldToValue = unPassword
+  fieldFromValue = prettyValidate . Password
 
 type MessageP a = StateT [Field] (Except MessageParseError) a
 
@@ -688,6 +722,7 @@ data MessageHeader = MessageHeader
     messageHeaderBodyLength :: !BodyLength,
     messageHeaderMessageType :: !MessageType,
     messageHeaderSender :: !SenderCompId,
+    messageHeaderSenderSubId :: !(Maybe SenderSubId),
     messageHeaderTarget :: !TargetCompId,
     messageHeaderMessageSequenceNumber :: !MessageSequenceNumber,
     messageHeaderSendingTime :: !SendingTime
@@ -702,6 +737,7 @@ parseMessageHeader = do
   messageHeaderBodyLength <- requiredFieldP
   messageHeaderMessageType <- requiredFieldP
   messageHeaderSender <- requiredFieldP
+  messageHeaderSenderSubId <- optionalFieldP
   messageHeaderTarget <- requiredFieldP
   messageHeaderMessageSequenceNumber <- requiredFieldP
   messageHeaderSendingTime <- requiredFieldP
@@ -714,6 +750,7 @@ renderMessageHeader MessageHeader {..} =
       requiredFieldB messageHeaderBodyLength,
       requiredFieldB messageHeaderMessageType,
       requiredFieldB messageHeaderSender,
+      optionalFieldB messageHeaderSenderSubId,
       requiredFieldB messageHeaderTarget,
       requiredFieldB messageHeaderMessageSequenceNumber,
       requiredFieldB messageHeaderSendingTime
@@ -740,7 +777,8 @@ renderMessageTrailer MessageTrailer {..} =
 data LogonMessage = LogonMessage
   { logonMessageEncryptMethod :: !EncryptionMethod,
     logonMessageHeartBeatInterval :: !HeartbeatInterval,
-    logonMessageResetSequenceNumbersFlag :: !(Maybe ResetSequenceNumbersFlag)
+    logonMessageResetSequenceNumbersFlag :: !(Maybe ResetSequenceNumbersFlag),
+    logonMessagePassword :: !(Maybe Password)
   }
   deriving (Show, Eq, Generic)
 
@@ -752,12 +790,14 @@ instance IsMessage LogonMessage where
     catMaybes
       [ requiredFieldB logonMessageEncryptMethod,
         requiredFieldB logonMessageHeartBeatInterval,
-        optionalFieldB logonMessageResetSequenceNumbersFlag
+        optionalFieldB logonMessageResetSequenceNumbersFlag,
+        optionalFieldB logonMessagePassword
       ]
   fromMessageFields = do
     logonMessageEncryptMethod <- requiredFieldP
     logonMessageHeartBeatInterval <- requiredFieldP
     logonMessageResetSequenceNumbersFlag <- optionalFieldP
+    logonMessagePassword <- optionalFieldP
     pure LogonMessage {..}
 
 data HeartbeatMessage = HeartbeatMessage

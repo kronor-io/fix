@@ -58,6 +58,8 @@ instance GenValid MessageSequenceNumber
 
 instance GenValid SenderCompId
 
+instance GenValid SenderSubId
+
 instance GenValid TargetCompId
 
 instance GenValid TestRequestId
@@ -70,6 +72,8 @@ instance GenValid SendingTime where
 instance GenValid EncryptionMethod
 
 instance GenValid HeartbeatInterval
+
+instance GenValid Password
 
 instance GenValid HeartbeatMessage
 
