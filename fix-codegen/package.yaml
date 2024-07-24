@@ -7,9 +7,11 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
+  - containers
   - opt-env-conf
   - path
   - path-io
+  - text
   - xml-conduit
 
 executables:
