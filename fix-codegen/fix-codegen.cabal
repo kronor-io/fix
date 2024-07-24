@@ -11,6 +11,7 @@ build-type:     Simple
 library
   exposed-modules:
       FIX.CodeGen
+      FIX.CodeGen.OptParse
       FIX.CodeGen.Spec
   other-modules:
       Paths_fix_codegen
