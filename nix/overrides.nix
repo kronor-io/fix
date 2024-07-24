@@ -40,6 +40,7 @@ let
     {
       fix = fixPkg "fix";
       fix-gen = fixPkg "fix-gen";
+      fix-codegen = fixPkg "fix-codegen";
     };
 in
 {

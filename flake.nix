@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-24.05";
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    quickfix.url = "github:quickfix/quickfix";
+    quickfix.flake = false;
     validity.url = "github:NorfairKing/validity";
     validity.flake = false;
     autodocodec.url = "github:NorfairKing/autodocodec";
@@ -14,6 +16,8 @@
     fast-myers-diff.flake = false;
     sydtest.url = "github:NorfairKing/sydtest";
     sydtest.flake = false;
+    opt-env-conf.url = "github:NorfairKing/opt-env-conf";
+    opt-env-conf.flake = false;
     dekking.url = "github:NorfairKing/dekking";
     dekking.flake = false;
     weeder-nix.url = "github:NorfairKing/weeder-nix";
@@ -24,11 +28,13 @@
     { self
     , nixpkgs
     , pre-commit-hooks
+    , quickfix
     , validity
     , safe-coloured-text
     , autodocodec
     , fast-myers-diff
     , sydtest
+    , opt-env-conf
     , dekking
     , weeder-nix
     }:
@@ -47,6 +53,7 @@
         (pkgs.callPackage (safe-coloured-text + "/nix/overrides.nix") { })
         (pkgs.callPackage (fast-myers-diff + "/nix/overrides.nix") { })
         (pkgs.callPackage (sydtest + "/nix/overrides.nix") { })
+        (pkgs.callPackage (opt-env-conf + "/nix/overrides.nix") { })
         (pkgs.callPackage (dekking + "/nix/overrides.nix") { })
         self.overrides.${system}
       ];
@@ -93,6 +100,7 @@
           cabal-install
           zlib
         ] ++ self.checks.${system}.pre-commit.enabledPackages;
+        FIX_SPEC_DIR = "${quickfix}/spec";
         shellHook = self.checks.${system}.pre-commit.shellHook;
       };
     };
