@@ -3,7 +3,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module FIX.CodeGen.Spec (Spec (..), parseSpec) where
+module FIX.CodeGen.Spec
+  ( Spec (..),
+    FieldSpec (..),
+    FieldType (..),
+    fieldTypeIsData,
+    parseSpec,
+  )
+where
 
 import Control.Monad
 import Data.List (find)
@@ -95,6 +102,12 @@ parseFieldType = \case
   "UTCTIMEONLY" -> Just FieldTypeUTCTimeOnly
   "COUNTRY" -> Just FieldTypeCountry
   t -> traceShow t Nothing
+
+-- TODO Missing here: XML
+fieldTypeIsData :: FieldType -> Bool
+fieldTypeIsData = \case
+  FieldTypeData -> True
+  _ -> False
 
 data FieldValueSpec = FieldValueSpec
   { fieldValueEnum :: !Text,
