@@ -1,8 +1,9 @@
 resolver: lts-22.22
 packages:
-- fix
-- fix-gen
 - fix-codegen
+- fix-core
+- fix-core-gen
+- fix-spec
 
 extra-deps:
 - github: NorfairKing/sydtest

@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 
-module FIX.Gen where
+module FIX.Core.Gen where
 
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
@@ -9,7 +9,7 @@ import Data.GenValidity.ByteString
 import Data.GenValidity.Text ()
 import Data.GenValidity.Time ()
 import Data.Word
-import FIX
+import FIX.Core
 import Test.QuickCheck
 
 genNonSOHWord8 :: Gen Word8

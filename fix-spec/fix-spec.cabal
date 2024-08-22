@@ -4,22 +4,21 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           fix
+name:           fix-spec
 version:        0.0.0.0
 build-type:     Simple
 
 library
   exposed-modules:
-      FIX
+      FIX.Fields
   other-modules:
-      Paths_fix
+      Paths_fix_spec
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
     , bytestring
-    , megaparsec
-    , mtl
+    , fix-core
     , text
     , time
     , validity

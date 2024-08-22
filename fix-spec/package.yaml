@@ -1,0 +1,17 @@
+name: fix-spec
+version: 0.0.0.0
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - fix-core
+  - text
+  - time
+  - validity
+  - validity-bytestring
+  - validity-text
+  - validity-time

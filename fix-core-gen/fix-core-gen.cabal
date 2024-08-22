@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           fix-gen
+name:           fix-core-gen
 version:        0.0.0.0
 build-type:     Simple
 extra-source-files:
@@ -14,28 +14,28 @@ extra-source-files:
 
 library
   exposed-modules:
-      FIX.Gen
+      FIX.Core.Gen
   other-modules:
-      Paths_fix_gen
+      Paths_fix_core_gen
   hs-source-dirs:
       src
   build-depends:
       QuickCheck
     , base >=4.7 && <5
     , bytestring
-    , fix
+    , fix-core
     , genvalidity
     , genvalidity-bytestring
     , genvalidity-text
     , genvalidity-time
   default-language: Haskell2010
 
-test-suite fix-test
+test-suite fix-core-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      FIXSpec
-      Paths_fix_gen
+      FIX.CoreSpec
+      Paths_fix_core_gen
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
@@ -44,8 +44,8 @@ test-suite fix-test
   build-depends:
       base >=4.7 && <5
     , bytestring
-    , fix
-    , fix-gen
+    , fix-core
+    , fix-core-gen
     , genvalidity-sydtest
     , path
     , path-io

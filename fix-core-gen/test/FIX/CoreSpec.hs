@@ -3,15 +3,15 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
-module FIXSpec (spec) where
+module FIX.CoreSpec (spec) where
 
 import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import Data.Time
 import Data.Typeable
-import FIX
-import FIX.Gen ()
+import FIX.Core
+import FIX.Core.Gen ()
 import Path
 import Path.IO
 import Test.Syd

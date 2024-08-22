@@ -68,10 +68,10 @@
         coverage-report = haskellPackages.dekking.makeCoverageReport {
           name = "test-coverage-report";
           packages = [
-            "fix"
+            "fix-core"
           ];
           coverage = [
-            "fix-gen"
+            "fix-core-gen"
           ];
         };
         weeder-check = pkgs.weeder-nix.makeWeederCheck {

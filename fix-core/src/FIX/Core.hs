@@ -4,7 +4,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module FIX where
+module FIX.Core where
 
 import Control.Arrow (left, second)
 import Control.Monad

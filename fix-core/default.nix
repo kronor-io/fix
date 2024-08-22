@@ -2,7 +2,7 @@
 , validity, validity-bytestring, validity-text, validity-time
 }:
 mkDerivation {
-  pname = "fix";
+  pname = "fix-core";
   version = "0.0.0.0";
   src = ./.;
   libraryHaskellDepends = [

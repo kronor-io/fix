@@ -1,4 +1,4 @@
-name: fix-gen
+name: fix-core-gen
 version: 0.0.0.0
 
 dependencies:
@@ -12,14 +12,14 @@ library:
   dependencies:
   - QuickCheck
   - bytestring
-  - fix
+  - fix-core
   - genvalidity
   - genvalidity-text
   - genvalidity-time
   - genvalidity-bytestring
 
 tests:
-  fix-test:
+  fix-core-test:
     main: Spec.hs
     source-dirs: test
     build-tools: sydtest-discover
@@ -29,8 +29,8 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - bytestring
-    - fix
-    - fix-gen
+    - fix-core
+    - fix-core-gen
     - genvalidity-sydtest
     - path
     - path-io

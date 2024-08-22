@@ -38,8 +38,8 @@ let
         );
     in
     {
-      fix = fixPkg "fix";
-      fix-gen = fixPkg "fix-gen";
+      fix-core = fixPkg "fix-core";
+      fix-core-gen = fixPkg "fix-core-gen";
       fix-codegen = fixPkg "fix-codegen";
     };
 in
