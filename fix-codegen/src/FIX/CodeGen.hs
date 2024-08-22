@@ -121,7 +121,8 @@ runFixCodeGen = do
               "import Data.ByteString (ByteString)",
               "import Data.Proxy",
               "import Data.Validity",
-              "import FIX.Core",
-              "import GHC.Generics (Generic)"
+              "import FIX.Core (IsFieldType(..), IsField(..))",
+              "import GHC.Generics (Generic)",
+              "import Control.Monad"
             ]
               : sections

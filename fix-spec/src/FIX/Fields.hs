@@ -5,10 +5,11 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Fields where
 
+import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core
+import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
 -- FieldSpec {fieldNumber = 1, fieldName = "Account", fieldType = FieldTypeString, fieldValues = []}
