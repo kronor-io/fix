@@ -22,10 +22,11 @@ runFixCodeGen = do
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
     Just spec -> do
-      let fieldSpecs = specFields spec
-      writeFieldsFile settingsOutputDir fieldSpecs
-      writeFieldsGenFile settingsOutputDir fieldSpecs
-      writeFieldsSpecFile settingsOutputDir fieldSpecs
+      -- let fieldSpecs = specFields spec
+      -- writeFieldsFile settingsOutputDir fieldSpecs
+      -- writeFieldsGenFile settingsOutputDir fieldSpecs
+      -- writeFieldsSpecFile settingsOutputDir fieldSpecs
+      mapM_ print (specMessages spec)
 
 disclaimer :: String
 disclaimer =

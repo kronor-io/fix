@@ -23,7 +23,8 @@ import Text.Read
 import Text.XML as XML
 
 data Spec = Spec
-  { specFields :: ![FieldSpec]
+  { specFields :: ![FieldSpec],
+    specMessages :: ![MessageSpec]
   }
 
 parseSpec :: Document -> Maybe Spec
@@ -31,7 +32,57 @@ parseSpec doc = do
   let rootElements = subElements $ documentRoot doc
   fieldsElement <- find ((== "fields") . elementName) rootElements
   specFields <- mapM parseFieldSpec $ subElements fieldsElement
+  messagesElement <- find ((== "messages") . elementName) rootElements
+  specMessages <- mapM parseMessageSpec $ subElements messagesElement
   pure Spec {..}
+
+data MessageSpec = MessageSpec
+  { messageName :: !Text,
+    messageType :: !Text,
+    messageCategory :: !Text,
+    messagePieces :: ![MessagePiece]
+  }
+  deriving (Show)
+
+parseMessageSpec :: Element -> Maybe MessageSpec
+parseMessageSpec e@Element {..} = do
+  guard $ elementName == "message"
+  messageName <- M.lookup "name" elementAttributes
+  messageType <- M.lookup "msgtype" elementAttributes
+  messageCategory <- M.lookup "msgcat" elementAttributes
+  messagePieces <- mapM parseMessagePiece $ subElements e
+
+  pure MessageSpec {..}
+
+data MessagePiece
+  = MessagePieceField !Text !Bool
+  | MessagePieceComponent !Text !Bool
+  | MessagePieceGroup !Text !Bool ![MessagePiece]
+  deriving (Show)
+
+parseMessagePiece :: Element -> Maybe MessagePiece
+parseMessagePiece e@Element {..} =
+  case elementName of
+    "field" -> do
+      name <- M.lookup "name" elementAttributes
+      required <- M.lookup "required" elementAttributes >>= parseRequired
+      pure $ MessagePieceField name required
+    "component" -> do
+      name <- M.lookup "name" elementAttributes
+      required <- M.lookup "required" elementAttributes >>= parseRequired
+      pure $ MessagePieceComponent name required
+    "group" -> do
+      name <- M.lookup "name" elementAttributes
+      required <- M.lookup "required" elementAttributes >>= parseRequired
+      groupPieces <- mapM parseMessagePiece $ subElements e
+      pure $ MessagePieceGroup name required groupPieces
+    _ -> Nothing
+
+parseRequired :: Text -> Maybe Bool
+parseRequired = \case
+  "Y" -> pure True
+  "N" -> pure False
+  _ -> Nothing
 
 data FieldSpec = FieldSpec
   { fieldNumber :: !Word,
