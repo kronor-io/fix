@@ -11,6 +11,7 @@ build-type:     Simple
 library
   exposed-modules:
       FIX.Fields
+      FIX.Messages
   other-modules:
       Paths_fix_spec
   hs-source-dirs:

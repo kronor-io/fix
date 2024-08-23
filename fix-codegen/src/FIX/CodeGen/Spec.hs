@@ -5,6 +5,8 @@
 
 module FIX.CodeGen.Spec
   ( Spec (..),
+    MessageSpec (..),
+    MessagePiece (..),
     FieldSpec (..),
     FieldType (..),
     fieldTypeIsData,

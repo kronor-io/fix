@@ -22,11 +22,13 @@ runFixCodeGen = do
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
     Just spec -> do
-      -- let fieldSpecs = specFields spec
-      -- writeFieldsFile settingsOutputDir fieldSpecs
-      -- writeFieldsGenFile settingsOutputDir fieldSpecs
-      -- writeFieldsSpecFile settingsOutputDir fieldSpecs
-      mapM_ print (specMessages spec)
+      let fieldSpecs = specFields spec
+      writeFieldsFile settingsOutputDir fieldSpecs
+      writeFieldsGenFile settingsOutputDir fieldSpecs
+      writeFieldsSpecFile settingsOutputDir fieldSpecs
+
+      let messageSpecs = specMessages spec
+      writeMessagesFile settingsOutputDir messageSpecs
 
 disclaimer :: String
 disclaimer =
@@ -199,3 +201,58 @@ writeFieldsSpecFile outputDir fieldSpecs = do
       ]
 
   callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsSpecFile]
+
+messageSpecConstructorName :: MessageSpec -> Name
+messageSpecConstructorName = mkName . T.unpack . messageName
+
+writeMessagesFile :: Path Abs Dir -> [MessageSpec] -> IO ()
+writeMessagesFile outputDir messageSpecs = do
+  messagesFile <- resolveFile outputDir "fix-spec/src/FIX/Messages.hs"
+  messageSections <- forM messageSpecs $ \f -> do
+    let constructorName = messageSpecConstructorName f
+    let section =
+          [ "-- " <> show f,
+            TH.pprint
+              [ DataD
+                  []
+                  constructorName
+                  []
+                  Nothing
+                  []
+                  [ DerivClause
+                      (Just StockStrategy)
+                      [ ConT (mkName "Show"),
+                        ConT (mkName "Eq"),
+                        ConT (mkName "Generic")
+                      ]
+                  ],
+                InstanceD
+                  Nothing
+                  []
+                  (AppT (ConT (mkName "Validity")) (ConT constructorName))
+                  []
+              ]
+          ]
+    mapM_ putStrLn section
+    pure section
+
+  ensureDir (parent messagesFile)
+  writeFile (fromAbsFile messagesFile) $
+    unlines $
+      concat $
+        [ "{-# LANGUAGE DerivingStrategies #-}",
+          "{-# LANGUAGE DeriveGeneric #-}",
+          "",
+          disclaimer,
+          "module FIX.Messages where",
+          "",
+          "import Data.ByteString (ByteString)",
+          "import Data.Proxy",
+          "import Data.Validity",
+          "import FIX.Core (IsMessage(..))",
+          "import GHC.Generics (Generic)",
+          "import Control.Monad",
+          ""
+        ]
+          : messageSections
+  callProcess "ormolu" ["-i", "-c", fromAbsFile messagesFile]
