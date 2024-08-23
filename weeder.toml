@@ -6,6 +6,7 @@ roots = [
   # Generated
   "Paths_",
   "FIX.Fields",
+  "FIX.Messages",
 ]
 root-instances = [
 ]

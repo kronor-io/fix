@@ -8,6 +8,7 @@ module FIX.CodeGen.Spec
     MessageSpec (..),
     MessagePiece (..),
     FieldSpec (..),
+    FieldValueSpec (..),
     FieldType (..),
     fieldTypeIsData,
     parseSpec,
