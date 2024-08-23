@@ -1,10 +1,13 @@
 {-# LANGUAGE ApplicativeDo #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module FIX.CodeGen (runFixCodeGen) where
 
 import Control.Monad
+import Data.Char as Char
+import Data.Maybe
 import qualified Data.Text as T
 import FIX.CodeGen.OptParse
 import FIX.CodeGen.Spec
@@ -215,12 +218,13 @@ writeFieldsFile outputDir fieldSpecs = do
           disclaimer,
           "module FIX.Fields where",
           "",
+          "import Control.Monad",
           "import Data.ByteString (ByteString)",
           "import Data.Proxy",
           "import Data.Validity",
           "import FIX.Core (IsFieldType(..), IsField(..))",
           "import GHC.Generics (Generic)",
-          "import Control.Monad"
+          ""
         ]
           : sections
   callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsFile]
@@ -244,9 +248,10 @@ writeFieldsGenFile outputDir fieldSpecs = do
           disclaimer,
           "module FIX.Fields.Gen where",
           "",
-          "import Data.GenValidity.ByteString ()",
           "import Data.GenValidity",
-          "import FIX.Fields"
+          "import Data.GenValidity.ByteString ()",
+          "import FIX.Fields",
+          ""
         ]
           : sections
   callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsGenFile]
@@ -267,10 +272,11 @@ writeFieldsSpecFile outputDir fieldSpecs = do
         disclaimer,
         "module FIX.FieldsSpec where",
         "",
-        "import Test.Syd",
         "import FIX.Core.TestUtils",
         "import FIX.Fields",
         "import FIX.Fields.Gen ()",
+        "import Test.Syd",
+        "",
         TH.pprint
           [ SigD (mkName "spec") (ConT (mkName "Spec")),
             FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
@@ -285,7 +291,7 @@ messageSpecConstructorName = mkName . T.unpack . messageName
 writeMessagesFile :: Path Abs Dir -> [MessageSpec] -> IO ()
 writeMessagesFile outputDir messageSpecs = do
   messagesFile <- resolveFile outputDir "fix-spec/src/FIX/Messages.hs"
-  messageSections <- forM messageSpecs $ \f -> do
+  messageSections <- forM messageSpecs $ \f@MessageSpec {..} -> do
     let constructorName = messageSpecConstructorName f
     pure
       [ "-- " <> show f,
@@ -295,11 +301,29 @@ writeMessagesFile outputDir messageSpecs = do
               constructorName
               []
               Nothing
-              []
+              [ RecC
+                  constructorName
+                  ( mapMaybe
+                      ( \case
+                          MessagePieceField t required ->
+                            Just
+                              ( mkName $ lowerHead (T.unpack messageName) <> T.unpack t,
+                                Bang NoSourceUnpackedness SourceStrict,
+                                ( if required
+                                    then id
+                                    else AppT (ConT (mkName "Maybe"))
+                                )
+                                  $ ConT (mkName (T.unpack t))
+                              )
+                          _ -> Nothing -- TODO define them all
+                      )
+                      messagePieces
+                  )
+              ]
               [ DerivClause
                   (Just StockStrategy)
-                  [ -- ConT (mkName "Show"),
-                    -- ConT (mkName "Eq"),
+                  [ ConT (mkName "Show"),
+                    ConT (mkName "Eq"),
                     ConT (mkName "Generic")
                   ]
               ],
@@ -322,8 +346,14 @@ writeMessagesFile outputDir messageSpecs = do
           "module FIX.Messages where",
           "",
           "import Data.Validity",
+          "import FIX.Fields",
           "import GHC.Generics (Generic)",
           ""
         ]
           : messageSections
   callProcess "ormolu" ["-i", "-c", fromAbsFile messagesFile]
+
+lowerHead :: String -> String
+lowerHead = \case
+  [] -> []
+  (c : cs) -> Char.toLower c : cs

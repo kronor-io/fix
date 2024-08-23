@@ -6,469 +6,2388 @@
 module FIX.Messages where
 
 import Data.Validity
+import FIX.Fields
 import GHC.Generics (Generic)
 
 -- MessageSpec {messageName = "Heartbeat", messageType = "0", messageCategory = "admin", messagePieces = [MessagePieceField "TestReqID" False]}
-data Heartbeat deriving stock (Generic)
+data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Heartbeat
 
 -- MessageSpec {messageName = "TestRequest", messageType = "1", messageCategory = "admin", messagePieces = [MessagePieceField "TestReqID" True]}
-data TestRequest deriving stock (Generic)
+data TestRequest = TestRequest {testRequestTestReqID :: !TestReqID}
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TestRequest
 
 -- MessageSpec {messageName = "ResendRequest", messageType = "2", messageCategory = "admin", messagePieces = [MessagePieceField "BeginSeqNo" True,MessagePieceField "EndSeqNo" True]}
-data ResendRequest deriving stock (Generic)
+data ResendRequest = ResendRequest
+  { resendRequestBeginSeqNo :: !BeginSeqNo,
+    resendRequestEndSeqNo :: !EndSeqNo
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ResendRequest
 
 -- MessageSpec {messageName = "Reject", messageType = "3", messageCategory = "admin", messagePieces = [MessagePieceField "RefSeqNum" True,MessagePieceField "RefTagID" False,MessagePieceField "RefMsgType" False,MessagePieceField "SessionRejectReason" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data Reject deriving stock (Generic)
+data Reject = Reject
+  { rejectRefSeqNum :: !RefSeqNum,
+    rejectRefTagID :: !(Maybe RefTagID),
+    rejectRefMsgType :: !(Maybe RefMsgType),
+    rejectSessionRejectReason :: !(Maybe SessionRejectReason),
+    rejectText :: !(Maybe Text),
+    rejectEncodedTextLen :: !(Maybe EncodedTextLen),
+    rejectEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Reject
 
 -- MessageSpec {messageName = "SequenceReset", messageType = "4", messageCategory = "admin", messagePieces = [MessagePieceField "GapFillFlag" False,MessagePieceField "NewSeqNo" True]}
-data SequenceReset deriving stock (Generic)
+data SequenceReset = SequenceReset
+  { sequenceResetGapFillFlag :: !(Maybe GapFillFlag),
+    sequenceResetNewSeqNo :: !NewSeqNo
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SequenceReset
 
 -- MessageSpec {messageName = "Logout", messageType = "5", messageCategory = "admin", messagePieces = [MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data Logout deriving stock (Generic)
+data Logout = Logout
+  { logoutText :: !(Maybe Text),
+    logoutEncodedTextLen :: !(Maybe EncodedTextLen),
+    logoutEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Logout
 
 -- MessageSpec {messageName = "IOI", messageType = "6", messageCategory = "app", messagePieces = [MessagePieceField "IOIID" True,MessagePieceField "IOITransType" True,MessagePieceField "IOIRefID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" True,MessagePieceField "QtyType" False,MessagePieceComponent "OrderQtyData" False,MessagePieceField "IOIQty" True,MessagePieceField "Currency" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "InstrmtLegIOIGrp" False,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "ValidUntilTime" False,MessagePieceField "IOIQltyInd" False,MessagePieceField "IOINaturalFlag" False,MessagePieceComponent "IOIQualGrp" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "TransactTime" False,MessagePieceField "URLLink" False,MessagePieceComponent "RoutingGrp" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False]}
-data IOI deriving stock (Generic)
+data IOI = IOI
+  { iOIIOIID :: !IOIID,
+    iOIIOITransType :: !IOITransType,
+    iOIIOIRefID :: !(Maybe IOIRefID),
+    iOISide :: !Side,
+    iOIQtyType :: !(Maybe QtyType),
+    iOIIOIQty :: !IOIQty,
+    iOICurrency :: !(Maybe Currency),
+    iOIPriceType :: !(Maybe PriceType),
+    iOIPrice :: !(Maybe Price),
+    iOIValidUntilTime :: !(Maybe ValidUntilTime),
+    iOIIOIQltyInd :: !(Maybe IOIQltyInd),
+    iOIIOINaturalFlag :: !(Maybe IOINaturalFlag),
+    iOIText :: !(Maybe Text),
+    iOIEncodedTextLen :: !(Maybe EncodedTextLen),
+    iOIEncodedText :: !(Maybe EncodedText),
+    iOITransactTime :: !(Maybe TransactTime),
+    iOIURLLink :: !(Maybe URLLink)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity IOI
 
 -- MessageSpec {messageName = "Advertisement", messageType = "7", messageCategory = "app", messagePieces = [MessagePieceField "AdvId" True,MessagePieceField "AdvTransType" True,MessagePieceField "AdvRefID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "AdvSide" True,MessagePieceField "Quantity" True,MessagePieceField "QtyType" False,MessagePieceField "Price" False,MessagePieceField "Currency" False,MessagePieceField "TradeDate" False,MessagePieceField "TransactTime" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "URLLink" False,MessagePieceField "LastMkt" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False]}
-data Advertisement deriving stock (Generic)
+data Advertisement = Advertisement
+  { advertisementAdvId :: !AdvId,
+    advertisementAdvTransType :: !AdvTransType,
+    advertisementAdvRefID :: !(Maybe AdvRefID),
+    advertisementAdvSide :: !AdvSide,
+    advertisementQuantity :: !Quantity,
+    advertisementQtyType :: !(Maybe QtyType),
+    advertisementPrice :: !(Maybe Price),
+    advertisementCurrency :: !(Maybe Currency),
+    advertisementTradeDate :: !(Maybe TradeDate),
+    advertisementTransactTime :: !(Maybe TransactTime),
+    advertisementText :: !(Maybe Text),
+    advertisementEncodedTextLen :: !(Maybe EncodedTextLen),
+    advertisementEncodedText :: !(Maybe EncodedText),
+    advertisementURLLink :: !(Maybe URLLink),
+    advertisementLastMkt :: !(Maybe LastMkt),
+    advertisementTradingSessionID :: !(Maybe TradingSessionID),
+    advertisementTradingSessionSubID :: !(Maybe TradingSessionSubID)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Advertisement
 
 -- MessageSpec {messageName = "ExecutionReport", messageType = "8", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" True,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "SecondaryExecID" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrigClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceField "QuoteRespID" False,MessagePieceField "OrdStatusReqID" False,MessagePieceField "MassStatusReqID" False,MessagePieceField "TotNumReports" False,MessagePieceField "LastRptRequested" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeOriginationDate" False,MessagePieceComponent "ContraGrp" False,MessagePieceField "ListID" False,MessagePieceField "CrossID" False,MessagePieceField "OrigCrossID" False,MessagePieceField "CrossType" False,MessagePieceField "ExecID" True,MessagePieceField "ExecRefID" False,MessagePieceField "ExecType" True,MessagePieceField "OrdStatus" True,MessagePieceField "WorkingIndicator" False,MessagePieceField "OrdRejReason" False,MessagePieceField "ExecRestatementReason" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "DayBookingInst" False,MessagePieceField "BookingUnit" False,MessagePieceField "PreallocMethod" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "CashMargin" False,MessagePieceField "ClearingFeeIndicator" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" True,MessagePieceComponent "Stipulations" False,MessagePieceField "QtyType" False,MessagePieceComponent "OrderQtyData" False,MessagePieceField "OrdType" False,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "PeggedPrice" False,MessagePieceField "DiscretionPrice" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "TargetStrategyPerformance" False,MessagePieceField "Currency" False,MessagePieceField "ComplianceID" False,MessagePieceField "SolicitedFlag" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "ExecInst" False,MessagePieceField "OrderCapacity" False,MessagePieceField "OrderRestrictions" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "LastQty" False,MessagePieceField "UnderlyingLastQty" False,MessagePieceField "LastPx" False,MessagePieceField "UnderlyingLastPx" False,MessagePieceField "LastParPx" False,MessagePieceField "LastSpotRate" False,MessagePieceField "LastForwardPoints" False,MessagePieceField "LastMkt" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "TimeBracket" False,MessagePieceField "LastCapacity" False,MessagePieceField "LeavesQty" True,MessagePieceField "CumQty" True,MessagePieceField "AvgPx" True,MessagePieceField "DayOrderQty" False,MessagePieceField "DayCumQty" False,MessagePieceField "DayAvgPx" False,MessagePieceField "GTBookingInst" False,MessagePieceField "TradeDate" False,MessagePieceField "TransactTime" False,MessagePieceField "ReportToExch" False,MessagePieceComponent "CommissionData" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceField "GrossTradeAmt" False,MessagePieceField "NumDaysInterest" False,MessagePieceField "ExDate" False,MessagePieceField "AccruedInterestRate" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "InterestAtMaturity" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceField "TradedFlatSwitch" False,MessagePieceField "BasisFeatureDate" False,MessagePieceField "BasisFeaturePrice" False,MessagePieceField "Concession" False,MessagePieceField "TotalTakedown" False,MessagePieceField "NetMoney" False,MessagePieceField "SettlCurrAmt" False,MessagePieceField "SettlCurrency" False,MessagePieceField "SettlCurrFxRate" False,MessagePieceField "SettlCurrFxRateCalc" False,MessagePieceField "HandlInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "PositionEffect" False,MessagePieceField "MaxShow" False,MessagePieceField "BookingType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "SettlDate2" False,MessagePieceField "OrderQty2" False,MessagePieceField "LastForwardPoints2" False,MessagePieceField "MultiLegReportingType" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False,MessagePieceField "TransBkdTime" False,MessagePieceField "ExecValuationPoint" False,MessagePieceField "ExecPriceType" False,MessagePieceField "ExecPriceAdjustment" False,MessagePieceField "PriorityIndicator" False,MessagePieceField "PriceImprovement" False,MessagePieceField "LastLiquidityInd" False,MessagePieceComponent "ContAmtGrp" False,MessagePieceComponent "InstrmtLegExecGrp" False,MessagePieceField "CopyMsgIndicator" False,MessagePieceComponent "MiscFeesGrp" False]}
-data ExecutionReport deriving stock (Generic)
+data ExecutionReport = ExecutionReport
+  { executionReportOrderID :: !OrderID,
+    executionReportSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    executionReportSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    executionReportSecondaryExecID :: !(Maybe SecondaryExecID),
+    executionReportClOrdID :: !(Maybe ClOrdID),
+    executionReportOrigClOrdID :: !(Maybe OrigClOrdID),
+    executionReportClOrdLinkID :: !(Maybe ClOrdLinkID),
+    executionReportQuoteRespID :: !(Maybe QuoteRespID),
+    executionReportOrdStatusReqID :: !(Maybe OrdStatusReqID),
+    executionReportMassStatusReqID :: !(Maybe MassStatusReqID),
+    executionReportTotNumReports :: !(Maybe TotNumReports),
+    executionReportLastRptRequested :: !(Maybe LastRptRequested),
+    executionReportTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    executionReportListID :: !(Maybe ListID),
+    executionReportCrossID :: !(Maybe CrossID),
+    executionReportOrigCrossID :: !(Maybe OrigCrossID),
+    executionReportCrossType :: !(Maybe CrossType),
+    executionReportExecID :: !ExecID,
+    executionReportExecRefID :: !(Maybe ExecRefID),
+    executionReportExecType :: !ExecType,
+    executionReportOrdStatus :: !OrdStatus,
+    executionReportWorkingIndicator :: !(Maybe WorkingIndicator),
+    executionReportOrdRejReason :: !(Maybe OrdRejReason),
+    executionReportExecRestatementReason :: !(Maybe ExecRestatementReason),
+    executionReportAccount :: !(Maybe Account),
+    executionReportAcctIDSource :: !(Maybe AcctIDSource),
+    executionReportAccountType :: !(Maybe AccountType),
+    executionReportDayBookingInst :: !(Maybe DayBookingInst),
+    executionReportBookingUnit :: !(Maybe BookingUnit),
+    executionReportPreallocMethod :: !(Maybe PreallocMethod),
+    executionReportSettlType :: !(Maybe SettlType),
+    executionReportSettlDate :: !(Maybe SettlDate),
+    executionReportCashMargin :: !(Maybe CashMargin),
+    executionReportClearingFeeIndicator :: !(Maybe ClearingFeeIndicator),
+    executionReportSide :: !Side,
+    executionReportQtyType :: !(Maybe QtyType),
+    executionReportOrdType :: !(Maybe OrdType),
+    executionReportPriceType :: !(Maybe PriceType),
+    executionReportPrice :: !(Maybe Price),
+    executionReportStopPx :: !(Maybe StopPx),
+    executionReportPeggedPrice :: !(Maybe PeggedPrice),
+    executionReportDiscretionPrice :: !(Maybe DiscretionPrice),
+    executionReportTargetStrategy :: !(Maybe TargetStrategy),
+    executionReportTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    executionReportParticipationRate :: !(Maybe ParticipationRate),
+    executionReportTargetStrategyPerformance :: !(Maybe TargetStrategyPerformance),
+    executionReportCurrency :: !(Maybe Currency),
+    executionReportComplianceID :: !(Maybe ComplianceID),
+    executionReportSolicitedFlag :: !(Maybe SolicitedFlag),
+    executionReportTimeInForce :: !(Maybe TimeInForce),
+    executionReportEffectiveTime :: !(Maybe EffectiveTime),
+    executionReportExpireDate :: !(Maybe ExpireDate),
+    executionReportExpireTime :: !(Maybe ExpireTime),
+    executionReportExecInst :: !(Maybe ExecInst),
+    executionReportOrderCapacity :: !(Maybe OrderCapacity),
+    executionReportOrderRestrictions :: !(Maybe OrderRestrictions),
+    executionReportCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    executionReportLastQty :: !(Maybe LastQty),
+    executionReportUnderlyingLastQty :: !(Maybe UnderlyingLastQty),
+    executionReportLastPx :: !(Maybe LastPx),
+    executionReportUnderlyingLastPx :: !(Maybe UnderlyingLastPx),
+    executionReportLastParPx :: !(Maybe LastParPx),
+    executionReportLastSpotRate :: !(Maybe LastSpotRate),
+    executionReportLastForwardPoints :: !(Maybe LastForwardPoints),
+    executionReportLastMkt :: !(Maybe LastMkt),
+    executionReportTradingSessionID :: !(Maybe TradingSessionID),
+    executionReportTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    executionReportTimeBracket :: !(Maybe TimeBracket),
+    executionReportLastCapacity :: !(Maybe LastCapacity),
+    executionReportLeavesQty :: !LeavesQty,
+    executionReportCumQty :: !CumQty,
+    executionReportAvgPx :: !AvgPx,
+    executionReportDayOrderQty :: !(Maybe DayOrderQty),
+    executionReportDayCumQty :: !(Maybe DayCumQty),
+    executionReportDayAvgPx :: !(Maybe DayAvgPx),
+    executionReportGTBookingInst :: !(Maybe GTBookingInst),
+    executionReportTradeDate :: !(Maybe TradeDate),
+    executionReportTransactTime :: !(Maybe TransactTime),
+    executionReportReportToExch :: !(Maybe ReportToExch),
+    executionReportGrossTradeAmt :: !(Maybe GrossTradeAmt),
+    executionReportNumDaysInterest :: !(Maybe NumDaysInterest),
+    executionReportExDate :: !(Maybe ExDate),
+    executionReportAccruedInterestRate :: !(Maybe AccruedInterestRate),
+    executionReportAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    executionReportInterestAtMaturity :: !(Maybe InterestAtMaturity),
+    executionReportEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    executionReportStartCash :: !(Maybe StartCash),
+    executionReportEndCash :: !(Maybe EndCash),
+    executionReportTradedFlatSwitch :: !(Maybe TradedFlatSwitch),
+    executionReportBasisFeatureDate :: !(Maybe BasisFeatureDate),
+    executionReportBasisFeaturePrice :: !(Maybe BasisFeaturePrice),
+    executionReportConcession :: !(Maybe Concession),
+    executionReportTotalTakedown :: !(Maybe TotalTakedown),
+    executionReportNetMoney :: !(Maybe NetMoney),
+    executionReportSettlCurrAmt :: !(Maybe SettlCurrAmt),
+    executionReportSettlCurrency :: !(Maybe SettlCurrency),
+    executionReportSettlCurrFxRate :: !(Maybe SettlCurrFxRate),
+    executionReportSettlCurrFxRateCalc :: !(Maybe SettlCurrFxRateCalc),
+    executionReportHandlInst :: !(Maybe HandlInst),
+    executionReportMinQty :: !(Maybe MinQty),
+    executionReportMaxFloor :: !(Maybe MaxFloor),
+    executionReportPositionEffect :: !(Maybe PositionEffect),
+    executionReportMaxShow :: !(Maybe MaxShow),
+    executionReportBookingType :: !(Maybe BookingType),
+    executionReportText :: !(Maybe Text),
+    executionReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    executionReportEncodedText :: !(Maybe EncodedText),
+    executionReportSettlDate2 :: !(Maybe SettlDate2),
+    executionReportOrderQty2 :: !(Maybe OrderQty2),
+    executionReportLastForwardPoints2 :: !(Maybe LastForwardPoints2),
+    executionReportMultiLegReportingType :: !(Maybe MultiLegReportingType),
+    executionReportCancellationRights :: !(Maybe CancellationRights),
+    executionReportMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    executionReportRegistID :: !(Maybe RegistID),
+    executionReportDesignation :: !(Maybe Designation),
+    executionReportTransBkdTime :: !(Maybe TransBkdTime),
+    executionReportExecValuationPoint :: !(Maybe ExecValuationPoint),
+    executionReportExecPriceType :: !(Maybe ExecPriceType),
+    executionReportExecPriceAdjustment :: !(Maybe ExecPriceAdjustment),
+    executionReportPriorityIndicator :: !(Maybe PriorityIndicator),
+    executionReportPriceImprovement :: !(Maybe PriceImprovement),
+    executionReportLastLiquidityInd :: !(Maybe LastLiquidityInd),
+    executionReportCopyMsgIndicator :: !(Maybe CopyMsgIndicator)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ExecutionReport
 
 -- MessageSpec {messageName = "OrderCancelReject", messageType = "9", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" True,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdID" True,MessagePieceField "ClOrdLinkID" False,MessagePieceField "OrigClOrdID" True,MessagePieceField "OrdStatus" True,MessagePieceField "WorkingIndicator" False,MessagePieceField "OrigOrdModTime" False,MessagePieceField "ListID" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradeDate" False,MessagePieceField "TransactTime" False,MessagePieceField "CxlRejResponseTo" True,MessagePieceField "CxlRejReason" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data OrderCancelReject deriving stock (Generic)
+data OrderCancelReject = OrderCancelReject
+  { orderCancelRejectOrderID :: !OrderID,
+    orderCancelRejectSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    orderCancelRejectSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    orderCancelRejectClOrdID :: !ClOrdID,
+    orderCancelRejectClOrdLinkID :: !(Maybe ClOrdLinkID),
+    orderCancelRejectOrigClOrdID :: !OrigClOrdID,
+    orderCancelRejectOrdStatus :: !OrdStatus,
+    orderCancelRejectWorkingIndicator :: !(Maybe WorkingIndicator),
+    orderCancelRejectOrigOrdModTime :: !(Maybe OrigOrdModTime),
+    orderCancelRejectListID :: !(Maybe ListID),
+    orderCancelRejectAccount :: !(Maybe Account),
+    orderCancelRejectAcctIDSource :: !(Maybe AcctIDSource),
+    orderCancelRejectAccountType :: !(Maybe AccountType),
+    orderCancelRejectTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    orderCancelRejectTradeDate :: !(Maybe TradeDate),
+    orderCancelRejectTransactTime :: !(Maybe TransactTime),
+    orderCancelRejectCxlRejResponseTo :: !CxlRejResponseTo,
+    orderCancelRejectCxlRejReason :: !(Maybe CxlRejReason),
+    orderCancelRejectText :: !(Maybe Text),
+    orderCancelRejectEncodedTextLen :: !(Maybe EncodedTextLen),
+    orderCancelRejectEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderCancelReject
 
 -- MessageSpec {messageName = "Logon", messageType = "A", messageCategory = "admin", messagePieces = [MessagePieceField "EncryptMethod" True,MessagePieceField "HeartBtInt" True,MessagePieceField "RawDataLength" False,MessagePieceField "RawData" False,MessagePieceField "ResetSeqNumFlag" False,MessagePieceField "NextExpectedMsgSeqNum" False,MessagePieceField "MaxMessageSize" False,MessagePieceGroup "NoMsgTypes" False [MessagePieceField "RefMsgType" False,MessagePieceField "MsgDirection" False],MessagePieceField "TestMessageIndicator" False,MessagePieceField "Username" False,MessagePieceField "Password" False]}
-data Logon deriving stock (Generic)
+data Logon = Logon
+  { logonEncryptMethod :: !EncryptMethod,
+    logonHeartBtInt :: !HeartBtInt,
+    logonRawDataLength :: !(Maybe RawDataLength),
+    logonRawData :: !(Maybe RawData),
+    logonResetSeqNumFlag :: !(Maybe ResetSeqNumFlag),
+    logonNextExpectedMsgSeqNum :: !(Maybe NextExpectedMsgSeqNum),
+    logonMaxMessageSize :: !(Maybe MaxMessageSize),
+    logonTestMessageIndicator :: !(Maybe TestMessageIndicator),
+    logonUsername :: !(Maybe Username),
+    logonPassword :: !(Maybe Password)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Logon
 
 -- MessageSpec {messageName = "News", messageType = "B", messageCategory = "app", messagePieces = [MessagePieceField "OrigTime" False,MessagePieceField "Urgency" False,MessagePieceField "Headline" True,MessagePieceField "EncodedHeadlineLen" False,MessagePieceField "EncodedHeadline" False,MessagePieceComponent "RoutingGrp" False,MessagePieceComponent "InstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "LinesOfTextGrp" True,MessagePieceField "URLLink" False,MessagePieceField "RawDataLength" False,MessagePieceField "RawData" False]}
-data News deriving stock (Generic)
+data News = News
+  { newsOrigTime :: !(Maybe OrigTime),
+    newsUrgency :: !(Maybe Urgency),
+    newsHeadline :: !Headline,
+    newsEncodedHeadlineLen :: !(Maybe EncodedHeadlineLen),
+    newsEncodedHeadline :: !(Maybe EncodedHeadline),
+    newsURLLink :: !(Maybe URLLink),
+    newsRawDataLength :: !(Maybe RawDataLength),
+    newsRawData :: !(Maybe RawData)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity News
 
 -- MessageSpec {messageName = "Email", messageType = "C", messageCategory = "app", messagePieces = [MessagePieceField "EmailThreadID" True,MessagePieceField "EmailType" True,MessagePieceField "OrigTime" False,MessagePieceField "Subject" True,MessagePieceField "EncodedSubjectLen" False,MessagePieceField "EncodedSubject" False,MessagePieceComponent "RoutingGrp" False,MessagePieceComponent "InstrmtGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "OrderID" False,MessagePieceField "ClOrdID" False,MessagePieceComponent "LinesOfTextGrp" True,MessagePieceField "RawDataLength" False,MessagePieceField "RawData" False]}
-data Email deriving stock (Generic)
+data Email = Email
+  { emailEmailThreadID :: !EmailThreadID,
+    emailEmailType :: !EmailType,
+    emailOrigTime :: !(Maybe OrigTime),
+    emailSubject :: !Subject,
+    emailEncodedSubjectLen :: !(Maybe EncodedSubjectLen),
+    emailEncodedSubject :: !(Maybe EncodedSubject),
+    emailOrderID :: !(Maybe OrderID),
+    emailClOrdID :: !(Maybe ClOrdID),
+    emailRawDataLength :: !(Maybe RawDataLength),
+    emailRawData :: !(Maybe RawData)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Email
 
 -- MessageSpec {messageName = "NewOrderSingle", messageType = "D", messageCategory = "app", messagePieces = [MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradeDate" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "DayBookingInst" False,MessagePieceField "BookingUnit" False,MessagePieceField "PreallocMethod" False,MessagePieceField "AllocID" False,MessagePieceComponent "PreAllocGrp" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "CashMargin" False,MessagePieceField "ClearingFeeIndicator" False,MessagePieceField "HandlInst" False,MessagePieceField "ExecInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "ExDestination" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "ProcessCode" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "PrevClosePx" False,MessagePieceField "Side" True,MessagePieceField "LocateReqd" False,MessagePieceField "TransactTime" True,MessagePieceComponent "Stipulations" False,MessagePieceField "QtyType" False,MessagePieceComponent "OrderQtyData" True,MessagePieceField "OrdType" True,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceField "Currency" False,MessagePieceField "ComplianceID" False,MessagePieceField "SolicitedFlag" False,MessagePieceField "IOIID" False,MessagePieceField "QuoteID" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "GTBookingInst" False,MessagePieceComponent "CommissionData" False,MessagePieceField "OrderCapacity" False,MessagePieceField "OrderRestrictions" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ForexReq" False,MessagePieceField "SettlCurrency" False,MessagePieceField "BookingType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "SettlDate2" False,MessagePieceField "OrderQty2" False,MessagePieceField "Price2" False,MessagePieceField "PositionEffect" False,MessagePieceField "CoveredOrUncovered" False,MessagePieceField "MaxShow" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False]}
-data NewOrderSingle deriving stock (Generic)
+data NewOrderSingle = NewOrderSingle
+  { newOrderSingleClOrdID :: !ClOrdID,
+    newOrderSingleSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    newOrderSingleClOrdLinkID :: !(Maybe ClOrdLinkID),
+    newOrderSingleTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    newOrderSingleTradeDate :: !(Maybe TradeDate),
+    newOrderSingleAccount :: !(Maybe Account),
+    newOrderSingleAcctIDSource :: !(Maybe AcctIDSource),
+    newOrderSingleAccountType :: !(Maybe AccountType),
+    newOrderSingleDayBookingInst :: !(Maybe DayBookingInst),
+    newOrderSingleBookingUnit :: !(Maybe BookingUnit),
+    newOrderSinglePreallocMethod :: !(Maybe PreallocMethod),
+    newOrderSingleAllocID :: !(Maybe AllocID),
+    newOrderSingleSettlType :: !(Maybe SettlType),
+    newOrderSingleSettlDate :: !(Maybe SettlDate),
+    newOrderSingleCashMargin :: !(Maybe CashMargin),
+    newOrderSingleClearingFeeIndicator :: !(Maybe ClearingFeeIndicator),
+    newOrderSingleHandlInst :: !(Maybe HandlInst),
+    newOrderSingleExecInst :: !(Maybe ExecInst),
+    newOrderSingleMinQty :: !(Maybe MinQty),
+    newOrderSingleMaxFloor :: !(Maybe MaxFloor),
+    newOrderSingleExDestination :: !(Maybe ExDestination),
+    newOrderSingleProcessCode :: !(Maybe ProcessCode),
+    newOrderSinglePrevClosePx :: !(Maybe PrevClosePx),
+    newOrderSingleSide :: !Side,
+    newOrderSingleLocateReqd :: !(Maybe LocateReqd),
+    newOrderSingleTransactTime :: !TransactTime,
+    newOrderSingleQtyType :: !(Maybe QtyType),
+    newOrderSingleOrdType :: !OrdType,
+    newOrderSinglePriceType :: !(Maybe PriceType),
+    newOrderSinglePrice :: !(Maybe Price),
+    newOrderSingleStopPx :: !(Maybe StopPx),
+    newOrderSingleCurrency :: !(Maybe Currency),
+    newOrderSingleComplianceID :: !(Maybe ComplianceID),
+    newOrderSingleSolicitedFlag :: !(Maybe SolicitedFlag),
+    newOrderSingleIOIID :: !(Maybe IOIID),
+    newOrderSingleQuoteID :: !(Maybe QuoteID),
+    newOrderSingleTimeInForce :: !(Maybe TimeInForce),
+    newOrderSingleEffectiveTime :: !(Maybe EffectiveTime),
+    newOrderSingleExpireDate :: !(Maybe ExpireDate),
+    newOrderSingleExpireTime :: !(Maybe ExpireTime),
+    newOrderSingleGTBookingInst :: !(Maybe GTBookingInst),
+    newOrderSingleOrderCapacity :: !(Maybe OrderCapacity),
+    newOrderSingleOrderRestrictions :: !(Maybe OrderRestrictions),
+    newOrderSingleCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    newOrderSingleForexReq :: !(Maybe ForexReq),
+    newOrderSingleSettlCurrency :: !(Maybe SettlCurrency),
+    newOrderSingleBookingType :: !(Maybe BookingType),
+    newOrderSingleText :: !(Maybe Text),
+    newOrderSingleEncodedTextLen :: !(Maybe EncodedTextLen),
+    newOrderSingleEncodedText :: !(Maybe EncodedText),
+    newOrderSingleSettlDate2 :: !(Maybe SettlDate2),
+    newOrderSingleOrderQty2 :: !(Maybe OrderQty2),
+    newOrderSinglePrice2 :: !(Maybe Price2),
+    newOrderSinglePositionEffect :: !(Maybe PositionEffect),
+    newOrderSingleCoveredOrUncovered :: !(Maybe CoveredOrUncovered),
+    newOrderSingleMaxShow :: !(Maybe MaxShow),
+    newOrderSingleTargetStrategy :: !(Maybe TargetStrategy),
+    newOrderSingleTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    newOrderSingleParticipationRate :: !(Maybe ParticipationRate),
+    newOrderSingleCancellationRights :: !(Maybe CancellationRights),
+    newOrderSingleMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    newOrderSingleRegistID :: !(Maybe RegistID),
+    newOrderSingleDesignation :: !(Maybe Designation)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity NewOrderSingle
 
 -- MessageSpec {messageName = "NewOrderList", messageType = "E", messageCategory = "app", messagePieces = [MessagePieceField "ListID" True,MessagePieceField "BidID" False,MessagePieceField "ClientBidID" False,MessagePieceField "ProgRptReqs" False,MessagePieceField "BidType" True,MessagePieceField "ProgPeriodInterval" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "ListExecInstType" False,MessagePieceField "ListExecInst" False,MessagePieceField "EncodedListExecInstLen" False,MessagePieceField "EncodedListExecInst" False,MessagePieceField "AllowableOneSidednessPct" False,MessagePieceField "AllowableOneSidednessValue" False,MessagePieceField "AllowableOneSidednessCurr" False,MessagePieceField "TotNoOrders" True,MessagePieceField "LastFragment" False,MessagePieceComponent "ListOrdGrp" True]}
-data NewOrderList deriving stock (Generic)
+data NewOrderList = NewOrderList
+  { newOrderListListID :: !ListID,
+    newOrderListBidID :: !(Maybe BidID),
+    newOrderListClientBidID :: !(Maybe ClientBidID),
+    newOrderListProgRptReqs :: !(Maybe ProgRptReqs),
+    newOrderListBidType :: !BidType,
+    newOrderListProgPeriodInterval :: !(Maybe ProgPeriodInterval),
+    newOrderListCancellationRights :: !(Maybe CancellationRights),
+    newOrderListMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    newOrderListRegistID :: !(Maybe RegistID),
+    newOrderListListExecInstType :: !(Maybe ListExecInstType),
+    newOrderListListExecInst :: !(Maybe ListExecInst),
+    newOrderListEncodedListExecInstLen :: !(Maybe EncodedListExecInstLen),
+    newOrderListEncodedListExecInst :: !(Maybe EncodedListExecInst),
+    newOrderListAllowableOneSidednessPct :: !(Maybe AllowableOneSidednessPct),
+    newOrderListAllowableOneSidednessValue :: !(Maybe AllowableOneSidednessValue),
+    newOrderListAllowableOneSidednessCurr :: !(Maybe AllowableOneSidednessCurr),
+    newOrderListTotNoOrders :: !TotNoOrders,
+    newOrderListLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity NewOrderList
 
 -- MessageSpec {messageName = "OrderCancelRequest", messageType = "F", messageCategory = "app", messagePieces = [MessagePieceField "OrigClOrdID" True,MessagePieceField "OrderID" False,MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceField "ListID" False,MessagePieceField "OrigOrdModTime" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceComponent "Parties" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" True,MessagePieceField "TransactTime" True,MessagePieceComponent "OrderQtyData" True,MessagePieceField "ComplianceID" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data OrderCancelRequest deriving stock (Generic)
+data OrderCancelRequest = OrderCancelRequest
+  { orderCancelRequestOrigClOrdID :: !OrigClOrdID,
+    orderCancelRequestOrderID :: !(Maybe OrderID),
+    orderCancelRequestClOrdID :: !ClOrdID,
+    orderCancelRequestSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    orderCancelRequestClOrdLinkID :: !(Maybe ClOrdLinkID),
+    orderCancelRequestListID :: !(Maybe ListID),
+    orderCancelRequestOrigOrdModTime :: !(Maybe OrigOrdModTime),
+    orderCancelRequestAccount :: !(Maybe Account),
+    orderCancelRequestAcctIDSource :: !(Maybe AcctIDSource),
+    orderCancelRequestAccountType :: !(Maybe AccountType),
+    orderCancelRequestSide :: !Side,
+    orderCancelRequestTransactTime :: !TransactTime,
+    orderCancelRequestComplianceID :: !(Maybe ComplianceID),
+    orderCancelRequestText :: !(Maybe Text),
+    orderCancelRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    orderCancelRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderCancelRequest
 
 -- MessageSpec {messageName = "OrderCancelReplaceRequest", messageType = "G", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradeDate" False,MessagePieceField "OrigClOrdID" True,MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceField "ListID" False,MessagePieceField "OrigOrdModTime" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "DayBookingInst" False,MessagePieceField "BookingUnit" False,MessagePieceField "PreallocMethod" False,MessagePieceField "AllocID" False,MessagePieceComponent "PreAllocGrp" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "CashMargin" False,MessagePieceField "ClearingFeeIndicator" False,MessagePieceField "HandlInst" False,MessagePieceField "ExecInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "ExDestination" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" True,MessagePieceField "TransactTime" True,MessagePieceField "QtyType" False,MessagePieceComponent "OrderQtyData" True,MessagePieceField "OrdType" True,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "ComplianceID" False,MessagePieceField "SolicitedFlag" False,MessagePieceField "Currency" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "GTBookingInst" False,MessagePieceComponent "CommissionData" False,MessagePieceField "OrderCapacity" False,MessagePieceField "OrderRestrictions" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ForexReq" False,MessagePieceField "SettlCurrency" False,MessagePieceField "BookingType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "SettlDate2" False,MessagePieceField "OrderQty2" False,MessagePieceField "Price2" False,MessagePieceField "PositionEffect" False,MessagePieceField "CoveredOrUncovered" False,MessagePieceField "MaxShow" False,MessagePieceField "LocateReqd" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False]}
-data OrderCancelReplaceRequest deriving stock (Generic)
+data OrderCancelReplaceRequest = OrderCancelReplaceRequest
+  { orderCancelReplaceRequestOrderID :: !(Maybe OrderID),
+    orderCancelReplaceRequestTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    orderCancelReplaceRequestTradeDate :: !(Maybe TradeDate),
+    orderCancelReplaceRequestOrigClOrdID :: !OrigClOrdID,
+    orderCancelReplaceRequestClOrdID :: !ClOrdID,
+    orderCancelReplaceRequestSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    orderCancelReplaceRequestClOrdLinkID :: !(Maybe ClOrdLinkID),
+    orderCancelReplaceRequestListID :: !(Maybe ListID),
+    orderCancelReplaceRequestOrigOrdModTime :: !(Maybe OrigOrdModTime),
+    orderCancelReplaceRequestAccount :: !(Maybe Account),
+    orderCancelReplaceRequestAcctIDSource :: !(Maybe AcctIDSource),
+    orderCancelReplaceRequestAccountType :: !(Maybe AccountType),
+    orderCancelReplaceRequestDayBookingInst :: !(Maybe DayBookingInst),
+    orderCancelReplaceRequestBookingUnit :: !(Maybe BookingUnit),
+    orderCancelReplaceRequestPreallocMethod :: !(Maybe PreallocMethod),
+    orderCancelReplaceRequestAllocID :: !(Maybe AllocID),
+    orderCancelReplaceRequestSettlType :: !(Maybe SettlType),
+    orderCancelReplaceRequestSettlDate :: !(Maybe SettlDate),
+    orderCancelReplaceRequestCashMargin :: !(Maybe CashMargin),
+    orderCancelReplaceRequestClearingFeeIndicator :: !(Maybe ClearingFeeIndicator),
+    orderCancelReplaceRequestHandlInst :: !(Maybe HandlInst),
+    orderCancelReplaceRequestExecInst :: !(Maybe ExecInst),
+    orderCancelReplaceRequestMinQty :: !(Maybe MinQty),
+    orderCancelReplaceRequestMaxFloor :: !(Maybe MaxFloor),
+    orderCancelReplaceRequestExDestination :: !(Maybe ExDestination),
+    orderCancelReplaceRequestSide :: !Side,
+    orderCancelReplaceRequestTransactTime :: !TransactTime,
+    orderCancelReplaceRequestQtyType :: !(Maybe QtyType),
+    orderCancelReplaceRequestOrdType :: !OrdType,
+    orderCancelReplaceRequestPriceType :: !(Maybe PriceType),
+    orderCancelReplaceRequestPrice :: !(Maybe Price),
+    orderCancelReplaceRequestStopPx :: !(Maybe StopPx),
+    orderCancelReplaceRequestTargetStrategy :: !(Maybe TargetStrategy),
+    orderCancelReplaceRequestTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    orderCancelReplaceRequestParticipationRate :: !(Maybe ParticipationRate),
+    orderCancelReplaceRequestComplianceID :: !(Maybe ComplianceID),
+    orderCancelReplaceRequestSolicitedFlag :: !(Maybe SolicitedFlag),
+    orderCancelReplaceRequestCurrency :: !(Maybe Currency),
+    orderCancelReplaceRequestTimeInForce :: !(Maybe TimeInForce),
+    orderCancelReplaceRequestEffectiveTime :: !(Maybe EffectiveTime),
+    orderCancelReplaceRequestExpireDate :: !(Maybe ExpireDate),
+    orderCancelReplaceRequestExpireTime :: !(Maybe ExpireTime),
+    orderCancelReplaceRequestGTBookingInst :: !(Maybe GTBookingInst),
+    orderCancelReplaceRequestOrderCapacity :: !(Maybe OrderCapacity),
+    orderCancelReplaceRequestOrderRestrictions :: !(Maybe OrderRestrictions),
+    orderCancelReplaceRequestCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    orderCancelReplaceRequestForexReq :: !(Maybe ForexReq),
+    orderCancelReplaceRequestSettlCurrency :: !(Maybe SettlCurrency),
+    orderCancelReplaceRequestBookingType :: !(Maybe BookingType),
+    orderCancelReplaceRequestText :: !(Maybe Text),
+    orderCancelReplaceRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    orderCancelReplaceRequestEncodedText :: !(Maybe EncodedText),
+    orderCancelReplaceRequestSettlDate2 :: !(Maybe SettlDate2),
+    orderCancelReplaceRequestOrderQty2 :: !(Maybe OrderQty2),
+    orderCancelReplaceRequestPrice2 :: !(Maybe Price2),
+    orderCancelReplaceRequestPositionEffect :: !(Maybe PositionEffect),
+    orderCancelReplaceRequestCoveredOrUncovered :: !(Maybe CoveredOrUncovered),
+    orderCancelReplaceRequestMaxShow :: !(Maybe MaxShow),
+    orderCancelReplaceRequestLocateReqd :: !(Maybe LocateReqd),
+    orderCancelReplaceRequestCancellationRights :: !(Maybe CancellationRights),
+    orderCancelReplaceRequestMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    orderCancelReplaceRequestRegistID :: !(Maybe RegistID),
+    orderCancelReplaceRequestDesignation :: !(Maybe Designation)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderCancelReplaceRequest
 
 -- MessageSpec {messageName = "OrderStatusRequest", messageType = "H", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" False,MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceComponent "Parties" False,MessagePieceField "OrdStatusReqID" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" True]}
-data OrderStatusRequest deriving stock (Generic)
+data OrderStatusRequest = OrderStatusRequest
+  { orderStatusRequestOrderID :: !(Maybe OrderID),
+    orderStatusRequestClOrdID :: !ClOrdID,
+    orderStatusRequestSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    orderStatusRequestClOrdLinkID :: !(Maybe ClOrdLinkID),
+    orderStatusRequestOrdStatusReqID :: !(Maybe OrdStatusReqID),
+    orderStatusRequestAccount :: !(Maybe Account),
+    orderStatusRequestAcctIDSource :: !(Maybe AcctIDSource),
+    orderStatusRequestSide :: !Side
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderStatusRequest
 
 -- MessageSpec {messageName = "AllocationInstruction", messageType = "J", messageCategory = "app", messagePieces = [MessagePieceField "AllocID" True,MessagePieceField "AllocTransType" True,MessagePieceField "AllocType" True,MessagePieceField "SecondaryAllocID" False,MessagePieceField "RefAllocID" False,MessagePieceField "AllocCancReplaceReason" False,MessagePieceField "AllocIntermedReqType" False,MessagePieceField "AllocLinkID" False,MessagePieceField "AllocLinkType" False,MessagePieceField "BookingRefID" False,MessagePieceField "AllocNoOrdersType" True,MessagePieceComponent "OrdAllocGrp" False,MessagePieceComponent "ExecAllocGrp" False,MessagePieceField "PreviouslyReported" False,MessagePieceField "ReversalIndicator" False,MessagePieceField "MatchType" False,MessagePieceField "Side" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "Quantity" True,MessagePieceField "QtyType" False,MessagePieceField "LastMkt" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "PriceType" False,MessagePieceField "AvgPx" True,MessagePieceField "AvgParPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceField "Currency" False,MessagePieceField "AvgPxPrecision" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeDate" True,MessagePieceField "TransactTime" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "BookingType" False,MessagePieceField "GrossTradeAmt" False,MessagePieceField "Concession" False,MessagePieceField "TotalTakedown" False,MessagePieceField "NetMoney" False,MessagePieceField "PositionEffect" False,MessagePieceField "AutoAcceptIndicator" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "NumDaysInterest" False,MessagePieceField "AccruedInterestRate" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "TotalAccruedInterestAmt" False,MessagePieceField "InterestAtMaturity" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceField "LegalConfirm" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "YieldData" False,MessagePieceField "TotNoAllocs" False,MessagePieceField "LastFragment" False,MessagePieceComponent "AllocGrp" False]}
-data AllocationInstruction deriving stock (Generic)
+data AllocationInstruction = AllocationInstruction
+  { allocationInstructionAllocID :: !AllocID,
+    allocationInstructionAllocTransType :: !AllocTransType,
+    allocationInstructionAllocType :: !AllocType,
+    allocationInstructionSecondaryAllocID :: !(Maybe SecondaryAllocID),
+    allocationInstructionRefAllocID :: !(Maybe RefAllocID),
+    allocationInstructionAllocCancReplaceReason :: !(Maybe AllocCancReplaceReason),
+    allocationInstructionAllocIntermedReqType :: !(Maybe AllocIntermedReqType),
+    allocationInstructionAllocLinkID :: !(Maybe AllocLinkID),
+    allocationInstructionAllocLinkType :: !(Maybe AllocLinkType),
+    allocationInstructionBookingRefID :: !(Maybe BookingRefID),
+    allocationInstructionAllocNoOrdersType :: !AllocNoOrdersType,
+    allocationInstructionPreviouslyReported :: !(Maybe PreviouslyReported),
+    allocationInstructionReversalIndicator :: !(Maybe ReversalIndicator),
+    allocationInstructionMatchType :: !(Maybe MatchType),
+    allocationInstructionSide :: !Side,
+    allocationInstructionQuantity :: !Quantity,
+    allocationInstructionQtyType :: !(Maybe QtyType),
+    allocationInstructionLastMkt :: !(Maybe LastMkt),
+    allocationInstructionTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    allocationInstructionTradingSessionID :: !(Maybe TradingSessionID),
+    allocationInstructionTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    allocationInstructionPriceType :: !(Maybe PriceType),
+    allocationInstructionAvgPx :: !AvgPx,
+    allocationInstructionAvgParPx :: !(Maybe AvgParPx),
+    allocationInstructionCurrency :: !(Maybe Currency),
+    allocationInstructionAvgPxPrecision :: !(Maybe AvgPxPrecision),
+    allocationInstructionTradeDate :: !TradeDate,
+    allocationInstructionTransactTime :: !(Maybe TransactTime),
+    allocationInstructionSettlType :: !(Maybe SettlType),
+    allocationInstructionSettlDate :: !(Maybe SettlDate),
+    allocationInstructionBookingType :: !(Maybe BookingType),
+    allocationInstructionGrossTradeAmt :: !(Maybe GrossTradeAmt),
+    allocationInstructionConcession :: !(Maybe Concession),
+    allocationInstructionTotalTakedown :: !(Maybe TotalTakedown),
+    allocationInstructionNetMoney :: !(Maybe NetMoney),
+    allocationInstructionPositionEffect :: !(Maybe PositionEffect),
+    allocationInstructionAutoAcceptIndicator :: !(Maybe AutoAcceptIndicator),
+    allocationInstructionText :: !(Maybe Text),
+    allocationInstructionEncodedTextLen :: !(Maybe EncodedTextLen),
+    allocationInstructionEncodedText :: !(Maybe EncodedText),
+    allocationInstructionNumDaysInterest :: !(Maybe NumDaysInterest),
+    allocationInstructionAccruedInterestRate :: !(Maybe AccruedInterestRate),
+    allocationInstructionAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    allocationInstructionTotalAccruedInterestAmt :: !(Maybe TotalAccruedInterestAmt),
+    allocationInstructionInterestAtMaturity :: !(Maybe InterestAtMaturity),
+    allocationInstructionEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    allocationInstructionStartCash :: !(Maybe StartCash),
+    allocationInstructionEndCash :: !(Maybe EndCash),
+    allocationInstructionLegalConfirm :: !(Maybe LegalConfirm),
+    allocationInstructionTotNoAllocs :: !(Maybe TotNoAllocs),
+    allocationInstructionLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity AllocationInstruction
 
 -- MessageSpec {messageName = "ListCancelRequest", messageType = "K", messageCategory = "app", messagePieces = [MessagePieceField "ListID" True,MessagePieceField "TransactTime" True,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradeDate" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data ListCancelRequest deriving stock (Generic)
+data ListCancelRequest = ListCancelRequest
+  { listCancelRequestListID :: !ListID,
+    listCancelRequestTransactTime :: !TransactTime,
+    listCancelRequestTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    listCancelRequestTradeDate :: !(Maybe TradeDate),
+    listCancelRequestText :: !(Maybe Text),
+    listCancelRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    listCancelRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ListCancelRequest
 
 -- MessageSpec {messageName = "ListExecute", messageType = "L", messageCategory = "app", messagePieces = [MessagePieceField "ListID" True,MessagePieceField "ClientBidID" False,MessagePieceField "BidID" False,MessagePieceField "TransactTime" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data ListExecute deriving stock (Generic)
+data ListExecute = ListExecute
+  { listExecuteListID :: !ListID,
+    listExecuteClientBidID :: !(Maybe ClientBidID),
+    listExecuteBidID :: !(Maybe BidID),
+    listExecuteTransactTime :: !TransactTime,
+    listExecuteText :: !(Maybe Text),
+    listExecuteEncodedTextLen :: !(Maybe EncodedTextLen),
+    listExecuteEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ListExecute
 
 -- MessageSpec {messageName = "ListStatusRequest", messageType = "M", messageCategory = "app", messagePieces = [MessagePieceField "ListID" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data ListStatusRequest deriving stock (Generic)
+data ListStatusRequest = ListStatusRequest
+  { listStatusRequestListID :: !ListID,
+    listStatusRequestText :: !(Maybe Text),
+    listStatusRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    listStatusRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ListStatusRequest
 
 -- MessageSpec {messageName = "ListStatus", messageType = "N", messageCategory = "app", messagePieces = [MessagePieceField "ListID" True,MessagePieceField "ListStatusType" True,MessagePieceField "NoRpts" True,MessagePieceField "ListOrderStatus" True,MessagePieceField "RptSeq" True,MessagePieceField "ListStatusText" False,MessagePieceField "EncodedListStatusTextLen" False,MessagePieceField "EncodedListStatusText" False,MessagePieceField "TransactTime" False,MessagePieceField "TotNoOrders" True,MessagePieceField "LastFragment" False,MessagePieceComponent "OrdListStatGrp" True]}
-data ListStatus deriving stock (Generic)
+data ListStatus = ListStatus
+  { listStatusListID :: !ListID,
+    listStatusListStatusType :: !ListStatusType,
+    listStatusNoRpts :: !NoRpts,
+    listStatusListOrderStatus :: !ListOrderStatus,
+    listStatusRptSeq :: !RptSeq,
+    listStatusListStatusText :: !(Maybe ListStatusText),
+    listStatusEncodedListStatusTextLen :: !(Maybe EncodedListStatusTextLen),
+    listStatusEncodedListStatusText :: !(Maybe EncodedListStatusText),
+    listStatusTransactTime :: !(Maybe TransactTime),
+    listStatusTotNoOrders :: !TotNoOrders,
+    listStatusLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ListStatus
 
 -- MessageSpec {messageName = "AllocationInstructionAck", messageType = "P", messageCategory = "app", messagePieces = [MessagePieceField "AllocID" True,MessagePieceComponent "Parties" False,MessagePieceField "SecondaryAllocID" False,MessagePieceField "TradeDate" False,MessagePieceField "TransactTime" True,MessagePieceField "AllocStatus" True,MessagePieceField "AllocRejCode" False,MessagePieceField "AllocType" False,MessagePieceField "AllocIntermedReqType" False,MessagePieceField "MatchStatus" False,MessagePieceField "Product" False,MessagePieceField "SecurityType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceComponent "AllocAckGrp" False]}
-data AllocationInstructionAck deriving stock (Generic)
+data AllocationInstructionAck = AllocationInstructionAck
+  { allocationInstructionAckAllocID :: !AllocID,
+    allocationInstructionAckSecondaryAllocID :: !(Maybe SecondaryAllocID),
+    allocationInstructionAckTradeDate :: !(Maybe TradeDate),
+    allocationInstructionAckTransactTime :: !TransactTime,
+    allocationInstructionAckAllocStatus :: !AllocStatus,
+    allocationInstructionAckAllocRejCode :: !(Maybe AllocRejCode),
+    allocationInstructionAckAllocType :: !(Maybe AllocType),
+    allocationInstructionAckAllocIntermedReqType :: !(Maybe AllocIntermedReqType),
+    allocationInstructionAckMatchStatus :: !(Maybe MatchStatus),
+    allocationInstructionAckProduct :: !(Maybe Product),
+    allocationInstructionAckSecurityType :: !(Maybe SecurityType),
+    allocationInstructionAckText :: !(Maybe Text),
+    allocationInstructionAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    allocationInstructionAckEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity AllocationInstructionAck
 
 -- MessageSpec {messageName = "DontKnowTrade", messageType = "Q", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" True,MessagePieceField "SecondaryOrderID" False,MessagePieceField "ExecID" True,MessagePieceField "DKReason" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "Side" True,MessagePieceComponent "OrderQtyData" True,MessagePieceField "LastQty" False,MessagePieceField "LastPx" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data DontKnowTrade deriving stock (Generic)
+data DontKnowTrade = DontKnowTrade
+  { dontKnowTradeOrderID :: !OrderID,
+    dontKnowTradeSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    dontKnowTradeExecID :: !ExecID,
+    dontKnowTradeDKReason :: !DKReason,
+    dontKnowTradeSide :: !Side,
+    dontKnowTradeLastQty :: !(Maybe LastQty),
+    dontKnowTradeLastPx :: !(Maybe LastPx),
+    dontKnowTradeText :: !(Maybe Text),
+    dontKnowTradeEncodedTextLen :: !(Maybe EncodedTextLen),
+    dontKnowTradeEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity DontKnowTrade
 
 -- MessageSpec {messageName = "QuoteRequest", messageType = "R", messageCategory = "app", messagePieces = [MessagePieceField "QuoteReqID" True,MessagePieceField "RFQReqID" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderCapacity" False,MessagePieceComponent "QuotReqGrp" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data QuoteRequest deriving stock (Generic)
+data QuoteRequest = QuoteRequest
+  { quoteRequestQuoteReqID :: !QuoteReqID,
+    quoteRequestRFQReqID :: !(Maybe RFQReqID),
+    quoteRequestClOrdID :: !(Maybe ClOrdID),
+    quoteRequestOrderCapacity :: !(Maybe OrderCapacity),
+    quoteRequestText :: !(Maybe Text),
+    quoteRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    quoteRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity QuoteRequest
 
 -- MessageSpec {messageName = "Quote", messageType = "S", messageCategory = "app", messagePieces = [MessagePieceField "QuoteReqID" False,MessagePieceField "QuoteID" True,MessagePieceField "QuoteRespID" False,MessagePieceField "QuoteType" False,MessagePieceComponent "QuotQualGrp" False,MessagePieceField "QuoteResponseLevel" False,MessagePieceComponent "Parties" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" False,MessagePieceComponent "OrderQtyData" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "SettlDate2" False,MessagePieceField "OrderQty2" False,MessagePieceField "Currency" False,MessagePieceComponent "Stipulations" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceComponent "LegQuotGrp" False,MessagePieceField "BidPx" False,MessagePieceField "OfferPx" False,MessagePieceField "MktBidPx" False,MessagePieceField "MktOfferPx" False,MessagePieceField "MinBidSize" False,MessagePieceField "BidSize" False,MessagePieceField "MinOfferSize" False,MessagePieceField "OfferSize" False,MessagePieceField "ValidUntilTime" False,MessagePieceField "BidSpotRate" False,MessagePieceField "OfferSpotRate" False,MessagePieceField "BidForwardPoints" False,MessagePieceField "OfferForwardPoints" False,MessagePieceField "MidPx" False,MessagePieceField "BidYield" False,MessagePieceField "MidYield" False,MessagePieceField "OfferYield" False,MessagePieceField "TransactTime" False,MessagePieceField "OrdType" False,MessagePieceField "BidForwardPoints2" False,MessagePieceField "OfferForwardPoints2" False,MessagePieceField "SettlCurrBidFxRate" False,MessagePieceField "SettlCurrOfferFxRate" False,MessagePieceField "SettlCurrFxRateCalc" False,MessagePieceField "CommType" False,MessagePieceField "Commission" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ExDestination" False,MessagePieceField "OrderCapacity" False,MessagePieceField "PriceType" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data Quote deriving stock (Generic)
+data Quote = Quote
+  { quoteQuoteReqID :: !(Maybe QuoteReqID),
+    quoteQuoteID :: !QuoteID,
+    quoteQuoteRespID :: !(Maybe QuoteRespID),
+    quoteQuoteType :: !(Maybe QuoteType),
+    quoteQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
+    quoteTradingSessionID :: !(Maybe TradingSessionID),
+    quoteTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    quoteSide :: !(Maybe Side),
+    quoteSettlType :: !(Maybe SettlType),
+    quoteSettlDate :: !(Maybe SettlDate),
+    quoteSettlDate2 :: !(Maybe SettlDate2),
+    quoteOrderQty2 :: !(Maybe OrderQty2),
+    quoteCurrency :: !(Maybe Currency),
+    quoteAccount :: !(Maybe Account),
+    quoteAcctIDSource :: !(Maybe AcctIDSource),
+    quoteAccountType :: !(Maybe AccountType),
+    quoteBidPx :: !(Maybe BidPx),
+    quoteOfferPx :: !(Maybe OfferPx),
+    quoteMktBidPx :: !(Maybe MktBidPx),
+    quoteMktOfferPx :: !(Maybe MktOfferPx),
+    quoteMinBidSize :: !(Maybe MinBidSize),
+    quoteBidSize :: !(Maybe BidSize),
+    quoteMinOfferSize :: !(Maybe MinOfferSize),
+    quoteOfferSize :: !(Maybe OfferSize),
+    quoteValidUntilTime :: !(Maybe ValidUntilTime),
+    quoteBidSpotRate :: !(Maybe BidSpotRate),
+    quoteOfferSpotRate :: !(Maybe OfferSpotRate),
+    quoteBidForwardPoints :: !(Maybe BidForwardPoints),
+    quoteOfferForwardPoints :: !(Maybe OfferForwardPoints),
+    quoteMidPx :: !(Maybe MidPx),
+    quoteBidYield :: !(Maybe BidYield),
+    quoteMidYield :: !(Maybe MidYield),
+    quoteOfferYield :: !(Maybe OfferYield),
+    quoteTransactTime :: !(Maybe TransactTime),
+    quoteOrdType :: !(Maybe OrdType),
+    quoteBidForwardPoints2 :: !(Maybe BidForwardPoints2),
+    quoteOfferForwardPoints2 :: !(Maybe OfferForwardPoints2),
+    quoteSettlCurrBidFxRate :: !(Maybe SettlCurrBidFxRate),
+    quoteSettlCurrOfferFxRate :: !(Maybe SettlCurrOfferFxRate),
+    quoteSettlCurrFxRateCalc :: !(Maybe SettlCurrFxRateCalc),
+    quoteCommType :: !(Maybe CommType),
+    quoteCommission :: !(Maybe Commission),
+    quoteCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    quoteExDestination :: !(Maybe ExDestination),
+    quoteOrderCapacity :: !(Maybe OrderCapacity),
+    quotePriceType :: !(Maybe PriceType),
+    quoteText :: !(Maybe Text),
+    quoteEncodedTextLen :: !(Maybe EncodedTextLen),
+    quoteEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Quote
 
 -- MessageSpec {messageName = "SettlementInstructions", messageType = "T", messageCategory = "app", messagePieces = [MessagePieceField "SettlInstMsgID" True,MessagePieceField "SettlInstReqID" False,MessagePieceField "SettlInstMode" True,MessagePieceField "SettlInstReqRejCode" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "ClOrdID" False,MessagePieceField "TransactTime" True,MessagePieceComponent "SettlInstGrp" False]}
-data SettlementInstructions deriving stock (Generic)
+data SettlementInstructions = SettlementInstructions
+  { settlementInstructionsSettlInstMsgID :: !SettlInstMsgID,
+    settlementInstructionsSettlInstReqID :: !(Maybe SettlInstReqID),
+    settlementInstructionsSettlInstMode :: !SettlInstMode,
+    settlementInstructionsSettlInstReqRejCode :: !(Maybe SettlInstReqRejCode),
+    settlementInstructionsText :: !(Maybe Text),
+    settlementInstructionsEncodedTextLen :: !(Maybe EncodedTextLen),
+    settlementInstructionsEncodedText :: !(Maybe EncodedText),
+    settlementInstructionsClOrdID :: !(Maybe ClOrdID),
+    settlementInstructionsTransactTime :: !TransactTime
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SettlementInstructions
 
 -- MessageSpec {messageName = "MarketDataRequest", messageType = "V", messageCategory = "app", messagePieces = [MessagePieceField "MDReqID" True,MessagePieceField "SubscriptionRequestType" True,MessagePieceField "MarketDepth" True,MessagePieceField "MDUpdateType" False,MessagePieceField "AggregatedBook" False,MessagePieceField "OpenCloseSettlFlag" False,MessagePieceField "Scope" False,MessagePieceField "MDImplicitDelete" False,MessagePieceComponent "MDReqGrp" True,MessagePieceComponent "InstrmtMDReqGrp" True,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "ApplQueueAction" False,MessagePieceField "ApplQueueMax" False]}
-data MarketDataRequest deriving stock (Generic)
+data MarketDataRequest = MarketDataRequest
+  { marketDataRequestMDReqID :: !MDReqID,
+    marketDataRequestSubscriptionRequestType :: !SubscriptionRequestType,
+    marketDataRequestMarketDepth :: !MarketDepth,
+    marketDataRequestMDUpdateType :: !(Maybe MDUpdateType),
+    marketDataRequestAggregatedBook :: !(Maybe AggregatedBook),
+    marketDataRequestOpenCloseSettlFlag :: !(Maybe OpenCloseSettlFlag),
+    marketDataRequestScope :: !(Maybe Scope),
+    marketDataRequestMDImplicitDelete :: !(Maybe MDImplicitDelete),
+    marketDataRequestApplQueueAction :: !(Maybe ApplQueueAction),
+    marketDataRequestApplQueueMax :: !(Maybe ApplQueueMax)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MarketDataRequest
 
 -- MessageSpec {messageName = "MarketDataSnapshotFullRefresh", messageType = "W", messageCategory = "app", messagePieces = [MessagePieceField "MDReqID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "FinancialStatus" False,MessagePieceField "CorporateAction" False,MessagePieceField "NetChgPrevDay" False,MessagePieceComponent "MDFullGrp" True,MessagePieceField "ApplQueueDepth" False,MessagePieceField "ApplQueueResolution" False]}
-data MarketDataSnapshotFullRefresh deriving stock (Generic)
+data MarketDataSnapshotFullRefresh = MarketDataSnapshotFullRefresh
+  { marketDataSnapshotFullRefreshMDReqID :: !(Maybe MDReqID),
+    marketDataSnapshotFullRefreshFinancialStatus :: !(Maybe FinancialStatus),
+    marketDataSnapshotFullRefreshCorporateAction :: !(Maybe CorporateAction),
+    marketDataSnapshotFullRefreshNetChgPrevDay :: !(Maybe NetChgPrevDay),
+    marketDataSnapshotFullRefreshApplQueueDepth :: !(Maybe ApplQueueDepth),
+    marketDataSnapshotFullRefreshApplQueueResolution :: !(Maybe ApplQueueResolution)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MarketDataSnapshotFullRefresh
 
 -- MessageSpec {messageName = "MarketDataIncrementalRefresh", messageType = "X", messageCategory = "app", messagePieces = [MessagePieceField "MDReqID" False,MessagePieceComponent "MDIncGrp" True,MessagePieceField "ApplQueueDepth" False,MessagePieceField "ApplQueueResolution" False]}
-data MarketDataIncrementalRefresh deriving stock (Generic)
+data MarketDataIncrementalRefresh = MarketDataIncrementalRefresh
+  { marketDataIncrementalRefreshMDReqID :: !(Maybe MDReqID),
+    marketDataIncrementalRefreshApplQueueDepth :: !(Maybe ApplQueueDepth),
+    marketDataIncrementalRefreshApplQueueResolution :: !(Maybe ApplQueueResolution)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MarketDataIncrementalRefresh
 
 -- MessageSpec {messageName = "MarketDataRequestReject", messageType = "Y", messageCategory = "app", messagePieces = [MessagePieceField "MDReqID" True,MessagePieceField "MDReqRejReason" False,MessagePieceComponent "MDRjctGrp" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data MarketDataRequestReject deriving stock (Generic)
+data MarketDataRequestReject = MarketDataRequestReject
+  { marketDataRequestRejectMDReqID :: !MDReqID,
+    marketDataRequestRejectMDReqRejReason :: !(Maybe MDReqRejReason),
+    marketDataRequestRejectText :: !(Maybe Text),
+    marketDataRequestRejectEncodedTextLen :: !(Maybe EncodedTextLen),
+    marketDataRequestRejectEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MarketDataRequestReject
 
 -- MessageSpec {messageName = "QuoteCancel", messageType = "Z", messageCategory = "app", messagePieces = [MessagePieceField "QuoteReqID" False,MessagePieceField "QuoteID" True,MessagePieceField "QuoteCancelType" True,MessagePieceField "QuoteResponseLevel" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "QuotCxlEntriesGrp" False]}
-data QuoteCancel deriving stock (Generic)
+data QuoteCancel = QuoteCancel
+  { quoteCancelQuoteReqID :: !(Maybe QuoteReqID),
+    quoteCancelQuoteID :: !QuoteID,
+    quoteCancelQuoteCancelType :: !QuoteCancelType,
+    quoteCancelQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
+    quoteCancelAccount :: !(Maybe Account),
+    quoteCancelAcctIDSource :: !(Maybe AcctIDSource),
+    quoteCancelAccountType :: !(Maybe AccountType),
+    quoteCancelTradingSessionID :: !(Maybe TradingSessionID),
+    quoteCancelTradingSessionSubID :: !(Maybe TradingSessionSubID)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity QuoteCancel
 
 -- MessageSpec {messageName = "QuoteStatusRequest", messageType = "a", messageCategory = "app", messagePieces = [MessagePieceField "QuoteStatusReqID" False,MessagePieceField "QuoteID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SubscriptionRequestType" False]}
-data QuoteStatusRequest deriving stock (Generic)
+data QuoteStatusRequest = QuoteStatusRequest
+  { quoteStatusRequestQuoteStatusReqID :: !(Maybe QuoteStatusReqID),
+    quoteStatusRequestQuoteID :: !(Maybe QuoteID),
+    quoteStatusRequestAccount :: !(Maybe Account),
+    quoteStatusRequestAcctIDSource :: !(Maybe AcctIDSource),
+    quoteStatusRequestAccountType :: !(Maybe AccountType),
+    quoteStatusRequestTradingSessionID :: !(Maybe TradingSessionID),
+    quoteStatusRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    quoteStatusRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity QuoteStatusRequest
 
 -- MessageSpec {messageName = "MassQuoteAcknowledgement", messageType = "b", messageCategory = "app", messagePieces = [MessagePieceField "QuoteReqID" False,MessagePieceField "QuoteID" False,MessagePieceField "QuoteStatus" True,MessagePieceField "QuoteRejectReason" False,MessagePieceField "QuoteResponseLevel" False,MessagePieceField "QuoteType" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceComponent "QuotSetAckGrp" False]}
-data MassQuoteAcknowledgement deriving stock (Generic)
+data MassQuoteAcknowledgement = MassQuoteAcknowledgement
+  { massQuoteAcknowledgementQuoteReqID :: !(Maybe QuoteReqID),
+    massQuoteAcknowledgementQuoteID :: !(Maybe QuoteID),
+    massQuoteAcknowledgementQuoteStatus :: !QuoteStatus,
+    massQuoteAcknowledgementQuoteRejectReason :: !(Maybe QuoteRejectReason),
+    massQuoteAcknowledgementQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
+    massQuoteAcknowledgementQuoteType :: !(Maybe QuoteType),
+    massQuoteAcknowledgementAccount :: !(Maybe Account),
+    massQuoteAcknowledgementAcctIDSource :: !(Maybe AcctIDSource),
+    massQuoteAcknowledgementAccountType :: !(Maybe AccountType),
+    massQuoteAcknowledgementText :: !(Maybe Text),
+    massQuoteAcknowledgementEncodedTextLen :: !(Maybe EncodedTextLen),
+    massQuoteAcknowledgementEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MassQuoteAcknowledgement
 
 -- MessageSpec {messageName = "SecurityDefinitionRequest", messageType = "c", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityRequestType" True,MessagePieceComponent "Instrument" False,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Currency" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "ExpirationCycle" False,MessagePieceField "SubscriptionRequestType" False]}
-data SecurityDefinitionRequest deriving stock (Generic)
+data SecurityDefinitionRequest = SecurityDefinitionRequest
+  { securityDefinitionRequestSecurityReqID :: !SecurityReqID,
+    securityDefinitionRequestSecurityRequestType :: !SecurityRequestType,
+    securityDefinitionRequestCurrency :: !(Maybe Currency),
+    securityDefinitionRequestText :: !(Maybe Text),
+    securityDefinitionRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    securityDefinitionRequestEncodedText :: !(Maybe EncodedText),
+    securityDefinitionRequestTradingSessionID :: !(Maybe TradingSessionID),
+    securityDefinitionRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityDefinitionRequestExpirationCycle :: !(Maybe ExpirationCycle),
+    securityDefinitionRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityDefinitionRequest
 
 -- MessageSpec {messageName = "SecurityDefinition", messageType = "d", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityResponseID" True,MessagePieceField "SecurityResponseType" True,MessagePieceComponent "Instrument" False,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Currency" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "ExpirationCycle" False,MessagePieceField "RoundLot" False,MessagePieceField "MinTradeVol" False]}
-data SecurityDefinition deriving stock (Generic)
+data SecurityDefinition = SecurityDefinition
+  { securityDefinitionSecurityReqID :: !SecurityReqID,
+    securityDefinitionSecurityResponseID :: !SecurityResponseID,
+    securityDefinitionSecurityResponseType :: !SecurityResponseType,
+    securityDefinitionCurrency :: !(Maybe Currency),
+    securityDefinitionTradingSessionID :: !(Maybe TradingSessionID),
+    securityDefinitionTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityDefinitionText :: !(Maybe Text),
+    securityDefinitionEncodedTextLen :: !(Maybe EncodedTextLen),
+    securityDefinitionEncodedText :: !(Maybe EncodedText),
+    securityDefinitionExpirationCycle :: !(Maybe ExpirationCycle),
+    securityDefinitionRoundLot :: !(Maybe RoundLot),
+    securityDefinitionMinTradeVol :: !(Maybe MinTradeVol)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityDefinition
 
 -- MessageSpec {messageName = "SecurityStatusRequest", messageType = "e", messageCategory = "app", messagePieces = [MessagePieceField "SecurityStatusReqID" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "Currency" False,MessagePieceField "SubscriptionRequestType" True,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False]}
-data SecurityStatusRequest deriving stock (Generic)
+data SecurityStatusRequest = SecurityStatusRequest
+  { securityStatusRequestSecurityStatusReqID :: !SecurityStatusReqID,
+    securityStatusRequestCurrency :: !(Maybe Currency),
+    securityStatusRequestSubscriptionRequestType :: !SubscriptionRequestType,
+    securityStatusRequestTradingSessionID :: !(Maybe TradingSessionID),
+    securityStatusRequestTradingSessionSubID :: !(Maybe TradingSessionSubID)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityStatusRequest
 
 -- MessageSpec {messageName = "SecurityStatus", messageType = "f", messageCategory = "app", messagePieces = [MessagePieceField "SecurityStatusReqID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "Currency" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "UnsolicitedIndicator" False,MessagePieceField "SecurityTradingStatus" False,MessagePieceField "FinancialStatus" False,MessagePieceField "CorporateAction" False,MessagePieceField "HaltReasonChar" False,MessagePieceField "InViewOfCommon" False,MessagePieceField "DueToRelated" False,MessagePieceField "BuyVolume" False,MessagePieceField "SellVolume" False,MessagePieceField "HighPx" False,MessagePieceField "LowPx" False,MessagePieceField "LastPx" False,MessagePieceField "TransactTime" False,MessagePieceField "Adjustment" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data SecurityStatus deriving stock (Generic)
+data SecurityStatus = SecurityStatus
+  { securityStatusSecurityStatusReqID :: !(Maybe SecurityStatusReqID),
+    securityStatusCurrency :: !(Maybe Currency),
+    securityStatusTradingSessionID :: !(Maybe TradingSessionID),
+    securityStatusTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityStatusUnsolicitedIndicator :: !(Maybe UnsolicitedIndicator),
+    securityStatusSecurityTradingStatus :: !(Maybe SecurityTradingStatus),
+    securityStatusFinancialStatus :: !(Maybe FinancialStatus),
+    securityStatusCorporateAction :: !(Maybe CorporateAction),
+    securityStatusHaltReasonChar :: !(Maybe HaltReasonChar),
+    securityStatusInViewOfCommon :: !(Maybe InViewOfCommon),
+    securityStatusDueToRelated :: !(Maybe DueToRelated),
+    securityStatusBuyVolume :: !(Maybe BuyVolume),
+    securityStatusSellVolume :: !(Maybe SellVolume),
+    securityStatusHighPx :: !(Maybe HighPx),
+    securityStatusLowPx :: !(Maybe LowPx),
+    securityStatusLastPx :: !(Maybe LastPx),
+    securityStatusTransactTime :: !(Maybe TransactTime),
+    securityStatusAdjustment :: !(Maybe Adjustment),
+    securityStatusText :: !(Maybe Text),
+    securityStatusEncodedTextLen :: !(Maybe EncodedTextLen),
+    securityStatusEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityStatus
 
 -- MessageSpec {messageName = "TradingSessionStatusRequest", messageType = "g", messageCategory = "app", messagePieces = [MessagePieceField "TradSesReqID" True,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "TradSesMethod" False,MessagePieceField "TradSesMode" False,MessagePieceField "SubscriptionRequestType" True]}
-data TradingSessionStatusRequest deriving stock (Generic)
+data TradingSessionStatusRequest = TradingSessionStatusRequest
+  { tradingSessionStatusRequestTradSesReqID :: !TradSesReqID,
+    tradingSessionStatusRequestTradingSessionID :: !(Maybe TradingSessionID),
+    tradingSessionStatusRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    tradingSessionStatusRequestTradSesMethod :: !(Maybe TradSesMethod),
+    tradingSessionStatusRequestTradSesMode :: !(Maybe TradSesMode),
+    tradingSessionStatusRequestSubscriptionRequestType :: !SubscriptionRequestType
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TradingSessionStatusRequest
 
 -- MessageSpec {messageName = "TradingSessionStatus", messageType = "h", messageCategory = "app", messagePieces = [MessagePieceField "TradSesReqID" False,MessagePieceField "TradingSessionID" True,MessagePieceField "TradingSessionSubID" False,MessagePieceField "TradSesMethod" False,MessagePieceField "TradSesMode" False,MessagePieceField "UnsolicitedIndicator" False,MessagePieceField "TradSesStatus" True,MessagePieceField "TradSesStatusRejReason" False,MessagePieceField "TradSesStartTime" False,MessagePieceField "TradSesOpenTime" False,MessagePieceField "TradSesPreCloseTime" False,MessagePieceField "TradSesCloseTime" False,MessagePieceField "TradSesEndTime" False,MessagePieceField "TotalVolumeTraded" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data TradingSessionStatus deriving stock (Generic)
+data TradingSessionStatus = TradingSessionStatus
+  { tradingSessionStatusTradSesReqID :: !(Maybe TradSesReqID),
+    tradingSessionStatusTradingSessionID :: !TradingSessionID,
+    tradingSessionStatusTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    tradingSessionStatusTradSesMethod :: !(Maybe TradSesMethod),
+    tradingSessionStatusTradSesMode :: !(Maybe TradSesMode),
+    tradingSessionStatusUnsolicitedIndicator :: !(Maybe UnsolicitedIndicator),
+    tradingSessionStatusTradSesStatus :: !TradSesStatus,
+    tradingSessionStatusTradSesStatusRejReason :: !(Maybe TradSesStatusRejReason),
+    tradingSessionStatusTradSesStartTime :: !(Maybe TradSesStartTime),
+    tradingSessionStatusTradSesOpenTime :: !(Maybe TradSesOpenTime),
+    tradingSessionStatusTradSesPreCloseTime :: !(Maybe TradSesPreCloseTime),
+    tradingSessionStatusTradSesCloseTime :: !(Maybe TradSesCloseTime),
+    tradingSessionStatusTradSesEndTime :: !(Maybe TradSesEndTime),
+    tradingSessionStatusTotalVolumeTraded :: !(Maybe TotalVolumeTraded),
+    tradingSessionStatusText :: !(Maybe Text),
+    tradingSessionStatusEncodedTextLen :: !(Maybe EncodedTextLen),
+    tradingSessionStatusEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TradingSessionStatus
 
 -- MessageSpec {messageName = "MassQuote", messageType = "i", messageCategory = "app", messagePieces = [MessagePieceField "QuoteReqID" False,MessagePieceField "QuoteID" True,MessagePieceField "QuoteType" False,MessagePieceField "QuoteResponseLevel" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "DefBidSize" False,MessagePieceField "DefOfferSize" False,MessagePieceComponent "QuotSetGrp" True]}
-data MassQuote deriving stock (Generic)
+data MassQuote = MassQuote
+  { massQuoteQuoteReqID :: !(Maybe QuoteReqID),
+    massQuoteQuoteID :: !QuoteID,
+    massQuoteQuoteType :: !(Maybe QuoteType),
+    massQuoteQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
+    massQuoteAccount :: !(Maybe Account),
+    massQuoteAcctIDSource :: !(Maybe AcctIDSource),
+    massQuoteAccountType :: !(Maybe AccountType),
+    massQuoteDefBidSize :: !(Maybe DefBidSize),
+    massQuoteDefOfferSize :: !(Maybe DefOfferSize)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MassQuote
 
 -- MessageSpec {messageName = "BusinessMessageReject", messageType = "j", messageCategory = "app", messagePieces = [MessagePieceField "RefSeqNum" False,MessagePieceField "RefMsgType" True,MessagePieceField "BusinessRejectRefID" False,MessagePieceField "BusinessRejectReason" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data BusinessMessageReject deriving stock (Generic)
+data BusinessMessageReject = BusinessMessageReject
+  { businessMessageRejectRefSeqNum :: !(Maybe RefSeqNum),
+    businessMessageRejectRefMsgType :: !RefMsgType,
+    businessMessageRejectBusinessRejectRefID :: !(Maybe BusinessRejectRefID),
+    businessMessageRejectBusinessRejectReason :: !BusinessRejectReason,
+    businessMessageRejectText :: !(Maybe Text),
+    businessMessageRejectEncodedTextLen :: !(Maybe EncodedTextLen),
+    businessMessageRejectEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity BusinessMessageReject
 
 -- MessageSpec {messageName = "BidRequest", messageType = "k", messageCategory = "app", messagePieces = [MessagePieceField "BidID" False,MessagePieceField "ClientBidID" True,MessagePieceField "BidRequestTransType" True,MessagePieceField "ListName" False,MessagePieceField "TotNoRelatedSym" True,MessagePieceField "BidType" True,MessagePieceField "NumTickets" False,MessagePieceField "Currency" False,MessagePieceField "SideValue1" False,MessagePieceField "SideValue2" False,MessagePieceComponent "BidDescReqGrp" False,MessagePieceComponent "BidCompReqGrp" False,MessagePieceField "LiquidityIndType" False,MessagePieceField "WtAverageLiquidity" False,MessagePieceField "ExchangeForPhysical" False,MessagePieceField "OutMainCntryUIndex" False,MessagePieceField "CrossPercent" False,MessagePieceField "ProgRptReqs" False,MessagePieceField "ProgPeriodInterval" False,MessagePieceField "IncTaxInd" False,MessagePieceField "ForexReq" False,MessagePieceField "NumBidders" False,MessagePieceField "TradeDate" False,MessagePieceField "BidTradeType" True,MessagePieceField "BasisPxType" True,MessagePieceField "StrikeTime" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data BidRequest deriving stock (Generic)
+data BidRequest = BidRequest
+  { bidRequestBidID :: !(Maybe BidID),
+    bidRequestClientBidID :: !ClientBidID,
+    bidRequestBidRequestTransType :: !BidRequestTransType,
+    bidRequestListName :: !(Maybe ListName),
+    bidRequestTotNoRelatedSym :: !TotNoRelatedSym,
+    bidRequestBidType :: !BidType,
+    bidRequestNumTickets :: !(Maybe NumTickets),
+    bidRequestCurrency :: !(Maybe Currency),
+    bidRequestSideValue1 :: !(Maybe SideValue1),
+    bidRequestSideValue2 :: !(Maybe SideValue2),
+    bidRequestLiquidityIndType :: !(Maybe LiquidityIndType),
+    bidRequestWtAverageLiquidity :: !(Maybe WtAverageLiquidity),
+    bidRequestExchangeForPhysical :: !(Maybe ExchangeForPhysical),
+    bidRequestOutMainCntryUIndex :: !(Maybe OutMainCntryUIndex),
+    bidRequestCrossPercent :: !(Maybe CrossPercent),
+    bidRequestProgRptReqs :: !(Maybe ProgRptReqs),
+    bidRequestProgPeriodInterval :: !(Maybe ProgPeriodInterval),
+    bidRequestIncTaxInd :: !(Maybe IncTaxInd),
+    bidRequestForexReq :: !(Maybe ForexReq),
+    bidRequestNumBidders :: !(Maybe NumBidders),
+    bidRequestTradeDate :: !(Maybe TradeDate),
+    bidRequestBidTradeType :: !BidTradeType,
+    bidRequestBasisPxType :: !BasisPxType,
+    bidRequestStrikeTime :: !(Maybe StrikeTime),
+    bidRequestText :: !(Maybe Text),
+    bidRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    bidRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity BidRequest
 
 -- MessageSpec {messageName = "BidResponse", messageType = "l", messageCategory = "app", messagePieces = [MessagePieceField "BidID" False,MessagePieceField "ClientBidID" False,MessagePieceComponent "BidCompRspGrp" True]}
-data BidResponse deriving stock (Generic)
+data BidResponse = BidResponse
+  { bidResponseBidID :: !(Maybe BidID),
+    bidResponseClientBidID :: !(Maybe ClientBidID)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity BidResponse
 
 -- MessageSpec {messageName = "ListStrikePrice", messageType = "m", messageCategory = "app", messagePieces = [MessagePieceField "ListID" True,MessagePieceField "TotNoStrikes" True,MessagePieceField "LastFragment" False,MessagePieceComponent "InstrmtStrkPxGrp" True,MessagePieceComponent "UndInstrmtStrkPxGrp" False]}
-data ListStrikePrice deriving stock (Generic)
+data ListStrikePrice = ListStrikePrice
+  { listStrikePriceListID :: !ListID,
+    listStrikePriceTotNoStrikes :: !TotNoStrikes,
+    listStrikePriceLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ListStrikePrice
 
 -- MessageSpec {messageName = "XMLnonFIX", messageType = "n", messageCategory = "admin", messagePieces = []}
-data XMLnonFIX deriving stock (Generic)
+data XMLnonFIX = XMLnonFIX {} deriving stock (Show, Eq, Generic)
 
 instance Validity XMLnonFIX
 
 -- MessageSpec {messageName = "RegistrationInstructions", messageType = "o", messageCategory = "app", messagePieces = [MessagePieceField "RegistID" True,MessagePieceField "RegistTransType" True,MessagePieceField "RegistRefID" True,MessagePieceField "ClOrdID" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "RegistAcctType" False,MessagePieceField "TaxAdvantageType" False,MessagePieceField "OwnershipType" False,MessagePieceComponent "RgstDtlsGrp" False,MessagePieceComponent "RgstDistInstGrp" False]}
-data RegistrationInstructions deriving stock (Generic)
+data RegistrationInstructions = RegistrationInstructions
+  { registrationInstructionsRegistID :: !RegistID,
+    registrationInstructionsRegistTransType :: !RegistTransType,
+    registrationInstructionsRegistRefID :: !RegistRefID,
+    registrationInstructionsClOrdID :: !(Maybe ClOrdID),
+    registrationInstructionsAccount :: !(Maybe Account),
+    registrationInstructionsAcctIDSource :: !(Maybe AcctIDSource),
+    registrationInstructionsRegistAcctType :: !(Maybe RegistAcctType),
+    registrationInstructionsTaxAdvantageType :: !(Maybe TaxAdvantageType),
+    registrationInstructionsOwnershipType :: !(Maybe OwnershipType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity RegistrationInstructions
 
 -- MessageSpec {messageName = "RegistrationInstructionsResponse", messageType = "p", messageCategory = "app", messagePieces = [MessagePieceField "RegistID" True,MessagePieceField "RegistTransType" True,MessagePieceField "RegistRefID" True,MessagePieceField "ClOrdID" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "RegistStatus" True,MessagePieceField "RegistRejReasonCode" False,MessagePieceField "RegistRejReasonText" False]}
-data RegistrationInstructionsResponse deriving stock (Generic)
+data RegistrationInstructionsResponse = RegistrationInstructionsResponse
+  { registrationInstructionsResponseRegistID :: !RegistID,
+    registrationInstructionsResponseRegistTransType :: !RegistTransType,
+    registrationInstructionsResponseRegistRefID :: !RegistRefID,
+    registrationInstructionsResponseClOrdID :: !(Maybe ClOrdID),
+    registrationInstructionsResponseAccount :: !(Maybe Account),
+    registrationInstructionsResponseAcctIDSource :: !(Maybe AcctIDSource),
+    registrationInstructionsResponseRegistStatus :: !RegistStatus,
+    registrationInstructionsResponseRegistRejReasonCode :: !(Maybe RegistRejReasonCode),
+    registrationInstructionsResponseRegistRejReasonText :: !(Maybe RegistRejReasonText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity RegistrationInstructionsResponse
 
 -- MessageSpec {messageName = "OrderMassCancelRequest", messageType = "q", messageCategory = "app", messagePieces = [MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "MassCancelRequestType" True,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "UnderlyingInstrument" False,MessagePieceField "Side" False,MessagePieceField "TransactTime" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data OrderMassCancelRequest deriving stock (Generic)
+data OrderMassCancelRequest = OrderMassCancelRequest
+  { orderMassCancelRequestClOrdID :: !ClOrdID,
+    orderMassCancelRequestSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    orderMassCancelRequestMassCancelRequestType :: !MassCancelRequestType,
+    orderMassCancelRequestTradingSessionID :: !(Maybe TradingSessionID),
+    orderMassCancelRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    orderMassCancelRequestSide :: !(Maybe Side),
+    orderMassCancelRequestTransactTime :: !TransactTime,
+    orderMassCancelRequestText :: !(Maybe Text),
+    orderMassCancelRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    orderMassCancelRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderMassCancelRequest
 
 -- MessageSpec {messageName = "OrderMassCancelReport", messageType = "r", messageCategory = "app", messagePieces = [MessagePieceField "ClOrdID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "OrderID" True,MessagePieceField "SecondaryOrderID" False,MessagePieceField "MassCancelRequestType" True,MessagePieceField "MassCancelResponse" True,MessagePieceField "MassCancelRejectReason" False,MessagePieceField "TotalAffectedOrders" False,MessagePieceComponent "AffectedOrdGrp" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "UnderlyingInstrument" False,MessagePieceField "Side" False,MessagePieceField "TransactTime" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data OrderMassCancelReport deriving stock (Generic)
+data OrderMassCancelReport = OrderMassCancelReport
+  { orderMassCancelReportClOrdID :: !(Maybe ClOrdID),
+    orderMassCancelReportSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    orderMassCancelReportOrderID :: !OrderID,
+    orderMassCancelReportSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    orderMassCancelReportMassCancelRequestType :: !MassCancelRequestType,
+    orderMassCancelReportMassCancelResponse :: !MassCancelResponse,
+    orderMassCancelReportMassCancelRejectReason :: !(Maybe MassCancelRejectReason),
+    orderMassCancelReportTotalAffectedOrders :: !(Maybe TotalAffectedOrders),
+    orderMassCancelReportTradingSessionID :: !(Maybe TradingSessionID),
+    orderMassCancelReportTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    orderMassCancelReportSide :: !(Maybe Side),
+    orderMassCancelReportTransactTime :: !(Maybe TransactTime),
+    orderMassCancelReportText :: !(Maybe Text),
+    orderMassCancelReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    orderMassCancelReportEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderMassCancelReport
 
 -- MessageSpec {messageName = "NewOrderCross", messageType = "s", messageCategory = "app", messagePieces = [MessagePieceField "CrossID" True,MessagePieceField "CrossType" True,MessagePieceField "CrossPrioritization" True,MessagePieceComponent "SideCrossOrdModGrp" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "HandlInst" False,MessagePieceField "ExecInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "ExDestination" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "ProcessCode" False,MessagePieceField "PrevClosePx" False,MessagePieceField "LocateReqd" False,MessagePieceField "TransactTime" True,MessagePieceComponent "Stipulations" False,MessagePieceField "OrdType" True,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceField "Currency" False,MessagePieceField "ComplianceID" False,MessagePieceField "IOIID" False,MessagePieceField "QuoteID" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "GTBookingInst" False,MessagePieceField "MaxShow" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False]}
-data NewOrderCross deriving stock (Generic)
+data NewOrderCross = NewOrderCross
+  { newOrderCrossCrossID :: !CrossID,
+    newOrderCrossCrossType :: !CrossType,
+    newOrderCrossCrossPrioritization :: !CrossPrioritization,
+    newOrderCrossSettlType :: !(Maybe SettlType),
+    newOrderCrossSettlDate :: !(Maybe SettlDate),
+    newOrderCrossHandlInst :: !(Maybe HandlInst),
+    newOrderCrossExecInst :: !(Maybe ExecInst),
+    newOrderCrossMinQty :: !(Maybe MinQty),
+    newOrderCrossMaxFloor :: !(Maybe MaxFloor),
+    newOrderCrossExDestination :: !(Maybe ExDestination),
+    newOrderCrossProcessCode :: !(Maybe ProcessCode),
+    newOrderCrossPrevClosePx :: !(Maybe PrevClosePx),
+    newOrderCrossLocateReqd :: !(Maybe LocateReqd),
+    newOrderCrossTransactTime :: !TransactTime,
+    newOrderCrossOrdType :: !OrdType,
+    newOrderCrossPriceType :: !(Maybe PriceType),
+    newOrderCrossPrice :: !(Maybe Price),
+    newOrderCrossStopPx :: !(Maybe StopPx),
+    newOrderCrossCurrency :: !(Maybe Currency),
+    newOrderCrossComplianceID :: !(Maybe ComplianceID),
+    newOrderCrossIOIID :: !(Maybe IOIID),
+    newOrderCrossQuoteID :: !(Maybe QuoteID),
+    newOrderCrossTimeInForce :: !(Maybe TimeInForce),
+    newOrderCrossEffectiveTime :: !(Maybe EffectiveTime),
+    newOrderCrossExpireDate :: !(Maybe ExpireDate),
+    newOrderCrossExpireTime :: !(Maybe ExpireTime),
+    newOrderCrossGTBookingInst :: !(Maybe GTBookingInst),
+    newOrderCrossMaxShow :: !(Maybe MaxShow),
+    newOrderCrossTargetStrategy :: !(Maybe TargetStrategy),
+    newOrderCrossTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    newOrderCrossParticipationRate :: !(Maybe ParticipationRate),
+    newOrderCrossCancellationRights :: !(Maybe CancellationRights),
+    newOrderCrossMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    newOrderCrossRegistID :: !(Maybe RegistID),
+    newOrderCrossDesignation :: !(Maybe Designation)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity NewOrderCross
 
 -- MessageSpec {messageName = "CrossOrderCancelReplaceRequest", messageType = "t", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" False,MessagePieceField "CrossID" True,MessagePieceField "OrigCrossID" True,MessagePieceField "CrossType" True,MessagePieceField "CrossPrioritization" True,MessagePieceComponent "SideCrossOrdModGrp" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "HandlInst" False,MessagePieceField "ExecInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "ExDestination" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "ProcessCode" False,MessagePieceField "PrevClosePx" False,MessagePieceField "LocateReqd" False,MessagePieceField "TransactTime" True,MessagePieceComponent "Stipulations" False,MessagePieceField "OrdType" True,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceField "Currency" False,MessagePieceField "ComplianceID" False,MessagePieceField "IOIID" False,MessagePieceField "QuoteID" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "GTBookingInst" False,MessagePieceField "MaxShow" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False]}
-data CrossOrderCancelReplaceRequest deriving stock (Generic)
+data CrossOrderCancelReplaceRequest = CrossOrderCancelReplaceRequest
+  { crossOrderCancelReplaceRequestOrderID :: !(Maybe OrderID),
+    crossOrderCancelReplaceRequestCrossID :: !CrossID,
+    crossOrderCancelReplaceRequestOrigCrossID :: !OrigCrossID,
+    crossOrderCancelReplaceRequestCrossType :: !CrossType,
+    crossOrderCancelReplaceRequestCrossPrioritization :: !CrossPrioritization,
+    crossOrderCancelReplaceRequestSettlType :: !(Maybe SettlType),
+    crossOrderCancelReplaceRequestSettlDate :: !(Maybe SettlDate),
+    crossOrderCancelReplaceRequestHandlInst :: !(Maybe HandlInst),
+    crossOrderCancelReplaceRequestExecInst :: !(Maybe ExecInst),
+    crossOrderCancelReplaceRequestMinQty :: !(Maybe MinQty),
+    crossOrderCancelReplaceRequestMaxFloor :: !(Maybe MaxFloor),
+    crossOrderCancelReplaceRequestExDestination :: !(Maybe ExDestination),
+    crossOrderCancelReplaceRequestProcessCode :: !(Maybe ProcessCode),
+    crossOrderCancelReplaceRequestPrevClosePx :: !(Maybe PrevClosePx),
+    crossOrderCancelReplaceRequestLocateReqd :: !(Maybe LocateReqd),
+    crossOrderCancelReplaceRequestTransactTime :: !TransactTime,
+    crossOrderCancelReplaceRequestOrdType :: !OrdType,
+    crossOrderCancelReplaceRequestPriceType :: !(Maybe PriceType),
+    crossOrderCancelReplaceRequestPrice :: !(Maybe Price),
+    crossOrderCancelReplaceRequestStopPx :: !(Maybe StopPx),
+    crossOrderCancelReplaceRequestCurrency :: !(Maybe Currency),
+    crossOrderCancelReplaceRequestComplianceID :: !(Maybe ComplianceID),
+    crossOrderCancelReplaceRequestIOIID :: !(Maybe IOIID),
+    crossOrderCancelReplaceRequestQuoteID :: !(Maybe QuoteID),
+    crossOrderCancelReplaceRequestTimeInForce :: !(Maybe TimeInForce),
+    crossOrderCancelReplaceRequestEffectiveTime :: !(Maybe EffectiveTime),
+    crossOrderCancelReplaceRequestExpireDate :: !(Maybe ExpireDate),
+    crossOrderCancelReplaceRequestExpireTime :: !(Maybe ExpireTime),
+    crossOrderCancelReplaceRequestGTBookingInst :: !(Maybe GTBookingInst),
+    crossOrderCancelReplaceRequestMaxShow :: !(Maybe MaxShow),
+    crossOrderCancelReplaceRequestTargetStrategy :: !(Maybe TargetStrategy),
+    crossOrderCancelReplaceRequestTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    crossOrderCancelReplaceRequestParticipationRate :: !(Maybe ParticipationRate),
+    crossOrderCancelReplaceRequestCancellationRights :: !(Maybe CancellationRights),
+    crossOrderCancelReplaceRequestMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    crossOrderCancelReplaceRequestRegistID :: !(Maybe RegistID),
+    crossOrderCancelReplaceRequestDesignation :: !(Maybe Designation)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CrossOrderCancelReplaceRequest
 
 -- MessageSpec {messageName = "CrossOrderCancelRequest", messageType = "u", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" False,MessagePieceField "CrossID" True,MessagePieceField "OrigCrossID" True,MessagePieceField "CrossType" True,MessagePieceField "CrossPrioritization" True,MessagePieceComponent "SideCrossOrdCxlGrp" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "TransactTime" True]}
-data CrossOrderCancelRequest deriving stock (Generic)
+data CrossOrderCancelRequest = CrossOrderCancelRequest
+  { crossOrderCancelRequestOrderID :: !(Maybe OrderID),
+    crossOrderCancelRequestCrossID :: !CrossID,
+    crossOrderCancelRequestOrigCrossID :: !OrigCrossID,
+    crossOrderCancelRequestCrossType :: !CrossType,
+    crossOrderCancelRequestCrossPrioritization :: !CrossPrioritization,
+    crossOrderCancelRequestTransactTime :: !TransactTime
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CrossOrderCancelRequest
 
 -- MessageSpec {messageName = "SecurityTypeRequest", messageType = "v", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "Product" False,MessagePieceField "SecurityType" False,MessagePieceField "SecuritySubType" False]}
-data SecurityTypeRequest deriving stock (Generic)
+data SecurityTypeRequest = SecurityTypeRequest
+  { securityTypeRequestSecurityReqID :: !SecurityReqID,
+    securityTypeRequestText :: !(Maybe Text),
+    securityTypeRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    securityTypeRequestEncodedText :: !(Maybe EncodedText),
+    securityTypeRequestTradingSessionID :: !(Maybe TradingSessionID),
+    securityTypeRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityTypeRequestProduct :: !(Maybe Product),
+    securityTypeRequestSecurityType :: !(Maybe SecurityType),
+    securityTypeRequestSecuritySubType :: !(Maybe SecuritySubType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityTypeRequest
 
 -- MessageSpec {messageName = "SecurityTypes", messageType = "w", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityResponseID" True,MessagePieceField "SecurityResponseType" True,MessagePieceField "TotNoSecurityTypes" False,MessagePieceField "LastFragment" False,MessagePieceComponent "SecTypesGrp" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SubscriptionRequestType" False]}
-data SecurityTypes deriving stock (Generic)
+data SecurityTypes = SecurityTypes
+  { securityTypesSecurityReqID :: !SecurityReqID,
+    securityTypesSecurityResponseID :: !SecurityResponseID,
+    securityTypesSecurityResponseType :: !SecurityResponseType,
+    securityTypesTotNoSecurityTypes :: !(Maybe TotNoSecurityTypes),
+    securityTypesLastFragment :: !(Maybe LastFragment),
+    securityTypesText :: !(Maybe Text),
+    securityTypesEncodedTextLen :: !(Maybe EncodedTextLen),
+    securityTypesEncodedText :: !(Maybe EncodedText),
+    securityTypesTradingSessionID :: !(Maybe TradingSessionID),
+    securityTypesTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityTypesSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityTypes
 
 -- MessageSpec {messageName = "SecurityListRequest", messageType = "x", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityListRequestType" True,MessagePieceComponent "Instrument" False,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "Currency" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SubscriptionRequestType" False]}
-data SecurityListRequest deriving stock (Generic)
+data SecurityListRequest = SecurityListRequest
+  { securityListRequestSecurityReqID :: !SecurityReqID,
+    securityListRequestSecurityListRequestType :: !SecurityListRequestType,
+    securityListRequestCurrency :: !(Maybe Currency),
+    securityListRequestText :: !(Maybe Text),
+    securityListRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    securityListRequestEncodedText :: !(Maybe EncodedText),
+    securityListRequestTradingSessionID :: !(Maybe TradingSessionID),
+    securityListRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityListRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityListRequest
 
 -- MessageSpec {messageName = "SecurityList", messageType = "y", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityResponseID" True,MessagePieceField "SecurityRequestResult" True,MessagePieceField "TotNoRelatedSym" False,MessagePieceField "LastFragment" False,MessagePieceComponent "SecListGrp" False]}
-data SecurityList deriving stock (Generic)
+data SecurityList = SecurityList
+  { securityListSecurityReqID :: !SecurityReqID,
+    securityListSecurityResponseID :: !SecurityResponseID,
+    securityListSecurityRequestResult :: !SecurityRequestResult,
+    securityListTotNoRelatedSym :: !(Maybe TotNoRelatedSym),
+    securityListLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityList
 
 -- MessageSpec {messageName = "DerivativeSecurityListRequest", messageType = "z", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityListRequestType" True,MessagePieceComponent "UnderlyingInstrument" False,MessagePieceField "SecuritySubType" False,MessagePieceField "Currency" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SubscriptionRequestType" False]}
-data DerivativeSecurityListRequest deriving stock (Generic)
+data DerivativeSecurityListRequest = DerivativeSecurityListRequest
+  { derivativeSecurityListRequestSecurityReqID :: !SecurityReqID,
+    derivativeSecurityListRequestSecurityListRequestType :: !SecurityListRequestType,
+    derivativeSecurityListRequestSecuritySubType :: !(Maybe SecuritySubType),
+    derivativeSecurityListRequestCurrency :: !(Maybe Currency),
+    derivativeSecurityListRequestText :: !(Maybe Text),
+    derivativeSecurityListRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    derivativeSecurityListRequestEncodedText :: !(Maybe EncodedText),
+    derivativeSecurityListRequestTradingSessionID :: !(Maybe TradingSessionID),
+    derivativeSecurityListRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    derivativeSecurityListRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity DerivativeSecurityListRequest
 
 -- MessageSpec {messageName = "DerivativeSecurityList", messageType = "AA", messageCategory = "app", messagePieces = [MessagePieceField "SecurityReqID" True,MessagePieceField "SecurityResponseID" True,MessagePieceField "SecurityRequestResult" True,MessagePieceComponent "UnderlyingInstrument" False,MessagePieceField "TotNoRelatedSym" False,MessagePieceField "LastFragment" False,MessagePieceComponent "RelSymDerivSecGrp" False]}
-data DerivativeSecurityList deriving stock (Generic)
+data DerivativeSecurityList = DerivativeSecurityList
+  { derivativeSecurityListSecurityReqID :: !SecurityReqID,
+    derivativeSecurityListSecurityResponseID :: !SecurityResponseID,
+    derivativeSecurityListSecurityRequestResult :: !SecurityRequestResult,
+    derivativeSecurityListTotNoRelatedSym :: !(Maybe TotNoRelatedSym),
+    derivativeSecurityListLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity DerivativeSecurityList
 
 -- MessageSpec {messageName = "NewOrderMultileg", messageType = "AB", messageCategory = "app", messagePieces = [MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradeDate" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "DayBookingInst" False,MessagePieceField "BookingUnit" False,MessagePieceField "PreallocMethod" False,MessagePieceField "AllocID" False,MessagePieceComponent "PreAllocMlegGrp" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "CashMargin" False,MessagePieceField "ClearingFeeIndicator" False,MessagePieceField "HandlInst" False,MessagePieceField "ExecInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "ExDestination" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "ProcessCode" False,MessagePieceField "Side" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "PrevClosePx" False,MessagePieceComponent "LegOrdGrp" True,MessagePieceField "LocateReqd" False,MessagePieceField "TransactTime" True,MessagePieceField "QtyType" False,MessagePieceComponent "OrderQtyData" True,MessagePieceField "OrdType" True,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceField "Currency" False,MessagePieceField "ComplianceID" False,MessagePieceField "SolicitedFlag" False,MessagePieceField "IOIID" False,MessagePieceField "QuoteID" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "GTBookingInst" False,MessagePieceComponent "CommissionData" False,MessagePieceField "OrderCapacity" False,MessagePieceField "OrderRestrictions" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ForexReq" False,MessagePieceField "SettlCurrency" False,MessagePieceField "BookingType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "PositionEffect" False,MessagePieceField "CoveredOrUncovered" False,MessagePieceField "MaxShow" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False,MessagePieceField "MultiLegRptTypeReq" False]}
-data NewOrderMultileg deriving stock (Generic)
+data NewOrderMultileg = NewOrderMultileg
+  { newOrderMultilegClOrdID :: !ClOrdID,
+    newOrderMultilegSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    newOrderMultilegClOrdLinkID :: !(Maybe ClOrdLinkID),
+    newOrderMultilegTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    newOrderMultilegTradeDate :: !(Maybe TradeDate),
+    newOrderMultilegAccount :: !(Maybe Account),
+    newOrderMultilegAcctIDSource :: !(Maybe AcctIDSource),
+    newOrderMultilegAccountType :: !(Maybe AccountType),
+    newOrderMultilegDayBookingInst :: !(Maybe DayBookingInst),
+    newOrderMultilegBookingUnit :: !(Maybe BookingUnit),
+    newOrderMultilegPreallocMethod :: !(Maybe PreallocMethod),
+    newOrderMultilegAllocID :: !(Maybe AllocID),
+    newOrderMultilegSettlType :: !(Maybe SettlType),
+    newOrderMultilegSettlDate :: !(Maybe SettlDate),
+    newOrderMultilegCashMargin :: !(Maybe CashMargin),
+    newOrderMultilegClearingFeeIndicator :: !(Maybe ClearingFeeIndicator),
+    newOrderMultilegHandlInst :: !(Maybe HandlInst),
+    newOrderMultilegExecInst :: !(Maybe ExecInst),
+    newOrderMultilegMinQty :: !(Maybe MinQty),
+    newOrderMultilegMaxFloor :: !(Maybe MaxFloor),
+    newOrderMultilegExDestination :: !(Maybe ExDestination),
+    newOrderMultilegProcessCode :: !(Maybe ProcessCode),
+    newOrderMultilegSide :: !Side,
+    newOrderMultilegPrevClosePx :: !(Maybe PrevClosePx),
+    newOrderMultilegLocateReqd :: !(Maybe LocateReqd),
+    newOrderMultilegTransactTime :: !TransactTime,
+    newOrderMultilegQtyType :: !(Maybe QtyType),
+    newOrderMultilegOrdType :: !OrdType,
+    newOrderMultilegPriceType :: !(Maybe PriceType),
+    newOrderMultilegPrice :: !(Maybe Price),
+    newOrderMultilegStopPx :: !(Maybe StopPx),
+    newOrderMultilegCurrency :: !(Maybe Currency),
+    newOrderMultilegComplianceID :: !(Maybe ComplianceID),
+    newOrderMultilegSolicitedFlag :: !(Maybe SolicitedFlag),
+    newOrderMultilegIOIID :: !(Maybe IOIID),
+    newOrderMultilegQuoteID :: !(Maybe QuoteID),
+    newOrderMultilegTimeInForce :: !(Maybe TimeInForce),
+    newOrderMultilegEffectiveTime :: !(Maybe EffectiveTime),
+    newOrderMultilegExpireDate :: !(Maybe ExpireDate),
+    newOrderMultilegExpireTime :: !(Maybe ExpireTime),
+    newOrderMultilegGTBookingInst :: !(Maybe GTBookingInst),
+    newOrderMultilegOrderCapacity :: !(Maybe OrderCapacity),
+    newOrderMultilegOrderRestrictions :: !(Maybe OrderRestrictions),
+    newOrderMultilegCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    newOrderMultilegForexReq :: !(Maybe ForexReq),
+    newOrderMultilegSettlCurrency :: !(Maybe SettlCurrency),
+    newOrderMultilegBookingType :: !(Maybe BookingType),
+    newOrderMultilegText :: !(Maybe Text),
+    newOrderMultilegEncodedTextLen :: !(Maybe EncodedTextLen),
+    newOrderMultilegEncodedText :: !(Maybe EncodedText),
+    newOrderMultilegPositionEffect :: !(Maybe PositionEffect),
+    newOrderMultilegCoveredOrUncovered :: !(Maybe CoveredOrUncovered),
+    newOrderMultilegMaxShow :: !(Maybe MaxShow),
+    newOrderMultilegTargetStrategy :: !(Maybe TargetStrategy),
+    newOrderMultilegTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    newOrderMultilegParticipationRate :: !(Maybe ParticipationRate),
+    newOrderMultilegCancellationRights :: !(Maybe CancellationRights),
+    newOrderMultilegMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    newOrderMultilegRegistID :: !(Maybe RegistID),
+    newOrderMultilegDesignation :: !(Maybe Designation),
+    newOrderMultilegMultiLegRptTypeReq :: !(Maybe MultiLegRptTypeReq)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity NewOrderMultileg
 
 -- MessageSpec {messageName = "MultilegOrderCancelReplace", messageType = "AC", messageCategory = "app", messagePieces = [MessagePieceField "OrderID" False,MessagePieceField "OrigClOrdID" True,MessagePieceField "ClOrdID" True,MessagePieceField "SecondaryClOrdID" False,MessagePieceField "ClOrdLinkID" False,MessagePieceField "OrigOrdModTime" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradeDate" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "DayBookingInst" False,MessagePieceField "BookingUnit" False,MessagePieceField "PreallocMethod" False,MessagePieceField "AllocID" False,MessagePieceComponent "PreAllocMlegGrp" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "CashMargin" False,MessagePieceField "ClearingFeeIndicator" False,MessagePieceField "HandlInst" False,MessagePieceField "ExecInst" False,MessagePieceField "MinQty" False,MessagePieceField "MaxFloor" False,MessagePieceField "ExDestination" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "ProcessCode" False,MessagePieceField "Side" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "PrevClosePx" False,MessagePieceComponent "LegOrdGrp" True,MessagePieceField "LocateReqd" False,MessagePieceField "TransactTime" True,MessagePieceField "QtyType" False,MessagePieceComponent "OrderQtyData" True,MessagePieceField "OrdType" True,MessagePieceField "PriceType" False,MessagePieceField "Price" False,MessagePieceField "StopPx" False,MessagePieceField "Currency" False,MessagePieceField "ComplianceID" False,MessagePieceField "SolicitedFlag" False,MessagePieceField "IOIID" False,MessagePieceField "QuoteID" False,MessagePieceField "TimeInForce" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireDate" False,MessagePieceField "ExpireTime" False,MessagePieceField "GTBookingInst" False,MessagePieceComponent "CommissionData" False,MessagePieceField "OrderCapacity" False,MessagePieceField "OrderRestrictions" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ForexReq" False,MessagePieceField "SettlCurrency" False,MessagePieceField "BookingType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "PositionEffect" False,MessagePieceField "CoveredOrUncovered" False,MessagePieceField "MaxShow" False,MessagePieceComponent "PegInstructions" False,MessagePieceComponent "DiscretionInstructions" False,MessagePieceField "TargetStrategy" False,MessagePieceField "TargetStrategyParameters" False,MessagePieceField "ParticipationRate" False,MessagePieceField "CancellationRights" False,MessagePieceField "MoneyLaunderingStatus" False,MessagePieceField "RegistID" False,MessagePieceField "Designation" False,MessagePieceField "MultiLegRptTypeReq" False]}
-data MultilegOrderCancelReplace deriving stock (Generic)
+data MultilegOrderCancelReplace = MultilegOrderCancelReplace
+  { multilegOrderCancelReplaceOrderID :: !(Maybe OrderID),
+    multilegOrderCancelReplaceOrigClOrdID :: !OrigClOrdID,
+    multilegOrderCancelReplaceClOrdID :: !ClOrdID,
+    multilegOrderCancelReplaceSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    multilegOrderCancelReplaceClOrdLinkID :: !(Maybe ClOrdLinkID),
+    multilegOrderCancelReplaceOrigOrdModTime :: !(Maybe OrigOrdModTime),
+    multilegOrderCancelReplaceTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    multilegOrderCancelReplaceTradeDate :: !(Maybe TradeDate),
+    multilegOrderCancelReplaceAccount :: !(Maybe Account),
+    multilegOrderCancelReplaceAcctIDSource :: !(Maybe AcctIDSource),
+    multilegOrderCancelReplaceAccountType :: !(Maybe AccountType),
+    multilegOrderCancelReplaceDayBookingInst :: !(Maybe DayBookingInst),
+    multilegOrderCancelReplaceBookingUnit :: !(Maybe BookingUnit),
+    multilegOrderCancelReplacePreallocMethod :: !(Maybe PreallocMethod),
+    multilegOrderCancelReplaceAllocID :: !(Maybe AllocID),
+    multilegOrderCancelReplaceSettlType :: !(Maybe SettlType),
+    multilegOrderCancelReplaceSettlDate :: !(Maybe SettlDate),
+    multilegOrderCancelReplaceCashMargin :: !(Maybe CashMargin),
+    multilegOrderCancelReplaceClearingFeeIndicator :: !(Maybe ClearingFeeIndicator),
+    multilegOrderCancelReplaceHandlInst :: !(Maybe HandlInst),
+    multilegOrderCancelReplaceExecInst :: !(Maybe ExecInst),
+    multilegOrderCancelReplaceMinQty :: !(Maybe MinQty),
+    multilegOrderCancelReplaceMaxFloor :: !(Maybe MaxFloor),
+    multilegOrderCancelReplaceExDestination :: !(Maybe ExDestination),
+    multilegOrderCancelReplaceProcessCode :: !(Maybe ProcessCode),
+    multilegOrderCancelReplaceSide :: !Side,
+    multilegOrderCancelReplacePrevClosePx :: !(Maybe PrevClosePx),
+    multilegOrderCancelReplaceLocateReqd :: !(Maybe LocateReqd),
+    multilegOrderCancelReplaceTransactTime :: !TransactTime,
+    multilegOrderCancelReplaceQtyType :: !(Maybe QtyType),
+    multilegOrderCancelReplaceOrdType :: !OrdType,
+    multilegOrderCancelReplacePriceType :: !(Maybe PriceType),
+    multilegOrderCancelReplacePrice :: !(Maybe Price),
+    multilegOrderCancelReplaceStopPx :: !(Maybe StopPx),
+    multilegOrderCancelReplaceCurrency :: !(Maybe Currency),
+    multilegOrderCancelReplaceComplianceID :: !(Maybe ComplianceID),
+    multilegOrderCancelReplaceSolicitedFlag :: !(Maybe SolicitedFlag),
+    multilegOrderCancelReplaceIOIID :: !(Maybe IOIID),
+    multilegOrderCancelReplaceQuoteID :: !(Maybe QuoteID),
+    multilegOrderCancelReplaceTimeInForce :: !(Maybe TimeInForce),
+    multilegOrderCancelReplaceEffectiveTime :: !(Maybe EffectiveTime),
+    multilegOrderCancelReplaceExpireDate :: !(Maybe ExpireDate),
+    multilegOrderCancelReplaceExpireTime :: !(Maybe ExpireTime),
+    multilegOrderCancelReplaceGTBookingInst :: !(Maybe GTBookingInst),
+    multilegOrderCancelReplaceOrderCapacity :: !(Maybe OrderCapacity),
+    multilegOrderCancelReplaceOrderRestrictions :: !(Maybe OrderRestrictions),
+    multilegOrderCancelReplaceCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    multilegOrderCancelReplaceForexReq :: !(Maybe ForexReq),
+    multilegOrderCancelReplaceSettlCurrency :: !(Maybe SettlCurrency),
+    multilegOrderCancelReplaceBookingType :: !(Maybe BookingType),
+    multilegOrderCancelReplaceText :: !(Maybe Text),
+    multilegOrderCancelReplaceEncodedTextLen :: !(Maybe EncodedTextLen),
+    multilegOrderCancelReplaceEncodedText :: !(Maybe EncodedText),
+    multilegOrderCancelReplacePositionEffect :: !(Maybe PositionEffect),
+    multilegOrderCancelReplaceCoveredOrUncovered :: !(Maybe CoveredOrUncovered),
+    multilegOrderCancelReplaceMaxShow :: !(Maybe MaxShow),
+    multilegOrderCancelReplaceTargetStrategy :: !(Maybe TargetStrategy),
+    multilegOrderCancelReplaceTargetStrategyParameters :: !(Maybe TargetStrategyParameters),
+    multilegOrderCancelReplaceParticipationRate :: !(Maybe ParticipationRate),
+    multilegOrderCancelReplaceCancellationRights :: !(Maybe CancellationRights),
+    multilegOrderCancelReplaceMoneyLaunderingStatus :: !(Maybe MoneyLaunderingStatus),
+    multilegOrderCancelReplaceRegistID :: !(Maybe RegistID),
+    multilegOrderCancelReplaceDesignation :: !(Maybe Designation),
+    multilegOrderCancelReplaceMultiLegRptTypeReq :: !(Maybe MultiLegRptTypeReq)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity MultilegOrderCancelReplace
 
 -- MessageSpec {messageName = "TradeCaptureReportRequest", messageType = "AD", messageCategory = "app", messagePieces = [MessagePieceField "TradeRequestID" True,MessagePieceField "TradeRequestType" True,MessagePieceField "SubscriptionRequestType" False,MessagePieceField "TradeReportID" False,MessagePieceField "SecondaryTradeReportID" False,MessagePieceField "ExecID" False,MessagePieceField "ExecType" False,MessagePieceField "OrderID" False,MessagePieceField "ClOrdID" False,MessagePieceField "MatchStatus" False,MessagePieceField "TrdType" False,MessagePieceField "TrdSubType" False,MessagePieceField "TransferReason" False,MessagePieceField "SecondaryTrdType" False,MessagePieceField "TradeLinkID" False,MessagePieceField "TrdMatchID" False,MessagePieceComponent "Parties" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "TrdCapDtGrp" False,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "TimeBracket" False,MessagePieceField "Side" False,MessagePieceField "MultiLegReportingType" False,MessagePieceField "TradeInputSource" False,MessagePieceField "TradeInputDevice" False,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data TradeCaptureReportRequest deriving stock (Generic)
+data TradeCaptureReportRequest = TradeCaptureReportRequest
+  { tradeCaptureReportRequestTradeRequestID :: !TradeRequestID,
+    tradeCaptureReportRequestTradeRequestType :: !TradeRequestType,
+    tradeCaptureReportRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    tradeCaptureReportRequestTradeReportID :: !(Maybe TradeReportID),
+    tradeCaptureReportRequestSecondaryTradeReportID :: !(Maybe SecondaryTradeReportID),
+    tradeCaptureReportRequestExecID :: !(Maybe ExecID),
+    tradeCaptureReportRequestExecType :: !(Maybe ExecType),
+    tradeCaptureReportRequestOrderID :: !(Maybe OrderID),
+    tradeCaptureReportRequestClOrdID :: !(Maybe ClOrdID),
+    tradeCaptureReportRequestMatchStatus :: !(Maybe MatchStatus),
+    tradeCaptureReportRequestTrdType :: !(Maybe TrdType),
+    tradeCaptureReportRequestTrdSubType :: !(Maybe TrdSubType),
+    tradeCaptureReportRequestTransferReason :: !(Maybe TransferReason),
+    tradeCaptureReportRequestSecondaryTrdType :: !(Maybe SecondaryTrdType),
+    tradeCaptureReportRequestTradeLinkID :: !(Maybe TradeLinkID),
+    tradeCaptureReportRequestTrdMatchID :: !(Maybe TrdMatchID),
+    tradeCaptureReportRequestClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    tradeCaptureReportRequestTradingSessionID :: !(Maybe TradingSessionID),
+    tradeCaptureReportRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    tradeCaptureReportRequestTimeBracket :: !(Maybe TimeBracket),
+    tradeCaptureReportRequestSide :: !(Maybe Side),
+    tradeCaptureReportRequestMultiLegReportingType :: !(Maybe MultiLegReportingType),
+    tradeCaptureReportRequestTradeInputSource :: !(Maybe TradeInputSource),
+    tradeCaptureReportRequestTradeInputDevice :: !(Maybe TradeInputDevice),
+    tradeCaptureReportRequestResponseTransportType :: !(Maybe ResponseTransportType),
+    tradeCaptureReportRequestResponseDestination :: !(Maybe ResponseDestination),
+    tradeCaptureReportRequestText :: !(Maybe Text),
+    tradeCaptureReportRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    tradeCaptureReportRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TradeCaptureReportRequest
 
 -- MessageSpec {messageName = "TradeCaptureReport", messageType = "AE", messageCategory = "app", messagePieces = [MessagePieceField "TradeReportID" True,MessagePieceField "TradeReportTransType" False,MessagePieceField "TradeReportType" False,MessagePieceField "TradeRequestID" False,MessagePieceField "TrdType" False,MessagePieceField "TrdSubType" False,MessagePieceField "SecondaryTrdType" False,MessagePieceField "TransferReason" False,MessagePieceField "ExecType" False,MessagePieceField "TotNumTradeReports" False,MessagePieceField "LastRptRequested" False,MessagePieceField "UnsolicitedIndicator" False,MessagePieceField "SubscriptionRequestType" False,MessagePieceField "TradeReportRefID" False,MessagePieceField "SecondaryTradeReportRefID" False,MessagePieceField "SecondaryTradeReportID" False,MessagePieceField "TradeLinkID" False,MessagePieceField "TrdMatchID" False,MessagePieceField "ExecID" False,MessagePieceField "OrdStatus" False,MessagePieceField "SecondaryExecID" False,MessagePieceField "ExecRestatementReason" False,MessagePieceField "PreviouslyReported" True,MessagePieceField "PriceType" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "OrderQtyData" False,MessagePieceField "QtyType" False,MessagePieceComponent "YieldData" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "UnderlyingTradingSessionID" False,MessagePieceField "UnderlyingTradingSessionSubID" False,MessagePieceField "LastQty" True,MessagePieceField "LastPx" True,MessagePieceField "LastParPx" False,MessagePieceField "LastSpotRate" False,MessagePieceField "LastForwardPoints" False,MessagePieceField "LastMkt" False,MessagePieceField "TradeDate" True,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "AvgPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceField "AvgPxIndicator" False,MessagePieceComponent "PositionAmountData" False,MessagePieceField "MultiLegReportingType" False,MessagePieceField "TradeLegRefID" False,MessagePieceComponent "TrdInstrmtLegGrp" False,MessagePieceField "TransactTime" True,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "MatchStatus" False,MessagePieceField "MatchType" False,MessagePieceComponent "TrdCapRptSideGrp" True,MessagePieceField "CopyMsgIndicator" False,MessagePieceField "PublishTrdIndicator" False,MessagePieceField "ShortSaleReason" False]}
-data TradeCaptureReport deriving stock (Generic)
+data TradeCaptureReport = TradeCaptureReport
+  { tradeCaptureReportTradeReportID :: !TradeReportID,
+    tradeCaptureReportTradeReportTransType :: !(Maybe TradeReportTransType),
+    tradeCaptureReportTradeReportType :: !(Maybe TradeReportType),
+    tradeCaptureReportTradeRequestID :: !(Maybe TradeRequestID),
+    tradeCaptureReportTrdType :: !(Maybe TrdType),
+    tradeCaptureReportTrdSubType :: !(Maybe TrdSubType),
+    tradeCaptureReportSecondaryTrdType :: !(Maybe SecondaryTrdType),
+    tradeCaptureReportTransferReason :: !(Maybe TransferReason),
+    tradeCaptureReportExecType :: !(Maybe ExecType),
+    tradeCaptureReportTotNumTradeReports :: !(Maybe TotNumTradeReports),
+    tradeCaptureReportLastRptRequested :: !(Maybe LastRptRequested),
+    tradeCaptureReportUnsolicitedIndicator :: !(Maybe UnsolicitedIndicator),
+    tradeCaptureReportSubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    tradeCaptureReportTradeReportRefID :: !(Maybe TradeReportRefID),
+    tradeCaptureReportSecondaryTradeReportRefID :: !(Maybe SecondaryTradeReportRefID),
+    tradeCaptureReportSecondaryTradeReportID :: !(Maybe SecondaryTradeReportID),
+    tradeCaptureReportTradeLinkID :: !(Maybe TradeLinkID),
+    tradeCaptureReportTrdMatchID :: !(Maybe TrdMatchID),
+    tradeCaptureReportExecID :: !(Maybe ExecID),
+    tradeCaptureReportOrdStatus :: !(Maybe OrdStatus),
+    tradeCaptureReportSecondaryExecID :: !(Maybe SecondaryExecID),
+    tradeCaptureReportExecRestatementReason :: !(Maybe ExecRestatementReason),
+    tradeCaptureReportPreviouslyReported :: !PreviouslyReported,
+    tradeCaptureReportPriceType :: !(Maybe PriceType),
+    tradeCaptureReportQtyType :: !(Maybe QtyType),
+    tradeCaptureReportUnderlyingTradingSessionID :: !(Maybe UnderlyingTradingSessionID),
+    tradeCaptureReportUnderlyingTradingSessionSubID :: !(Maybe UnderlyingTradingSessionSubID),
+    tradeCaptureReportLastQty :: !LastQty,
+    tradeCaptureReportLastPx :: !LastPx,
+    tradeCaptureReportLastParPx :: !(Maybe LastParPx),
+    tradeCaptureReportLastSpotRate :: !(Maybe LastSpotRate),
+    tradeCaptureReportLastForwardPoints :: !(Maybe LastForwardPoints),
+    tradeCaptureReportLastMkt :: !(Maybe LastMkt),
+    tradeCaptureReportTradeDate :: !TradeDate,
+    tradeCaptureReportClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    tradeCaptureReportAvgPx :: !(Maybe AvgPx),
+    tradeCaptureReportAvgPxIndicator :: !(Maybe AvgPxIndicator),
+    tradeCaptureReportMultiLegReportingType :: !(Maybe MultiLegReportingType),
+    tradeCaptureReportTradeLegRefID :: !(Maybe TradeLegRefID),
+    tradeCaptureReportTransactTime :: !TransactTime,
+    tradeCaptureReportSettlType :: !(Maybe SettlType),
+    tradeCaptureReportSettlDate :: !(Maybe SettlDate),
+    tradeCaptureReportMatchStatus :: !(Maybe MatchStatus),
+    tradeCaptureReportMatchType :: !(Maybe MatchType),
+    tradeCaptureReportCopyMsgIndicator :: !(Maybe CopyMsgIndicator),
+    tradeCaptureReportPublishTrdIndicator :: !(Maybe PublishTrdIndicator),
+    tradeCaptureReportShortSaleReason :: !(Maybe ShortSaleReason)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TradeCaptureReport
 
 -- MessageSpec {messageName = "OrderMassStatusRequest", messageType = "AF", messageCategory = "app", messagePieces = [MessagePieceField "MassStatusReqID" True,MessagePieceField "MassStatusReqType" True,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "UnderlyingInstrument" False,MessagePieceField "Side" False]}
-data OrderMassStatusRequest deriving stock (Generic)
+data OrderMassStatusRequest = OrderMassStatusRequest
+  { orderMassStatusRequestMassStatusReqID :: !MassStatusReqID,
+    orderMassStatusRequestMassStatusReqType :: !MassStatusReqType,
+    orderMassStatusRequestAccount :: !(Maybe Account),
+    orderMassStatusRequestAcctIDSource :: !(Maybe AcctIDSource),
+    orderMassStatusRequestTradingSessionID :: !(Maybe TradingSessionID),
+    orderMassStatusRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    orderMassStatusRequestSide :: !(Maybe Side)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity OrderMassStatusRequest
 
 -- MessageSpec {messageName = "QuoteRequestReject", messageType = "AG", messageCategory = "app", messagePieces = [MessagePieceField "QuoteReqID" True,MessagePieceField "RFQReqID" False,MessagePieceField "QuoteRequestRejectReason" True,MessagePieceComponent "QuotReqRjctGrp" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data QuoteRequestReject deriving stock (Generic)
+data QuoteRequestReject = QuoteRequestReject
+  { quoteRequestRejectQuoteReqID :: !QuoteReqID,
+    quoteRequestRejectRFQReqID :: !(Maybe RFQReqID),
+    quoteRequestRejectQuoteRequestRejectReason :: !QuoteRequestRejectReason,
+    quoteRequestRejectText :: !(Maybe Text),
+    quoteRequestRejectEncodedTextLen :: !(Maybe EncodedTextLen),
+    quoteRequestRejectEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity QuoteRequestReject
 
 -- MessageSpec {messageName = "RFQRequest", messageType = "AH", messageCategory = "app", messagePieces = [MessagePieceField "RFQReqID" True,MessagePieceComponent "RFQReqGrp" True,MessagePieceField "SubscriptionRequestType" False]}
-data RFQRequest deriving stock (Generic)
+data RFQRequest = RFQRequest
+  { rFQRequestRFQReqID :: !RFQReqID,
+    rFQRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity RFQRequest
 
 -- MessageSpec {messageName = "QuoteStatusReport", messageType = "AI", messageCategory = "app", messagePieces = [MessagePieceField "QuoteStatusReqID" False,MessagePieceField "QuoteReqID" False,MessagePieceField "QuoteID" True,MessagePieceField "QuoteRespID" False,MessagePieceField "QuoteType" False,MessagePieceComponent "Parties" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" False,MessagePieceComponent "OrderQtyData" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "SettlDate2" False,MessagePieceField "OrderQty2" False,MessagePieceField "Currency" False,MessagePieceComponent "Stipulations" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceComponent "LegQuotStatGrp" False,MessagePieceComponent "QuotQualGrp" False,MessagePieceField "ExpireTime" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False,MessagePieceField "BidPx" False,MessagePieceField "OfferPx" False,MessagePieceField "MktBidPx" False,MessagePieceField "MktOfferPx" False,MessagePieceField "MinBidSize" False,MessagePieceField "BidSize" False,MessagePieceField "MinOfferSize" False,MessagePieceField "OfferSize" False,MessagePieceField "ValidUntilTime" False,MessagePieceField "BidSpotRate" False,MessagePieceField "OfferSpotRate" False,MessagePieceField "BidForwardPoints" False,MessagePieceField "OfferForwardPoints" False,MessagePieceField "MidPx" False,MessagePieceField "BidYield" False,MessagePieceField "MidYield" False,MessagePieceField "OfferYield" False,MessagePieceField "TransactTime" False,MessagePieceField "OrdType" False,MessagePieceField "BidForwardPoints2" False,MessagePieceField "OfferForwardPoints2" False,MessagePieceField "SettlCurrBidFxRate" False,MessagePieceField "SettlCurrOfferFxRate" False,MessagePieceField "SettlCurrFxRateCalc" False,MessagePieceField "CommType" False,MessagePieceField "Commission" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ExDestination" False,MessagePieceField "QuoteStatus" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data QuoteStatusReport deriving stock (Generic)
+data QuoteStatusReport = QuoteStatusReport
+  { quoteStatusReportQuoteStatusReqID :: !(Maybe QuoteStatusReqID),
+    quoteStatusReportQuoteReqID :: !(Maybe QuoteReqID),
+    quoteStatusReportQuoteID :: !QuoteID,
+    quoteStatusReportQuoteRespID :: !(Maybe QuoteRespID),
+    quoteStatusReportQuoteType :: !(Maybe QuoteType),
+    quoteStatusReportTradingSessionID :: !(Maybe TradingSessionID),
+    quoteStatusReportTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    quoteStatusReportSide :: !(Maybe Side),
+    quoteStatusReportSettlType :: !(Maybe SettlType),
+    quoteStatusReportSettlDate :: !(Maybe SettlDate),
+    quoteStatusReportSettlDate2 :: !(Maybe SettlDate2),
+    quoteStatusReportOrderQty2 :: !(Maybe OrderQty2),
+    quoteStatusReportCurrency :: !(Maybe Currency),
+    quoteStatusReportAccount :: !(Maybe Account),
+    quoteStatusReportAcctIDSource :: !(Maybe AcctIDSource),
+    quoteStatusReportAccountType :: !(Maybe AccountType),
+    quoteStatusReportExpireTime :: !(Maybe ExpireTime),
+    quoteStatusReportPrice :: !(Maybe Price),
+    quoteStatusReportPriceType :: !(Maybe PriceType),
+    quoteStatusReportBidPx :: !(Maybe BidPx),
+    quoteStatusReportOfferPx :: !(Maybe OfferPx),
+    quoteStatusReportMktBidPx :: !(Maybe MktBidPx),
+    quoteStatusReportMktOfferPx :: !(Maybe MktOfferPx),
+    quoteStatusReportMinBidSize :: !(Maybe MinBidSize),
+    quoteStatusReportBidSize :: !(Maybe BidSize),
+    quoteStatusReportMinOfferSize :: !(Maybe MinOfferSize),
+    quoteStatusReportOfferSize :: !(Maybe OfferSize),
+    quoteStatusReportValidUntilTime :: !(Maybe ValidUntilTime),
+    quoteStatusReportBidSpotRate :: !(Maybe BidSpotRate),
+    quoteStatusReportOfferSpotRate :: !(Maybe OfferSpotRate),
+    quoteStatusReportBidForwardPoints :: !(Maybe BidForwardPoints),
+    quoteStatusReportOfferForwardPoints :: !(Maybe OfferForwardPoints),
+    quoteStatusReportMidPx :: !(Maybe MidPx),
+    quoteStatusReportBidYield :: !(Maybe BidYield),
+    quoteStatusReportMidYield :: !(Maybe MidYield),
+    quoteStatusReportOfferYield :: !(Maybe OfferYield),
+    quoteStatusReportTransactTime :: !(Maybe TransactTime),
+    quoteStatusReportOrdType :: !(Maybe OrdType),
+    quoteStatusReportBidForwardPoints2 :: !(Maybe BidForwardPoints2),
+    quoteStatusReportOfferForwardPoints2 :: !(Maybe OfferForwardPoints2),
+    quoteStatusReportSettlCurrBidFxRate :: !(Maybe SettlCurrBidFxRate),
+    quoteStatusReportSettlCurrOfferFxRate :: !(Maybe SettlCurrOfferFxRate),
+    quoteStatusReportSettlCurrFxRateCalc :: !(Maybe SettlCurrFxRateCalc),
+    quoteStatusReportCommType :: !(Maybe CommType),
+    quoteStatusReportCommission :: !(Maybe Commission),
+    quoteStatusReportCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    quoteStatusReportExDestination :: !(Maybe ExDestination),
+    quoteStatusReportQuoteStatus :: !(Maybe QuoteStatus),
+    quoteStatusReportText :: !(Maybe Text),
+    quoteStatusReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    quoteStatusReportEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity QuoteStatusReport
 
 -- MessageSpec {messageName = "QuoteResponse", messageType = "AJ", messageCategory = "app", messagePieces = [MessagePieceField "QuoteRespID" True,MessagePieceField "QuoteID" False,MessagePieceField "QuoteRespType" True,MessagePieceField "ClOrdID" False,MessagePieceField "OrderCapacity" False,MessagePieceField "IOIID" False,MessagePieceField "QuoteType" False,MessagePieceComponent "QuotQualGrp" False,MessagePieceComponent "Parties" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "Side" False,MessagePieceComponent "OrderQtyData" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "SettlDate2" False,MessagePieceField "OrderQty2" False,MessagePieceField "Currency" False,MessagePieceComponent "Stipulations" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceComponent "LegQuotGrp" False,MessagePieceField "BidPx" False,MessagePieceField "OfferPx" False,MessagePieceField "MktBidPx" False,MessagePieceField "MktOfferPx" False,MessagePieceField "MinBidSize" False,MessagePieceField "BidSize" False,MessagePieceField "MinOfferSize" False,MessagePieceField "OfferSize" False,MessagePieceField "ValidUntilTime" False,MessagePieceField "BidSpotRate" False,MessagePieceField "OfferSpotRate" False,MessagePieceField "BidForwardPoints" False,MessagePieceField "OfferForwardPoints" False,MessagePieceField "MidPx" False,MessagePieceField "BidYield" False,MessagePieceField "MidYield" False,MessagePieceField "OfferYield" False,MessagePieceField "TransactTime" False,MessagePieceField "OrdType" False,MessagePieceField "BidForwardPoints2" False,MessagePieceField "OfferForwardPoints2" False,MessagePieceField "SettlCurrBidFxRate" False,MessagePieceField "SettlCurrOfferFxRate" False,MessagePieceField "SettlCurrFxRateCalc" False,MessagePieceField "Commission" False,MessagePieceField "CommType" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "ExDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "YieldData" False]}
-data QuoteResponse deriving stock (Generic)
+data QuoteResponse = QuoteResponse
+  { quoteResponseQuoteRespID :: !QuoteRespID,
+    quoteResponseQuoteID :: !(Maybe QuoteID),
+    quoteResponseQuoteRespType :: !QuoteRespType,
+    quoteResponseClOrdID :: !(Maybe ClOrdID),
+    quoteResponseOrderCapacity :: !(Maybe OrderCapacity),
+    quoteResponseIOIID :: !(Maybe IOIID),
+    quoteResponseQuoteType :: !(Maybe QuoteType),
+    quoteResponseTradingSessionID :: !(Maybe TradingSessionID),
+    quoteResponseTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    quoteResponseSide :: !(Maybe Side),
+    quoteResponseSettlType :: !(Maybe SettlType),
+    quoteResponseSettlDate :: !(Maybe SettlDate),
+    quoteResponseSettlDate2 :: !(Maybe SettlDate2),
+    quoteResponseOrderQty2 :: !(Maybe OrderQty2),
+    quoteResponseCurrency :: !(Maybe Currency),
+    quoteResponseAccount :: !(Maybe Account),
+    quoteResponseAcctIDSource :: !(Maybe AcctIDSource),
+    quoteResponseAccountType :: !(Maybe AccountType),
+    quoteResponseBidPx :: !(Maybe BidPx),
+    quoteResponseOfferPx :: !(Maybe OfferPx),
+    quoteResponseMktBidPx :: !(Maybe MktBidPx),
+    quoteResponseMktOfferPx :: !(Maybe MktOfferPx),
+    quoteResponseMinBidSize :: !(Maybe MinBidSize),
+    quoteResponseBidSize :: !(Maybe BidSize),
+    quoteResponseMinOfferSize :: !(Maybe MinOfferSize),
+    quoteResponseOfferSize :: !(Maybe OfferSize),
+    quoteResponseValidUntilTime :: !(Maybe ValidUntilTime),
+    quoteResponseBidSpotRate :: !(Maybe BidSpotRate),
+    quoteResponseOfferSpotRate :: !(Maybe OfferSpotRate),
+    quoteResponseBidForwardPoints :: !(Maybe BidForwardPoints),
+    quoteResponseOfferForwardPoints :: !(Maybe OfferForwardPoints),
+    quoteResponseMidPx :: !(Maybe MidPx),
+    quoteResponseBidYield :: !(Maybe BidYield),
+    quoteResponseMidYield :: !(Maybe MidYield),
+    quoteResponseOfferYield :: !(Maybe OfferYield),
+    quoteResponseTransactTime :: !(Maybe TransactTime),
+    quoteResponseOrdType :: !(Maybe OrdType),
+    quoteResponseBidForwardPoints2 :: !(Maybe BidForwardPoints2),
+    quoteResponseOfferForwardPoints2 :: !(Maybe OfferForwardPoints2),
+    quoteResponseSettlCurrBidFxRate :: !(Maybe SettlCurrBidFxRate),
+    quoteResponseSettlCurrOfferFxRate :: !(Maybe SettlCurrOfferFxRate),
+    quoteResponseSettlCurrFxRateCalc :: !(Maybe SettlCurrFxRateCalc),
+    quoteResponseCommission :: !(Maybe Commission),
+    quoteResponseCommType :: !(Maybe CommType),
+    quoteResponseCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    quoteResponseExDestination :: !(Maybe ExDestination),
+    quoteResponseText :: !(Maybe Text),
+    quoteResponseEncodedTextLen :: !(Maybe EncodedTextLen),
+    quoteResponseEncodedText :: !(Maybe EncodedText),
+    quoteResponsePrice :: !(Maybe Price),
+    quoteResponsePriceType :: !(Maybe PriceType)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity QuoteResponse
 
 -- MessageSpec {messageName = "Confirmation", messageType = "AK", messageCategory = "app", messagePieces = [MessagePieceField "ConfirmID" True,MessagePieceField "ConfirmRefID" False,MessagePieceField "ConfirmReqID" False,MessagePieceField "ConfirmTransType" True,MessagePieceField "ConfirmType" True,MessagePieceField "CopyMsgIndicator" False,MessagePieceField "LegalConfirm" False,MessagePieceField "ConfirmStatus" True,MessagePieceComponent "Parties" False,MessagePieceComponent "OrdAllocGrp" False,MessagePieceField "AllocID" False,MessagePieceField "SecondaryAllocID" False,MessagePieceField "IndividualAllocID" False,MessagePieceField "TransactTime" True,MessagePieceField "TradeDate" True,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceComponent "Instrument" True,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" True,MessagePieceComponent "InstrmtLegGrp" True,MessagePieceComponent "YieldData" False,MessagePieceField "AllocQty" True,MessagePieceField "QtyType" False,MessagePieceField "Side" True,MessagePieceField "Currency" False,MessagePieceField "LastMkt" False,MessagePieceComponent "CpctyConfGrp" True,MessagePieceField "AllocAccount" True,MessagePieceField "AllocAcctIDSource" False,MessagePieceField "AllocAccountType" False,MessagePieceField "AvgPx" True,MessagePieceField "AvgPxPrecision" False,MessagePieceField "PriceType" False,MessagePieceField "AvgParPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceField "ReportedPx" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "ProcessCode" False,MessagePieceField "GrossTradeAmt" True,MessagePieceField "NumDaysInterest" False,MessagePieceField "ExDate" False,MessagePieceField "AccruedInterestRate" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "InterestAtMaturity" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceField "Concession" False,MessagePieceField "TotalTakedown" False,MessagePieceField "NetMoney" True,MessagePieceField "MaturityNetMoney" False,MessagePieceField "SettlCurrAmt" False,MessagePieceField "SettlCurrency" False,MessagePieceField "SettlCurrFxRate" False,MessagePieceField "SettlCurrFxRateCalc" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceComponent "SettlInstructionsData" False,MessagePieceComponent "CommissionData" False,MessagePieceField "SharedCommission" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "MiscFeesGrp" False]}
-data Confirmation deriving stock (Generic)
+data Confirmation = Confirmation
+  { confirmationConfirmID :: !ConfirmID,
+    confirmationConfirmRefID :: !(Maybe ConfirmRefID),
+    confirmationConfirmReqID :: !(Maybe ConfirmReqID),
+    confirmationConfirmTransType :: !ConfirmTransType,
+    confirmationConfirmType :: !ConfirmType,
+    confirmationCopyMsgIndicator :: !(Maybe CopyMsgIndicator),
+    confirmationLegalConfirm :: !(Maybe LegalConfirm),
+    confirmationConfirmStatus :: !ConfirmStatus,
+    confirmationAllocID :: !(Maybe AllocID),
+    confirmationSecondaryAllocID :: !(Maybe SecondaryAllocID),
+    confirmationIndividualAllocID :: !(Maybe IndividualAllocID),
+    confirmationTransactTime :: !TransactTime,
+    confirmationTradeDate :: !TradeDate,
+    confirmationAllocQty :: !AllocQty,
+    confirmationQtyType :: !(Maybe QtyType),
+    confirmationSide :: !Side,
+    confirmationCurrency :: !(Maybe Currency),
+    confirmationLastMkt :: !(Maybe LastMkt),
+    confirmationAllocAccount :: !AllocAccount,
+    confirmationAllocAcctIDSource :: !(Maybe AllocAcctIDSource),
+    confirmationAllocAccountType :: !(Maybe AllocAccountType),
+    confirmationAvgPx :: !AvgPx,
+    confirmationAvgPxPrecision :: !(Maybe AvgPxPrecision),
+    confirmationPriceType :: !(Maybe PriceType),
+    confirmationAvgParPx :: !(Maybe AvgParPx),
+    confirmationReportedPx :: !(Maybe ReportedPx),
+    confirmationText :: !(Maybe Text),
+    confirmationEncodedTextLen :: !(Maybe EncodedTextLen),
+    confirmationEncodedText :: !(Maybe EncodedText),
+    confirmationProcessCode :: !(Maybe ProcessCode),
+    confirmationGrossTradeAmt :: !GrossTradeAmt,
+    confirmationNumDaysInterest :: !(Maybe NumDaysInterest),
+    confirmationExDate :: !(Maybe ExDate),
+    confirmationAccruedInterestRate :: !(Maybe AccruedInterestRate),
+    confirmationAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    confirmationInterestAtMaturity :: !(Maybe InterestAtMaturity),
+    confirmationEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    confirmationStartCash :: !(Maybe StartCash),
+    confirmationEndCash :: !(Maybe EndCash),
+    confirmationConcession :: !(Maybe Concession),
+    confirmationTotalTakedown :: !(Maybe TotalTakedown),
+    confirmationNetMoney :: !NetMoney,
+    confirmationMaturityNetMoney :: !(Maybe MaturityNetMoney),
+    confirmationSettlCurrAmt :: !(Maybe SettlCurrAmt),
+    confirmationSettlCurrency :: !(Maybe SettlCurrency),
+    confirmationSettlCurrFxRate :: !(Maybe SettlCurrFxRate),
+    confirmationSettlCurrFxRateCalc :: !(Maybe SettlCurrFxRateCalc),
+    confirmationSettlType :: !(Maybe SettlType),
+    confirmationSettlDate :: !(Maybe SettlDate),
+    confirmationSharedCommission :: !(Maybe SharedCommission)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity Confirmation
 
 -- MessageSpec {messageName = "PositionMaintenanceRequest", messageType = "AL", messageCategory = "app", messagePieces = [MessagePieceField "PosReqID" True,MessagePieceField "PosTransType" True,MessagePieceField "PosMaintAction" True,MessagePieceField "OrigPosReqRefID" False,MessagePieceField "PosMaintRptRefID" False,MessagePieceField "ClearingBusinessDate" True,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceComponent "Parties" True,MessagePieceField "Account" True,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" True,MessagePieceComponent "Instrument" True,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "TransactTime" True,MessagePieceComponent "PositionQty" True,MessagePieceField "AdjustmentType" False,MessagePieceField "ContraryInstructionIndicator" False,MessagePieceField "PriorSpreadIndicator" False,MessagePieceField "ThresholdAmount" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data PositionMaintenanceRequest deriving stock (Generic)
+data PositionMaintenanceRequest = PositionMaintenanceRequest
+  { positionMaintenanceRequestPosReqID :: !PosReqID,
+    positionMaintenanceRequestPosTransType :: !PosTransType,
+    positionMaintenanceRequestPosMaintAction :: !PosMaintAction,
+    positionMaintenanceRequestOrigPosReqRefID :: !(Maybe OrigPosReqRefID),
+    positionMaintenanceRequestPosMaintRptRefID :: !(Maybe PosMaintRptRefID),
+    positionMaintenanceRequestClearingBusinessDate :: !ClearingBusinessDate,
+    positionMaintenanceRequestSettlSessID :: !(Maybe SettlSessID),
+    positionMaintenanceRequestSettlSessSubID :: !(Maybe SettlSessSubID),
+    positionMaintenanceRequestAccount :: !Account,
+    positionMaintenanceRequestAcctIDSource :: !(Maybe AcctIDSource),
+    positionMaintenanceRequestAccountType :: !AccountType,
+    positionMaintenanceRequestCurrency :: !(Maybe Currency),
+    positionMaintenanceRequestTransactTime :: !TransactTime,
+    positionMaintenanceRequestAdjustmentType :: !(Maybe AdjustmentType),
+    positionMaintenanceRequestContraryInstructionIndicator :: !(Maybe ContraryInstructionIndicator),
+    positionMaintenanceRequestPriorSpreadIndicator :: !(Maybe PriorSpreadIndicator),
+    positionMaintenanceRequestThresholdAmount :: !(Maybe ThresholdAmount),
+    positionMaintenanceRequestText :: !(Maybe Text),
+    positionMaintenanceRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    positionMaintenanceRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity PositionMaintenanceRequest
 
 -- MessageSpec {messageName = "PositionMaintenanceReport", messageType = "AM", messageCategory = "app", messagePieces = [MessagePieceField "PosMaintRptID" True,MessagePieceField "PosTransType" True,MessagePieceField "PosReqID" False,MessagePieceField "PosMaintAction" True,MessagePieceField "OrigPosReqRefID" True,MessagePieceField "PosMaintStatus" True,MessagePieceField "PosMaintResult" False,MessagePieceField "ClearingBusinessDate" True,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" True,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" True,MessagePieceComponent "Instrument" True,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "TransactTime" True,MessagePieceComponent "PositionQty" True,MessagePieceComponent "PositionAmountData" True,MessagePieceField "AdjustmentType" False,MessagePieceField "ThresholdAmount" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data PositionMaintenanceReport deriving stock (Generic)
+data PositionMaintenanceReport = PositionMaintenanceReport
+  { positionMaintenanceReportPosMaintRptID :: !PosMaintRptID,
+    positionMaintenanceReportPosTransType :: !PosTransType,
+    positionMaintenanceReportPosReqID :: !(Maybe PosReqID),
+    positionMaintenanceReportPosMaintAction :: !PosMaintAction,
+    positionMaintenanceReportOrigPosReqRefID :: !OrigPosReqRefID,
+    positionMaintenanceReportPosMaintStatus :: !PosMaintStatus,
+    positionMaintenanceReportPosMaintResult :: !(Maybe PosMaintResult),
+    positionMaintenanceReportClearingBusinessDate :: !ClearingBusinessDate,
+    positionMaintenanceReportSettlSessID :: !(Maybe SettlSessID),
+    positionMaintenanceReportSettlSessSubID :: !(Maybe SettlSessSubID),
+    positionMaintenanceReportAccount :: !Account,
+    positionMaintenanceReportAcctIDSource :: !(Maybe AcctIDSource),
+    positionMaintenanceReportAccountType :: !AccountType,
+    positionMaintenanceReportCurrency :: !(Maybe Currency),
+    positionMaintenanceReportTransactTime :: !TransactTime,
+    positionMaintenanceReportAdjustmentType :: !(Maybe AdjustmentType),
+    positionMaintenanceReportThresholdAmount :: !(Maybe ThresholdAmount),
+    positionMaintenanceReportText :: !(Maybe Text),
+    positionMaintenanceReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    positionMaintenanceReportEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity PositionMaintenanceReport
 
 -- MessageSpec {messageName = "RequestForPositions", messageType = "AN", messageCategory = "app", messagePieces = [MessagePieceField "PosReqID" True,MessagePieceField "PosReqType" True,MessagePieceField "MatchStatus" False,MessagePieceField "SubscriptionRequestType" False,MessagePieceComponent "Parties" True,MessagePieceField "Account" True,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" True,MessagePieceComponent "Instrument" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "ClearingBusinessDate" True,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceComponent "TrdgSesGrp" False,MessagePieceField "TransactTime" True,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data RequestForPositions deriving stock (Generic)
+data RequestForPositions = RequestForPositions
+  { requestForPositionsPosReqID :: !PosReqID,
+    requestForPositionsPosReqType :: !PosReqType,
+    requestForPositionsMatchStatus :: !(Maybe MatchStatus),
+    requestForPositionsSubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    requestForPositionsAccount :: !Account,
+    requestForPositionsAcctIDSource :: !(Maybe AcctIDSource),
+    requestForPositionsAccountType :: !AccountType,
+    requestForPositionsCurrency :: !(Maybe Currency),
+    requestForPositionsClearingBusinessDate :: !ClearingBusinessDate,
+    requestForPositionsSettlSessID :: !(Maybe SettlSessID),
+    requestForPositionsSettlSessSubID :: !(Maybe SettlSessSubID),
+    requestForPositionsTransactTime :: !TransactTime,
+    requestForPositionsResponseTransportType :: !(Maybe ResponseTransportType),
+    requestForPositionsResponseDestination :: !(Maybe ResponseDestination),
+    requestForPositionsText :: !(Maybe Text),
+    requestForPositionsEncodedTextLen :: !(Maybe EncodedTextLen),
+    requestForPositionsEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity RequestForPositions
 
 -- MessageSpec {messageName = "RequestForPositionsAck", messageType = "AO", messageCategory = "app", messagePieces = [MessagePieceField "PosMaintRptID" True,MessagePieceField "PosReqID" False,MessagePieceField "TotalNumPosReports" False,MessagePieceField "UnsolicitedIndicator" False,MessagePieceField "PosReqResult" True,MessagePieceField "PosReqStatus" True,MessagePieceComponent "Parties" True,MessagePieceField "Account" True,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" True,MessagePieceComponent "Instrument" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data RequestForPositionsAck deriving stock (Generic)
+data RequestForPositionsAck = RequestForPositionsAck
+  { requestForPositionsAckPosMaintRptID :: !PosMaintRptID,
+    requestForPositionsAckPosReqID :: !(Maybe PosReqID),
+    requestForPositionsAckTotalNumPosReports :: !(Maybe TotalNumPosReports),
+    requestForPositionsAckUnsolicitedIndicator :: !(Maybe UnsolicitedIndicator),
+    requestForPositionsAckPosReqResult :: !PosReqResult,
+    requestForPositionsAckPosReqStatus :: !PosReqStatus,
+    requestForPositionsAckAccount :: !Account,
+    requestForPositionsAckAcctIDSource :: !(Maybe AcctIDSource),
+    requestForPositionsAckAccountType :: !AccountType,
+    requestForPositionsAckCurrency :: !(Maybe Currency),
+    requestForPositionsAckResponseTransportType :: !(Maybe ResponseTransportType),
+    requestForPositionsAckResponseDestination :: !(Maybe ResponseDestination),
+    requestForPositionsAckText :: !(Maybe Text),
+    requestForPositionsAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    requestForPositionsAckEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity RequestForPositionsAck
 
 -- MessageSpec {messageName = "PositionReport", messageType = "AP", messageCategory = "app", messagePieces = [MessagePieceField "PosMaintRptID" True,MessagePieceField "PosReqID" False,MessagePieceField "PosReqType" False,MessagePieceField "SubscriptionRequestType" False,MessagePieceField "TotalNumPosReports" False,MessagePieceField "UnsolicitedIndicator" False,MessagePieceField "PosReqResult" True,MessagePieceField "ClearingBusinessDate" True,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceComponent "Parties" True,MessagePieceField "Account" True,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" True,MessagePieceComponent "Instrument" False,MessagePieceField "Currency" False,MessagePieceField "SettlPrice" True,MessagePieceField "SettlPriceType" True,MessagePieceField "PriorSettlPrice" True,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "PosUndInstrmtGrp" False,MessagePieceComponent "PositionQty" True,MessagePieceComponent "PositionAmountData" True,MessagePieceField "RegistStatus" False,MessagePieceField "DeliveryDate" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data PositionReport deriving stock (Generic)
+data PositionReport = PositionReport
+  { positionReportPosMaintRptID :: !PosMaintRptID,
+    positionReportPosReqID :: !(Maybe PosReqID),
+    positionReportPosReqType :: !(Maybe PosReqType),
+    positionReportSubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    positionReportTotalNumPosReports :: !(Maybe TotalNumPosReports),
+    positionReportUnsolicitedIndicator :: !(Maybe UnsolicitedIndicator),
+    positionReportPosReqResult :: !PosReqResult,
+    positionReportClearingBusinessDate :: !ClearingBusinessDate,
+    positionReportSettlSessID :: !(Maybe SettlSessID),
+    positionReportSettlSessSubID :: !(Maybe SettlSessSubID),
+    positionReportAccount :: !Account,
+    positionReportAcctIDSource :: !(Maybe AcctIDSource),
+    positionReportAccountType :: !AccountType,
+    positionReportCurrency :: !(Maybe Currency),
+    positionReportSettlPrice :: !SettlPrice,
+    positionReportSettlPriceType :: !SettlPriceType,
+    positionReportPriorSettlPrice :: !PriorSettlPrice,
+    positionReportRegistStatus :: !(Maybe RegistStatus),
+    positionReportDeliveryDate :: !(Maybe DeliveryDate),
+    positionReportText :: !(Maybe Text),
+    positionReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    positionReportEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity PositionReport
 
 -- MessageSpec {messageName = "TradeCaptureReportRequestAck", messageType = "AQ", messageCategory = "app", messagePieces = [MessagePieceField "TradeRequestID" True,MessagePieceField "TradeRequestType" True,MessagePieceField "SubscriptionRequestType" False,MessagePieceField "TotNumTradeReports" False,MessagePieceField "TradeRequestResult" True,MessagePieceField "TradeRequestStatus" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "MultiLegReportingType" False,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data TradeCaptureReportRequestAck deriving stock (Generic)
+data TradeCaptureReportRequestAck = TradeCaptureReportRequestAck
+  { tradeCaptureReportRequestAckTradeRequestID :: !TradeRequestID,
+    tradeCaptureReportRequestAckTradeRequestType :: !TradeRequestType,
+    tradeCaptureReportRequestAckSubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    tradeCaptureReportRequestAckTotNumTradeReports :: !(Maybe TotNumTradeReports),
+    tradeCaptureReportRequestAckTradeRequestResult :: !TradeRequestResult,
+    tradeCaptureReportRequestAckTradeRequestStatus :: !TradeRequestStatus,
+    tradeCaptureReportRequestAckMultiLegReportingType :: !(Maybe MultiLegReportingType),
+    tradeCaptureReportRequestAckResponseTransportType :: !(Maybe ResponseTransportType),
+    tradeCaptureReportRequestAckResponseDestination :: !(Maybe ResponseDestination),
+    tradeCaptureReportRequestAckText :: !(Maybe Text),
+    tradeCaptureReportRequestAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    tradeCaptureReportRequestAckEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TradeCaptureReportRequestAck
 
 -- MessageSpec {messageName = "TradeCaptureReportAck", messageType = "AR", messageCategory = "app", messagePieces = [MessagePieceField "TradeReportID" True,MessagePieceField "TradeReportTransType" False,MessagePieceField "TradeReportType" False,MessagePieceField "TrdType" False,MessagePieceField "TrdSubType" False,MessagePieceField "SecondaryTrdType" False,MessagePieceField "TransferReason" False,MessagePieceField "ExecType" True,MessagePieceField "TradeReportRefID" False,MessagePieceField "SecondaryTradeReportRefID" False,MessagePieceField "TrdRptStatus" False,MessagePieceField "TradeReportRejectReason" False,MessagePieceField "SecondaryTradeReportID" False,MessagePieceField "SubscriptionRequestType" False,MessagePieceField "TradeLinkID" False,MessagePieceField "TrdMatchID" False,MessagePieceField "ExecID" False,MessagePieceField "SecondaryExecID" False,MessagePieceComponent "Instrument" True,MessagePieceField "TransactTime" False,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceComponent "TrdInstrmtLegGrp" False,MessagePieceField "ClearingFeeIndicator" False,MessagePieceField "OrderCapacity" False,MessagePieceField "OrderRestrictions" False,MessagePieceField "CustOrderCapacity" False,MessagePieceField "Account" False,MessagePieceField "AcctIDSource" False,MessagePieceField "AccountType" False,MessagePieceField "PositionEffect" False,MessagePieceField "PreallocMethod" False,MessagePieceComponent "TrdAllocGrp" False]}
-data TradeCaptureReportAck deriving stock (Generic)
+data TradeCaptureReportAck = TradeCaptureReportAck
+  { tradeCaptureReportAckTradeReportID :: !TradeReportID,
+    tradeCaptureReportAckTradeReportTransType :: !(Maybe TradeReportTransType),
+    tradeCaptureReportAckTradeReportType :: !(Maybe TradeReportType),
+    tradeCaptureReportAckTrdType :: !(Maybe TrdType),
+    tradeCaptureReportAckTrdSubType :: !(Maybe TrdSubType),
+    tradeCaptureReportAckSecondaryTrdType :: !(Maybe SecondaryTrdType),
+    tradeCaptureReportAckTransferReason :: !(Maybe TransferReason),
+    tradeCaptureReportAckExecType :: !ExecType,
+    tradeCaptureReportAckTradeReportRefID :: !(Maybe TradeReportRefID),
+    tradeCaptureReportAckSecondaryTradeReportRefID :: !(Maybe SecondaryTradeReportRefID),
+    tradeCaptureReportAckTrdRptStatus :: !(Maybe TrdRptStatus),
+    tradeCaptureReportAckTradeReportRejectReason :: !(Maybe TradeReportRejectReason),
+    tradeCaptureReportAckSecondaryTradeReportID :: !(Maybe SecondaryTradeReportID),
+    tradeCaptureReportAckSubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    tradeCaptureReportAckTradeLinkID :: !(Maybe TradeLinkID),
+    tradeCaptureReportAckTrdMatchID :: !(Maybe TrdMatchID),
+    tradeCaptureReportAckExecID :: !(Maybe ExecID),
+    tradeCaptureReportAckSecondaryExecID :: !(Maybe SecondaryExecID),
+    tradeCaptureReportAckTransactTime :: !(Maybe TransactTime),
+    tradeCaptureReportAckResponseTransportType :: !(Maybe ResponseTransportType),
+    tradeCaptureReportAckResponseDestination :: !(Maybe ResponseDestination),
+    tradeCaptureReportAckText :: !(Maybe Text),
+    tradeCaptureReportAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    tradeCaptureReportAckEncodedText :: !(Maybe EncodedText),
+    tradeCaptureReportAckClearingFeeIndicator :: !(Maybe ClearingFeeIndicator),
+    tradeCaptureReportAckOrderCapacity :: !(Maybe OrderCapacity),
+    tradeCaptureReportAckOrderRestrictions :: !(Maybe OrderRestrictions),
+    tradeCaptureReportAckCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    tradeCaptureReportAckAccount :: !(Maybe Account),
+    tradeCaptureReportAckAcctIDSource :: !(Maybe AcctIDSource),
+    tradeCaptureReportAckAccountType :: !(Maybe AccountType),
+    tradeCaptureReportAckPositionEffect :: !(Maybe PositionEffect),
+    tradeCaptureReportAckPreallocMethod :: !(Maybe PreallocMethod)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity TradeCaptureReportAck
 
 -- MessageSpec {messageName = "AllocationReport", messageType = "AS", messageCategory = "app", messagePieces = [MessagePieceField "AllocReportID" True,MessagePieceField "AllocID" False,MessagePieceField "AllocTransType" True,MessagePieceField "AllocReportRefID" False,MessagePieceField "AllocCancReplaceReason" False,MessagePieceField "SecondaryAllocID" False,MessagePieceField "AllocReportType" True,MessagePieceField "AllocStatus" True,MessagePieceField "AllocRejCode" False,MessagePieceField "RefAllocID" False,MessagePieceField "AllocIntermedReqType" False,MessagePieceField "AllocLinkID" False,MessagePieceField "AllocLinkType" False,MessagePieceField "BookingRefID" False,MessagePieceField "AllocNoOrdersType" True,MessagePieceComponent "OrdAllocGrp" False,MessagePieceComponent "ExecAllocGrp" False,MessagePieceField "PreviouslyReported" False,MessagePieceField "ReversalIndicator" False,MessagePieceField "MatchType" False,MessagePieceField "Side" True,MessagePieceComponent "Instrument" True,MessagePieceComponent "InstrumentExtension" False,MessagePieceComponent "FinancingDetails" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceField "Quantity" True,MessagePieceField "QtyType" False,MessagePieceField "LastMkt" False,MessagePieceField "TradeOriginationDate" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "PriceType" False,MessagePieceField "AvgPx" True,MessagePieceField "AvgParPx" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceField "Currency" False,MessagePieceField "AvgPxPrecision" False,MessagePieceComponent "Parties" False,MessagePieceField "TradeDate" True,MessagePieceField "TransactTime" False,MessagePieceField "SettlType" False,MessagePieceField "SettlDate" False,MessagePieceField "BookingType" False,MessagePieceField "GrossTradeAmt" False,MessagePieceField "Concession" False,MessagePieceField "TotalTakedown" False,MessagePieceField "NetMoney" False,MessagePieceField "PositionEffect" False,MessagePieceField "AutoAcceptIndicator" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceField "NumDaysInterest" False,MessagePieceField "AccruedInterestRate" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "TotalAccruedInterestAmt" False,MessagePieceField "InterestAtMaturity" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceField "LegalConfirm" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "YieldData" False,MessagePieceField "TotNoAllocs" False,MessagePieceField "LastFragment" False,MessagePieceComponent "AllocGrp" False]}
-data AllocationReport deriving stock (Generic)
+data AllocationReport = AllocationReport
+  { allocationReportAllocReportID :: !AllocReportID,
+    allocationReportAllocID :: !(Maybe AllocID),
+    allocationReportAllocTransType :: !AllocTransType,
+    allocationReportAllocReportRefID :: !(Maybe AllocReportRefID),
+    allocationReportAllocCancReplaceReason :: !(Maybe AllocCancReplaceReason),
+    allocationReportSecondaryAllocID :: !(Maybe SecondaryAllocID),
+    allocationReportAllocReportType :: !AllocReportType,
+    allocationReportAllocStatus :: !AllocStatus,
+    allocationReportAllocRejCode :: !(Maybe AllocRejCode),
+    allocationReportRefAllocID :: !(Maybe RefAllocID),
+    allocationReportAllocIntermedReqType :: !(Maybe AllocIntermedReqType),
+    allocationReportAllocLinkID :: !(Maybe AllocLinkID),
+    allocationReportAllocLinkType :: !(Maybe AllocLinkType),
+    allocationReportBookingRefID :: !(Maybe BookingRefID),
+    allocationReportAllocNoOrdersType :: !AllocNoOrdersType,
+    allocationReportPreviouslyReported :: !(Maybe PreviouslyReported),
+    allocationReportReversalIndicator :: !(Maybe ReversalIndicator),
+    allocationReportMatchType :: !(Maybe MatchType),
+    allocationReportSide :: !Side,
+    allocationReportQuantity :: !Quantity,
+    allocationReportQtyType :: !(Maybe QtyType),
+    allocationReportLastMkt :: !(Maybe LastMkt),
+    allocationReportTradeOriginationDate :: !(Maybe TradeOriginationDate),
+    allocationReportTradingSessionID :: !(Maybe TradingSessionID),
+    allocationReportTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    allocationReportPriceType :: !(Maybe PriceType),
+    allocationReportAvgPx :: !AvgPx,
+    allocationReportAvgParPx :: !(Maybe AvgParPx),
+    allocationReportCurrency :: !(Maybe Currency),
+    allocationReportAvgPxPrecision :: !(Maybe AvgPxPrecision),
+    allocationReportTradeDate :: !TradeDate,
+    allocationReportTransactTime :: !(Maybe TransactTime),
+    allocationReportSettlType :: !(Maybe SettlType),
+    allocationReportSettlDate :: !(Maybe SettlDate),
+    allocationReportBookingType :: !(Maybe BookingType),
+    allocationReportGrossTradeAmt :: !(Maybe GrossTradeAmt),
+    allocationReportConcession :: !(Maybe Concession),
+    allocationReportTotalTakedown :: !(Maybe TotalTakedown),
+    allocationReportNetMoney :: !(Maybe NetMoney),
+    allocationReportPositionEffect :: !(Maybe PositionEffect),
+    allocationReportAutoAcceptIndicator :: !(Maybe AutoAcceptIndicator),
+    allocationReportText :: !(Maybe Text),
+    allocationReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    allocationReportEncodedText :: !(Maybe EncodedText),
+    allocationReportNumDaysInterest :: !(Maybe NumDaysInterest),
+    allocationReportAccruedInterestRate :: !(Maybe AccruedInterestRate),
+    allocationReportAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    allocationReportTotalAccruedInterestAmt :: !(Maybe TotalAccruedInterestAmt),
+    allocationReportInterestAtMaturity :: !(Maybe InterestAtMaturity),
+    allocationReportEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    allocationReportStartCash :: !(Maybe StartCash),
+    allocationReportEndCash :: !(Maybe EndCash),
+    allocationReportLegalConfirm :: !(Maybe LegalConfirm),
+    allocationReportTotNoAllocs :: !(Maybe TotNoAllocs),
+    allocationReportLastFragment :: !(Maybe LastFragment)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity AllocationReport
 
 -- MessageSpec {messageName = "AllocationReportAck", messageType = "AT", messageCategory = "app", messagePieces = [MessagePieceField "AllocReportID" True,MessagePieceField "AllocID" True,MessagePieceComponent "Parties" False,MessagePieceField "SecondaryAllocID" False,MessagePieceField "TradeDate" False,MessagePieceField "TransactTime" True,MessagePieceField "AllocStatus" True,MessagePieceField "AllocRejCode" False,MessagePieceField "AllocReportType" False,MessagePieceField "AllocIntermedReqType" False,MessagePieceField "MatchStatus" False,MessagePieceField "Product" False,MessagePieceField "SecurityType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False,MessagePieceComponent "AllocAckGrp" False]}
-data AllocationReportAck deriving stock (Generic)
+data AllocationReportAck = AllocationReportAck
+  { allocationReportAckAllocReportID :: !AllocReportID,
+    allocationReportAckAllocID :: !AllocID,
+    allocationReportAckSecondaryAllocID :: !(Maybe SecondaryAllocID),
+    allocationReportAckTradeDate :: !(Maybe TradeDate),
+    allocationReportAckTransactTime :: !TransactTime,
+    allocationReportAckAllocStatus :: !AllocStatus,
+    allocationReportAckAllocRejCode :: !(Maybe AllocRejCode),
+    allocationReportAckAllocReportType :: !(Maybe AllocReportType),
+    allocationReportAckAllocIntermedReqType :: !(Maybe AllocIntermedReqType),
+    allocationReportAckMatchStatus :: !(Maybe MatchStatus),
+    allocationReportAckProduct :: !(Maybe Product),
+    allocationReportAckSecurityType :: !(Maybe SecurityType),
+    allocationReportAckText :: !(Maybe Text),
+    allocationReportAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    allocationReportAckEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity AllocationReportAck
 
 -- MessageSpec {messageName = "ConfirmationAck", messageType = "AU", messageCategory = "app", messagePieces = [MessagePieceField "ConfirmID" True,MessagePieceField "TradeDate" True,MessagePieceField "TransactTime" True,MessagePieceField "AffirmStatus" True,MessagePieceField "ConfirmRejReason" False,MessagePieceField "MatchStatus" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data ConfirmationAck deriving stock (Generic)
+data ConfirmationAck = ConfirmationAck
+  { confirmationAckConfirmID :: !ConfirmID,
+    confirmationAckTradeDate :: !TradeDate,
+    confirmationAckTransactTime :: !TransactTime,
+    confirmationAckAffirmStatus :: !AffirmStatus,
+    confirmationAckConfirmRejReason :: !(Maybe ConfirmRejReason),
+    confirmationAckMatchStatus :: !(Maybe MatchStatus),
+    confirmationAckText :: !(Maybe Text),
+    confirmationAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    confirmationAckEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ConfirmationAck
 
 -- MessageSpec {messageName = "SettlementInstructionRequest", messageType = "AV", messageCategory = "app", messagePieces = [MessagePieceField "SettlInstReqID" True,MessagePieceField "TransactTime" True,MessagePieceComponent "Parties" False,MessagePieceField "AllocAccount" False,MessagePieceField "AllocAcctIDSource" False,MessagePieceField "Side" False,MessagePieceField "Product" False,MessagePieceField "SecurityType" False,MessagePieceField "CFICode" False,MessagePieceField "EffectiveTime" False,MessagePieceField "ExpireTime" False,MessagePieceField "LastUpdateTime" False,MessagePieceField "StandInstDbType" False,MessagePieceField "StandInstDbName" False,MessagePieceField "StandInstDbID" False]}
-data SettlementInstructionRequest deriving stock (Generic)
+data SettlementInstructionRequest = SettlementInstructionRequest
+  { settlementInstructionRequestSettlInstReqID :: !SettlInstReqID,
+    settlementInstructionRequestTransactTime :: !TransactTime,
+    settlementInstructionRequestAllocAccount :: !(Maybe AllocAccount),
+    settlementInstructionRequestAllocAcctIDSource :: !(Maybe AllocAcctIDSource),
+    settlementInstructionRequestSide :: !(Maybe Side),
+    settlementInstructionRequestProduct :: !(Maybe Product),
+    settlementInstructionRequestSecurityType :: !(Maybe SecurityType),
+    settlementInstructionRequestCFICode :: !(Maybe CFICode),
+    settlementInstructionRequestEffectiveTime :: !(Maybe EffectiveTime),
+    settlementInstructionRequestExpireTime :: !(Maybe ExpireTime),
+    settlementInstructionRequestLastUpdateTime :: !(Maybe LastUpdateTime),
+    settlementInstructionRequestStandInstDbType :: !(Maybe StandInstDbType),
+    settlementInstructionRequestStandInstDbName :: !(Maybe StandInstDbName),
+    settlementInstructionRequestStandInstDbID :: !(Maybe StandInstDbID)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity SettlementInstructionRequest
 
 -- MessageSpec {messageName = "AssignmentReport", messageType = "AW", messageCategory = "app", messagePieces = [MessagePieceField "AsgnRptID" True,MessagePieceField "TotNumAssignmentReports" False,MessagePieceField "LastRptRequested" False,MessagePieceComponent "Parties" True,MessagePieceField "Account" False,MessagePieceField "AccountType" True,MessagePieceComponent "Instrument" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceComponent "PositionQty" True,MessagePieceComponent "PositionAmountData" True,MessagePieceField "ThresholdAmount" False,MessagePieceField "SettlPrice" True,MessagePieceField "SettlPriceType" True,MessagePieceField "UnderlyingSettlPrice" True,MessagePieceField "ExpireDate" False,MessagePieceField "AssignmentMethod" True,MessagePieceField "AssignmentUnit" False,MessagePieceField "OpenInterest" True,MessagePieceField "ExerciseMethod" True,MessagePieceField "SettlSessID" True,MessagePieceField "SettlSessSubID" True,MessagePieceField "ClearingBusinessDate" True,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data AssignmentReport deriving stock (Generic)
+data AssignmentReport = AssignmentReport
+  { assignmentReportAsgnRptID :: !AsgnRptID,
+    assignmentReportTotNumAssignmentReports :: !(Maybe TotNumAssignmentReports),
+    assignmentReportLastRptRequested :: !(Maybe LastRptRequested),
+    assignmentReportAccount :: !(Maybe Account),
+    assignmentReportAccountType :: !AccountType,
+    assignmentReportCurrency :: !(Maybe Currency),
+    assignmentReportThresholdAmount :: !(Maybe ThresholdAmount),
+    assignmentReportSettlPrice :: !SettlPrice,
+    assignmentReportSettlPriceType :: !SettlPriceType,
+    assignmentReportUnderlyingSettlPrice :: !UnderlyingSettlPrice,
+    assignmentReportExpireDate :: !(Maybe ExpireDate),
+    assignmentReportAssignmentMethod :: !AssignmentMethod,
+    assignmentReportAssignmentUnit :: !(Maybe AssignmentUnit),
+    assignmentReportOpenInterest :: !OpenInterest,
+    assignmentReportExerciseMethod :: !ExerciseMethod,
+    assignmentReportSettlSessID :: !SettlSessID,
+    assignmentReportSettlSessSubID :: !SettlSessSubID,
+    assignmentReportClearingBusinessDate :: !ClearingBusinessDate,
+    assignmentReportText :: !(Maybe Text),
+    assignmentReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    assignmentReportEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity AssignmentReport
 
 -- MessageSpec {messageName = "CollateralRequest", messageType = "AX", messageCategory = "app", messagePieces = [MessagePieceField "CollReqID" True,MessagePieceField "CollAsgnReason" True,MessagePieceField "TransactTime" True,MessagePieceField "ExpireTime" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AccountType" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderID" False,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceComponent "ExecCollGrp" False,MessagePieceComponent "TrdCollGrp" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "FinancingDetails" False,MessagePieceField "SettlDate" False,MessagePieceField "Quantity" False,MessagePieceField "QtyType" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtCollGrp" False,MessagePieceField "MarginExcess" False,MessagePieceField "TotalNetValue" False,MessagePieceField "CashOutstanding" False,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "Side" False,MessagePieceComponent "MiscFeesGrp" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "Stipulations" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data CollateralRequest deriving stock (Generic)
+data CollateralRequest = CollateralRequest
+  { collateralRequestCollReqID :: !CollReqID,
+    collateralRequestCollAsgnReason :: !CollAsgnReason,
+    collateralRequestTransactTime :: !TransactTime,
+    collateralRequestExpireTime :: !(Maybe ExpireTime),
+    collateralRequestAccount :: !(Maybe Account),
+    collateralRequestAccountType :: !(Maybe AccountType),
+    collateralRequestClOrdID :: !(Maybe ClOrdID),
+    collateralRequestOrderID :: !(Maybe OrderID),
+    collateralRequestSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    collateralRequestSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    collateralRequestSettlDate :: !(Maybe SettlDate),
+    collateralRequestQuantity :: !(Maybe Quantity),
+    collateralRequestQtyType :: !(Maybe QtyType),
+    collateralRequestCurrency :: !(Maybe Currency),
+    collateralRequestMarginExcess :: !(Maybe MarginExcess),
+    collateralRequestTotalNetValue :: !(Maybe TotalNetValue),
+    collateralRequestCashOutstanding :: !(Maybe CashOutstanding),
+    collateralRequestSide :: !(Maybe Side),
+    collateralRequestPrice :: !(Maybe Price),
+    collateralRequestPriceType :: !(Maybe PriceType),
+    collateralRequestAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    collateralRequestEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    collateralRequestStartCash :: !(Maybe StartCash),
+    collateralRequestEndCash :: !(Maybe EndCash),
+    collateralRequestTradingSessionID :: !(Maybe TradingSessionID),
+    collateralRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    collateralRequestSettlSessID :: !(Maybe SettlSessID),
+    collateralRequestSettlSessSubID :: !(Maybe SettlSessSubID),
+    collateralRequestClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    collateralRequestText :: !(Maybe Text),
+    collateralRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    collateralRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CollateralRequest
 
 -- MessageSpec {messageName = "CollateralAssignment", messageType = "AY", messageCategory = "app", messagePieces = [MessagePieceField "CollAsgnID" True,MessagePieceField "CollReqID" False,MessagePieceField "CollAsgnReason" True,MessagePieceField "CollAsgnTransType" True,MessagePieceField "CollAsgnRefID" False,MessagePieceField "TransactTime" True,MessagePieceField "ExpireTime" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AccountType" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderID" False,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceComponent "ExecCollGrp" False,MessagePieceComponent "TrdCollGrp" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "FinancingDetails" False,MessagePieceField "SettlDate" False,MessagePieceField "Quantity" False,MessagePieceField "QtyType" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtCollGrp" False,MessagePieceField "MarginExcess" False,MessagePieceField "TotalNetValue" False,MessagePieceField "CashOutstanding" False,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "Side" False,MessagePieceComponent "MiscFeesGrp" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "SettlInstructionsData" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data CollateralAssignment deriving stock (Generic)
+data CollateralAssignment = CollateralAssignment
+  { collateralAssignmentCollAsgnID :: !CollAsgnID,
+    collateralAssignmentCollReqID :: !(Maybe CollReqID),
+    collateralAssignmentCollAsgnReason :: !CollAsgnReason,
+    collateralAssignmentCollAsgnTransType :: !CollAsgnTransType,
+    collateralAssignmentCollAsgnRefID :: !(Maybe CollAsgnRefID),
+    collateralAssignmentTransactTime :: !TransactTime,
+    collateralAssignmentExpireTime :: !(Maybe ExpireTime),
+    collateralAssignmentAccount :: !(Maybe Account),
+    collateralAssignmentAccountType :: !(Maybe AccountType),
+    collateralAssignmentClOrdID :: !(Maybe ClOrdID),
+    collateralAssignmentOrderID :: !(Maybe OrderID),
+    collateralAssignmentSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    collateralAssignmentSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    collateralAssignmentSettlDate :: !(Maybe SettlDate),
+    collateralAssignmentQuantity :: !(Maybe Quantity),
+    collateralAssignmentQtyType :: !(Maybe QtyType),
+    collateralAssignmentCurrency :: !(Maybe Currency),
+    collateralAssignmentMarginExcess :: !(Maybe MarginExcess),
+    collateralAssignmentTotalNetValue :: !(Maybe TotalNetValue),
+    collateralAssignmentCashOutstanding :: !(Maybe CashOutstanding),
+    collateralAssignmentSide :: !(Maybe Side),
+    collateralAssignmentPrice :: !(Maybe Price),
+    collateralAssignmentPriceType :: !(Maybe PriceType),
+    collateralAssignmentAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    collateralAssignmentEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    collateralAssignmentStartCash :: !(Maybe StartCash),
+    collateralAssignmentEndCash :: !(Maybe EndCash),
+    collateralAssignmentTradingSessionID :: !(Maybe TradingSessionID),
+    collateralAssignmentTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    collateralAssignmentSettlSessID :: !(Maybe SettlSessID),
+    collateralAssignmentSettlSessSubID :: !(Maybe SettlSessSubID),
+    collateralAssignmentClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    collateralAssignmentText :: !(Maybe Text),
+    collateralAssignmentEncodedTextLen :: !(Maybe EncodedTextLen),
+    collateralAssignmentEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CollateralAssignment
 
 -- MessageSpec {messageName = "CollateralResponse", messageType = "AZ", messageCategory = "app", messagePieces = [MessagePieceField "CollRespID" True,MessagePieceField "CollAsgnID" True,MessagePieceField "CollReqID" False,MessagePieceField "CollAsgnReason" True,MessagePieceField "CollAsgnTransType" False,MessagePieceField "CollAsgnRespType" True,MessagePieceField "CollAsgnRejectReason" False,MessagePieceField "TransactTime" True,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AccountType" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderID" False,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceComponent "ExecCollGrp" False,MessagePieceComponent "TrdCollGrp" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "FinancingDetails" False,MessagePieceField "SettlDate" False,MessagePieceField "Quantity" False,MessagePieceField "QtyType" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtCollGrp" False,MessagePieceField "MarginExcess" False,MessagePieceField "TotalNetValue" False,MessagePieceField "CashOutstanding" False,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "Side" False,MessagePieceComponent "MiscFeesGrp" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "Stipulations" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data CollateralResponse deriving stock (Generic)
+data CollateralResponse = CollateralResponse
+  { collateralResponseCollRespID :: !CollRespID,
+    collateralResponseCollAsgnID :: !CollAsgnID,
+    collateralResponseCollReqID :: !(Maybe CollReqID),
+    collateralResponseCollAsgnReason :: !CollAsgnReason,
+    collateralResponseCollAsgnTransType :: !(Maybe CollAsgnTransType),
+    collateralResponseCollAsgnRespType :: !CollAsgnRespType,
+    collateralResponseCollAsgnRejectReason :: !(Maybe CollAsgnRejectReason),
+    collateralResponseTransactTime :: !TransactTime,
+    collateralResponseAccount :: !(Maybe Account),
+    collateralResponseAccountType :: !(Maybe AccountType),
+    collateralResponseClOrdID :: !(Maybe ClOrdID),
+    collateralResponseOrderID :: !(Maybe OrderID),
+    collateralResponseSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    collateralResponseSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    collateralResponseSettlDate :: !(Maybe SettlDate),
+    collateralResponseQuantity :: !(Maybe Quantity),
+    collateralResponseQtyType :: !(Maybe QtyType),
+    collateralResponseCurrency :: !(Maybe Currency),
+    collateralResponseMarginExcess :: !(Maybe MarginExcess),
+    collateralResponseTotalNetValue :: !(Maybe TotalNetValue),
+    collateralResponseCashOutstanding :: !(Maybe CashOutstanding),
+    collateralResponseSide :: !(Maybe Side),
+    collateralResponsePrice :: !(Maybe Price),
+    collateralResponsePriceType :: !(Maybe PriceType),
+    collateralResponseAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    collateralResponseEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    collateralResponseStartCash :: !(Maybe StartCash),
+    collateralResponseEndCash :: !(Maybe EndCash),
+    collateralResponseText :: !(Maybe Text),
+    collateralResponseEncodedTextLen :: !(Maybe EncodedTextLen),
+    collateralResponseEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CollateralResponse
 
 -- MessageSpec {messageName = "CollateralReport", messageType = "BA", messageCategory = "app", messagePieces = [MessagePieceField "CollRptID" True,MessagePieceField "CollInquiryID" False,MessagePieceField "CollStatus" True,MessagePieceField "TotNumReports" False,MessagePieceField "LastRptRequested" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AccountType" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderID" False,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceComponent "ExecCollGrp" False,MessagePieceComponent "TrdCollGrp" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "FinancingDetails" False,MessagePieceField "SettlDate" False,MessagePieceField "Quantity" False,MessagePieceField "QtyType" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "MarginExcess" False,MessagePieceField "TotalNetValue" False,MessagePieceField "CashOutstanding" False,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "Side" False,MessagePieceComponent "MiscFeesGrp" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "SettlInstructionsData" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data CollateralReport deriving stock (Generic)
+data CollateralReport = CollateralReport
+  { collateralReportCollRptID :: !CollRptID,
+    collateralReportCollInquiryID :: !(Maybe CollInquiryID),
+    collateralReportCollStatus :: !CollStatus,
+    collateralReportTotNumReports :: !(Maybe TotNumReports),
+    collateralReportLastRptRequested :: !(Maybe LastRptRequested),
+    collateralReportAccount :: !(Maybe Account),
+    collateralReportAccountType :: !(Maybe AccountType),
+    collateralReportClOrdID :: !(Maybe ClOrdID),
+    collateralReportOrderID :: !(Maybe OrderID),
+    collateralReportSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    collateralReportSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    collateralReportSettlDate :: !(Maybe SettlDate),
+    collateralReportQuantity :: !(Maybe Quantity),
+    collateralReportQtyType :: !(Maybe QtyType),
+    collateralReportCurrency :: !(Maybe Currency),
+    collateralReportMarginExcess :: !(Maybe MarginExcess),
+    collateralReportTotalNetValue :: !(Maybe TotalNetValue),
+    collateralReportCashOutstanding :: !(Maybe CashOutstanding),
+    collateralReportSide :: !(Maybe Side),
+    collateralReportPrice :: !(Maybe Price),
+    collateralReportPriceType :: !(Maybe PriceType),
+    collateralReportAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    collateralReportEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    collateralReportStartCash :: !(Maybe StartCash),
+    collateralReportEndCash :: !(Maybe EndCash),
+    collateralReportTradingSessionID :: !(Maybe TradingSessionID),
+    collateralReportTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    collateralReportSettlSessID :: !(Maybe SettlSessID),
+    collateralReportSettlSessSubID :: !(Maybe SettlSessSubID),
+    collateralReportClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    collateralReportText :: !(Maybe Text),
+    collateralReportEncodedTextLen :: !(Maybe EncodedTextLen),
+    collateralReportEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CollateralReport
 
 -- MessageSpec {messageName = "CollateralInquiry", messageType = "BB", messageCategory = "app", messagePieces = [MessagePieceField "CollInquiryID" False,MessagePieceComponent "CollInqQualGrp" False,MessagePieceField "SubscriptionRequestType" False,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AccountType" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderID" False,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceComponent "ExecCollGrp" False,MessagePieceComponent "TrdCollGrp" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "FinancingDetails" False,MessagePieceField "SettlDate" False,MessagePieceField "Quantity" False,MessagePieceField "QtyType" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "MarginExcess" False,MessagePieceField "TotalNetValue" False,MessagePieceField "CashOutstanding" False,MessagePieceComponent "TrdRegTimestamps" False,MessagePieceField "Side" False,MessagePieceField "Price" False,MessagePieceField "PriceType" False,MessagePieceField "AccruedInterestAmt" False,MessagePieceField "EndAccruedInterestAmt" False,MessagePieceField "StartCash" False,MessagePieceField "EndCash" False,MessagePieceComponent "SpreadOrBenchmarkCurveData" False,MessagePieceComponent "Stipulations" False,MessagePieceComponent "SettlInstructionsData" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data CollateralInquiry deriving stock (Generic)
+data CollateralInquiry = CollateralInquiry
+  { collateralInquiryCollInquiryID :: !(Maybe CollInquiryID),
+    collateralInquirySubscriptionRequestType :: !(Maybe SubscriptionRequestType),
+    collateralInquiryResponseTransportType :: !(Maybe ResponseTransportType),
+    collateralInquiryResponseDestination :: !(Maybe ResponseDestination),
+    collateralInquiryAccount :: !(Maybe Account),
+    collateralInquiryAccountType :: !(Maybe AccountType),
+    collateralInquiryClOrdID :: !(Maybe ClOrdID),
+    collateralInquiryOrderID :: !(Maybe OrderID),
+    collateralInquirySecondaryOrderID :: !(Maybe SecondaryOrderID),
+    collateralInquirySecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    collateralInquirySettlDate :: !(Maybe SettlDate),
+    collateralInquiryQuantity :: !(Maybe Quantity),
+    collateralInquiryQtyType :: !(Maybe QtyType),
+    collateralInquiryCurrency :: !(Maybe Currency),
+    collateralInquiryMarginExcess :: !(Maybe MarginExcess),
+    collateralInquiryTotalNetValue :: !(Maybe TotalNetValue),
+    collateralInquiryCashOutstanding :: !(Maybe CashOutstanding),
+    collateralInquirySide :: !(Maybe Side),
+    collateralInquiryPrice :: !(Maybe Price),
+    collateralInquiryPriceType :: !(Maybe PriceType),
+    collateralInquiryAccruedInterestAmt :: !(Maybe AccruedInterestAmt),
+    collateralInquiryEndAccruedInterestAmt :: !(Maybe EndAccruedInterestAmt),
+    collateralInquiryStartCash :: !(Maybe StartCash),
+    collateralInquiryEndCash :: !(Maybe EndCash),
+    collateralInquiryTradingSessionID :: !(Maybe TradingSessionID),
+    collateralInquiryTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    collateralInquirySettlSessID :: !(Maybe SettlSessID),
+    collateralInquirySettlSessSubID :: !(Maybe SettlSessSubID),
+    collateralInquiryClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    collateralInquiryText :: !(Maybe Text),
+    collateralInquiryEncodedTextLen :: !(Maybe EncodedTextLen),
+    collateralInquiryEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CollateralInquiry
 
 -- MessageSpec {messageName = "NetworkCounterpartySystemStatusRequest", messageType = "BC", messageCategory = "app", messagePieces = [MessagePieceField "NetworkRequestType" True,MessagePieceField "NetworkRequestID" True,MessagePieceComponent "CompIDReqGrp" False]}
-data NetworkCounterpartySystemStatusRequest deriving stock (Generic)
+data NetworkCounterpartySystemStatusRequest = NetworkCounterpartySystemStatusRequest
+  { networkCounterpartySystemStatusRequestNetworkRequestType :: !NetworkRequestType,
+    networkCounterpartySystemStatusRequestNetworkRequestID :: !NetworkRequestID
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity NetworkCounterpartySystemStatusRequest
 
 -- MessageSpec {messageName = "NetworkCounterpartySystemStatusResponse", messageType = "BD", messageCategory = "app", messagePieces = [MessagePieceField "NetworkStatusResponseType" True,MessagePieceField "NetworkRequestID" False,MessagePieceField "NetworkResponseID" True,MessagePieceField "LastNetworkResponseID" False,MessagePieceComponent "CompIDStatGrp" True]}
-data NetworkCounterpartySystemStatusResponse deriving stock (Generic)
+data NetworkCounterpartySystemStatusResponse = NetworkCounterpartySystemStatusResponse
+  { networkCounterpartySystemStatusResponseNetworkStatusResponseType :: !NetworkStatusResponseType,
+    networkCounterpartySystemStatusResponseNetworkRequestID :: !(Maybe NetworkRequestID),
+    networkCounterpartySystemStatusResponseNetworkResponseID :: !NetworkResponseID,
+    networkCounterpartySystemStatusResponseLastNetworkResponseID :: !(Maybe LastNetworkResponseID)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity NetworkCounterpartySystemStatusResponse
 
 -- MessageSpec {messageName = "UserRequest", messageType = "BE", messageCategory = "app", messagePieces = [MessagePieceField "UserRequestID" True,MessagePieceField "UserRequestType" True,MessagePieceField "Username" True,MessagePieceField "Password" False,MessagePieceField "NewPassword" False,MessagePieceField "RawDataLength" False,MessagePieceField "RawData" False]}
-data UserRequest deriving stock (Generic)
+data UserRequest = UserRequest
+  { userRequestUserRequestID :: !UserRequestID,
+    userRequestUserRequestType :: !UserRequestType,
+    userRequestUsername :: !Username,
+    userRequestPassword :: !(Maybe Password),
+    userRequestNewPassword :: !(Maybe NewPassword),
+    userRequestRawDataLength :: !(Maybe RawDataLength),
+    userRequestRawData :: !(Maybe RawData)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity UserRequest
 
 -- MessageSpec {messageName = "UserResponse", messageType = "BF", messageCategory = "app", messagePieces = [MessagePieceField "UserRequestID" True,MessagePieceField "Username" True,MessagePieceField "UserStatus" False,MessagePieceField "UserStatusText" False]}
-data UserResponse deriving stock (Generic)
+data UserResponse = UserResponse
+  { userResponseUserRequestID :: !UserRequestID,
+    userResponseUsername :: !Username,
+    userResponseUserStatus :: !(Maybe UserStatus),
+    userResponseUserStatusText :: !(Maybe UserStatusText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity UserResponse
 
 -- MessageSpec {messageName = "CollateralInquiryAck", messageType = "BG", messageCategory = "app", messagePieces = [MessagePieceField "CollInquiryID" True,MessagePieceField "CollInquiryStatus" True,MessagePieceField "CollInquiryResult" False,MessagePieceComponent "CollInqQualGrp" False,MessagePieceField "TotNumReports" False,MessagePieceComponent "Parties" False,MessagePieceField "Account" False,MessagePieceField "AccountType" False,MessagePieceField "ClOrdID" False,MessagePieceField "OrderID" False,MessagePieceField "SecondaryOrderID" False,MessagePieceField "SecondaryClOrdID" False,MessagePieceComponent "ExecCollGrp" False,MessagePieceComponent "TrdCollGrp" False,MessagePieceComponent "Instrument" False,MessagePieceComponent "FinancingDetails" False,MessagePieceField "SettlDate" False,MessagePieceField "Quantity" False,MessagePieceField "QtyType" False,MessagePieceField "Currency" False,MessagePieceComponent "InstrmtLegGrp" False,MessagePieceComponent "UndInstrmtGrp" False,MessagePieceField "TradingSessionID" False,MessagePieceField "TradingSessionSubID" False,MessagePieceField "SettlSessID" False,MessagePieceField "SettlSessSubID" False,MessagePieceField "ClearingBusinessDate" False,MessagePieceField "ResponseTransportType" False,MessagePieceField "ResponseDestination" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data CollateralInquiryAck deriving stock (Generic)
+data CollateralInquiryAck = CollateralInquiryAck
+  { collateralInquiryAckCollInquiryID :: !CollInquiryID,
+    collateralInquiryAckCollInquiryStatus :: !CollInquiryStatus,
+    collateralInquiryAckCollInquiryResult :: !(Maybe CollInquiryResult),
+    collateralInquiryAckTotNumReports :: !(Maybe TotNumReports),
+    collateralInquiryAckAccount :: !(Maybe Account),
+    collateralInquiryAckAccountType :: !(Maybe AccountType),
+    collateralInquiryAckClOrdID :: !(Maybe ClOrdID),
+    collateralInquiryAckOrderID :: !(Maybe OrderID),
+    collateralInquiryAckSecondaryOrderID :: !(Maybe SecondaryOrderID),
+    collateralInquiryAckSecondaryClOrdID :: !(Maybe SecondaryClOrdID),
+    collateralInquiryAckSettlDate :: !(Maybe SettlDate),
+    collateralInquiryAckQuantity :: !(Maybe Quantity),
+    collateralInquiryAckQtyType :: !(Maybe QtyType),
+    collateralInquiryAckCurrency :: !(Maybe Currency),
+    collateralInquiryAckTradingSessionID :: !(Maybe TradingSessionID),
+    collateralInquiryAckTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    collateralInquiryAckSettlSessID :: !(Maybe SettlSessID),
+    collateralInquiryAckSettlSessSubID :: !(Maybe SettlSessSubID),
+    collateralInquiryAckClearingBusinessDate :: !(Maybe ClearingBusinessDate),
+    collateralInquiryAckResponseTransportType :: !(Maybe ResponseTransportType),
+    collateralInquiryAckResponseDestination :: !(Maybe ResponseDestination),
+    collateralInquiryAckText :: !(Maybe Text),
+    collateralInquiryAckEncodedTextLen :: !(Maybe EncodedTextLen),
+    collateralInquiryAckEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity CollateralInquiryAck
 
 -- MessageSpec {messageName = "ConfirmationRequest", messageType = "BH", messageCategory = "app", messagePieces = [MessagePieceField "ConfirmReqID" True,MessagePieceField "ConfirmType" True,MessagePieceComponent "OrdAllocGrp" False,MessagePieceField "AllocID" False,MessagePieceField "SecondaryAllocID" False,MessagePieceField "IndividualAllocID" False,MessagePieceField "TransactTime" True,MessagePieceField "AllocAccount" False,MessagePieceField "AllocAcctIDSource" False,MessagePieceField "AllocAccountType" False,MessagePieceField "Text" False,MessagePieceField "EncodedTextLen" False,MessagePieceField "EncodedText" False]}
-data ConfirmationRequest deriving stock (Generic)
+data ConfirmationRequest = ConfirmationRequest
+  { confirmationRequestConfirmReqID :: !ConfirmReqID,
+    confirmationRequestConfirmType :: !ConfirmType,
+    confirmationRequestAllocID :: !(Maybe AllocID),
+    confirmationRequestSecondaryAllocID :: !(Maybe SecondaryAllocID),
+    confirmationRequestIndividualAllocID :: !(Maybe IndividualAllocID),
+    confirmationRequestTransactTime :: !TransactTime,
+    confirmationRequestAllocAccount :: !(Maybe AllocAccount),
+    confirmationRequestAllocAcctIDSource :: !(Maybe AllocAcctIDSource),
+    confirmationRequestAllocAccountType :: !(Maybe AllocAccountType),
+    confirmationRequestText :: !(Maybe Text),
+    confirmationRequestEncodedTextLen :: !(Maybe EncodedTextLen),
+    confirmationRequestEncodedText :: !(Maybe EncodedText)
+  }
+  deriving stock (Show, Eq, Generic)
 
 instance Validity ConfirmationRequest
