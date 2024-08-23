@@ -9,11 +9,11 @@ mkDerivation {
   src = ./.;
   libraryHaskellDepends = [
     base bytestring fix-core genvalidity genvalidity-bytestring
-    genvalidity-text genvalidity-time QuickCheck
+    genvalidity-sydtest genvalidity-text genvalidity-time path path-io
+    QuickCheck sydtest
   ];
   testHaskellDepends = [
-    base bytestring fix-core genvalidity-sydtest path path-io sydtest
-    time
+    base bytestring fix-core genvalidity-sydtest sydtest time
   ];
   testToolDepends = [ sydtest-discover ];
   license = "unknown";

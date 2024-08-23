@@ -10,3 +10,19 @@ library:
   - fix-spec
   - genvalidity
   - genvalidity-bytestring
+
+tests:
+  fix-spec-test:
+    main: Spec.hs
+    source-dirs: test/
+    build-tools: sydtest-discover
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -Wall
+    dependencies:
+    - fix-core-gen
+    - fix-spec
+    - fix-spec-gen
+    - sydtest

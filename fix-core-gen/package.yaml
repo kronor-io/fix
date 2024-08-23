@@ -14,9 +14,13 @@ library:
   - bytestring
   - fix-core
   - genvalidity
+  - genvalidity-bytestring
+  - genvalidity-sydtest
   - genvalidity-text
   - genvalidity-time
-  - genvalidity-bytestring
+  - path
+  - path-io
+  - sydtest
 
 tests:
   fix-core-test:
@@ -32,7 +36,5 @@ tests:
     - fix-core
     - fix-core-gen
     - genvalidity-sydtest
-    - path
-    - path-io
     - sydtest
     - time

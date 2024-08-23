@@ -25,6 +25,7 @@ runFixCodeGen = do
       let fieldSpecs = specFields spec
       writeFieldsFile settingsOutputDir fieldSpecs
       writeFieldsGenFile settingsOutputDir fieldSpecs
+      writeFieldsSpecFile settingsOutputDir fieldSpecs
 
 disclaimer :: String
 disclaimer =
@@ -33,37 +34,14 @@ disclaimer =
       "-- Any manual edits will be undone the next time fix-codegen is run."
     ]
 
-writeFieldsGenFile :: Path Abs Dir -> [FieldSpec] -> IO ()
-writeFieldsGenFile outputDir fieldSpecs = do
-  fieldsGenFile <- resolveFile outputDir "fix-spec-gen/src/FIX/Fields/Gen.hs"
-  sections <- forM fieldSpecs $ \FieldSpec {..} -> do
-    let constructorName = mkName $ T.unpack fieldName
-    pure
-      [ TH.pprint
-          [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
-          ]
-      ]
-  ensureDir (parent fieldsGenFile)
-  writeFile (fromAbsFile fieldsGenFile) $
-    unlines $
-      concat $
-        [ "{-# OPTIONS_GHC -Wno-orphans #-}",
-          "",
-          disclaimer,
-          "module FIX.Fields.Gen where",
-          "",
-          "import Data.GenValidity.ByteString ()",
-          "import Data.GenValidity",
-          "import FIX.Fields"
-        ]
-          : sections
-  callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsGenFile]
+fieldSpecConstructorName :: FieldSpec -> Name
+fieldSpecConstructorName = mkName . T.unpack . fieldName
 
 writeFieldsFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsFile outputDir fieldSpecs = do
   fieldsFile <- resolveFile outputDir "fix-spec/src/FIX/Fields.hs"
   sections <- forM fieldSpecs $ \f@FieldSpec {..} -> do
-    let constructorName = mkName $ T.unpack fieldName
+    let constructorName = fieldSpecConstructorName f
     let selectorName = mkName $ "un" <> T.unpack fieldName
     let typ = case fieldType of
           FieldTypeBoolean -> ConT (mkName "Bool")
@@ -166,3 +144,57 @@ writeFieldsFile outputDir fieldSpecs = do
         ]
           : sections
   callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsFile]
+
+writeFieldsGenFile :: Path Abs Dir -> [FieldSpec] -> IO ()
+writeFieldsGenFile outputDir fieldSpecs = do
+  fieldsGenFile <- resolveFile outputDir "fix-spec-gen/src/FIX/Fields/Gen.hs"
+  sections <- forM fieldSpecs $ \f -> do
+    let constructorName = fieldSpecConstructorName f
+    pure
+      [ TH.pprint
+          [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
+          ]
+      ]
+  ensureDir (parent fieldsGenFile)
+  writeFile (fromAbsFile fieldsGenFile) $
+    unlines $
+      concat $
+        [ "{-# OPTIONS_GHC -Wno-orphans #-}",
+          "",
+          disclaimer,
+          "module FIX.Fields.Gen where",
+          "",
+          "import Data.GenValidity.ByteString ()",
+          "import Data.GenValidity",
+          "import FIX.Fields"
+        ]
+          : sections
+  callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsGenFile]
+
+writeFieldsSpecFile :: Path Abs Dir -> [FieldSpec] -> IO ()
+writeFieldsSpecFile outputDir fieldSpecs = do
+  fieldsSpecFile <- resolveFile outputDir "fix-spec-gen/test/FIX/FieldsSpec.hs"
+  statements <- forM fieldSpecs $ \f -> do
+    let constructorName = fieldSpecConstructorName f
+    pure $ NoBindS (AppTypeE (VarE (mkName "fieldSpec")) (ConT constructorName))
+
+  ensureDir (parent fieldsSpecFile)
+  writeFile (fromAbsFile fieldsSpecFile) $
+    unlines
+      [ "{-# OPTIONS_GHC -Wno-orphans #-}",
+        "{-# LANGUAGE TypeApplications #-}",
+        "",
+        disclaimer,
+        "module FIX.FieldsSpec where",
+        "",
+        "import Test.Syd",
+        "import FIX.Core.TestUtils",
+        "import FIX.Fields",
+        "import FIX.Fields.Gen ()",
+        TH.pprint
+          [ SigD (mkName "spec") (ConT (mkName "Spec")),
+            FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
+          ]
+      ]
+
+  callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsSpecFile]

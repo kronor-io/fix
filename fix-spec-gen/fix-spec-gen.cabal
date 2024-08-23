@@ -21,3 +21,22 @@ library
     , genvalidity
     , genvalidity-bytestring
   default-language: Haskell2010
+
+test-suite fix-spec-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      FIX.FieldsSpec
+      Paths_fix_spec_gen
+  hs-source-dirs:
+      test/
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+  build-tool-depends:
+      sydtest-discover:sydtest-discover
+  build-depends:
+      base >=4.7 && <5
+    , fix-core-gen
+    , fix-spec
+    , fix-spec-gen
+    , sydtest
+  default-language: Haskell2010
