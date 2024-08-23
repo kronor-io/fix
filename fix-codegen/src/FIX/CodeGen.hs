@@ -54,180 +54,184 @@ fieldValueSpecConstructorName FieldSpec {..} FieldValueSpec {..} =
 
 writeFieldsFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsFile outputDir fieldSpecs = do
-  fieldsFile <- resolveFile outputDir "fix-spec/src/FIX/Fields.hs"
-  sections <- forM fieldSpecs $ \f@FieldSpec {..} -> do
+  fieldsDir <- resolveDir outputDir "fix-spec/src/FIX/Fields"
+
+  forM_ fieldSpecs $ \f@FieldSpec {..} -> do
+    fieldFile <- resolveFile fieldsDir $ T.unpack fieldName <> ".hs"
     let constructorName = fieldSpecConstructorName f
     let selectorName = mkName $ "un" <> T.unpack fieldName
     let typ = case fieldType of
           FieldTypeBoolean -> ConT (mkName "Bool")
           _ -> ConT (mkName "ByteString")
-    pure
-      [ "-- " <> show f,
-        TH.pprint
-          [ if null fieldValues
-              then
-                NewtypeD
-                  []
-                  constructorName
-                  []
-                  Nothing
-                  (RecC constructorName [(selectorName, Bang NoSourceUnpackedness NoSourceStrictness, typ)])
-                  [ DerivClause
-                      (Just StockStrategy)
-                      [ ConT (mkName "Show"),
-                        ConT (mkName "Eq"),
-                        ConT (mkName "Generic")
+    let section =
+          [ "-- " <> show f,
+            TH.pprint
+              [ if null fieldValues
+                  then
+                    NewtypeD
+                      []
+                      constructorName
+                      []
+                      Nothing
+                      (RecC constructorName [(selectorName, Bang NoSourceUnpackedness NoSourceStrictness, typ)])
+                      [ DerivClause
+                          (Just StockStrategy)
+                          [ ConT (mkName "Show"),
+                            ConT (mkName "Eq"),
+                            ConT (mkName "Generic")
+                          ]
                       ]
-                  ]
-              else
-                DataD
-                  []
-                  constructorName
-                  []
+                  else
+                    DataD
+                      []
+                      constructorName
+                      []
+                      Nothing
+                      (map (\fvs -> NormalC (fieldValueSpecConstructorName f fvs) []) fieldValues)
+                      [ DerivClause
+                          (Just StockStrategy)
+                          [ ConT (mkName "Show"),
+                            ConT (mkName "Eq"),
+                            ConT (mkName "Generic")
+                          ]
+                      ],
+                InstanceD
                   Nothing
-                  (map (\fvs -> NormalC (fieldValueSpecConstructorName f fvs) []) fieldValues)
-                  [ DerivClause
-                      (Just StockStrategy)
-                      [ ConT (mkName "Show"),
-                        ConT (mkName "Eq"),
-                        ConT (mkName "Generic")
-                      ]
-                  ],
-            InstanceD
-              Nothing
-              []
-              (AppT (ConT (mkName "Validity")) (ConT constructorName))
-              [],
-            InstanceD
-              Nothing
-              []
-              (AppT (ConT (mkName "IsField")) (ConT constructorName))
-              [ FunD
-                  (mkName "fieldTag")
-                  [ Clause
-                      [VarP (mkName "Proxy")]
-                      (NormalB (LitE (IntegerL (toInteger fieldNumber))))
-                      []
-                  ],
-                FunD
-                  (mkName "fieldIsData")
-                  [ Clause
-                      [VarP (mkName "Proxy")]
-                      ( NormalB
-                          ( ConE
-                              (mkName $ show $ fieldTypeIsData fieldType)
+                  []
+                  (AppT (ConT (mkName "Validity")) (ConT constructorName))
+                  [],
+                InstanceD
+                  Nothing
+                  []
+                  (AppT (ConT (mkName "IsField")) (ConT constructorName))
+                  [ FunD
+                      (mkName "fieldTag")
+                      [ Clause
+                          [VarP (mkName "Proxy")]
+                          (NormalB (LitE (IntegerL (toInteger fieldNumber))))
+                          []
+                      ],
+                    FunD
+                      (mkName "fieldIsData")
+                      [ Clause
+                          [VarP (mkName "Proxy")]
+                          ( NormalB
+                              ( ConE
+                                  (mkName $ show $ fieldTypeIsData fieldType)
+                              )
                           )
-                      )
-                      []
-                  ],
-                FunD
-                  (mkName "fieldToValue")
-                  [ Clause
-                      []
-                      ( NormalB
-                          ( if null fieldValues
-                              then
-                                InfixE
-                                  (Just (VarE (mkName "toValue")))
-                                  (VarE (mkName "."))
-                                  (Just (VarE selectorName))
-                              else
-                                LamCaseE $
-                                  map
-                                    ( \fvs ->
-                                        Match
-                                          ( ConP
-                                              (fieldValueSpecConstructorName f fvs)
-                                              []
-                                              []
-                                          )
-                                          (NormalB (LitE (StringL (T.unpack (fieldValueEnum fvs)))))
-                                          []
-                                    )
-                                    fieldValues
-                          )
-                      )
-                      []
-                  ],
-                FunD
-                  (mkName "fieldFromValue")
-                  [ Clause
-                      []
-                      ( NormalB
-                          ( if null fieldValues
-                              then
-                                InfixE
-                                  (Just (VarE (mkName "fromValue")))
-                                  (VarE (mkName ">=>"))
-                                  ( Just
-                                      ( InfixE
-                                          (Just (VarE (mkName "prettyValidate")))
-                                          (VarE (mkName "."))
-                                          (Just (VarE constructorName))
-                                      )
-                                  )
-                              else
-                                LamCaseE $
-                                  concat
-                                    [ map
+                          []
+                      ],
+                    FunD
+                      (mkName "fieldToValue")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( if null fieldValues
+                                  then
+                                    InfixE
+                                      (Just (VarE (mkName "toValue")))
+                                      (VarE (mkName "."))
+                                      (Just (VarE selectorName))
+                                  else
+                                    LamCaseE $
+                                      map
                                         ( \fvs ->
                                             Match
-                                              (LitP (StringL (T.unpack (fieldValueEnum fvs))))
-                                              ( NormalB
-                                                  ( AppE
-                                                      (ConE (mkName "Right"))
-                                                      (ConE (fieldValueSpecConstructorName f fvs))
-                                                  )
+                                              ( ConP
+                                                  (fieldValueSpecConstructorName f fvs)
+                                                  []
+                                                  []
                                               )
+                                              (NormalB (LitE (StringL (T.unpack (fieldValueEnum fvs)))))
                                               []
                                         )
-                                        fieldValues,
-                                      [ let vn = mkName "v"
-                                         in Match
-                                              (VarP vn)
-                                              ( NormalB
-                                                  ( AppE
-                                                      (ConE (mkName "Left"))
-                                                      ( InfixE
-                                                          (Just (LitE (StringL $ "Unknown " <> T.unpack fieldName <> ": ")))
-                                                          (VarE (mkName "<>"))
-                                                          (Just (AppE (VarE (mkName "show")) (VarE vn)))
+                                        fieldValues
+                              )
+                          )
+                          []
+                      ],
+                    FunD
+                      (mkName "fieldFromValue")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( if null fieldValues
+                                  then
+                                    InfixE
+                                      (Just (VarE (mkName "fromValue")))
+                                      (VarE (mkName ">=>"))
+                                      ( Just
+                                          ( InfixE
+                                              (Just (VarE (mkName "prettyValidate")))
+                                              (VarE (mkName "."))
+                                              (Just (VarE constructorName))
+                                          )
+                                      )
+                                  else
+                                    LamCaseE $
+                                      concat
+                                        [ map
+                                            ( \fvs ->
+                                                Match
+                                                  (LitP (StringL (T.unpack (fieldValueEnum fvs))))
+                                                  ( NormalB
+                                                      ( AppE
+                                                          (ConE (mkName "Right"))
+                                                          (ConE (fieldValueSpecConstructorName f fvs))
                                                       )
                                                   )
-                                              )
-                                              []
-                                      ]
-                                    ]
+                                                  []
+                                            )
+                                            fieldValues,
+                                          [ let vn = mkName "v"
+                                             in Match
+                                                  (VarP vn)
+                                                  ( NormalB
+                                                      ( AppE
+                                                          (ConE (mkName "Left"))
+                                                          ( InfixE
+                                                              (Just (LitE (StringL $ "Unknown " <> T.unpack fieldName <> ": ")))
+                                                              (VarE (mkName "<>"))
+                                                              (Just (AppE (VarE (mkName "show")) (VarE vn)))
+                                                          )
+                                                      )
+                                                  )
+                                                  []
+                                          ]
+                                        ]
+                              )
                           )
-                      )
-                      []
+                          []
+                      ]
                   ]
               ]
           ]
-      ]
 
-  ensureDir (parent fieldsFile)
-  writeFile (fromAbsFile fieldsFile) $
-    unlines $
-      concat $
-        [ "{-# LANGUAGE DerivingStrategies #-}",
-          "{-# LANGUAGE DeriveGeneric #-}",
-          "{-# LANGUAGE LambdaCase #-}",
-          "{-# LANGUAGE OverloadedStrings #-}",
-          "",
-          disclaimer,
-          "module FIX.Fields where",
-          "",
-          "import Control.Monad",
-          "import Data.ByteString (ByteString)",
-          "import Data.Proxy",
-          "import Data.Validity",
-          "import FIX.Core (IsFieldType(..), IsField(..))",
-          "import GHC.Generics (Generic)",
-          ""
-        ]
-          : sections
-  callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsFile]
+    writeHaskellCode fieldFile $
+      unlines $
+        concat
+          [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
+              "{-# LANGUAGE DerivingStrategies #-}",
+              "{-# LANGUAGE DeriveGeneric #-}",
+              "{-# LANGUAGE LambdaCase #-}",
+              "{-# LANGUAGE OverloadedStrings #-}",
+              "",
+              disclaimer,
+              "module FIX.Fields." <> T.unpack fieldName <> " where",
+              "",
+              "import Control.Monad",
+              "import Data.ByteString (ByteString)",
+              "import Data.Proxy",
+              "import Data.Validity",
+              "import FIX.Core (IsFieldType(..), IsField(..))",
+              "import GHC.Generics (Generic)",
+              "",
+              "{-# ANN module \"HLint: ignore\" #-}",
+              ""
+            ],
+            section
+          ]
 
 writeFieldsGenFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsGenFile outputDir fieldSpecs = do
@@ -239,8 +243,7 @@ writeFieldsGenFile outputDir fieldSpecs = do
           [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
           ]
       ]
-  ensureDir (parent fieldsGenFile)
-  writeFile (fromAbsFile fieldsGenFile) $
+  writeHaskellCode fieldsGenFile $
     unlines $
       concat $
         [ "{-# OPTIONS_GHC -Wno-orphans #-}",
@@ -254,7 +257,6 @@ writeFieldsGenFile outputDir fieldSpecs = do
           ""
         ]
           : sections
-  callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsGenFile]
 
 writeFieldsSpecFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsSpecFile outputDir fieldSpecs = do
@@ -263,8 +265,7 @@ writeFieldsSpecFile outputDir fieldSpecs = do
     let constructorName = fieldSpecConstructorName f
     pure $ NoBindS (AppTypeE (VarE (mkName "fieldSpec")) (ConT constructorName))
 
-  ensureDir (parent fieldsSpecFile)
-  writeFile (fromAbsFile fieldsSpecFile) $
+  writeHaskellCode fieldsSpecFile $
     unlines
       [ "{-# OPTIONS_GHC -Wno-orphans #-}",
         "{-# LANGUAGE TypeApplications #-}",
@@ -282,8 +283,6 @@ writeFieldsSpecFile outputDir fieldSpecs = do
             FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
           ]
       ]
-
-  callProcess "ormolu" ["-i", "-c", fromAbsFile fieldsSpecFile]
 
 messageSpecConstructorName :: MessageSpec -> Name
 messageSpecConstructorName = mkName . T.unpack . messageName
@@ -335,8 +334,7 @@ writeMessagesFile outputDir messageSpecs = do
           ]
       ]
 
-  ensureDir (parent messagesFile)
-  writeFile (fromAbsFile messagesFile) $
+  writeHaskellCode messagesFile $
     unlines $
       concat $
         [ "{-# LANGUAGE DerivingStrategies #-}",
@@ -346,12 +344,19 @@ writeMessagesFile outputDir messageSpecs = do
           "module FIX.Messages where",
           "",
           "import Data.Validity",
-          "import FIX.Fields",
           "import GHC.Generics (Generic)",
           ""
         ]
           : messageSections
-  callProcess "ormolu" ["-i", "-c", fromAbsFile messagesFile]
+
+writeHaskellCode :: Path Abs File -> String -> IO ()
+writeHaskellCode f source = do
+  ensureDir (parent f)
+  writeFile (fromAbsFile f) source
+  runOrmoluOn f
+
+runOrmoluOn :: Path Abs File -> IO ()
+runOrmoluOn f = callProcess "ormolu" ["-i", "-c", fromAbsFile f]
 
 lowerHead :: String -> String
 lowerHead = \case

@@ -6,7 +6,6 @@
 module FIX.Messages where
 
 import Data.Validity
-import FIX.Fields
 import GHC.Generics (Generic)
 
 -- MessageSpec {messageName = "Heartbeat", messageType = "0", messageCategory = "admin", messagePieces = [MessagePieceField "TestReqID" False]}
