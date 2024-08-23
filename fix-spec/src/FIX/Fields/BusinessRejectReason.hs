@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 380, fieldName = "BusinessRejectReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "OTHER"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "UNKNOWN_ID"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "UNKNOWN_SECURITY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "UNSUPPORTED_MESSAGE_TYPE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "APPLICATION_NOT_AVAILABLE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "CONDITIONALLY_REQUIRED_FIELD_MISSING"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "NOT_AUTHORIZED"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "DELIVER_TO_FIRM_NOT_AVAILABLE_AT_THIS_TIME"}]}
 data BusinessRejectReason

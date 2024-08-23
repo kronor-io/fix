@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 492, fieldName = "PaymentMethod", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "CREST"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "NSCC"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "EUROCLEAR"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CLEARSTREAM"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "CHEQUE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "TELEGRAPHIC_TRANSFER"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "FED_WIRE"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "DEBIT_CARD"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "DIRECT_DEBIT"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "DIRECT_CREDIT"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "CREDIT_CARD"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "ACH_DEBIT"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "ACH_CREDIT"},FieldValueSpec {fieldValueEnum = "14", fieldValueDescription = "BPAY"},FieldValueSpec {fieldValueEnum = "15", fieldValueDescription = "HIGH_VALUE_CLEARING_SYSTEM"}]}
 data PaymentMethod

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 236, fieldName = "Yield", fieldType = FieldTypePercentage, fieldValues = []}
 newtype Yield = Yield {unYield :: ByteString}

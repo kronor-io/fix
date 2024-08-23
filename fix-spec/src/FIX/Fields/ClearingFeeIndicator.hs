@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 635, fieldName = "ClearingFeeIndicator", fieldType = FieldTypeString, fieldValues = [FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "CBOE_MEMBER"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "NON_MEMBER_AND_CUSTOMER"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "EQUITY_MEMBER_AND_CLEARING_MEMBER"},FieldValueSpec {fieldValueEnum = "F", fieldValueDescription = "FULL_AND_ASSOCIATE_MEMBER"},FieldValueSpec {fieldValueEnum = "H", fieldValueDescription = "FIRMS106_H_AND106_J"},FieldValueSpec {fieldValueEnum = "I", fieldValueDescription = "GIM"},FieldValueSpec {fieldValueEnum = "L", fieldValueDescription = "LESSEE106_F_EMPLOYEES"},FieldValueSpec {fieldValueEnum = "M", fieldValueDescription = "ALL_OTHER_OWNERSHIP_TYPES"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "FIRST_YEAR_DELEGATE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "SECOND_YEAR_DELEGATE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "THIRD_YEAR_DELEGATE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "FOURTH_YEAR_DELEGATE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "FIFTH_YEAR_DELEGATE"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "SIXTH_YEAR_DELEGATE"}]}
 data ClearingFeeIndicator

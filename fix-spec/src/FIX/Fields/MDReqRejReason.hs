@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 281, fieldName = "MDReqRejReason", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "UNKNOWN_SYMBOL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "DUPLICATE_MD_REQ_ID"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INSUFFICIENT_BANDWIDTH"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INSUFFICIENT_PERMISSIONS"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "UNSUPPORTED_SUBSCRIPTION_REQUEST_TYPE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "UNSUPPORTED_MARKET_DEPTH"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "UNSUPPORTED_MD_UPDATE_TYPE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "UNSUPPORTED_AGGREGATED_BOOK"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "UNSUPPORTED_MD_ENTRY_TYPE"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "UNSUPPORTED_TRADING_SESSION_ID"},FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "UNSUPPORTED_SCOPE"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "UNSUPPORTED_OPEN_CLOSE_SETTLE_FLAG"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "UNSUPPORTED_MD_IMPLICIT_DELETE"}]}
 data MDReqRejReason

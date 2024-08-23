@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 431, fieldName = "ListOrderStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "IN_BIDDING_PROCESS"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "RECEIVED_FOR_EXECUTION"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "EXECUTING"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CANCELLING"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "ALERT"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "ALL_DONE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "REJECT"}]}
 data ListOrderStatus

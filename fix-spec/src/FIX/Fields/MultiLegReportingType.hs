@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 442, fieldName = "MultiLegReportingType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SINGLE_SECURITY"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INDIVIDUAL_LEG_OF_A_MULTI_LEG_SECURITY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "MULTI_LEG_SECURITY"}]}
 data MultiLegReportingType

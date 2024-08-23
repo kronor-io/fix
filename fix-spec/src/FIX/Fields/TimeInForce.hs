@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 59, fieldName = "TimeInForce", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "DAY"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "GOOD_TILL_CANCEL"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "AT_THE_OPENING"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "IMMEDIATE_OR_CANCEL"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "FILL_OR_KILL"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "GOOD_TILL_CROSSING"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "GOOD_TILL_DATE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "AT_THE_CLOSE"}]}
 data TimeInForce

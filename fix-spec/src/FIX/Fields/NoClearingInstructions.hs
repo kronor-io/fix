@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 576, fieldName = "NoClearingInstructions", fieldType = FieldTypeNumInGroup, fieldValues = []}
 newtype NoClearingInstructions = NoClearingInstructions {unNoClearingInstructions :: ByteString}

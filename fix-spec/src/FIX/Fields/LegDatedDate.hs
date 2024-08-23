@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 739, fieldName = "LegDatedDate", fieldType = FieldTypeLocalMktDate, fieldValues = []}
 newtype LegDatedDate = LegDatedDate {unLegDatedDate :: ByteString}

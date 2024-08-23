@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 484, fieldName = "ExecPriceType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "BID_PRICE"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "CREATION_PRICE"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "CREATION_PRICE_PLUS_ADJUSTMENT_PERCENT"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "CREATION_PRICE_PLUS_ADJUSTMENT_AMOUNT"},FieldValueSpec {fieldValueEnum = "O", fieldValueDescription = "OFFER_PRICE"},FieldValueSpec {fieldValueEnum = "P", fieldValueDescription = "OFFER_PRICE_MINUS_ADJUSTMENT_PERCENT"},FieldValueSpec {fieldValueEnum = "Q", fieldValueDescription = "OFFER_PRICE_MINUS_ADJUSTMENT_AMOUNT"},FieldValueSpec {fieldValueEnum = "S", fieldValueDescription = "SINGLE_PRICE"}]}
 data ExecPriceType

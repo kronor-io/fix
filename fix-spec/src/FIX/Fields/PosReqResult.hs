@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 728, fieldName = "PosReqResult", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "VALID_REQUEST"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INVALID_OR_UNSUPPORTED_REQUEST"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "NO_POSITIONS_FOUND_THAT_MATCH_CRITERIA"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "NOT_AUTHORIZED_TO_REQUEST_POSITIONS"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "REQUEST_FOR_POSITION_NOT_SUPPORTED"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data PosReqResult

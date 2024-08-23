@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 707, fieldName = "PosAmtType", fieldType = FieldTypeString, fieldValues = [FieldValueSpec {fieldValueEnum = "FMTM", fieldValueDescription = "FINAL_MARK_TO_MARKET_AMOUNT"},FieldValueSpec {fieldValueEnum = "IMTM", fieldValueDescription = "INCREMENTAL_MARK_TO_MARKET_AMOUNT"},FieldValueSpec {fieldValueEnum = "TVAR", fieldValueDescription = "TRADE_VARIATION_AMOUNT"},FieldValueSpec {fieldValueEnum = "SMTM", fieldValueDescription = "START_OF_DAY_MARK_TO_MARKET_AMOUNT"},FieldValueSpec {fieldValueEnum = "PREM", fieldValueDescription = "PREMIUM_AMOUNT"},FieldValueSpec {fieldValueEnum = "CRES", fieldValueDescription = "CASH_RESIDUAL_AMOUNT"},FieldValueSpec {fieldValueEnum = "CASH", fieldValueDescription = "CASH_AMOUNT"},FieldValueSpec {fieldValueEnum = "VADJ", fieldValueDescription = "VALUE_ADJUSTED_AMOUNT"}]}
 data PosAmtType

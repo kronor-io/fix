@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 81, fieldName = "ProcessCode", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "REGULAR"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SOFT_DOLLAR"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "STEP_IN"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "STEP_OUT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "SOFT_DOLLAR_STEP_IN"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "SOFT_DOLLAR_STEP_OUT"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "PLAN_SPONSOR"}]}
 data ProcessCode

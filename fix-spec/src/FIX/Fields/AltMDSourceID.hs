@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 817, fieldName = "AltMDSourceID", fieldType = FieldTypeString, fieldValues = []}
 newtype AltMDSourceID = AltMDSourceID {unAltMDSourceID :: ByteString}

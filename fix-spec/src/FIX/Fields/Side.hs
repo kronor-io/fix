@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 54, fieldName = "Side", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "BUY"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "SELL"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "BUY_MINUS"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "SELL_PLUS"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "SELL_SHORT"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "SELL_SHORT_EXEMPT"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "UNDISCLOSED"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "CROSS"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "CROSS_SHORT"},FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "CROSS_SHORT_EXEMPT"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "AS_DEFINED"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "OPPOSITE"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "SUBSCRIBE"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "REDEEM"},FieldValueSpec {fieldValueEnum = "F", fieldValueDescription = "LEND"},FieldValueSpec {fieldValueEnum = "G", fieldValueDescription = "BORROW"}]}
 data Side

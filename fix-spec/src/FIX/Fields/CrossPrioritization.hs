@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 550, fieldName = "CrossPrioritization", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NONE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "BUY_SIDE_IS_PRIORITIZED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "SELL_SIDE_IS_PRIORITIZED"}]}
 data CrossPrioritization

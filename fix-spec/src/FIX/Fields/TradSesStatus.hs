@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 340, fieldName = "TradSesStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "UNKNOWN"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "HALTED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "OPEN"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CLOSED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "PRE_OPEN"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PRE_CLOSE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "REQUEST_REJECTED"}]}
 data TradSesStatus

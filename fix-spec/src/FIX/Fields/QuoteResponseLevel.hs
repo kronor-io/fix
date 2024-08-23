@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 301, fieldName = "QuoteResponseLevel", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NO_ACKNOWLEDGEMENT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ACKNOWLEDGE_ONLY_NEGATIVE_OR_ERRONEOUS_QUOTES"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ACKNOWLEDGE_EACH_QUOTE_MESSAGE"}]}
 data QuoteResponseLevel

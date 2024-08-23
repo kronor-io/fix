@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 298, fieldName = "QuoteCancelType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "CANCEL_FOR_ONE_OR_MORE_SECURITIES"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "CANCEL_FOR_SECURITY_TYPE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CANCEL_FOR_UNDERLYING_SECURITY"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CANCEL_ALL_QUOTES"}]}
 data QuoteCancelType

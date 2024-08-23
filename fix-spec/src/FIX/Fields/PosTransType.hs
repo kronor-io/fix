@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 709, fieldName = "PosTransType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "EXERCISE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "DO_NOT_EXERCISE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "POSITION_ADJUSTMENT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "POSITION_CHANGE_SUBMISSION"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PLEDGE"}]}
 data PosTransType

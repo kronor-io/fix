@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 419, fieldName = "BasisPxType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "CLOSING_PRICE_AT_MORNING_SESSION"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CLOSING_PRICE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CURRENT_PRICE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "SQ"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "VWAP_THROUGH_A_DAY"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "VWAP_THROUGH_A_MORNING_SESSION"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "VWAP_THROUGH_AN_AFTERNOON_SESSION"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "VWAP_THROUGH_A_DAY_EXCEPT"},FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "VWAP_THROUGH_A_MORNING_SESSION_EXCEPT"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "VWAP_THROUGH_AN_AFTERNOON_SESSION_EXCEPT"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "STRIKE"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "OPEN"},FieldValueSpec {fieldValueEnum = "Z", fieldValueDescription = "OTHERS"}]}
 data BasisPxType

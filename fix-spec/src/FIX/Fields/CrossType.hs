@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 549, fieldName = "CrossType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "CROSS_AON"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "CROSS_IOC"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CROSS_ONE_SIDE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CROSS_SAME_PRICE"}]}
 data CrossType

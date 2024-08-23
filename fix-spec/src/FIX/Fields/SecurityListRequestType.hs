@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 559, fieldName = "SecurityListRequestType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "SYMBOL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SECURITY_TYPE_AND"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "PRODUCT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "TRADING_SESSION_ID"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "ALL_SECURITIES"}]}
 data SecurityListRequestType

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 935, fieldName = "NetworkRequestType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SNAPSHOT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "SUBSCRIBE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "STOP_SUBSCRIBING"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "LEVEL_OF_DETAIL"}]}
 data NetworkRequestType

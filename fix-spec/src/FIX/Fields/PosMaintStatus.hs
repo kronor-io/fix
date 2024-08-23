@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 722, fieldName = "PosMaintStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ACCEPTED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ACCEPTED_WITH_WARNINGS"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "REJECTED"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "COMPLETED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "COMPLETED_WITH_WARNINGS"}]}
 data PosMaintStatus

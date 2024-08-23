@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 590, fieldName = "BookingUnit", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "EACH_PARTIAL_EXECUTION_IS_A_BOOKABLE_UNIT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "AGGREGATE_PARTIAL_EXECUTIONS_ON_THIS_ORDER"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "AGGREGATE_EXECUTIONS_FOR_THIS_SYMBOL"}]}
 data BookingUnit

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 388, fieldName = "DiscretionInst", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "RELATED_TO_DISPLAYED_PRICE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "RELATED_TO_MARKET_PRICE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "RELATED_TO_PRIMARY_PRICE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "RELATED_TO_LOCAL_PRIMARY_PRICE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "RELATED_TO_MIDPOINT_PRICE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "RELATED_TO_LAST_TRADE_PRICE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "RELATED_TO_VWAP"}]}
 data DiscretionInst

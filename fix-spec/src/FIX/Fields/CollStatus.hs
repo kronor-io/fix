@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 910, fieldName = "CollStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "UNASSIGNED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PARTIALLY_ASSIGNED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ASSIGNMENT_PROPOSED"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "ASSIGNED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CHALLENGED"}]}
 data CollStatus

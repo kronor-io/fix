@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 63, fieldName = "SettlType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "REGULAR"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "CASH"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "NEXT_DAY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "T_PLUS2"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "T_PLUS3"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "T_PLUS4"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "FUTURE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "WHEN_AND_IF_ISSUED"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "SELLERS_OPTION"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "T_PLUS5"}]}
 data SettlType

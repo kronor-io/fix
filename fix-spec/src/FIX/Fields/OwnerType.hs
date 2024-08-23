@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 522, fieldName = "OwnerType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INDIVIDUAL_INVESTOR"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "PUBLIC_COMPANY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "PRIVATE_COMPANY"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INDIVIDUAL_TRUSTEE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "COMPANY_TRUSTEE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "PENSION_PLAN"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "CUSTODIAN_UNDER_GIFTS_TO_MINORS_ACT"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "TRUSTS"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "FIDUCIARIES"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "NETWORKING_SUB_ACCOUNT"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "NON_PROFIT_ORGANIZATION"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "CORPORATE_BODY"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "NOMINEE"}]}
 data OwnerType

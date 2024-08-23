@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 780, fieldName = "AllocSettlInstType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "USE_DEFAULT_INSTRUCTIONS"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "DERIVE_FROM_PARAMETERS_PROVIDED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "FULL_DETAILS_PROVIDED"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "SSIDBI_DS_PROVIDED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "PHONE_FOR_INSTRUCTIONS"}]}
 data AllocSettlInstType

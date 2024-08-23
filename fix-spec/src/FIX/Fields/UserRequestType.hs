@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 924, fieldName = "UserRequestType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "LOG_ON_USER"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "LOG_OFF_USER"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CHANGE_PASSWORD_FOR_USER"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "REQUEST_INDIVIDUAL_USER_STATUS"}]}
 data UserRequestType

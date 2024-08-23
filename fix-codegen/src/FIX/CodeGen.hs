@@ -17,6 +17,7 @@ import Path.IO
 import System.Exit
 import System.Process
 import qualified Text.XML as XML
+import UnliftIO
 
 runFixCodeGen :: IO ()
 runFixCodeGen = do
@@ -56,7 +57,7 @@ writeFieldsFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsFile outputDir fieldSpecs = do
   fieldsDir <- resolveDir outputDir "fix-spec/src/FIX/Fields"
 
-  forM_ fieldSpecs $ \f@FieldSpec {..} -> do
+  forConcurrently_ fieldSpecs $ \f@FieldSpec {..} -> do
     fieldFile <- resolveFile fieldsDir $ T.unpack fieldName <> ".hs"
     let constructorName = fieldSpecConstructorName f
     let selectorName = mkName $ "un" <> T.unpack fieldName
@@ -227,7 +228,7 @@ writeFieldsFile outputDir fieldSpecs = do
               "import FIX.Core (IsFieldType(..), IsField(..))",
               "import GHC.Generics (Generic)",
               "",
-              "{-# ANN module \"HLint: ignore\" #-}",
+              "{-# ANN module (\"HLint: ignore\" :: String) #-}",
               ""
             ],
             section
@@ -236,6 +237,12 @@ writeFieldsFile outputDir fieldSpecs = do
 writeFieldsGenFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsGenFile outputDir fieldSpecs = do
   fieldsGenFile <- resolveFile outputDir "fix-spec-gen/src/FIX/Fields/Gen.hs"
+  let imports =
+        map
+          ( \f ->
+              "import FIX.Fields." <> T.unpack (fieldName f)
+          )
+          fieldSpecs
   sections <- forM fieldSpecs $ \f -> do
     let constructorName = fieldSpecConstructorName f
     pure
@@ -253,105 +260,125 @@ writeFieldsGenFile outputDir fieldSpecs = do
           "",
           "import Data.GenValidity",
           "import Data.GenValidity.ByteString ()",
-          "import FIX.Fields",
           ""
         ]
+          : imports
           : sections
 
 writeFieldsSpecFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeFieldsSpecFile outputDir fieldSpecs = do
   fieldsSpecFile <- resolveFile outputDir "fix-spec-gen/test/FIX/FieldsSpec.hs"
+  let imports =
+        map
+          ( \f ->
+              "import FIX.Fields." <> T.unpack (fieldName f)
+          )
+          fieldSpecs
   statements <- forM fieldSpecs $ \f -> do
     let constructorName = fieldSpecConstructorName f
     pure $ NoBindS (AppTypeE (VarE (mkName "fieldSpec")) (ConT constructorName))
 
   writeHaskellCode fieldsSpecFile $
-    unlines
-      [ "{-# OPTIONS_GHC -Wno-orphans #-}",
-        "{-# LANGUAGE TypeApplications #-}",
-        "",
-        disclaimer,
-        "module FIX.FieldsSpec where",
-        "",
-        "import FIX.Core.TestUtils",
-        "import FIX.Fields",
-        "import FIX.Fields.Gen ()",
-        "import Test.Syd",
-        "",
-        TH.pprint
-          [ SigD (mkName "spec") (ConT (mkName "Spec")),
-            FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
+    unlines $
+      concat
+        [ [ "{-# OPTIONS_GHC -Wno-orphans #-}",
+            "{-# LANGUAGE TypeApplications #-}",
+            "",
+            disclaimer,
+            "module FIX.FieldsSpec where",
+            "",
+            "import FIX.Core.TestUtils",
+            "import FIX.Fields.Gen ()",
+            "import Test.Syd",
+            ""
+          ],
+          imports,
+          [ TH.pprint
+              [ SigD (mkName "spec") (ConT (mkName "Spec")),
+                FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
+              ]
           ]
-      ]
+        ]
 
 messageSpecConstructorName :: MessageSpec -> Name
 messageSpecConstructorName = mkName . T.unpack . messageName
 
 writeMessagesFile :: Path Abs Dir -> [MessageSpec] -> IO ()
 writeMessagesFile outputDir messageSpecs = do
-  messagesFile <- resolveFile outputDir "fix-spec/src/FIX/Messages.hs"
-  messageSections <- forM messageSpecs $ \f@MessageSpec {..} -> do
+  messagesDir <- resolveDir outputDir "fix-spec/src/FIX/Messages"
+  forConcurrently_ messageSpecs $ \f@MessageSpec {..} -> do
+    messageFile <- resolveFile messagesDir $ T.unpack messageName <> ".hs"
     let constructorName = messageSpecConstructorName f
-    pure
-      [ "-- " <> show f,
-        TH.pprint
-          [ DataD
-              []
-              constructorName
-              []
-              Nothing
-              [ RecC
+    let imports =
+          mapMaybe
+            ( \case
+                MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
+                _ -> Nothing
+            )
+            messagePieces
+    let section =
+          [ "-- " <> show f,
+            TH.pprint
+              [ DataD
+                  []
                   constructorName
-                  ( mapMaybe
-                      ( \case
-                          MessagePieceField t required ->
-                            Just
-                              ( mkName $ lowerHead (T.unpack messageName) <> T.unpack t,
-                                Bang NoSourceUnpackedness SourceStrict,
-                                ( if required
-                                    then id
-                                    else AppT (ConT (mkName "Maybe"))
-                                )
-                                  $ ConT (mkName (T.unpack t))
-                              )
-                          _ -> Nothing -- TODO define them all
+                  []
+                  Nothing
+                  [ RecC
+                      constructorName
+                      ( mapMaybe
+                          ( \case
+                              MessagePieceField t required ->
+                                Just
+                                  ( mkName $ lowerHead (T.unpack messageName) <> T.unpack t,
+                                    Bang NoSourceUnpackedness SourceStrict,
+                                    ( if required
+                                        then id
+                                        else AppT (ConT (mkName "Maybe"))
+                                    )
+                                      $ ConT (mkName (T.unpack t))
+                                  )
+                              _ -> Nothing -- TODO define them all
+                          )
+                          messagePieces
                       )
-                      messagePieces
-                  )
-              ]
-              [ DerivClause
-                  (Just StockStrategy)
-                  [ ConT (mkName "Show"),
-                    ConT (mkName "Eq"),
-                    ConT (mkName "Generic")
                   ]
-              ],
-            InstanceD
-              Nothing
-              []
-              (AppT (ConT (mkName "Validity")) (ConT constructorName))
-              []
+                  [ DerivClause
+                      (Just StockStrategy)
+                      [ ConT (mkName "Show"),
+                        ConT (mkName "Eq"),
+                        ConT (mkName "Generic")
+                      ]
+                  ],
+                InstanceD
+                  Nothing
+                  []
+                  (AppT (ConT (mkName "Validity")) (ConT constructorName))
+                  []
+              ]
           ]
-      ]
 
-  writeHaskellCode messagesFile $
-    unlines $
-      concat $
-        [ "{-# LANGUAGE DerivingStrategies #-}",
-          "{-# LANGUAGE DeriveGeneric #-}",
-          "",
-          disclaimer,
-          "module FIX.Messages where",
-          "",
-          "import Data.Validity",
-          "import GHC.Generics (Generic)",
-          ""
-        ]
-          : messageSections
+    writeHaskellCode messageFile $
+      unlines $
+        concat
+          [ [ "{-# LANGUAGE DerivingStrategies #-}",
+              "{-# LANGUAGE DeriveGeneric #-}",
+              "",
+              disclaimer,
+              "module FIX.Messages." <> T.unpack messageName <> " where",
+              "",
+              "import Data.Validity",
+              "import GHC.Generics (Generic)",
+              ""
+            ],
+            imports,
+            section
+          ]
 
 writeHaskellCode :: Path Abs File -> String -> IO ()
 writeHaskellCode f source = do
   ensureDir (parent f)
+  putStrLn $ unwords ["Writing", fromAbsFile f]
   writeFile (fromAbsFile f) source
   runOrmoluOn f
 

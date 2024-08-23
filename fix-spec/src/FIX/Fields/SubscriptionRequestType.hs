@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 263, fieldName = "SubscriptionRequestType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "SNAPSHOT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SNAPSHOT_AND_UPDATES"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "DISABLE_PREVIOUS_SNAPSHOT"}]}
 data SubscriptionRequestType

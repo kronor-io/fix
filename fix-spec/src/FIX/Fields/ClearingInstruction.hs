@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 577, fieldName = "ClearingInstruction", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "PROCESS_NORMALLY"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "EXCLUDE_FROM_ALL_NETTING"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "BILATERAL_NETTING_ONLY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "EX_CLEARING"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "SPECIAL_TRADE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "MULTILATERAL_NETTING"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "CLEAR_AGAINST_CENTRAL_COUNTERPARTY"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "EXCLUDE_FROM_CENTRAL_COUNTERPARTY"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "MANUAL_MODE"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "AUTOMATIC_POSTING_MODE"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "AUTOMATIC_GIVE_UP_MODE"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "QUALIFIED_SERVICE_REPRESENTATIVE_QSR"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "CUSTOMER_TRADE"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "SELF_CLEARING"}]}
 data ClearingInstruction

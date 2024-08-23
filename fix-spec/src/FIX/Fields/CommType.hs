@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 13, fieldName = "CommType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PER_UNIT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "PERCENT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "ABSOLUTE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "PERCENTAGE_WAIVED_CASH_DISCOUNT"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PERCENTAGE_WAIVED_ENHANCED_UNITS"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "POINTS_PER_BOND_OR_CONTRACT"}]}
 data CommType

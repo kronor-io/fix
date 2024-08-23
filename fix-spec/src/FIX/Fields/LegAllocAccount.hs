@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 671, fieldName = "LegAllocAccount", fieldType = FieldTypeString, fieldValues = []}
 newtype LegAllocAccount = LegAllocAccount {unLegAllocAccount :: ByteString}

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 42, fieldName = "OrigTime", fieldType = FieldTypeUTCTimestamp, fieldValues = []}
 newtype OrigTime = OrigTime {unOrigTime :: ByteString}

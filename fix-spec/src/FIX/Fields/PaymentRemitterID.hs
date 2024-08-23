@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 505, fieldName = "PaymentRemitterID", fieldType = FieldTypeString, fieldValues = []}
 newtype PaymentRemitterID = PaymentRemitterID {unPaymentRemitterID :: ByteString}

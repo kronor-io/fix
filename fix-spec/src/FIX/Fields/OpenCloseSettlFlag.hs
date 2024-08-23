@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 286, fieldName = "OpenCloseSettlFlag", fieldType = FieldTypeMultipleValueString, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "DAILY_OPEN"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SESSION_OPEN"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "DELIVERY_SETTLEMENT_ENTRY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "EXPECTED_ENTRY"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "ENTRY_FROM_PREVIOUS_BUSINESS_DAY"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "THEORETICAL_PRICE_VALUE"}]}
 data OpenCloseSettlFlag

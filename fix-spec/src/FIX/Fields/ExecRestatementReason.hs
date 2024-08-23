@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 378, fieldName = "ExecRestatementReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "GT_CORPORATE_ACTION"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "GT_RENEWAL"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "VERBAL_CHANGE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "REPRICING_OF_ORDER"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "BROKER_OPTION"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PARTIAL_DECLINE_OF_ORDER_QTY"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "CANCEL_ON_TRADING_HALT"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "CANCEL_ON_SYSTEM_FAILURE"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "MARKET"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "CANCELED"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "WAREHOUSE_RECAP"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data ExecRestatementReason

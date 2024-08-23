@@ -1,5 +1,5 @@
 { mkDerivation, base, containers, lib, opt-env-conf, path, path-io
-, process, template-haskell, text, xml-conduit
+, process, template-haskell, text, unliftio, xml-conduit
 }:
 mkDerivation {
   pname = "fix-codegen";
@@ -9,7 +9,7 @@ mkDerivation {
   isExecutable = true;
   libraryHaskellDepends = [
     base containers opt-env-conf path path-io process template-haskell
-    text xml-conduit
+    text unliftio xml-conduit
   ];
   executableHaskellDepends = [ base ];
   license = "unknown";

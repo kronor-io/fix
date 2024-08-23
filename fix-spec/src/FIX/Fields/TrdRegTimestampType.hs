@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 770, fieldName = "TrdRegTimestampType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "EXECUTION_TIME"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TIME_IN"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "TIME_OUT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "BROKER_RECEIPT"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "BROKER_EXECUTION"}]}
 data TrdRegTimestampType

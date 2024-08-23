@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 657, fieldName = "SettlCurrOfferFxRate", fieldType = FieldTypeFloat, fieldValues = []}
 newtype SettlCurrOfferFxRate = SettlCurrOfferFxRate {unSettlCurrOfferFxRate :: ByteString}

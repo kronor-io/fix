@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 692, fieldName = "QuotePriceType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PERCENT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "PER_SHARE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "FIXED_AMOUNT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "DISCOUNT"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PREMIUM"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "SPREAD"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "TED_PRICE"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "TED_YIELD"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "YIELD_SPREAD"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "YIELD"}]}
 data QuotePriceType

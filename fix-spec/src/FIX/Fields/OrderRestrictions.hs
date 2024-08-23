@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 529, fieldName = "OrderRestrictions", fieldType = FieldTypeMultipleValueString, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PROGRAM_TRADE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INDEX_ARBITRAGE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "NON_INDEX_ARBITRAGE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "COMPETING_MARKET_MAKER"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "ACTING_AS_MARKET_MAKER_OR_SPECIALIST_IN_SECURITY"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "ACTING_AS_MARKET_MAKER_OR_SPECIALIST_IN_UNDERLYING"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "FOREIGN_ENTITY"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "EXTERNAL_MARKET_PARTICIPANT"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "EXTERNAL_INTER_CONNECTED_MARKET_LINKAGE"},FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "RISKLESS_ARBITRAGE"}]}
 data OrderRestrictions

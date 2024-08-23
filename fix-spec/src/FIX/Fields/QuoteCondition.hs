@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 276, fieldName = "QuoteCondition", fieldType = FieldTypeMultipleValueString, fieldValues = [FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "OPEN"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "CLOSED"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "EXCHANGE_BEST"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "CONSOLIDATED_BEST"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "LOCKED"},FieldValueSpec {fieldValueEnum = "F", fieldValueDescription = "CROSSED"},FieldValueSpec {fieldValueEnum = "G", fieldValueDescription = "DEPTH"},FieldValueSpec {fieldValueEnum = "H", fieldValueDescription = "FAST_TRADING"},FieldValueSpec {fieldValueEnum = "I", fieldValueDescription = "NON_FIRM"}]}
 data QuoteCondition

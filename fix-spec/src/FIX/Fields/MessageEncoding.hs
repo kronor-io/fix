@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 347, fieldName = "MessageEncoding", fieldType = FieldTypeString, fieldValues = [FieldValueSpec {fieldValueEnum = "ISO-2022-JP", fieldValueDescription = "ISO2022_JP"},FieldValueSpec {fieldValueEnum = "EUC-JP", fieldValueDescription = "EUCJP"},FieldValueSpec {fieldValueEnum = "Shift_JIS", fieldValueDescription = "SHIFT_JIS"},FieldValueSpec {fieldValueEnum = "UTF-8", fieldValueDescription = "UTF8"}]}
 data MessageEncoding

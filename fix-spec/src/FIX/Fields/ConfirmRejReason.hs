@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 774, fieldName = "ConfirmRejReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "MISMATCHED_ACCOUNT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "MISSING_SETTLEMENT_INSTRUCTIONS"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data ConfirmRejReason

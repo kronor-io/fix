@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 150, fieldName = "ExecType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NEW"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "DONE_FOR_DAY"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CANCELED"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "REPLACED"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "PENDING_CANCEL"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "STOPPED"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "REJECTED"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "SUSPENDED"},FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "PENDING_NEW"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "CALCULATED"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "EXPIRED"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "RESTATED"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "PENDING_REPLACE"},FieldValueSpec {fieldValueEnum = "F", fieldValueDescription = "TRADE"},FieldValueSpec {fieldValueEnum = "G", fieldValueDescription = "TRADE_CORRECT"},FieldValueSpec {fieldValueEnum = "H", fieldValueDescription = "TRADE_CANCEL"},FieldValueSpec {fieldValueEnum = "I", fieldValueDescription = "ORDER_STATUS"}]}
 data ExecType

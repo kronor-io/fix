@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 519, fieldName = "ContAmtType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "COMMISSION_AMOUNT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "COMMISSION_PERCENT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INITIAL_CHARGE_AMOUNT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INITIAL_CHARGE_PERCENT"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "DISCOUNT_AMOUNT"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "DISCOUNT_PERCENT"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "DILUTION_LEVY_AMOUNT"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "DILUTION_LEVY_PERCENT"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "EXIT_CHARGE_AMOUNT"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "EXIT_CHARGE_PERCENT"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "FUND_BASED_RENEWAL_COMMISSION_PERCENT"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "PROJECTED_FUND_VALUE"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "FUND_BASED_RENEWAL_COMMISSION_ON_ORDER"},FieldValueSpec {fieldValueEnum = "14", fieldValueDescription = "FUND_BASED_RENEWAL_COMMISSION_ON_FUND"},FieldValueSpec {fieldValueEnum = "15", fieldValueDescription = "NET_SETTLEMENT_AMOUNT"}]}
 data ContAmtType

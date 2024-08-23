@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 579, fieldName = "TradeInputDevice", fieldType = FieldTypeString, fieldValues = []}
 newtype TradeInputDevice = TradeInputDevice {unTradeInputDevice :: ByteString}

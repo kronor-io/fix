@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 853, fieldName = "ShortSaleReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "DEALER_SOLD_SHORT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "DEALER_SOLD_SHORT_EXEMPT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "SELLING_CUSTOMER_SOLD_SHORT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "SELLING_CUSTOMER_SOLD_SHORT_EXEMPT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "QUALIFIED_SERVICE_REPRESENTATIVE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "QSR_OR_AGU_CONTRA_SIDE_SOLD_SHORT_EXEMPT"}]}
 data ShortSaleReason

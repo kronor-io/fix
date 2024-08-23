@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 300, fieldName = "QuoteRejectReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "UNKNOWN_SYMBOL"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "EXCHANGE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "QUOTE_REQUEST_EXCEEDS_LIMIT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "TOO_LATE_TO_ENTER"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "UNKNOWN_QUOTE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "DUPLICATE_QUOTE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "INVALID_BID"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "INVALID_PRICE"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "NOT_AUTHORIZED_TO_QUOTE_SECURITY"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data QuoteRejectReason

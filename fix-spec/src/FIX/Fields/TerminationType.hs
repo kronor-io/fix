@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 788, fieldName = "TerminationType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "OVERNIGHT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TERM"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "FLEXIBLE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "OPEN"}]}
 data TerminationType

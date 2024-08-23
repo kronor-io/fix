@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 895, fieldName = "CollAsgnReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "INITIAL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SCHEDULED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TIME_WARNING"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "MARGIN_DEFICIENCY"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "MARGIN_EXCESS"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "FORWARD_COLLATERAL_DEMAND"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "EVENT_OF_DEFAULT"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "ADVERSE_TAX_EVENT"}]}
 data CollAsgnReason

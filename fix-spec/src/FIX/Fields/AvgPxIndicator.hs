@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 819, fieldName = "AvgPxIndicator", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NO_AVERAGE_PRICING"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "TRADE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "LAST_TRADE"}]}
 data AvgPxIndicator

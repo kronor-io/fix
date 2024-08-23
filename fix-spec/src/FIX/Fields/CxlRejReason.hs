@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 102, fieldName = "CxlRejReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "TOO_LATE_TO_CANCEL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "UNKNOWN_ORDER"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "BROKER_CREDIT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "ORDER_ALREADY_IN_PENDING_STATUS"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "UNABLE_TO_PROCESS_ORDER_MASS_CANCEL_REQUEST"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "ORIG_ORD_MOD_TIME"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "DUPLICATE_CL_ORD_ID"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data CxlRejReason

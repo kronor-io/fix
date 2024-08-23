@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 385, fieldName = "MsgDirection", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "S", fieldValueDescription = "SEND"},FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "RECEIVE"}]}
 data MsgDirection

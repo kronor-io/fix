@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 104, fieldName = "IOIQualifier", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "ALL_OR_NONE"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "MARKET_ON_CLOSE"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "AT_THE_CLOSE"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "VWAP"},FieldValueSpec {fieldValueEnum = "I", fieldValueDescription = "IN_TOUCH_WITH"},FieldValueSpec {fieldValueEnum = "L", fieldValueDescription = "LIMIT"},FieldValueSpec {fieldValueEnum = "M", fieldValueDescription = "MORE_BEHIND"},FieldValueSpec {fieldValueEnum = "O", fieldValueDescription = "AT_THE_OPEN"},FieldValueSpec {fieldValueEnum = "P", fieldValueDescription = "TAKING_A_POSITION"},FieldValueSpec {fieldValueEnum = "Q", fieldValueDescription = "AT_THE_MARKET"},FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "READY_TO_TRADE"},FieldValueSpec {fieldValueEnum = "S", fieldValueDescription = "PORTFOLIO_SHOWN"},FieldValueSpec {fieldValueEnum = "T", fieldValueDescription = "THROUGH_THE_DAY"},FieldValueSpec {fieldValueEnum = "V", fieldValueDescription = "VERSUS"},FieldValueSpec {fieldValueEnum = "W", fieldValueDescription = "INDICATION"},FieldValueSpec {fieldValueEnum = "X", fieldValueDescription = "CROSSING_OPPORTUNITY"},FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "AT_THE_MIDPOINT"},FieldValueSpec {fieldValueEnum = "Z", fieldValueDescription = "PRE_OPEN"}]}
 data IOIQualifier

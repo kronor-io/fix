@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 826, fieldName = "TradeAllocIndicator", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ALLOCATION_NOT_REQUIRED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ALLOCATION_REQUIRED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "USE_ALLOCATION_PROVIDED_WITH_THE_TRADE"}]}
 data TradeAllocIndicator

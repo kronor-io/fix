@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 274, fieldName = "TickDirection", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "PLUS_TICK"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ZERO_PLUS_TICK"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "MINUS_TICK"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "ZERO_MINUS_TICK"}]}
 data TickDirection

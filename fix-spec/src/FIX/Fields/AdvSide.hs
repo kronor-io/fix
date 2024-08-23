@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 4, fieldName = "AdvSide", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "BUY"},FieldValueSpec {fieldValueEnum = "S", fieldValueDescription = "SELL"},FieldValueSpec {fieldValueEnum = "X", fieldValueDescription = "CROSS"},FieldValueSpec {fieldValueEnum = "T", fieldValueDescription = "TRADE"}]}
 data AdvSide

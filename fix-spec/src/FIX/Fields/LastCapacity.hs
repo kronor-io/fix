@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 29, fieldName = "LastCapacity", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "AGENT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "CROSS_AS_AGENT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CROSS_AS_PRINCIPAL"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "PRINCIPAL"}]}
 data LastCapacity

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 560, fieldName = "SecurityRequestResult", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "VALID_REQUEST"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INVALID_OR_UNSUPPORTED_REQUEST"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "NO_INSTRUMENTS_FOUND"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "NOT_AUTHORIZED_TO_RETRIEVE_INSTRUMENT_DATA"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INSTRUMENT_DATA_TEMPORARILY_UNAVAILABLE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "REQUEST_FOR_INSTRUMENT_DATA_NOT_SUPPORTED"}]}
 data SecurityRequestResult

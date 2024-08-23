@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 694, fieldName = "QuoteRespType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "HIT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "COUNTER"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "EXPIRED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "COVER"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "DONE_AWAY"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "PASS"}]}
 data QuoteRespType

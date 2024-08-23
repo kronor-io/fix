@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 269, fieldName = "MDEntryType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "BID"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "OFFER"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TRADE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INDEX_VALUE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "OPENING_PRICE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "CLOSING_PRICE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "SETTLEMENT_PRICE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "TRADING_SESSION_HIGH_PRICE"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "TRADING_SESSION_LOW_PRICE"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "TRADING_SESSION_VWAP_PRICE"},FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "IMBALANCE"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "TRADE_VOLUME"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "OPEN_INTEREST"}]}
 data MDEntryType

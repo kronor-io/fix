@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 891, fieldName = "MiscFeeBasis", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ABSOLUTE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PER_UNIT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "PERCENTAGE"}]}
 data MiscFeeBasis

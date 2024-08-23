@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 796, fieldName = "AllocCancReplaceReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ORIGINAL_DETAILS_INCOMPLETE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "CHANGE_IN_UNDERLYING_ORDER_DETAILS"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data AllocCancReplaceReason

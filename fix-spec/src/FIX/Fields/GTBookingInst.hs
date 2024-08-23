@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 427, fieldName = "GTBookingInst", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "BOOK_OUT_ALL_TRADES_ON_DAY_OF_EXECUTION"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ACCUMULATE_UNTIL_FILLED_OR_EXPIRED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ACCUMULATE_UNTIL_VERBALLLY_NOTIFIED_OTHERWISE"}]}
 data GTBookingInst

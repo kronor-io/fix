@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 103, fieldName = "OrdRejReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "BROKER_CREDIT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "UNKNOWN_SYMBOL"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "EXCHANGE_CLOSED"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "ORDER_EXCEEDS_LIMIT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "TOO_LATE_TO_ENTER"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "UNKNOWN_ORDER"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "DUPLICATE_ORDER"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "DUPLICATE_OF_A_VERBALLY_COMMUNICATED_ORDER"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "STALE_ORDER"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "TRADE_ALONG_REQUIRED"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "INVALID_INVESTOR_ID"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "UNSUPPORTED_ORDER_CHARACTERISTIC"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "INCORRECT_QUANTITY"},FieldValueSpec {fieldValueEnum = "14", fieldValueDescription = "INCORRECT_ALLOCATED_QUANTITY"},FieldValueSpec {fieldValueEnum = "15", fieldValueDescription = "UNKNOWN_ACCOUNT"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data OrdRejReason

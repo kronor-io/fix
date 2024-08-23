@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 771, fieldName = "TrdRegTimestampOrigin", fieldType = FieldTypeString, fieldValues = []}
 newtype TrdRegTimestampOrigin = TrdRegTimestampOrigin {unTrdRegTimestampOrigin :: ByteString}

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 749, fieldName = "TradeRequestResult", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "SUCCESSFUL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INVALID_OR_UNKNOWN_INSTRUMENT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INVALID_TYPE_OF_TRADE_REQUESTED"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INVALID_PARTIES"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INVALID_TRANSPORT_TYPE_REQUESTED"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "INVALID_DESTINATION_REQUESTED"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "TRADE_REQUEST_TYPE_NOT_SUPPORTED"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "NOT_AUTHORIZED"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data TradeRequestResult

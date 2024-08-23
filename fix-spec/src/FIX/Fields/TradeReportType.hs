@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 856, fieldName = "TradeReportType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "SUBMIT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ALLEGED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ACCEPT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "DECLINE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "ADDENDUM"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "NO"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "TRADE_REPORT_CANCEL"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "LOCKED_IN"}]}
 data TradeReportType

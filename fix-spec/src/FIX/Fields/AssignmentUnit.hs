@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 745, fieldName = "AssignmentUnit", fieldType = FieldTypeQTY, fieldValues = []}
 newtype AssignmentUnit = AssignmentUnit {unAssignmentUnit :: ByteString}

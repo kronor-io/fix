@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 775, fieldName = "BookingType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "REGULAR_BOOKING"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "CFD"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TOTAL_RETURN_SWAP"}]}
 data BookingType

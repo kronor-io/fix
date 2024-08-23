@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 163, fieldName = "SettlInstTransType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NEW"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "CANCEL"},FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "REPLACE"},FieldValueSpec {fieldValueEnum = "T", fieldValueDescription = "RESTATE"}]}
 data SettlInstTransType

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 127, fieldName = "DKReason", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "UNKNOWN_SYMBOL"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "WRONG_SIDE"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "QUANTITY_EXCEEDS_ORDER"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "NO_MATCHING_ORDER"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "PRICE_EXCEEDS_LIMIT"},FieldValueSpec {fieldValueEnum = "F", fieldValueDescription = "CALCULATION_DIFFERENCE"},FieldValueSpec {fieldValueEnum = "Z", fieldValueDescription = "OTHER"}]}
 data DKReason

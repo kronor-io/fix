@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 481, fieldName = "MoneyLaunderingStatus", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "PASSED"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NOT_CHECKED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "EXEMPT_BELOW_LIMIT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "EXEMPT_MONEY_TYPE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "EXEMPT_AUTHORISED"}]}
 data MoneyLaunderingStatus

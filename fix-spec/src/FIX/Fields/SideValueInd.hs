@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 401, fieldName = "SideValueInd", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "SIDE_VALUE1"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "SIDE_VALUE2"}]}
 data SideValueInd

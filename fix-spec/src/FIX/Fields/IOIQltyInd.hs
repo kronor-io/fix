@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 25, fieldName = "IOIQltyInd", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "L", fieldValueDescription = "LOW"},FieldValueSpec {fieldValueEnum = "M", fieldValueDescription = "MEDIUM"},FieldValueSpec {fieldValueEnum = "H", fieldValueDescription = "HIGH"}]}
 data IOIQltyInd

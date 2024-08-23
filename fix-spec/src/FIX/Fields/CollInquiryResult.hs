@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 946, fieldName = "CollInquiryResult", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "SUCCESSFUL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INVALID_OR_UNKNOWN_INSTRUMENT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INVALID_OR_UNKNOWN_COLLATERAL_TYPE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INVALID_PARTIES"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INVALID_TRANSPORT_TYPE_REQUESTED"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "INVALID_DESTINATION_REQUESTED"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "NO_COLLATERAL_FOUND_FOR_THE_TRADE_SPECIFIED"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "NO_COLLATERAL_FOUND_FOR_THE_ORDER_SPECIFIED"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "COLLATERAL_INQUIRY_TYPE_NOT_SUPPORTED"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "UNAUTHORIZED_FOR_COLLATERAL_INQUIRY"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data CollInquiryResult

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 642, fieldName = "BidForwardPoints2", fieldType = FieldTypePriceOffset, fieldValues = []}
 newtype BidForwardPoints2 = BidForwardPoints2 {unBidForwardPoints2 :: ByteString}

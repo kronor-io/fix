@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 836, fieldName = "PegOffsetType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "PRICE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "BASIS_POINTS"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TICKS"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "PRICE_TIER"}]}
 data PegOffsetType

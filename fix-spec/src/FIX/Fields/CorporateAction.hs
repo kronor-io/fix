@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 292, fieldName = "CorporateAction", fieldType = FieldTypeMultipleValueString, fieldValues = [FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "EX_DIVIDEND"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "EX_DISTRIBUTION"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "EX_RIGHTS"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "NEW"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "EX_INTEREST"}]}
 data CorporateAction

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 5, fieldName = "AdvTransType", fieldType = FieldTypeString, fieldValues = [FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NEW"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "CANCEL"},FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "REPLACE"}]}
 data AdvTransType

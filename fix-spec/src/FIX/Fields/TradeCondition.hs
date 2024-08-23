@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 277, fieldName = "TradeCondition", fieldType = FieldTypeMultipleValueString, fieldValues = [FieldValueSpec {fieldValueEnum = "A", fieldValueDescription = "CASH"},FieldValueSpec {fieldValueEnum = "B", fieldValueDescription = "AVERAGE_PRICE_TRADE"},FieldValueSpec {fieldValueEnum = "C", fieldValueDescription = "CASH_TRADE"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "NEXT_DAY"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "OPENING"},FieldValueSpec {fieldValueEnum = "F", fieldValueDescription = "INTRADAY_TRADE_DETAIL"},FieldValueSpec {fieldValueEnum = "G", fieldValueDescription = "RULE127_TRADE"},FieldValueSpec {fieldValueEnum = "H", fieldValueDescription = "RULE155_TRADE"},FieldValueSpec {fieldValueEnum = "I", fieldValueDescription = "SOLD_LAST"},FieldValueSpec {fieldValueEnum = "J", fieldValueDescription = "NEXT_DAY_TRADE"},FieldValueSpec {fieldValueEnum = "K", fieldValueDescription = "OPENED"},FieldValueSpec {fieldValueEnum = "L", fieldValueDescription = "SELLER"},FieldValueSpec {fieldValueEnum = "M", fieldValueDescription = "SOLD"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "STOPPED_STOCK"},FieldValueSpec {fieldValueEnum = "P", fieldValueDescription = "IMBALANCE_MORE_BUYERS"},FieldValueSpec {fieldValueEnum = "Q", fieldValueDescription = "IMBALANCE_MORE_SELLERS"},FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "OPENING_PRICE"}]}
 data TradeCondition

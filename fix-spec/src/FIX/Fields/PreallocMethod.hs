@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 591, fieldName = "PreallocMethod", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "PRO_RATA"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "DO_NOT_PRO_RATA"}]}
 data PreallocMethod

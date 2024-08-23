@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 952, fieldName = "NoNested3PartySubIDs", fieldType = FieldTypeNumInGroup, fieldValues = []}
 newtype NoNested3PartySubIDs = NoNested3PartySubIDs {unNoNested3PartySubIDs :: ByteString}

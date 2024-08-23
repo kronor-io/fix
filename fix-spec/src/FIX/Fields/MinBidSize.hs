@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 647, fieldName = "MinBidSize", fieldType = FieldTypeQTY, fieldValues = []}
 newtype MinBidSize = MinBidSize {unMinBidSize :: ByteString}

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 638, fieldName = "PriorityIndicator", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "PRIORITY_UNCHANGED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "LOST_PRIORITY_AS_RESULT_OF_ORDER_CHANGE"}]}
 data PriorityIndicator

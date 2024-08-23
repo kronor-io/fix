@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 160, fieldName = "SettlInstMode", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "STANDING_INSTRUCTIONS_PROVIDED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "SPECIFIC_ORDER_FOR_A_SINGLE_ACCOUNT"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "REQUEST_REJECT"}]}
 data SettlInstMode

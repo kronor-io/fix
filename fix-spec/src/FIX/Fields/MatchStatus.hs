@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 573, fieldName = "MatchStatus", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "COMPARED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "UNCOMPARED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ADVISORY_OR_ALERT"}]}
 data MatchStatus

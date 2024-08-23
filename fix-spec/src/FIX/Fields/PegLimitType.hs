@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 837, fieldName = "PegLimitType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "OR_BETTER"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "STRICT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "OR_WORSE"}]}
 data PegLimitType

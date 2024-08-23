@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 906, fieldName = "CollAsgnRejectReason", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "UNKNOWN_DEAL"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "UNKNOWN_OR_INVALID_INSTRUMENT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "UNAUTHORIZED_TRANSACTION"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INSUFFICIENT_COLLATERAL"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INVALID_TYPE_OF_COLLATERAL"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "EXCESSIVE_SUBSTITUTION"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data CollAsgnRejectReason

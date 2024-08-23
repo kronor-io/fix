@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 88, fieldName = "AllocRejCode", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "UNKNOWN_ACCOUNT"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INCORRECT_QUANTITY"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INCORRECT_AVERAGEG_PRICE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "UNKNOWN_EXECUTING_BROKER_MNEMONIC"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "COMMISSION_DIFFERENCE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "UNKNOWN_ORDER_ID"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "UNKNOWN_LIST_ID"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "OTHER_SEE_TEXT"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "INCORRECT_ALLOCATED_QUANTITY"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "CALCULATION_DIFFERENCE"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "UNKNOWN_OR_STALE_EXEC_ID"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "MISMATCHED_DATA"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "UNKNOWN_CL_ORD_ID"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "WAREHOUSE_REQUEST_REJECTED"}]}
 data AllocRejCode

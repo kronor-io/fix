@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 532, fieldName = "MassCancelRejectReason", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "MASS_CANCEL_NOT_SUPPORTED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INVALID_OR_UNKNOWN_SECURITY"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "INVALID_OR_UNKOWN_UNDERLYING_SECURITY"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "INVALID_OR_UNKNOWN_PRODUCT"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INVALID_OR_UNKNOWN_CFI_CODE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "INVALID_OR_UNKNOWN_SECURITY_TYPE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "INVALID_OR_UNKNOWN_TRADING_SESSION"},FieldValueSpec {fieldValueEnum = "99", fieldValueDescription = "OTHER"}]}
 data MassCancelRejectReason

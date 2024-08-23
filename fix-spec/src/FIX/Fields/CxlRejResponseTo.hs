@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 434, fieldName = "CxlRejResponseTo", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ORDER_CANCEL_REQUEST"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ORDER_CANCEL"}]}
 data CxlRejResponseTo

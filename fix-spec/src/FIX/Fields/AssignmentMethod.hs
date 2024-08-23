@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 744, fieldName = "AssignmentMethod", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "RANDOM"},FieldValueSpec {fieldValueEnum = "P", fieldValueDescription = "PRO_RATA"}]}
 data AssignmentMethod

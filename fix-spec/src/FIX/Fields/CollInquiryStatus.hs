@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 945, fieldName = "CollInquiryStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ACCEPTED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ACCEPTED_WITH_WARNINGS"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "COMPLETED"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "COMPLETED_WITH_WARNINGS"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "REJECTED"}]}
 data CollInquiryStatus

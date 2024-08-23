@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 846, fieldName = "DiscretionScope", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "LOCAL"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "NATIONAL"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "GLOBAL"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "NATIONAL_EXCLUDING_LOCAL"}]}
 data DiscretionScope

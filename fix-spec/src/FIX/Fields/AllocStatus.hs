@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 87, fieldName = "AllocStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ACCEPTED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "BLOCK_LEVEL_REJECT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ACCOUNT_LEVEL_REJECT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "RECEIVED"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "INCOMPLETE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "REJECTED_BY_INTERMEDIARY"}]}
 data AllocStatus

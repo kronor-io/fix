@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 297, fieldName = "QuoteStatus", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ACCEPTED"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "CANCEL_FOR_SYMBOL"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "CANCELED_FOR_SECURITY_TYPE"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "CANCELED_FOR_UNDERLYING"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "CANCELED_ALL"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "REJECTED"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "REMOVED_FROM_MARKET"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "EXPIRED"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "QUERY"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "QUOTE_NOT_FOUND"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "PENDING"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "PASS"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "LOCKED_MARKET_WARNING"},FieldValueSpec {fieldValueEnum = "13", fieldValueDescription = "CROSS_MARKET_WARNING"},FieldValueSpec {fieldValueEnum = "14", fieldValueDescription = "CANCELED_DUE_TO_LOCK_MARKET"},FieldValueSpec {fieldValueEnum = "15", fieldValueDescription = "CANCELED_DUE_TO_CROSS_MARKET"}]}
 data QuoteStatus

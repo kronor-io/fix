@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 828, fieldName = "TrdType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "REGULAR_TRADE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "BLOCK_TRADE"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "EFP"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "TRANSFER"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "LATE_TRADE"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "T_TRADE"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "WEIGHTED_AVERAGE_PRICE_TRADE"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "BUNCHED_TRADE"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "LATE_BUNCHED_TRADE"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "PRIOR_REFERENCE_PRICE_TRADE"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "AFTER_HOURS_TRADE"}]}
 data TrdType

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 814, fieldName = "ApplQueueResolution", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NO_ACTION_TAKEN"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "QUEUE_FLUSHED"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "OVERLAY_LAST"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "END_SESSION"}]}
 data ApplQueueResolution

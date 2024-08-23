@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 663, fieldName = "BenchmarkPriceType", fieldType = FieldTypeInt, fieldValues = []}
 newtype BenchmarkPriceType = BenchmarkPriceType {unBenchmarkPriceType :: ByteString}

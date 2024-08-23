@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 896, fieldName = "CollInquiryQualifier", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "TRADE_DATE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "GC_INSTRUMENT"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "COLLATERAL_INSTRUMENT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "SUBSTITUTION_ELIGIBLE"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "NOT_ASSIGNED"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PARTIALLY_ASSIGNED"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "FULLY_ASSIGNED"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "OUTSTANDING_TRADES"}]}
 data CollInquiryQualifier

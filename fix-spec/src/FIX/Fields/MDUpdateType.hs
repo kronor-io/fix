@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 265, fieldName = "MDUpdateType", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "FULL_REFRESH"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "INCREMENTAL_REFRESH"}]}
 data MDUpdateType

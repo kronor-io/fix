@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 139, fieldName = "MiscFeeType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "REGULATORY"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "TAX"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "LOCAL_COMMISSION"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "EXCHANGE_FEES"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "STAMP"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "LEVY"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "OTHER"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "MARKUP"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "CONSUMPTION_TAX"},FieldValueSpec {fieldValueEnum = "10", fieldValueDescription = "PER_TRANSACTION"},FieldValueSpec {fieldValueEnum = "11", fieldValueDescription = "CONVERSION"},FieldValueSpec {fieldValueEnum = "12", fieldValueDescription = "AGENT"}]}
 data MiscFeeType

@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 40, fieldName = "OrdType", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "MARKET"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "LIMIT"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "STOP"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "STOP_LIMIT"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "WITH_OR_WITHOUT"},FieldValueSpec {fieldValueEnum = "7", fieldValueDescription = "LIMIT_OR_BETTER"},FieldValueSpec {fieldValueEnum = "8", fieldValueDescription = "LIMIT_WITH_OR_WITHOUT"},FieldValueSpec {fieldValueEnum = "9", fieldValueDescription = "ON_BASIS"},FieldValueSpec {fieldValueEnum = "D", fieldValueDescription = "PREVIOUSLY_QUOTED"},FieldValueSpec {fieldValueEnum = "E", fieldValueDescription = "PREVIOUSLY_INDICATED"},FieldValueSpec {fieldValueEnum = "G", fieldValueDescription = "FOREX_SWAP"},FieldValueSpec {fieldValueEnum = "I", fieldValueDescription = "FUNARI"},FieldValueSpec {fieldValueEnum = "J", fieldValueDescription = "MARKET_IF_TOUCHED"},FieldValueSpec {fieldValueEnum = "K", fieldValueDescription = "MARKET_WITH_LEFT_OVER_AS_LIMIT"},FieldValueSpec {fieldValueEnum = "L", fieldValueDescription = "PREVIOUS_FUND_VALUATION_POINT"},FieldValueSpec {fieldValueEnum = "M", fieldValueDescription = "NEXT_FUND_VALUATION_POINT"},FieldValueSpec {fieldValueEnum = "P", fieldValueDescription = "PEGGED"}]}
 data OrdType

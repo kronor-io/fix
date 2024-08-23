@@ -15,7 +15,7 @@ import Data.Validity
 import FIX.Core (IsField (..), IsFieldType (..))
 import GHC.Generics (Generic)
 
-{-# ANN module "HLint: ignore" #-}
+{-# ANN module ("HLint: ignore" :: String) #-}
 
 -- FieldSpec {fieldNumber = 468, fieldName = "RoundingDirection", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "ROUND_TO_NEAREST"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "ROUND_DOWN"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "ROUND_UP"}]}
 data RoundingDirection
