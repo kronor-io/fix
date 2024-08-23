@@ -23,6 +23,7 @@ library
     , opt-env-conf
     , path
     , path-io
+    , process
     , template-haskell
     , text
     , xml-conduit

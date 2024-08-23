@@ -42,6 +42,7 @@ let
       fix-core-gen = fixPkg "fix-core-gen";
       fix-codegen = fixPkg "fix-codegen";
       fix-spec = fixPkg "fix-spec";
+      fix-spec-gen = fixPkg "fix-spec-gen";
     };
 in
 {

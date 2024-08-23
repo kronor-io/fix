@@ -1,4 +1,4 @@
-name: fix-spec
+name: fix-spec-gen
 version: 0.0.0.0
 
 dependencies:
@@ -7,6 +7,6 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
-  - bytestring
-  - fix-core
-  - validity
+  - fix-spec
+  - genvalidity
+  - genvalidity-bytestring

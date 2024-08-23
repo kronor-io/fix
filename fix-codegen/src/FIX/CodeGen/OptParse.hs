@@ -31,8 +31,8 @@ instance HasParser Settings where
           ]
     settingsOutputDir <-
       directoryPathSetting
-        [ help "Path to the package output dir",
+        [ help "Path to the top-level directory of this monorepo output dir",
           name "output",
-          value "fix-spec"
+          value "."
         ]
     pure Settings {..}
