@@ -26,17 +26,28 @@ import Text.Read
 import Text.XML as XML
 
 data Spec = Spec
-  { specFields :: ![FieldSpec],
+  { specHeader :: ![MessagePiece],
+    specFields :: ![FieldSpec],
+    specTrailer :: ![MessagePiece],
     specMessages :: ![MessageSpec]
   }
 
 parseSpec :: Document -> Maybe Spec
 parseSpec doc = do
   let rootElements = subElements $ documentRoot doc
+
+  headerElement <- find ((== "header") . elementName) rootElements
+  specHeader <- mapM parseMessagePiece $ subElements headerElement
+
   fieldsElement <- find ((== "fields") . elementName) rootElements
   specFields <- mapM parseFieldSpec $ subElements fieldsElement
+
+  trailerElement <- find ((== "header") . elementName) rootElements
+  specTrailer <- mapM parseMessagePiece $ subElements trailerElement
+
   messagesElement <- find ((== "messages") . elementName) rootElements
   specMessages <- mapM parseMessageSpec $ subElements messagesElement
+
   pure Spec {..}
 
 data MessageSpec = MessageSpec

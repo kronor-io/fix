@@ -49,9 +49,14 @@ filterSpec (Just messages) spec =
         MessagePieceGroup g _ ps -> S.insert g (foldMap pieceFieldNames ps)
       messageFields :: MessageSpec -> Set Text
       messageFields = foldMap pieceFieldNames . messagePieces
-      mentionedFields = foldMap messageFields filteredMessages
+      mentionedFields =
+        S.unions
+          [ foldMap pieceFieldNames (specHeader spec),
+            foldMap messageFields filteredMessages,
+            foldMap pieceFieldNames (specTrailer spec)
+          ]
       filteredFields = filter (\f -> S.member (fieldName f) mentionedFields) (specFields spec)
-   in Spec
+   in spec
         { specMessages = filteredMessages,
           specFields = filteredFields
         }

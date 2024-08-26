@@ -6,24 +6,80 @@ module FIX.Fields.Gen where
 
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
+import FIX.Fields.BeginString
+import FIX.Fields.BodyLength
+import FIX.Fields.DeliverToCompID
+import FIX.Fields.DeliverToLocationID
+import FIX.Fields.DeliverToSubID
 import FIX.Fields.EncryptMethod
 import FIX.Fields.HeartBtInt
+import FIX.Fields.HopCompID
+import FIX.Fields.HopRefID
+import FIX.Fields.HopSendingTime
+import FIX.Fields.LastMsgSeqNumProcessed
 import FIX.Fields.MaxMessageSize
+import FIX.Fields.MessageEncoding
 import FIX.Fields.MsgDirection
+import FIX.Fields.MsgSeqNum
+import FIX.Fields.MsgType
 import FIX.Fields.NextExpectedMsgSeqNum
+import FIX.Fields.NoHops
 import FIX.Fields.NoMsgTypes
+import FIX.Fields.OnBehalfOfCompID
+import FIX.Fields.OnBehalfOfLocationID
+import FIX.Fields.OnBehalfOfSubID
+import FIX.Fields.OrigSendingTime
 import FIX.Fields.Password
+import FIX.Fields.PossDupFlag
+import FIX.Fields.PossResend
 import FIX.Fields.RawData
 import FIX.Fields.RawDataLength
 import FIX.Fields.RefMsgType
 import FIX.Fields.ResetSeqNumFlag
+import FIX.Fields.SecureData
+import FIX.Fields.SecureDataLen
+import FIX.Fields.SenderCompID
+import FIX.Fields.SenderLocationID
+import FIX.Fields.SenderSubID
+import FIX.Fields.SendingTime
+import FIX.Fields.TargetCompID
+import FIX.Fields.TargetLocationID
+import FIX.Fields.TargetSubID
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.TestReqID
 import FIX.Fields.Username
+import FIX.Fields.XmlData
+import FIX.Fields.XmlDataLen
+
+instance GenValid BeginString
+
+instance GenValid BodyLength
+
+instance GenValid MsgSeqNum
+
+instance GenValid MsgType
+
+instance GenValid PossDupFlag
+
+instance GenValid SenderCompID
+
+instance GenValid SenderSubID
+
+instance GenValid SendingTime
+
+instance GenValid TargetCompID
+
+instance GenValid TargetSubID
+
+instance GenValid SecureDataLen
+
+instance GenValid SecureData
 
 instance GenValid RawDataLength
 
 instance GenValid RawData
+
+instance GenValid PossResend
 
 instance GenValid EncryptMethod
 
@@ -31,7 +87,33 @@ instance GenValid HeartBtInt
 
 instance GenValid TestReqID
 
+instance GenValid OnBehalfOfCompID
+
+instance GenValid OnBehalfOfSubID
+
+instance GenValid OrigSendingTime
+
+instance GenValid DeliverToCompID
+
+instance GenValid DeliverToSubID
+
 instance GenValid ResetSeqNumFlag
+
+instance GenValid SenderLocationID
+
+instance GenValid TargetLocationID
+
+instance GenValid OnBehalfOfLocationID
+
+instance GenValid DeliverToLocationID
+
+instance GenValid XmlDataLen
+
+instance GenValid XmlData
+
+instance GenValid MessageEncoding
+
+instance GenValid LastMsgSeqNumProcessed
 
 instance GenValid RefMsgType
 
@@ -46,5 +128,13 @@ instance GenValid TestMessageIndicator
 instance GenValid Username
 
 instance GenValid Password
+
+instance GenValid NoHops
+
+instance GenValid HopCompID
+
+instance GenValid HopSendingTime
+
+instance GenValid HopRefID
 
 instance GenValid NextExpectedMsgSeqNum

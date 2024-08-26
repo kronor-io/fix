@@ -10,20 +10,50 @@ build-type:     Simple
 
 library
   exposed-modules:
+      FIX.Fields.BeginString
+      FIX.Fields.BodyLength
+      FIX.Fields.DeliverToCompID
+      FIX.Fields.DeliverToLocationID
+      FIX.Fields.DeliverToSubID
       FIX.Fields.EncryptMethod
       FIX.Fields.HeartBtInt
+      FIX.Fields.HopCompID
+      FIX.Fields.HopRefID
+      FIX.Fields.HopSendingTime
+      FIX.Fields.LastMsgSeqNumProcessed
       FIX.Fields.MaxMessageSize
+      FIX.Fields.MessageEncoding
       FIX.Fields.MsgDirection
+      FIX.Fields.MsgSeqNum
+      FIX.Fields.MsgType
       FIX.Fields.NextExpectedMsgSeqNum
+      FIX.Fields.NoHops
       FIX.Fields.NoMsgTypes
+      FIX.Fields.OnBehalfOfCompID
+      FIX.Fields.OnBehalfOfLocationID
+      FIX.Fields.OnBehalfOfSubID
+      FIX.Fields.OrigSendingTime
       FIX.Fields.Password
+      FIX.Fields.PossDupFlag
+      FIX.Fields.PossResend
       FIX.Fields.RawData
       FIX.Fields.RawDataLength
       FIX.Fields.RefMsgType
       FIX.Fields.ResetSeqNumFlag
+      FIX.Fields.SecureData
+      FIX.Fields.SecureDataLen
+      FIX.Fields.SenderCompID
+      FIX.Fields.SenderLocationID
+      FIX.Fields.SenderSubID
+      FIX.Fields.SendingTime
+      FIX.Fields.TargetCompID
+      FIX.Fields.TargetLocationID
+      FIX.Fields.TargetSubID
       FIX.Fields.TestMessageIndicator
       FIX.Fields.TestReqID
       FIX.Fields.Username
+      FIX.Fields.XmlData
+      FIX.Fields.XmlDataLen
       FIX.Messages.Heartbeat
       FIX.Messages.Logon
   other-modules:
