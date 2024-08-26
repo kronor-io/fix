@@ -87,7 +87,7 @@ writeFieldsFile outputDir fieldSpecs = do
           FieldTypeBoolean -> ConT (mkName "Bool")
           _ -> ConT (mkName "ByteString")
     let section =
-          [ "-- " <> show f,
+          [ "-- | " <> show f,
             TH.pprint
               [ if null fieldValues
                   then
@@ -339,7 +339,7 @@ writeMessagesFile outputDir messageSpecs = do
             )
             messagePieces
     let section =
-          [ "-- " <> show f,
+          [ "-- | " <> show f,
             TH.pprint
               [ DataD
                   []

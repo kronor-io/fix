@@ -17,7 +17,7 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- FieldSpec {fieldNumber = 108, fieldName = "HeartBtInt", fieldType = FieldTypeInt, fieldValues = []}
+-- | FieldSpec {fieldNumber = 108, fieldName = "HeartBtInt", fieldType = FieldTypeInt, fieldValues = []}
 newtype HeartBtInt = HeartBtInt {unHeartBtInt :: ByteString}
   deriving stock (Show, Eq, Generic)
 

@@ -17,7 +17,7 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- FieldSpec {fieldNumber = 464, fieldName = "TestMessageIndicator", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
+-- | FieldSpec {fieldNumber = 464, fieldName = "TestMessageIndicator", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
 data TestMessageIndicator
   = TestMessageIndicator_YES
   | TestMessageIndicator_NO

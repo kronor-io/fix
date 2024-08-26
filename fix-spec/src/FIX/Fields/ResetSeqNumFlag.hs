@@ -17,7 +17,7 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- FieldSpec {fieldNumber = 141, fieldName = "ResetSeqNumFlag", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
+-- | FieldSpec {fieldNumber = 141, fieldName = "ResetSeqNumFlag", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
 data ResetSeqNumFlag
   = ResetSeqNumFlag_YES
   | ResetSeqNumFlag_NO
