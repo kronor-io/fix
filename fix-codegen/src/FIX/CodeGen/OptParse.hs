@@ -8,6 +8,8 @@ module FIX.CodeGen.OptParse
   )
 where
 
+import Data.Set (Set)
+import Data.Text (Text)
 import OptEnvConf
 import Path
 import Path.IO
@@ -17,22 +19,29 @@ getSettings :: IO Settings
 getSettings = runSettingsParser version "FIX protocol code generation"
 
 data Settings = Settings
-  { settingsSpecFile :: Path Abs File,
-    settingsOutputDir :: Path Abs Dir
+  { settingSpecFile :: !(Path Abs File),
+    settingOutputDir :: !(Path Abs Dir),
+    settingMessages :: !(Maybe (Set Text))
   }
 
 instance HasParser Settings where
   settingsParser = withLocalYamlConfig $ do
-    settingsSpecFile <-
+    settingSpecFile <-
       mapIO (`resolveFile` "FIX44.xml") $
         directoryPathSetting
           [ help "path to directory with specificaton files",
             env "FIX_SPEC_DIR"
           ]
-    settingsOutputDir <-
+    settingOutputDir <-
       directoryPathSetting
         [ help "Path to the top-level directory of this monorepo output dir",
           name "output",
           value "."
         ]
+    settingMessages <-
+      optional $
+        setting
+          [ help "Messages to generate code for",
+            conf "messages"
+          ]
     pure Settings {..}

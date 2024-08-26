@@ -8,6 +8,9 @@ module FIX.CodeGen (runFixCodeGen) where
 import Control.Monad
 import Data.Char as Char
 import Data.Maybe
+import Data.Set (Set)
+import qualified Data.Set as S
+import Data.Text (Text)
 import qualified Data.Text as T
 import FIX.CodeGen.OptParse
 import FIX.CodeGen.Spec
@@ -22,17 +25,36 @@ import UnliftIO
 runFixCodeGen :: IO ()
 runFixCodeGen = do
   Settings {..} <- getSettings
-  doc <- XML.readFile XML.def (fromAbsFile settingsSpecFile)
+  doc <- XML.readFile XML.def (fromAbsFile settingSpecFile)
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
-    Just spec -> do
+    Just spec' -> do
+      let spec = filterSpec settingMessages spec'
       let fieldSpecs = specFields spec
-      writeFieldsFile settingsOutputDir fieldSpecs
-      writeFieldsGenFile settingsOutputDir fieldSpecs
-      writeFieldsSpecFile settingsOutputDir fieldSpecs
+      writeFieldsFile settingOutputDir fieldSpecs
+      writeFieldsGenFile settingOutputDir fieldSpecs
+      writeFieldsSpecFile settingOutputDir fieldSpecs
 
       let messageSpecs = specMessages spec
-      writeMessagesFile settingsOutputDir messageSpecs
+      writeMessagesFile settingOutputDir messageSpecs
+
+filterSpec :: Maybe (Set Text) -> Spec -> Spec
+filterSpec Nothing spec = spec
+filterSpec (Just messages) spec =
+  let filteredMessages = filter (\m -> S.member (messageName m) messages) (specMessages spec)
+      pieceFieldNames :: MessagePiece -> Set Text
+      pieceFieldNames = \case
+        MessagePieceField n _ -> S.singleton n
+        MessagePieceComponent c _ -> S.singleton c
+        MessagePieceGroup g _ ps -> S.insert g (foldMap pieceFieldNames ps)
+      messageFields :: MessageSpec -> Set Text
+      messageFields = foldMap pieceFieldNames . messagePieces
+      mentionedFields = foldMap messageFields filteredMessages
+      filteredFields = filter (\f -> S.member (fieldName f) mentionedFields) (specFields spec)
+   in Spec
+        { specMessages = filteredMessages,
+          specFields = filteredFields
+        }
 
 disclaimer :: String
 disclaimer =
