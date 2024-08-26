@@ -1,4 +1,5 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
@@ -98,7 +99,7 @@ messageSpec ::
     Eq a,
     GenValid a,
     Typeable a,
-    IsMessage a
+    IsMessage MessageType a
   ) =>
   FilePath ->
   Spec

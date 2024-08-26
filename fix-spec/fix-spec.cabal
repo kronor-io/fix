@@ -54,6 +54,7 @@ library
       FIX.Fields.Username
       FIX.Fields.XmlData
       FIX.Fields.XmlDataLen
+      FIX.Messages.Class
       FIX.Messages.Heartbeat
       FIX.Messages.Logon
   other-modules:

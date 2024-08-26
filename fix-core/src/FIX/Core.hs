@@ -1,4 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -615,12 +617,12 @@ optionalFieldP = do
         put fields'
         pure (Just v)
 
-class IsMessage a where
-  messageType :: Proxy a -> MessageType
+class IsMessage typeType a | a -> typeType where
+  messageType :: Proxy a -> typeType
   toMessageFields :: a -> [Field]
   fromMessageFields :: MessageP a
 
-toMessage :: forall a. (IsMessage a) => Envelope a -> Message
+toMessage :: forall a. (IsMessage MessageType a) => Envelope a -> Message
 toMessage e'' =
   let h = (envelopeHeader e'') {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
       e' = e'' {envelopeHeader = h}
@@ -637,12 +639,12 @@ toMessage e'' =
         }
 
 -- Has to happen _before_ fixEnvelopeCheckSum
-fixEnvelopeBodyLength :: (IsMessage a) => Envelope a -> Envelope a
+fixEnvelopeBodyLength :: (IsMessage typeType a) => Envelope a -> Envelope a
 fixEnvelopeBodyLength e =
   let bodyLength = computeBodyLength e
    in e {envelopeHeader = (envelopeHeader e) {messageHeaderBodyLength = bodyLength}}
 
-computeBodyLength :: (IsMessage a) => Envelope a -> BodyLength
+computeBodyLength :: (IsMessage typeType a) => Envelope a -> BodyLength
 computeBodyLength Envelope {..} =
   let bytesBeforeBodyLength =
         computeFieldsLength
@@ -666,7 +668,10 @@ computeFieldsLength fields =
   let bytes = renderMessage (Message {messageFields = fields})
    in fromIntegral $ SB.length bytes
 
-fixEnvelopeCheckSum :: (IsMessage a) => Envelope a -> Envelope a
+fixEnvelopeCheckSum ::
+  (IsMessage typeType a) =>
+  Envelope a ->
+  Envelope a
 fixEnvelopeCheckSum e@Envelope {..} =
   let fieldsUntilCheckSum =
         concat
@@ -686,7 +691,7 @@ computeCheckSum fields =
 
 fromMessage ::
   forall a.
-  (IsMessage a) =>
+  (IsMessage MessageType a) =>
   Message ->
   Either MessageParseError (Envelope a)
 fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
@@ -784,7 +789,7 @@ data LogonMessage = LogonMessage
 
 instance Validity LogonMessage
 
-instance IsMessage LogonMessage where
+instance IsMessage MessageType LogonMessage where
   messageType Proxy = MessageTypeLogon
   toMessageFields LogonMessage {..} =
     catMaybes
@@ -807,7 +812,7 @@ data HeartbeatMessage = HeartbeatMessage
 
 instance Validity HeartbeatMessage
 
-instance IsMessage HeartbeatMessage where
+instance IsMessage MessageType HeartbeatMessage where
   messageType Proxy = MessageTypeHeartbeat
   toMessageFields HeartbeatMessage {..} =
     catMaybes
