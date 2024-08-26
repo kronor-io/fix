@@ -339,6 +339,8 @@ writeMessagesFile outputDir messageSpecs = do
   forConcurrently_ messageSpecs $ \f@MessageSpec {..} -> do
     messageFile <- resolveFile messagesDir $ T.unpack messageName <> ".hs"
     let constructorName = messageSpecConstructorName f
+    -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
+    let recordWildCardName = mkName (T.unpack messageName <> "{..}")
     let imports =
           mapMaybe
             ( \case
@@ -346,6 +348,8 @@ writeMessagesFile outputDir messageSpecs = do
                 _ -> Nothing
             )
             messagePieces
+        fieldName t = mkName $ lowerHead (T.unpack messageName) <> T.unpack t
+
     let section =
           [ "-- | " <> show f,
             TH.pprint
@@ -360,7 +364,7 @@ writeMessagesFile outputDir messageSpecs = do
                           ( \case
                               MessagePieceField t required ->
                                 Just
-                                  ( mkName $ lowerHead (T.unpack messageName) <> T.unpack t,
+                                  ( fieldName t,
                                     Bang NoSourceUnpackedness SourceStrict,
                                     ( if required
                                         then id
@@ -395,6 +399,69 @@ writeMessagesFile outputDir messageSpecs = do
                           [VarP (mkName "Proxy")]
                           (NormalB (ConE (mkName ("MsgType_" <> T.unpack (T.toUpper messageName)))))
                           []
+                      ],
+                    FunD
+                      (mkName "toMessageFields")
+                      [ Clause
+                          [ConP recordWildCardName [] []]
+                          ( NormalB
+                              ( AppE
+                                  (VarE (mkName "catMaybes"))
+                                  ( ListE
+                                      ( mapMaybe
+                                          ( \case
+                                              MessagePieceField t required ->
+                                                Just $
+                                                  AppE
+                                                    ( VarE
+                                                        ( mkName
+                                                            ( if required
+                                                                then "requiredFieldB"
+                                                                else "optionalFieldB"
+                                                            )
+                                                        )
+                                                    )
+                                                    (VarE (fieldName t))
+                                              _ -> Nothing
+                                          )
+                                          messagePieces
+                                      )
+                                  )
+                              )
+                          )
+                          []
+                      ],
+                    FunD
+                      (mkName "fromMessageFields")
+                      [ Clause
+                          -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
+                          []
+                          ( NormalB
+                              ( DoE
+                                  Nothing
+                                  $ concat
+                                    [ mapMaybe
+                                        ( \case
+                                            MessagePieceField t required ->
+                                              Just $
+                                                BindS
+                                                  (VarP (fieldName t))
+                                                  ( VarE
+                                                      ( mkName
+                                                          ( if required
+                                                              then "requiredFieldP"
+                                                              else "optionalFieldP"
+                                                          )
+                                                      )
+                                                  )
+                                            _ -> Nothing
+                                        )
+                                        messagePieces,
+                                      [NoBindS $ AppE (VarE (mkName "pure")) (ConE recordWildCardName)]
+                                    ]
+                              )
+                          )
+                          []
                       ]
                   ]
               ]
@@ -403,17 +470,20 @@ writeMessagesFile outputDir messageSpecs = do
     writeHaskellCode messageFile $
       unlines $
         concat
-          [ [ "{-# LANGUAGE DeriveGeneric #-}",
+          [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
+              "{-# LANGUAGE DeriveGeneric #-}",
               "{-# LANGUAGE MultiParamTypeClasses #-}",
               "{-# LANGUAGE DerivingStrategies #-}",
+              "{-# LANGUAGE RecordWildCards #-}",
               "",
               "module FIX.Messages." <> T.unpack messageName <> " where",
               "",
               "import Data.Validity",
-              "import FIX.Core (IsMessage(..))",
+              "import FIX.Core (IsMessage(..), requiredFieldB, optionalFieldB, requiredFieldP, optionalFieldP)",
               "import FIX.Fields.MsgType",
               "import GHC.Generics (Generic)",
               "import Data.Proxy",
+              "import Data.Maybe (catMaybes)",
               ""
             ],
             imports,
