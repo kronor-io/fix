@@ -36,6 +36,7 @@ runFixCodeGen = do
       writeFieldsFiles settingOutputDir fieldSpecs
       writeFieldsGenFile settingOutputDir fieldSpecs
       writeFieldsSpecFile settingOutputDir fieldSpecs
+      writeTopLevelFieldsFile settingOutputDir fieldSpecs
 
       -- Messages
       writeMessagesClassFile settingOutputDir
@@ -330,6 +331,24 @@ writeFieldsSpecFile outputDir fieldSpecs = do
                 FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
               ]
           ]
+        ]
+
+writeTopLevelFieldsFile :: Path Abs Dir -> [FieldSpec] -> IO ()
+writeTopLevelFieldsFile outputDir fieldSpecs = do
+  fieldsFile <- resolveFile outputDir "fix-spec-gen/test/FIX/Fields.hs"
+  let imports =
+        map
+          ( \f ->
+              "import FIX.Fields." <> T.unpack (fieldName f) <> " as X"
+          )
+          fieldSpecs
+  writeHaskellCode fieldsFile $
+    unlines $
+      concat
+        [ [ "module FIX.Fields (module X) where",
+            ""
+          ],
+          imports
         ]
 
 messageSpecConstructorName :: MessageSpec -> Name
