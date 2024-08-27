@@ -18,7 +18,7 @@ import GHC.Generics (Generic)
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 369, fieldName = "LastMsgSeqNumProcessed", fieldType = FieldTypeSeqNum, fieldValues = []}
-newtype LastMsgSeqNumProcessed = LastMsgSeqNumProcessed {unLastMsgSeqNumProcessed :: SimpleBytes}
+newtype LastMsgSeqNumProcessed = LastMsgSeqNumProcessed {unLastMsgSeqNumProcessed :: Word}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LastMsgSeqNumProcessed

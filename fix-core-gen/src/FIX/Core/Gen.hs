@@ -43,4 +43,7 @@ instance GenValid Field where
               else ValueSimple <$> genSimpleValue
           )
 
+instance GenValid UTCTimestamp where
+  genValid = mkUTCTimestamp <$> genValid
+
 instance GenValid Message

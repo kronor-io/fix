@@ -10,6 +10,7 @@ build-type:     Simple
 
 library
   exposed-modules:
+      FIX.Fields
       FIX.Fields.BeginString
       FIX.Fields.BodyLength
       FIX.Fields.CheckSum

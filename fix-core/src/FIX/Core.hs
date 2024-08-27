@@ -249,14 +249,24 @@ instance IsFieldType Int where
           Nothing -> Left $ "Could not Read Int from String: " <> show s
           Just w -> Right w
 
-instance IsFieldType UTCTime where
-  toValue = TE.encodeUtf8 . T.pack . formatTime defaultTimeLocale "%Y%m%d-%H:%M:%S%03Q"
+newtype UTCTimestamp = UTCTimestamp {unUTCTimestamp :: UTCTime}
+  deriving (Show, Eq, Generic)
+
+instance Validity UTCTimestamp where
+  validate uts@(UTCTimestamp t) =
+    mconcat
+      [ genericValidate uts,
+        validateImpreciseUTCTime t
+      ]
+
+instance IsFieldType UTCTimestamp where
+  toValue = TE.encodeUtf8 . T.pack . formatTime defaultTimeLocale "%Y%m%d-%H:%M:%S%03Q" . unUTCTimestamp
   fromValue sb =
     let s = T.unpack $ TE.decodeLatin1 sb
      in case parseTimeM False defaultTimeLocale utcTimeFormatExact s
           <|> parseTimeM False defaultTimeLocale utcTimeFormat s of
           Nothing -> Left $ "Could not Read UTCTime from String: " <> show s
-          Just u -> Right u
+          Just u -> Right (UTCTimestamp u)
 
 utcTimeFormat :: String
 utcTimeFormat = "%Y%m%d-%X"
@@ -264,8 +274,8 @@ utcTimeFormat = "%Y%m%d-%X"
 utcTimeFormatExact :: String
 utcTimeFormatExact = "%Y%m%d-%H:%M:%S%Q"
 
-mkImpreciseUTCTime :: UTCTime -> UTCTime
-mkImpreciseUTCTime u = u {utctDayTime = fromIntegral (floor (utctDayTime u) :: Word)}
+mkUTCTimestamp :: UTCTime -> UTCTimestamp
+mkUTCTimestamp u = UTCTimestamp $ u {utctDayTime = fromIntegral (floor (utctDayTime u) :: Word)}
 
 validateImpreciseUTCTime :: UTCTime -> Validation
 validateImpreciseUTCTime = validateImpreciseLocalTime . utcToLocalTime utc

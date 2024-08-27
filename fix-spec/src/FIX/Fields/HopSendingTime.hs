@@ -18,7 +18,7 @@ import GHC.Generics (Generic)
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 629, fieldName = "HopSendingTime", fieldType = FieldTypeUTCTimestamp, fieldValues = []}
-newtype HopSendingTime = HopSendingTime {unHopSendingTime :: SimpleBytes}
+newtype HopSendingTime = HopSendingTime {unHopSendingTime :: UTCTimestamp}
   deriving stock (Show, Eq, Generic)
 
 instance Validity HopSendingTime

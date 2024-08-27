@@ -96,8 +96,12 @@ writeFieldsFiles outputDir fieldSpecs = do
     let typ = case fieldType of
           FieldTypeBoolean -> ConT (mkName "Bool")
           FieldTypeLength -> ConT (mkName "Word")
+          FieldTypeSeqNum -> ConT (mkName "Word")
+          FieldTypeNumInGroup -> ConT (mkName "Word")
+          FieldTypeInt -> ConT (mkName "Int")
           FieldTypeData -> ConT (mkName "DataBytes")
           FieldTypeString -> ConT (mkName "SimpleBytes")
+          FieldTypeUTCTimestamp -> ConT (mkName "UTCTimestamp")
           _ -> ConT (mkName "SimpleBytes")
     let section =
           [ "-- | " <> show f,
@@ -335,7 +339,7 @@ writeFieldsSpecFile outputDir fieldSpecs = do
 
 writeTopLevelFieldsFile :: Path Abs Dir -> [FieldSpec] -> IO ()
 writeTopLevelFieldsFile outputDir fieldSpecs = do
-  fieldsFile <- resolveFile outputDir "fix-spec-gen/test/FIX/Fields.hs"
+  fieldsFile <- resolveFile outputDir "fix-spec/src/FIX/Fields.hs"
   let imports =
         map
           ( \f ->
