@@ -238,4 +238,4 @@ computeCheckSum fields =
    in renderCheckSum w
 
 renderCheckSum :: Word8 -> CheckSum
-renderCheckSum = CheckSum . TE.encodeUtf8 . T.pack . printf "%03d"
+renderCheckSum = CheckSum . SimpleBytes . TE.encodeUtf8 . T.pack . printf "%03d"

@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 142, fieldName = "SenderLocationID", fieldType = FieldTypeString, fieldValues = []}
-newtype SenderLocationID = SenderLocationID {unSenderLocationID :: ByteString}
+newtype SenderLocationID = SenderLocationID {unSenderLocationID :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity SenderLocationID

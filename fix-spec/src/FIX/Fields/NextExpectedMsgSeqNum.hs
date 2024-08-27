@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 789, fieldName = "NextExpectedMsgSeqNum", fieldType = FieldTypeSeqNum, fieldValues = []}
-newtype NextExpectedMsgSeqNum = NextExpectedMsgSeqNum {unNextExpectedMsgSeqNum :: ByteString}
+newtype NextExpectedMsgSeqNum = NextExpectedMsgSeqNum {unNextExpectedMsgSeqNum :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity NextExpectedMsgSeqNum

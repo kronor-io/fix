@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 554, fieldName = "Password", fieldType = FieldTypeString, fieldValues = []}
-newtype Password = Password {unPassword :: ByteString}
+newtype Password = Password {unPassword :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity Password

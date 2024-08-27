@@ -7,7 +7,7 @@ mkDerivation {
   version = "0.0.0.0";
   src = ./.;
   libraryHaskellDepends = [
-    base bytestring fix-core fix-spec genvalidity
+    base bytestring fix-core fix-core-gen fix-spec genvalidity
     genvalidity-bytestring genvalidity-sydtest path path-io sydtest
   ];
   testHaskellDepends = [ base fix-core-gen fix-spec sydtest ];

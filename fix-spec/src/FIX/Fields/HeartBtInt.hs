@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 108, fieldName = "HeartBtInt", fieldType = FieldTypeInt, fieldValues = []}
-newtype HeartBtInt = HeartBtInt {unHeartBtInt :: ByteString}
+newtype HeartBtInt = HeartBtInt {unHeartBtInt :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity HeartBtInt

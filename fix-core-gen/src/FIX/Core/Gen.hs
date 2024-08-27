@@ -18,8 +18,14 @@ genNonSOHWord8 = genValid `suchThat` (/= 1)
 genSimpleValue :: Gen ByteString
 genSimpleValue = genStrictByteStringBy genNonSOHWord8 `suchThat` (not . SB.null)
 
+instance GenValid SimpleBytes where
+  genValid = SimpleBytes <$> genSimpleValue
+
 genDataValue :: Gen ByteString
 genDataValue = genValid `suchThat` (not . SB.null)
+
+instance GenValid DataBytes where
+  genValid = DataBytes <$> genDataValue
 
 instance GenValid Value where
   genValid =

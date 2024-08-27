@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 57, fieldName = "TargetSubID", fieldType = FieldTypeString, fieldValues = []}
-newtype TargetSubID = TargetSubID {unTargetSubID :: ByteString}
+newtype TargetSubID = TargetSubID {unTargetSubID :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity TargetSubID

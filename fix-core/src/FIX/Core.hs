@@ -130,6 +130,7 @@ messageP = Message <$> many fieldP
 tagIsLen :: Tag -> Bool
 tagIsLen = \case
   90 -> True
+  96 -> True
   360 -> True
   358 -> True
   348 -> True
@@ -185,16 +186,44 @@ instance IsFieldType ByteString where
   toValue = id
   fromValue = Right
 
-validateByteStringValue :: ByteString -> Validation
-validateByteStringValue value =
-  mconcat
-    [ declare "The value is nonempty" $
-        not $
-          SB.null value,
-      decorateList (SB.unpack value) $ \w ->
-        declare "The value is not '\\SOH'" $
-          w /= 1
-    ]
+-- | Bytes of data fields
+-- These are nonempty.
+newtype DataBytes = DataBytes {unDataBytes :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity DataBytes where
+  validate sb@(DataBytes value) =
+    mconcat
+      [ genericValidate sb,
+        declare "The value is nonempty" $
+          not $
+            SB.null value
+      ]
+
+instance IsFieldType DataBytes where
+  toValue = unDataBytes
+  fromValue = prettyValidate . DataBytes
+
+-- | Bytes of non-data fields
+-- These are nonempty and not '\SOH'.
+newtype SimpleBytes = SimpleBytes {unSimpleBytes :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity SimpleBytes where
+  validate sb@(SimpleBytes value) =
+    mconcat
+      [ genericValidate sb,
+        declare "The value is nonempty" $
+          not $
+            SB.null value,
+        decorateList (SB.unpack value) $ \w ->
+          declare "The value is not '\\SOH'" $
+            w /= 1
+      ]
+
+instance IsFieldType SimpleBytes where
+  toValue = unSimpleBytes
+  fromValue = prettyValidate . SimpleBytes
 
 instance IsFieldType Word where
   toValue = TE.encodeUtf8 . T.pack . show

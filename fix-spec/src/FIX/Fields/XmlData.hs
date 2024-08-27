@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 213, fieldName = "XmlData", fieldType = FieldTypeData, fieldValues = []}
-newtype XmlData = XmlData {unXmlData :: ByteString}
+newtype XmlData = XmlData {unXmlData :: DataBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity XmlData

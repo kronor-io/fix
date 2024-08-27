@@ -21,6 +21,7 @@ library
       base >=4.7 && <5
     , bytestring
     , fix-core
+    , fix-core-gen
     , fix-spec
     , genvalidity
     , genvalidity-bytestring

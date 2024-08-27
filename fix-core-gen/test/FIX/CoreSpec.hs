@@ -46,22 +46,3 @@ spec = do
       "20190605-11:57:29.360"
       (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.360)))
     fieldTypeSpec @UTCTime
-
-  fieldSpec @BeginString
-  fieldSpec @BodyLength
-  fieldSpec @CheckSum
-  fieldSpec @MessageSequenceNumber
-  fieldSpec @MessageType
-  fieldSpec @SenderCompId
-  fieldSpec @SenderSubId
-  fieldSpec @TargetCompId
-  fieldSpec @SendingTime
-  fieldSpec @EncryptionMethod
-  fieldSpec @HeartbeatInterval
-  fieldSpec @TestRequestId
-  fieldSpec @Password
-
-  messageSpec @HeartbeatMessage
-  goldenMessageSpec @HeartbeatMessage "heartbeat"
-  messageSpec @LogonMessage
-  goldenMessageSpec @LogonMessage "logon"

@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 10, fieldName = "CheckSum", fieldType = FieldTypeString, fieldValues = []}
-newtype CheckSum = CheckSum {unCheckSum :: ByteString}
+newtype CheckSum = CheckSum {unCheckSum :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity CheckSum

@@ -12,13 +12,13 @@ import Control.Monad
 import Data.ByteString (ByteString)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsField (..), IsFieldType (..))
+import FIX.Core
 import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 144, fieldName = "OnBehalfOfLocationID", fieldType = FieldTypeString, fieldValues = []}
-newtype OnBehalfOfLocationID = OnBehalfOfLocationID {unOnBehalfOfLocationID :: ByteString}
+newtype OnBehalfOfLocationID = OnBehalfOfLocationID {unOnBehalfOfLocationID :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 
 instance Validity OnBehalfOfLocationID

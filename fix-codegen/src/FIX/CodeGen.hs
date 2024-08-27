@@ -34,16 +34,16 @@ runFixCodeGen = do
       -- Fields
       let fieldSpecs = specFields spec
       writeFieldsFiles settingOutputDir fieldSpecs
-      -- writeFieldsGenFile settingOutputDir fieldSpecs
-      -- writeFieldsSpecFile settingOutputDir fieldSpecs
+      writeFieldsGenFile settingOutputDir fieldSpecs
+      writeFieldsSpecFile settingOutputDir fieldSpecs
 
       -- Messages
       writeMessagesClassFile settingOutputDir
 
       let messageSpecs = specMessages spec
-      -- writeMessagesFiles settingOutputDir messageSpecs
+      writeMessagesFiles settingOutputDir messageSpecs
 
-      -- writeMessagesGenFile settingOutputDir messageSpecs
+      writeMessagesGenFile settingOutputDir messageSpecs
       writeMessagesTestUtilsFile settingOutputDir
       writeMessagesSpecFile settingOutputDir messageSpecs
 
@@ -95,7 +95,9 @@ writeFieldsFiles outputDir fieldSpecs = do
     let typ = case fieldType of
           FieldTypeBoolean -> ConT (mkName "Bool")
           FieldTypeLength -> ConT (mkName "Word")
-          _ -> ConT (mkName "ByteString")
+          FieldTypeData -> ConT (mkName "DataBytes")
+          FieldTypeString -> ConT (mkName "SimpleBytes")
+          _ -> ConT (mkName "SimpleBytes")
     let section =
           [ "-- | " <> show f,
             TH.pprint
@@ -256,7 +258,7 @@ writeFieldsFiles outputDir fieldSpecs = do
               "import Data.ByteString (ByteString)",
               "import Data.Proxy",
               "import Data.Validity",
-              "import FIX.Core (IsFieldType(..), IsField(..))",
+              "import FIX.Core",
               "import GHC.Generics (Generic)",
               "",
               "{-# ANN module (\"HLint: ignore\" :: String) #-}",
@@ -290,6 +292,7 @@ writeFieldsGenFile outputDir fieldSpecs = do
           "",
           "import Data.GenValidity",
           "import Data.GenValidity.ByteString ()",
+          "import FIX.Core.Gen ()",
           ""
         ]
           : imports

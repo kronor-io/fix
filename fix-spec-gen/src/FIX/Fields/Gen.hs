@@ -6,6 +6,7 @@ module FIX.Fields.Gen where
 
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
+import FIX.Core.Gen ()
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
