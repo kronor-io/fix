@@ -17,6 +17,7 @@ import FIX.CodeGen.Spec
 import Language.Haskell.TH as TH
 import Path
 import Path.IO
+import Paths_fix_codegen (getDataDir)
 import System.Exit
 import System.Process
 import qualified Text.XML as XML
@@ -32,7 +33,7 @@ runFixCodeGen = do
       let spec = filterSpec settingMessages spec'
       -- Fields
       let fieldSpecs = specFields spec
-      writeFieldsFile settingOutputDir fieldSpecs
+      writeFieldsFiles settingOutputDir fieldSpecs
       writeFieldsGenFile settingOutputDir fieldSpecs
       writeFieldsSpecFile settingOutputDir fieldSpecs
 
@@ -40,9 +41,13 @@ runFixCodeGen = do
       writeMessagesClassFile settingOutputDir
 
       let messageSpecs = specMessages spec
-      writeMessagesFile settingOutputDir messageSpecs
+      writeMessagesFiles settingOutputDir messageSpecs
+
       writeMessagesGenFile settingOutputDir messageSpecs
+      writeMessagesTestUtilsFile settingOutputDir
       writeMessagesSpecFile settingOutputDir messageSpecs
+
+      pure ()
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
 filterSpec Nothing spec = spec
@@ -79,8 +84,8 @@ fieldValueSpecConstructorName FieldSpec {..} FieldValueSpec {..} =
         T.unpack fieldValueDescription -- TODO fix the casing
       ]
 
-writeFieldsFile :: Path Abs Dir -> [FieldSpec] -> IO ()
-writeFieldsFile outputDir fieldSpecs = do
+writeFieldsFiles :: Path Abs Dir -> [FieldSpec] -> IO ()
+writeFieldsFiles outputDir fieldSpecs = do
   fieldsDir <- resolveDir outputDir "fix-spec/src/FIX/Fields"
 
   forConcurrently_ fieldSpecs $ \f@FieldSpec {..} -> do
@@ -327,16 +332,10 @@ messageSpecConstructorName :: MessageSpec -> Name
 messageSpecConstructorName = mkName . T.unpack . messageName
 
 writeMessagesClassFile :: Path Abs Dir -> IO ()
-writeMessagesClassFile outputDir = do
-  messagesClassFile <- resolveFile outputDir "fix-spec/src/FIX/Messages/Class.hs"
-  writeHaskellCode messagesClassFile $
-    unlines
-      [ "module FIX.Messages.Class where",
-        ""
-      ]
+writeMessagesClassFile outputDir = copyDataFile outputDir "fix-spec/src/FIX/Messages/Class.hs"
 
-writeMessagesFile :: Path Abs Dir -> [MessageSpec] -> IO ()
-writeMessagesFile outputDir messageSpecs = do
+writeMessagesFiles :: Path Abs Dir -> [MessageSpec] -> IO ()
+writeMessagesFiles outputDir messageSpecs = do
   messagesDir <- resolveDir outputDir "fix-spec/src/FIX/Messages"
   forConcurrently_ messageSpecs $ \f@MessageSpec {..} -> do
     messageFile <- resolveFile messagesDir $ T.unpack messageName <> ".hs"
@@ -394,7 +393,7 @@ writeMessagesFile outputDir messageSpecs = do
                 InstanceD
                   Nothing
                   []
-                  (AppT (AppT (ConT (mkName "IsMessage")) (ConT (mkName "MsgType"))) (ConT constructorName))
+                  (AppT (ConT (mkName "IsMessage")) (ConT constructorName))
                   [ FunD
                       (mkName "messageType")
                       [ Clause
@@ -481,7 +480,7 @@ writeMessagesFile outputDir messageSpecs = do
               "module FIX.Messages." <> T.unpack messageName <> " where",
               "",
               "import Data.Validity",
-              "import FIX.Core (IsMessage(..), requiredFieldB, optionalFieldB, requiredFieldP, optionalFieldP)",
+              "import FIX.Messages.Class",
               "import FIX.Fields.MsgType",
               "import GHC.Generics (Generic)",
               "import Data.Proxy",
@@ -518,9 +517,16 @@ writeMessagesGenFile outputDir messageSpecs = do
           "import Data.GenValidity",
           "import Data.GenValidity.ByteString ()",
           "import FIX.Fields.Gen ()",
+          "import FIX.Messages.Class",
           ""
         ]
           : messagesImports
+          : [ "",
+              "instance GenValid MessageHeader",
+              "instance GenValid MessageTrailer",
+              "instance (GenValid a) => GenValid (Envelope a)",
+              ""
+            ]
           : sections
 
 writeMessagesSpecFile :: Path Abs Dir -> [MessageSpec] -> IO ()
@@ -556,6 +562,17 @@ writeMessagesSpecFile outputDir messageSpecs = do
               ]
           ]
         ]
+
+writeMessagesTestUtilsFile :: Path Abs Dir -> IO ()
+writeMessagesTestUtilsFile outputDir = copyDataFile outputDir "fix-spec-gen/src/FIX/Messages/TestUtils.hs"
+
+copyDataFile :: Path Abs Dir -> FilePath -> IO ()
+copyDataFile outputDir filePath = do
+  dataDir <- getDataDir >>= resolveDir'
+  fromFile <- resolveFile dataDir $ "data/" <> filePath
+  contents <- readFile (fromAbsFile fromFile)
+  messagesClassFile <- resolveFile outputDir filePath
+  writeHaskellCode messagesClassFile contents
 
 writeHaskellCode :: Path Abs File -> String -> IO ()
 writeHaskellCode f source = do

@@ -11,9 +11,9 @@ module FIX.Messages.Heartbeat where
 import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsMessage (..), optionalFieldB, optionalFieldP, requiredFieldB, requiredFieldP)
 import FIX.Fields.MsgType
 import FIX.Fields.TestReqID
+import FIX.Messages.Class
 import GHC.Generics (Generic)
 
 -- | MessageSpec {messageName = "Heartbeat", messageType = "0", messageCategory = "admin", messagePieces = [MessagePieceField "TestReqID" False]}
@@ -22,7 +22,7 @@ data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
 
 instance Validity Heartbeat
 
-instance IsMessage MsgType Heartbeat where
+instance IsMessage Heartbeat where
   messageType Proxy = MsgType_HEARTBEAT
   toMessageFields ((Heartbeat {..})) = catMaybes [optionalFieldB heartbeatTestReqID]
   fromMessageFields = do

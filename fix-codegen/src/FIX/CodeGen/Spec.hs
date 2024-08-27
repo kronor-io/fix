@@ -42,7 +42,7 @@ parseSpec doc = do
   fieldsElement <- find ((== "fields") . elementName) rootElements
   specFields <- mapM parseFieldSpec $ subElements fieldsElement
 
-  trailerElement <- find ((== "header") . elementName) rootElements
+  trailerElement <- find ((== "trailer") . elementName) rootElements
   specTrailer <- mapM parseMessagePiece $ subElements trailerElement
 
   messagesElement <- find ((== "messages") . elementName) rootElements

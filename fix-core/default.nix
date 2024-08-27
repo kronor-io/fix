@@ -1,4 +1,4 @@
-{ mkDerivation, base, bytestring, lib, megaparsec, mtl, text, time
+{ mkDerivation, base, bytestring, lib, megaparsec, text, time
 , validity, validity-bytestring, validity-text, validity-time
 }:
 mkDerivation {
@@ -6,8 +6,8 @@ mkDerivation {
   version = "0.0.0.0";
   src = ./.;
   libraryHaskellDepends = [
-    base bytestring megaparsec mtl text time validity
-    validity-bytestring validity-text validity-time
+    base bytestring megaparsec text time validity validity-bytestring
+    validity-text validity-time
   ];
   license = "unknown";
 }

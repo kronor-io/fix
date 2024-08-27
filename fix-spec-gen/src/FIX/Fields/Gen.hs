@@ -8,6 +8,7 @@ import Data.GenValidity
 import Data.GenValidity.ByteString ()
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
+import FIX.Fields.CheckSum
 import FIX.Fields.DeliverToCompID
 import FIX.Fields.DeliverToLocationID
 import FIX.Fields.DeliverToSubID
@@ -42,6 +43,8 @@ import FIX.Fields.SenderCompID
 import FIX.Fields.SenderLocationID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
+import FIX.Fields.Signature
+import FIX.Fields.SignatureLength
 import FIX.Fields.TargetCompID
 import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
@@ -54,6 +57,8 @@ import FIX.Fields.XmlDataLen
 instance GenValid BeginString
 
 instance GenValid BodyLength
+
+instance GenValid CheckSum
 
 instance GenValid MsgSeqNum
 
@@ -71,9 +76,13 @@ instance GenValid TargetCompID
 
 instance GenValid TargetSubID
 
+instance GenValid Signature
+
 instance GenValid SecureDataLen
 
 instance GenValid SecureData
+
+instance GenValid SignatureLength
 
 instance GenValid RawDataLength
 

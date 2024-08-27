@@ -7,9 +7,15 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
+  - bytestring
+  - fix-core
   - fix-spec
   - genvalidity
   - genvalidity-bytestring
+  - genvalidity-sydtest
+  - path
+  - path-io
+  - sydtest
 
 tests:
   fix-spec-test:

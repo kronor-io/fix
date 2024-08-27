@@ -7,6 +7,9 @@ cabal-version: 1.12
 name:           fix-codegen
 version:        0.0.0.0
 build-type:     Simple
+data-files:
+    data/fix-spec-gen/src/FIX/Messages/TestUtils.hs
+    data/fix-spec/src/FIX/Messages/Class.hs
 
 library
   exposed-modules:

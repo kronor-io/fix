@@ -8,6 +8,7 @@ module FIX.FieldsSpec where
 import FIX.Core.TestUtils
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
+import FIX.Fields.CheckSum
 import FIX.Fields.DeliverToCompID
 import FIX.Fields.DeliverToLocationID
 import FIX.Fields.DeliverToSubID
@@ -43,6 +44,8 @@ import FIX.Fields.SenderCompID
 import FIX.Fields.SenderLocationID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
+import FIX.Fields.Signature
+import FIX.Fields.SignatureLength
 import FIX.Fields.TargetCompID
 import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
@@ -57,6 +60,7 @@ spec :: Spec
 spec = do
   fieldSpec @BeginString
   fieldSpec @BodyLength
+  fieldSpec @CheckSum
   fieldSpec @MsgSeqNum
   fieldSpec @MsgType
   fieldSpec @PossDupFlag
@@ -65,8 +69,10 @@ spec = do
   fieldSpec @SendingTime
   fieldSpec @TargetCompID
   fieldSpec @TargetSubID
+  fieldSpec @Signature
   fieldSpec @SecureDataLen
   fieldSpec @SecureData
+  fieldSpec @SignatureLength
   fieldSpec @RawDataLength
   fieldSpec @RawData
   fieldSpec @PossResend

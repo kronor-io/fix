@@ -11,7 +11,6 @@ module FIX.Messages.Logon where
 import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
-import FIX.Core (IsMessage (..), optionalFieldB, optionalFieldP, requiredFieldB, requiredFieldP)
 import FIX.Fields.EncryptMethod
 import FIX.Fields.HeartBtInt
 import FIX.Fields.MaxMessageSize
@@ -23,6 +22,7 @@ import FIX.Fields.RawDataLength
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.Username
+import FIX.Messages.Class
 import GHC.Generics (Generic)
 
 -- | MessageSpec {messageName = "Logon", messageType = "A", messageCategory = "admin", messagePieces = [MessagePieceField "EncryptMethod" True,MessagePieceField "HeartBtInt" True,MessagePieceField "RawDataLength" False,MessagePieceField "RawData" False,MessagePieceField "ResetSeqNumFlag" False,MessagePieceField "NextExpectedMsgSeqNum" False,MessagePieceField "MaxMessageSize" False,MessagePieceGroup "NoMsgTypes" False [MessagePieceField "RefMsgType" False,MessagePieceField "MsgDirection" False],MessagePieceField "TestMessageIndicator" False,MessagePieceField "Username" False,MessagePieceField "Password" False]}
@@ -42,7 +42,7 @@ data Logon = Logon
 
 instance Validity Logon
 
-instance IsMessage MsgType Logon where
+instance IsMessage Logon where
   messageType Proxy = MsgType_LOGON
   toMessageFields ((Logon {..})) =
     catMaybes

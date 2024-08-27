@@ -9,4 +9,5 @@ library:
   dependencies:
   - bytestring
   - fix-core
+  - mtl
   - validity

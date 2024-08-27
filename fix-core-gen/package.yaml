@@ -18,8 +18,6 @@ library:
   - genvalidity-sydtest
   - genvalidity-text
   - genvalidity-time
-  - path
-  - path-io
   - sydtest
 
 tests:

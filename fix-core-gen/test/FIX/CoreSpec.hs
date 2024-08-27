@@ -61,5 +61,7 @@ spec = do
   fieldSpec @TestRequestId
   fieldSpec @Password
 
-  messageSpec @HeartbeatMessage "heartbeat"
-  messageSpec @LogonMessage "logon"
+  messageSpec @HeartbeatMessage
+  goldenMessageSpec @HeartbeatMessage "heartbeat"
+  messageSpec @LogonMessage
+  goldenMessageSpec @LogonMessage "logon"

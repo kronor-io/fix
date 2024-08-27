@@ -7,8 +7,15 @@ module FIX.Messages.Gen where
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
 import FIX.Fields.Gen ()
+import FIX.Messages.Class
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
+
+instance GenValid MessageHeader
+
+instance GenValid MessageTrailer
+
+instance (GenValid a) => GenValid (Envelope a)
 
 instance GenValid Heartbeat
 

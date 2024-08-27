@@ -1,6 +1,9 @@
 name: fix-codegen
 version: 0.0.0.0
 
+data-files:
+- data/**/*.hs
+
 dependencies:
 - base >= 4.7 && < 5
 

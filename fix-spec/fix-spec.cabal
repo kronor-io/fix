@@ -12,6 +12,7 @@ library
   exposed-modules:
       FIX.Fields.BeginString
       FIX.Fields.BodyLength
+      FIX.Fields.CheckSum
       FIX.Fields.DeliverToCompID
       FIX.Fields.DeliverToLocationID
       FIX.Fields.DeliverToSubID
@@ -46,6 +47,8 @@ library
       FIX.Fields.SenderLocationID
       FIX.Fields.SenderSubID
       FIX.Fields.SendingTime
+      FIX.Fields.Signature
+      FIX.Fields.SignatureLength
       FIX.Fields.TargetCompID
       FIX.Fields.TargetLocationID
       FIX.Fields.TargetSubID
@@ -65,5 +68,6 @@ library
       base >=4.7 && <5
     , bytestring
     , fix-core
+    , mtl
     , validity
   default-language: Haskell2010

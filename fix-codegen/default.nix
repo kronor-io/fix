@@ -7,6 +7,7 @@ mkDerivation {
   src = ./.;
   isLibrary = true;
   isExecutable = true;
+  enableSeparateDataOutput = true;
   libraryHaskellDepends = [
     base containers opt-env-conf path path-io process template-haskell
     text unliftio xml-conduit
