@@ -61,7 +61,5 @@ spec = do
   fieldSpec @TestRequestId
   fieldSpec @Password
 
-  describe "HeartbeatMessage" $ do
-    messageSpec @HeartbeatMessage "heartbeat"
-  describe "LogonMessage" $ do
-    messageSpec @LogonMessage "logon"
+  messageSpec @HeartbeatMessage "heartbeat"
+  messageSpec @LogonMessage "logon"

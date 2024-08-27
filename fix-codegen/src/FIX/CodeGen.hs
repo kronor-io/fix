@@ -41,6 +41,7 @@ runFixCodeGen = do
 
       let messageSpecs = specMessages spec
       writeMessagesFile settingOutputDir messageSpecs
+      writeMessagesGenFile settingOutputDir messageSpecs
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
 filterSpec Nothing spec = spec
@@ -489,6 +490,37 @@ writeMessagesFile outputDir messageSpecs = do
             imports,
             section
           ]
+
+writeMessagesGenFile :: Path Abs Dir -> [MessageSpec] -> IO ()
+writeMessagesGenFile outputDir messageSpecs = do
+  messagesGenFile <- resolveFile outputDir "fix-spec-gen/src/FIX/Messages/Gen.hs"
+  let messagesImports =
+        map
+          ( \f ->
+              "import FIX.Messages." <> T.unpack (messageName f)
+          )
+          messageSpecs
+  sections <- forM messageSpecs $ \f -> do
+    let constructorName = messageSpecConstructorName f
+    pure
+      [ TH.pprint
+          [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
+          ]
+      ]
+  writeHaskellCode messagesGenFile $
+    unlines $
+      concat $
+        [ "{-# OPTIONS_GHC -Wno-orphans #-}",
+          "",
+          "module FIX.Messages.Gen where",
+          "",
+          "import Data.GenValidity",
+          "import Data.GenValidity.ByteString ()",
+          "import FIX.Fields.Gen ()",
+          ""
+        ]
+          : messagesImports
+          : sections
 
 writeHaskellCode :: Path Abs File -> String -> IO ()
 writeHaskellCode f source = do

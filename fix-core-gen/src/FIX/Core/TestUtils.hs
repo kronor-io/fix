@@ -103,50 +103,51 @@ messageSpec ::
   ) =>
   FilePath ->
   Spec
-messageSpec dir = do
-  genValidSpec @a
-  describe "fromMessage" $ do
-    it "roundtrips with toMessage" $
-      forAllValid $ \envelopePrototype -> do
-        let envelope =
-              fixEnvelopeCheckSum $
-                fixEnvelopeBodyLength $
-                  envelopePrototype
-                    { envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
-                    }
-        let rendered = toMessage (envelope :: Envelope a)
-        context (ppShow rendered) $ case fromMessage rendered of
-          Left parseErr ->
-            expectationFailure $
-              unlines
-                [ "Failed to parse message.",
-                  show parseErr
-                ]
-          Right envelope' -> envelope' `shouldBe` envelope
-
-  describe "toMessage" $ do
-    it "renders to valid messages" $
-      producesValid (toMessage :: Envelope a -> Message)
-
-  scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
-    af <- resolveFile' fp
-    when (fileExtension af == Just ".tagvalue") $
-      it "can parse this message and roundtrip it" $ do
-        contents <- SB.readFile (fromAbsFile af)
-        case parseMessage contents of
-          Left err -> expectationFailure err
-          Right message -> case fromMessage message of
+messageSpec dir =
+  describe (nameOf @a) $ do
+    genValidSpec @a
+    describe "fromMessage" $ do
+      it "roundtrips with toMessage" $
+        forAllValid $ \envelopePrototype -> do
+          let envelope =
+                fixEnvelopeCheckSum $
+                  fixEnvelopeBodyLength $
+                    envelopePrototype
+                      { envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMessageType = messageType (Proxy :: Proxy a)}
+                      }
+          let rendered = toMessage (envelope :: Envelope a)
+          context (ppShow rendered) $ case fromMessage rendered of
             Left parseErr ->
               expectationFailure $
                 unlines
-                  [ "Could not parse message envelope from untyped message:",
+                  [ "Failed to parse message.",
                     show parseErr
                   ]
-            Right a -> do
-              shouldBeValid (a :: Envelope a)
-              let renderedMessage = toMessage a
-              shouldBeValid renderedMessage
-              renderedMessage `shouldBe` message
-              let renderedBytes = renderMessage renderedMessage
-              shouldBeValid renderedBytes
-              renderedBytes `shouldBe` contents
+            Right envelope' -> envelope' `shouldBe` envelope
+
+    describe "toMessage" $ do
+      it "renders to valid messages" $
+        producesValid (toMessage :: Envelope a -> Message)
+
+    scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
+      af <- resolveFile' fp
+      when (fileExtension af == Just ".tagvalue") $
+        it "can parse this message and roundtrip it" $ do
+          contents <- SB.readFile (fromAbsFile af)
+          case parseMessage contents of
+            Left err -> expectationFailure err
+            Right message -> case fromMessage message of
+              Left parseErr ->
+                expectationFailure $
+                  unlines
+                    [ "Could not parse message envelope from untyped message:",
+                      show parseErr
+                    ]
+              Right a -> do
+                shouldBeValid (a :: Envelope a)
+                let renderedMessage = toMessage a
+                shouldBeValid renderedMessage
+                renderedMessage `shouldBe` message
+                let renderedBytes = renderMessage renderedMessage
+                shouldBeValid renderedBytes
+                renderedBytes `shouldBe` contents
