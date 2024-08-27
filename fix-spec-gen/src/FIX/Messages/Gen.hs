@@ -11,7 +11,7 @@ import FIX.Messages.Class
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 
-instance GenValid MessageHeader
+instance GenValid Header
 
 instance GenValid MessageTrailer
 

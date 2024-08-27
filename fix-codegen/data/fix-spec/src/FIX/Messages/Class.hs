@@ -87,7 +87,7 @@ requiredFieldB = Just . fieldB
 optionalFieldB :: (IsField a) => Maybe a -> Maybe Field
 optionalFieldB = (>>= requiredFieldB)
 
-data MessageHeader = MessageHeader
+data Header = Header
   { messageHeaderBeginString :: !BeginString,
     messageHeaderBodyLength :: !BodyLength,
     messageHeaderMsgType :: !MsgType,
@@ -99,10 +99,10 @@ data MessageHeader = MessageHeader
   }
   deriving (Show, Eq, Generic)
 
-instance Validity MessageHeader
+instance Validity Header
 
-parseMessageHeader :: MessageP MessageHeader
-parseMessageHeader = do
+parseHeader :: MessageP Header
+parseHeader = do
   messageHeaderBeginString <- requiredFieldP
   messageHeaderBodyLength <- requiredFieldP
   messageHeaderMsgType <- requiredFieldP
@@ -111,10 +111,10 @@ parseMessageHeader = do
   messageHeaderTarget <- requiredFieldP
   messageHeaderMessageSequenceNumber <- requiredFieldP
   messageHeaderSendingTime <- requiredFieldP
-  pure MessageHeader {..}
+  pure Header {..}
 
-renderMessageHeader :: MessageHeader -> [Field]
-renderMessageHeader MessageHeader {..} =
+renderHeader :: Header -> [Field]
+renderHeader Header {..} =
   catMaybes
     [ requiredFieldB messageHeaderBeginString,
       requiredFieldB messageHeaderBodyLength,
@@ -145,7 +145,7 @@ renderMessageTrailer MessageTrailer {..} =
     ]
 
 data Envelope a = Envelope
-  { envelopeHeader :: MessageHeader,
+  { envelopeHeader :: Header,
     envelopeContents :: a,
     envelopeTrailer :: MessageTrailer
   }
@@ -160,7 +160,7 @@ fromMessage ::
   Either MessageParseError (Envelope a)
 fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
   -- TODO consider erroring on unexpected fields?
-  envelopeHeader <- parseMessageHeader
+  envelopeHeader <- parseHeader
   let actualTag = messageHeaderMsgType envelopeHeader
   let expectedTag = messageType (Proxy :: Proxy a)
   when (actualTag /= expectedTag) $ throwError $ MessageParseErrorMessageTypeMismatch actualTag expectedTag
@@ -178,7 +178,7 @@ toMessage e'' =
             concat
               -- TODO figure out what to do about the message type being in the
               -- header already
-              [ renderMessageHeader (envelopeHeader e),
+              [ renderHeader (envelopeHeader e),
                 toMessageFields (envelopeContents e),
                 renderMessageTrailer (envelopeTrailer e)
               ]
@@ -199,7 +199,7 @@ computeBodyLength Envelope {..} =
           ]
       allFields =
         concat
-          [ renderMessageHeader envelopeHeader,
+          [ renderHeader envelopeHeader,
             toMessageFields envelopeContents,
             renderMessageTrailer envelopeTrailer
           ]
@@ -223,7 +223,7 @@ fixEnvelopeCheckSum e@Envelope {..} =
         concat
           -- TODO figure out what to do about the message type being in the
           -- header already
-          [ renderMessageHeader envelopeHeader,
+          [ renderHeader envelopeHeader,
             toMessageFields envelopeContents
           ]
       checkSum = computeCheckSum fieldsUntilCheckSum

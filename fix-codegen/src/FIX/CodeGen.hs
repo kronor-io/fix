@@ -36,6 +36,7 @@ runFixCodeGen = do
                     fieldsSpecFile fieldSpecs,
                     topLevelFieldsFile fieldSpecs
                   ],
+            headerDataFile (specHeader spec),
             -- Messages
             let messageSpecs = specMessages spec
              in mconcat
@@ -44,7 +45,8 @@ runFixCodeGen = do
                     messagesGenFile messageSpecs,
                     messagesTestUtilsFile,
                     messagesSpecFile messageSpecs
-                  ]
+                  ],
+            specDiscoverFile
           ]
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
@@ -345,6 +347,68 @@ topLevelFieldsFile fieldSpecs =
 messageSpecConstructorName :: MessageSpec -> Name
 messageSpecConstructorName = mkName . T.unpack . messageName
 
+messageDataDeclaration :: Text -> [MessagePiece] -> Dec
+messageDataDeclaration name pieces =
+  let constructorName = mkName (T.unpack name)
+      fieldName t = mkName $ lowerHead (T.unpack name) <> T.unpack t
+   in DataD
+        []
+        constructorName
+        []
+        Nothing
+        [ RecC
+            constructorName
+            ( mapMaybe
+                ( \case
+                    MessagePieceField t required ->
+                      Just
+                        ( fieldName t,
+                          Bang NoSourceUnpackedness SourceStrict,
+                          ( if required
+                              then id
+                              else AppT (ConT (mkName "Maybe"))
+                          )
+                            $ ConT (mkName (T.unpack t))
+                        )
+                    _ -> Nothing -- TODO define them all
+                )
+                pieces
+            )
+        ]
+        [ DerivClause
+            (Just StockStrategy)
+            [ ConT (mkName "Show"),
+              ConT (mkName "Eq"),
+              ConT (mkName "Generic")
+            ]
+        ]
+
+messagePiecesImports :: [MessagePiece] -> [String]
+messagePiecesImports =
+  mapMaybe
+    ( \case
+        MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
+        _ -> Nothing
+    )
+
+headerDataFile :: [MessagePiece] -> CodeGen
+headerDataFile pieces =
+  genHaskellFile "fix-spec/src/FIX/Messages/Header.hs" $
+    let imports = messagePiecesImports pieces
+     in unlines $
+          concat
+            [ [ "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE DeriveGeneric #-}",
+                "",
+                "module FIX.Messages.Header where",
+                "",
+                "import GHC.Generics (Generic)",
+                ""
+              ],
+              imports,
+              [TH.pprint [messageDataDeclaration "Header" pieces]]
+            ]
+
 messagesClassFile :: CodeGen
 messagesClassFile = genDataFile "fix-spec/src/FIX/Messages/Class.hs"
 
@@ -354,49 +418,12 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
     let constructorName = messageSpecConstructorName f
         -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
         recordWildCardName = mkName (T.unpack messageName <> "{..}")
-        imports =
-          mapMaybe
-            ( \case
-                MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
-                _ -> Nothing
-            )
-            messagePieces
         fieldName t = mkName $ lowerHead (T.unpack messageName) <> T.unpack t
 
         section =
           [ "-- | " <> show f,
             TH.pprint
-              [ DataD
-                  []
-                  constructorName
-                  []
-                  Nothing
-                  [ RecC
-                      constructorName
-                      ( mapMaybe
-                          ( \case
-                              MessagePieceField t required ->
-                                Just
-                                  ( fieldName t,
-                                    Bang NoSourceUnpackedness SourceStrict,
-                                    ( if required
-                                        then id
-                                        else AppT (ConT (mkName "Maybe"))
-                                    )
-                                      $ ConT (mkName (T.unpack t))
-                                  )
-                              _ -> Nothing -- TODO define them all
-                          )
-                          messagePieces
-                      )
-                  ]
-                  [ DerivClause
-                      (Just StockStrategy)
-                      [ ConT (mkName "Show"),
-                        ConT (mkName "Eq"),
-                        ConT (mkName "Generic")
-                      ]
-                  ],
+              [ messageDataDeclaration messageName messagePieces,
                 InstanceD
                   Nothing
                   []
@@ -497,7 +524,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                 "import Data.Maybe (catMaybes)",
                 ""
               ],
-              imports,
+              messagePiecesImports messagePieces,
               section
             ]
 
@@ -530,7 +557,7 @@ messagesGenFile messageSpecs =
             ]
               : messagesImports
               : [ "",
-                  "instance GenValid MessageHeader",
+                  "instance GenValid Header",
                   "instance GenValid MessageTrailer",
                   "instance (GenValid a) => GenValid (Envelope a)",
                   ""
@@ -571,3 +598,6 @@ messagesSpecFile messageSpecs =
                   ]
               ]
             ]
+
+specDiscoverFile :: CodeGen
+specDiscoverFile = genDataFile "fix-spec-gen/test/Spec.hs"
