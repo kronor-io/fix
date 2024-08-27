@@ -11,10 +11,11 @@ import FIX.Messages.Envelope
 import FIX.Messages.Header
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
+import FIX.Messages.Trailer
 
 instance GenValid Header
 
-instance GenValid MessageTrailer
+instance GenValid Trailer
 
 instance (GenValid a) => GenValid (Envelope a)
 

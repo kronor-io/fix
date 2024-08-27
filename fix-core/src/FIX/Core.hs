@@ -78,8 +78,8 @@ instance Validity Field where
     mconcat
       [ genericValidate f,
         case v of
-          ValueSimple _ -> declare "The tag is not a length tag" $ not $ tagIsLen t
-          ValueData _ -> declare "The tag is a length tag" $ tagIsLen t
+          ValueSimple _ -> declare ("The tag is not a length tag: " <> show t) $ not $ tagIsLen t
+          ValueData _ -> declare ("The tag is a length tag: " <> show t) $ tagIsLen t
       ]
 
 newtype Message = Message
@@ -128,6 +128,7 @@ messageP = Message <$> many fieldP
 -- TODO Generate this?
 tagIsLen :: Tag -> Bool
 tagIsLen = \case
+  89 -> True
   91 -> True
   96 -> True
   213 -> True

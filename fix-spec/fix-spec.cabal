@@ -63,6 +63,7 @@ library
       FIX.Messages.Header
       FIX.Messages.Heartbeat
       FIX.Messages.Logon
+      FIX.Messages.Trailer
   other-modules:
       Paths_fix_spec
   hs-source-dirs:

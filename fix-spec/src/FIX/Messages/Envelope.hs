@@ -10,7 +10,6 @@ import Control.Monad
 import Control.Monad.Except
 import Control.Monad.State
 import qualified Data.ByteString as SB
-import Data.Maybe
 import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
@@ -21,31 +20,14 @@ import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
 import FIX.Messages.Class
 import FIX.Messages.Header
+import FIX.Messages.Trailer
 import GHC.Generics (Generic)
 import Text.Printf
-
-data MessageTrailer = MessageTrailer
-  { messageTrailerCheckSum :: !CheckSum
-  }
-  deriving (Show, Eq, Generic)
-
-instance Validity MessageTrailer
-
-parseMessageTrailer :: MessageP MessageTrailer
-parseMessageTrailer = do
-  messageTrailerCheckSum <- requiredFieldP
-  pure MessageTrailer {..}
-
-renderMessageTrailer :: MessageTrailer -> [Field]
-renderMessageTrailer MessageTrailer {..} =
-  catMaybes
-    [ requiredFieldB messageTrailerCheckSum
-    ]
 
 data Envelope a = Envelope
   { envelopeHeader :: Header,
     envelopeContents :: a,
-    envelopeTrailer :: MessageTrailer
+    envelopeTrailer :: Trailer
   }
   deriving (Show, Eq, Generic)
 
@@ -63,7 +45,7 @@ fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
   let expectedTag = messageType (Proxy :: Proxy a)
   when (actualTag /= expectedTag) $ throwError $ MessageParseErrorMessageTypeMismatch actualTag expectedTag
   envelopeContents <- fromMessageFields
-  envelopeTrailer <- parseMessageTrailer
+  envelopeTrailer <- parseTrailer
   pure Envelope {..}
 
 toMessage :: forall a. (IsMessage a) => Envelope a -> Message
@@ -78,7 +60,7 @@ toMessage e'' =
               -- header already
               [ renderHeader (envelopeHeader e),
                 toMessageFields (envelopeContents e),
-                renderMessageTrailer (envelopeTrailer e)
+                renderTrailer (envelopeTrailer e)
               ]
         }
 
@@ -99,9 +81,9 @@ computeBodyLength Envelope {..} =
         concat
           [ renderHeader envelopeHeader,
             toMessageFields envelopeContents,
-            renderMessageTrailer envelopeTrailer
+            renderTrailer envelopeTrailer
           ]
-      bytesFromCheckSum = computeFieldsLength [fieldB $ messageTrailerCheckSum envelopeTrailer]
+      bytesFromCheckSum = computeFieldsLength [fieldB $ trailerCheckSum envelopeTrailer]
    in BodyLength $
         computeFieldsLength allFields
           - bytesBeforeBodyLength
@@ -125,7 +107,7 @@ fixEnvelopeCheckSum e@Envelope {..} =
             toMessageFields envelopeContents
           ]
       checkSum = computeCheckSum fieldsUntilCheckSum
-   in e {envelopeTrailer = envelopeTrailer {messageTrailerCheckSum = checkSum}}
+   in e {envelopeTrailer = envelopeTrailer {trailerCheckSum = checkSum}}
 
 computeCheckSum :: [Field] -> CheckSum
 computeCheckSum fields =

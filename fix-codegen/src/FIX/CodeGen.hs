@@ -37,6 +37,7 @@ runFixCodeGen = do
                     topLevelFieldsFile fieldSpecs
                   ],
             headerDataFile (specHeader spec),
+            trailerDataFile (specTrailer spec),
             -- Messages
             let messageSpecs = specMessages spec
              in mconcat
@@ -499,6 +500,37 @@ headerDataFile pieces =
               ]
             ]
 
+trailerDataFile :: [MessagePiece] -> CodeGen
+trailerDataFile pieces =
+  genHaskellFile "fix-spec/src/FIX/Messages/Trailer.hs" $
+    let imports = messagePiecesImports pieces
+        renderTrailerName = mkName "renderTrailer"
+        parseTrailerName = mkName "parseTrailer"
+     in unlines $
+          concat
+            [ [ "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE DeriveGeneric #-}",
+                "{-# LANGUAGE RecordWildCards #-}",
+                "",
+                "module FIX.Messages.Trailer where",
+                "",
+                "import Data.Maybe",
+                "import Data.Validity",
+                "import GHC.Generics (Generic)",
+                "import FIX.Core",
+                "import FIX.Messages.Class",
+                ""
+              ],
+              imports,
+              [ TH.pprint $ messagePiecesDataDeclaration "Trailer" pieces,
+                TH.pprint $ validityInstance (mkName "Trailer"),
+                "renderTrailer :: Trailer -> [Field]",
+                TH.pprint $ messagePiecesToFieldsFunction "Trailer" renderTrailerName pieces,
+                "parseTrailer :: MessageP Trailer",
+                TH.pprint $ messagePiecesFromFieldsFunction "Trailer" parseTrailerName pieces
+              ]
+            ]
+
 messagesClassFile :: CodeGen
 messagesClassFile = genDataFile "fix-spec/src/FIX/Messages/Class.hs"
 
@@ -579,13 +611,14 @@ messagesGenFile messageSpecs =
               "import Data.GenValidity.ByteString ()",
               "import FIX.Fields.Gen ()",
               "import FIX.Messages.Header",
+              "import FIX.Messages.Trailer",
               "import FIX.Messages.Envelope",
               ""
             ]
               : messagesImports
               : [ "",
                   "instance GenValid Header",
-                  "instance GenValid MessageTrailer",
+                  "instance GenValid Trailer",
                   "instance (GenValid a) => GenValid (Envelope a)",
                   ""
                 ]
