@@ -10,4 +10,5 @@ library:
   - bytestring
   - fix-core
   - mtl
+  - text
   - validity

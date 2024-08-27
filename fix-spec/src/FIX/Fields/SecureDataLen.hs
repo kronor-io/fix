@@ -18,7 +18,7 @@ import GHC.Generics (Generic)
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 90, fieldName = "SecureDataLen", fieldType = FieldTypeLength, fieldValues = []}
-newtype SecureDataLen = SecureDataLen {unSecureDataLen :: ByteString}
+newtype SecureDataLen = SecureDataLen {unSecureDataLen :: Word}
   deriving stock (Show, Eq, Generic)
 
 instance Validity SecureDataLen

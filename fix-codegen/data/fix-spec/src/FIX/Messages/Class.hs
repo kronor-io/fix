@@ -12,21 +12,22 @@ import Control.Monad.State
 import qualified Data.ByteString as SB
 import Data.Maybe
 import Data.Proxy
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
 import Data.Validity
+import Data.Word
 import FIX.Core
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
-import FIX.Fields.EncryptMethod
-import FIX.Fields.HeartBtInt
 import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
-import FIX.Fields.Password
 import FIX.Fields.SenderCompID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
 import FIX.Fields.TargetCompID
 import GHC.Generics (Generic)
+import Text.Printf
 
 type MessageP a = StateT [Field] (Except MessageParseError) a
 
@@ -232,4 +233,7 @@ computeCheckSum :: [Field] -> CheckSum
 computeCheckSum fields =
   let bytes = renderMessage (Message {messageFields = fields})
       w = sum $ SB.unpack bytes
-   in CheckSum w
+   in renderCheckSum w
+
+renderCheckSum :: Word8 -> CheckSum
+renderCheckSum = CheckSum . TE.encodeUtf8 . T.pack . printf "%03d"

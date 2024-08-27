@@ -10,7 +10,6 @@ import Control.Monad
 import qualified Data.ByteString as SB
 import Data.Typeable
 import FIX.Core
-import FIX.Fields.MsgType
 import FIX.Messages.Class
 import FIX.Messages.Gen ()
 import Path

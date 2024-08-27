@@ -34,16 +34,16 @@ runFixCodeGen = do
       -- Fields
       let fieldSpecs = specFields spec
       writeFieldsFiles settingOutputDir fieldSpecs
-      writeFieldsGenFile settingOutputDir fieldSpecs
-      writeFieldsSpecFile settingOutputDir fieldSpecs
+      -- writeFieldsGenFile settingOutputDir fieldSpecs
+      -- writeFieldsSpecFile settingOutputDir fieldSpecs
 
       -- Messages
       writeMessagesClassFile settingOutputDir
 
       let messageSpecs = specMessages spec
-      writeMessagesFiles settingOutputDir messageSpecs
+      -- writeMessagesFiles settingOutputDir messageSpecs
 
-      writeMessagesGenFile settingOutputDir messageSpecs
+      -- writeMessagesGenFile settingOutputDir messageSpecs
       writeMessagesTestUtilsFile settingOutputDir
       writeMessagesSpecFile settingOutputDir messageSpecs
 
@@ -94,6 +94,7 @@ writeFieldsFiles outputDir fieldSpecs = do
     let selectorName = mkName $ "un" <> T.unpack fieldName
     let typ = case fieldType of
           FieldTypeBoolean -> ConT (mkName "Bool")
+          FieldTypeLength -> ConT (mkName "Word")
           _ -> ConT (mkName "ByteString")
     let section =
           [ "-- | " <> show f,
@@ -550,7 +551,7 @@ writeMessagesSpecFile outputDir messageSpecs = do
             "",
             "module FIX.MessagesSpec where",
             "",
-            "import FIX.Core.TestUtils",
+            "import FIX.Messages.TestUtils",
             "import FIX.Messages.Gen ()",
             "import Test.Syd",
             ""

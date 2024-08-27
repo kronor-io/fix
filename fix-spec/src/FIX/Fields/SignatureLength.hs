@@ -18,7 +18,7 @@ import GHC.Generics (Generic)
 {-# ANN module ("HLint: ignore" :: String) #-}
 
 -- | FieldSpec {fieldNumber = 93, fieldName = "SignatureLength", fieldType = FieldTypeLength, fieldValues = []}
-newtype SignatureLength = SignatureLength {unSignatureLength :: ByteString}
+newtype SignatureLength = SignatureLength {unSignatureLength :: Word}
   deriving stock (Show, Eq, Generic)
 
 instance Validity SignatureLength
