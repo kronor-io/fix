@@ -14,6 +14,7 @@ data-files:
 library
   exposed-modules:
       FIX.CodeGen
+      FIX.CodeGen.Code
       FIX.CodeGen.OptParse
       FIX.CodeGen.Spec
   other-modules:
