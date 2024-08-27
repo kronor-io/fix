@@ -9,7 +9,9 @@ import qualified Data.ByteString as SB
 import Data.Typeable
 import FIX.Core
 import FIX.Messages.Class
+import FIX.Messages.Envelope
 import FIX.Messages.Gen ()
+import FIX.Messages.Header
 import Path
 import Path.IO
 import Test.Syd
@@ -35,7 +37,7 @@ messageSpec =
                 fixEnvelopeCheckSum $
                   fixEnvelopeBodyLength $
                     envelopePrototype
-                      { envelopeHeader = (envelopeHeader envelopePrototype) {messageHeaderMsgType = messageType (Proxy :: Proxy a)}
+                      { envelopeHeader = (envelopeHeader envelopePrototype) {headerMsgType = messageType (Proxy :: Proxy a)}
                       }
           let rendered = toMessage (envelope :: Envelope a)
           context (ppShow rendered) $ case fromMessage rendered of

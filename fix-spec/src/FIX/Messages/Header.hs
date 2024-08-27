@@ -7,6 +7,7 @@
 module FIX.Messages.Header where
 
 import Data.Maybe
+import Data.Validity
 import FIX.Core
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
@@ -67,6 +68,8 @@ data Header = Header
   }
   deriving stock (Show, Eq, Generic)
 
+instance Validity Header
+
 renderHeader :: Header -> [Field]
 renderHeader ((Header {..})) =
   catMaybes
@@ -97,3 +100,33 @@ renderHeader ((Header {..})) =
       optionalFieldB headerMessageEncoding,
       optionalFieldB headerLastMsgSeqNumProcessed
     ]
+
+parseHeader :: MessageP Header
+parseHeader = do
+  headerBeginString <- requiredFieldP
+  headerBodyLength <- requiredFieldP
+  headerMsgType <- requiredFieldP
+  headerSenderCompID <- requiredFieldP
+  headerTargetCompID <- requiredFieldP
+  headerOnBehalfOfCompID <- optionalFieldP
+  headerDeliverToCompID <- optionalFieldP
+  headerSecureDataLen <- optionalFieldP
+  headerSecureData <- optionalFieldP
+  headerMsgSeqNum <- requiredFieldP
+  headerSenderSubID <- optionalFieldP
+  headerSenderLocationID <- optionalFieldP
+  headerTargetSubID <- optionalFieldP
+  headerTargetLocationID <- optionalFieldP
+  headerOnBehalfOfSubID <- optionalFieldP
+  headerOnBehalfOfLocationID <- optionalFieldP
+  headerDeliverToSubID <- optionalFieldP
+  headerDeliverToLocationID <- optionalFieldP
+  headerPossDupFlag <- optionalFieldP
+  headerPossResend <- optionalFieldP
+  headerSendingTime <- requiredFieldP
+  headerOrigSendingTime <- optionalFieldP
+  headerXmlDataLen <- optionalFieldP
+  headerXmlData <- optionalFieldP
+  headerMessageEncoding <- optionalFieldP
+  headerLastMsgSeqNumProcessed <- optionalFieldP
+  pure (Header {..})

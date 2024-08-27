@@ -128,8 +128,9 @@ messageP = Message <$> many fieldP
 -- TODO Generate this?
 tagIsLen :: Tag -> Bool
 tagIsLen = \case
-  90 -> True
+  91 -> True
   96 -> True
+  213 -> True
   360 -> True
   358 -> True
   348 -> True

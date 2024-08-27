@@ -7,7 +7,8 @@ module FIX.Messages.Gen where
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
 import FIX.Fields.Gen ()
-import FIX.Messages.Class
+import FIX.Messages.Envelope
+import FIX.Messages.Header
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 

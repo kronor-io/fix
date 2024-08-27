@@ -132,11 +132,7 @@ fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
                             ConT (mkName "Generic")
                           ]
                       ],
-                InstanceD
-                  Nothing
-                  []
-                  (AppT (ConT (mkName "Validity")) (ConT constructorName))
-                  [],
+                validityInstance constructorName,
                 InstanceD
                   Nothing
                   []
@@ -386,6 +382,22 @@ messagePiecesDataDeclaration name pieces =
             ]
         ]
 
+validityInstance :: Name -> Dec
+validityInstance typeName =
+  InstanceD
+    Nothing
+    []
+    (AppT (ConT (mkName "Validity")) (ConT typeName))
+    []
+
+messagePiecesImports :: [MessagePiece] -> [String]
+messagePiecesImports =
+  mapMaybe
+    ( \case
+        MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
+        _ -> Nothing
+    )
+
 messagePiecesToFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
 messagePiecesToFieldsFunction name funName pieces =
   let recordWildCardName = mkName (T.unpack name <> "{..}")
@@ -421,19 +433,47 @@ messagePiecesToFieldsFunction name funName pieces =
             []
         ]
 
-messagePiecesImports :: [MessagePiece] -> [String]
-messagePiecesImports =
-  mapMaybe
-    ( \case
-        MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
-        _ -> Nothing
-    )
+messagePiecesFromFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
+messagePiecesFromFieldsFunction name funName pieces =
+  let recordWildCardName = mkName (T.unpack name <> "{..}")
+   in FunD
+        funName
+        [ Clause
+            []
+            ( NormalB
+                ( DoE
+                    Nothing
+                    $ concat
+                      [ mapMaybe
+                          ( \case
+                              MessagePieceField t required ->
+                                Just $
+                                  BindS
+                                    (VarP (mkFieldName name t))
+                                    ( VarE
+                                        ( mkName
+                                            ( if required
+                                                then "requiredFieldP"
+                                                else "optionalFieldP"
+                                            )
+                                        )
+                                    )
+                              _ -> Nothing
+                          )
+                          pieces,
+                        [NoBindS $ AppE (VarE (mkName "pure")) (ConE recordWildCardName)]
+                      ]
+                )
+            )
+            []
+        ]
 
 headerDataFile :: [MessagePiece] -> CodeGen
 headerDataFile pieces =
   genHaskellFile "fix-spec/src/FIX/Messages/Header.hs" $
     let imports = messagePiecesImports pieces
         renderHeaderName = mkName "renderHeader"
+        parseHeaderName = mkName "parseHeader"
      in unlines $
           concat
             [ [ "{-# LANGUAGE DerivingStrategies #-}",
@@ -443,6 +483,7 @@ headerDataFile pieces =
                 "module FIX.Messages.Header where",
                 "",
                 "import Data.Maybe",
+                "import Data.Validity",
                 "import GHC.Generics (Generic)",
                 "import FIX.Core",
                 "import FIX.Messages.Class",
@@ -450,8 +491,11 @@ headerDataFile pieces =
               ],
               imports,
               [ TH.pprint $ messagePiecesDataDeclaration "Header" pieces,
+                TH.pprint $ validityInstance (mkName "Header"),
                 "renderHeader :: Header -> [Field]",
-                TH.pprint $ messagePiecesToFieldsFunction "Header" renderHeaderName pieces
+                TH.pprint $ messagePiecesToFieldsFunction "Header" renderHeaderName pieces,
+                "parseHeader :: MessageP Header",
+                TH.pprint $ messagePiecesFromFieldsFunction "Header" parseHeaderName pieces
               ]
             ]
 
@@ -463,18 +507,12 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
   genHaskellFile ("fix-spec/src/FIX/Messages/" <> T.unpack messageName <> ".hs") $
     let constructorName = messageSpecConstructorName f
         -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
-        recordWildCardName = mkName (T.unpack messageName <> "{..}")
-        fieldName t = mkName $ lowerHead (T.unpack messageName) <> T.unpack t
 
         section =
           [ "-- | " <> show f,
             TH.pprint
               [ messagePiecesDataDeclaration messageName messagePieces,
-                InstanceD
-                  Nothing
-                  []
-                  (AppT (ConT (mkName "Validity")) (ConT constructorName))
-                  [],
+                validityInstance constructorName,
                 InstanceD
                   Nothing
                   []
@@ -487,38 +525,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                           []
                       ],
                     messagePiecesToFieldsFunction messageName (mkName "toMessageFields") messagePieces,
-                    FunD
-                      (mkName "fromMessageFields")
-                      [ Clause
-                          -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
-                          []
-                          ( NormalB
-                              ( DoE
-                                  Nothing
-                                  $ concat
-                                    [ mapMaybe
-                                        ( \case
-                                            MessagePieceField t required ->
-                                              Just $
-                                                BindS
-                                                  (VarP (fieldName t))
-                                                  ( VarE
-                                                      ( mkName
-                                                          ( if required
-                                                              then "requiredFieldP"
-                                                              else "optionalFieldP"
-                                                          )
-                                                      )
-                                                  )
-                                            _ -> Nothing
-                                        )
-                                        messagePieces,
-                                      [NoBindS $ AppE (VarE (mkName "pure")) (ConE recordWildCardName)]
-                                    ]
-                              )
-                          )
-                          []
-                      ]
+                    messagePiecesFromFieldsFunction messageName (mkName "fromMessageFields") messagePieces
                   ]
               ]
           ]
@@ -571,7 +578,8 @@ messagesGenFile messageSpecs =
               "import Data.GenValidity",
               "import Data.GenValidity.ByteString ()",
               "import FIX.Fields.Gen ()",
-              "import FIX.Messages.Class",
+              "import FIX.Messages.Header",
+              "import FIX.Messages.Envelope",
               ""
             ]
               : messagesImports

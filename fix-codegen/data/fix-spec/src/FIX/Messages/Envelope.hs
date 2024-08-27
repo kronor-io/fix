@@ -4,7 +4,6 @@
 
 module FIX.Messages.Envelope where
 
-import Control.Arrow (second)
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.State
@@ -16,15 +15,8 @@ import qualified Data.Text.Encoding as TE
 import Data.Validity
 import Data.Word
 import FIX.Core
-import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
-import FIX.Fields.MsgSeqNum
-import FIX.Fields.MsgType
-import FIX.Fields.SenderCompID
-import FIX.Fields.SenderSubID
-import FIX.Fields.SendingTime
-import FIX.Fields.TargetCompID
 import FIX.Messages.Class
 import FIX.Messages.Header
 import GHC.Generics (Generic)
