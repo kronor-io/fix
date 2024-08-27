@@ -59,6 +59,7 @@ library
       FIX.Fields.XmlData
       FIX.Fields.XmlDataLen
       FIX.Messages.Class
+      FIX.Messages.Envelope
       FIX.Messages.Header
       FIX.Messages.Heartbeat
       FIX.Messages.Logon

@@ -42,6 +42,7 @@ runFixCodeGen = do
              in mconcat
                   [ messagesClassFile,
                     messagesDataFiles messageSpecs,
+                    messagesEnvelopeFile,
                     messagesGenFile messageSpecs,
                     messagesTestUtilsFile,
                     messagesSpecFile messageSpecs
@@ -347,10 +348,12 @@ topLevelFieldsFile fieldSpecs =
 messageSpecConstructorName :: MessageSpec -> Name
 messageSpecConstructorName = mkName . T.unpack . messageName
 
-messageDataDeclaration :: Text -> [MessagePiece] -> Dec
-messageDataDeclaration name pieces =
+mkFieldName :: Text -> Text -> Name
+mkFieldName name t = mkName $ lowerHead (T.unpack name) <> T.unpack t
+
+messagePiecesDataDeclaration :: Text -> [MessagePiece] -> Dec
+messagePiecesDataDeclaration name pieces =
   let constructorName = mkName (T.unpack name)
-      fieldName t = mkName $ lowerHead (T.unpack name) <> T.unpack t
    in DataD
         []
         constructorName
@@ -362,7 +365,7 @@ messageDataDeclaration name pieces =
                 ( \case
                     MessagePieceField t required ->
                       Just
-                        ( fieldName t,
+                        ( mkFieldName name t,
                           Bang NoSourceUnpackedness SourceStrict,
                           ( if required
                               then id
@@ -383,6 +386,41 @@ messageDataDeclaration name pieces =
             ]
         ]
 
+messagePiecesToFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
+messagePiecesToFieldsFunction name funName pieces =
+  let recordWildCardName = mkName (T.unpack name <> "{..}")
+   in FunD
+        funName
+        [ Clause
+            [ConP recordWildCardName [] []]
+            ( NormalB
+                ( AppE
+                    (VarE (mkName "catMaybes"))
+                    ( ListE
+                        ( mapMaybe
+                            ( \case
+                                MessagePieceField t required ->
+                                  Just $
+                                    AppE
+                                      ( VarE
+                                          ( mkName
+                                              ( if required
+                                                  then "requiredFieldB"
+                                                  else "optionalFieldB"
+                                              )
+                                          )
+                                      )
+                                      (VarE (mkFieldName name t))
+                                _ -> Nothing
+                            )
+                            pieces
+                        )
+                    )
+                )
+            )
+            []
+        ]
+
 messagePiecesImports :: [MessagePiece] -> [String]
 messagePiecesImports =
   mapMaybe
@@ -395,18 +433,26 @@ headerDataFile :: [MessagePiece] -> CodeGen
 headerDataFile pieces =
   genHaskellFile "fix-spec/src/FIX/Messages/Header.hs" $
     let imports = messagePiecesImports pieces
+        renderHeaderName = mkName "renderHeader"
      in unlines $
           concat
             [ [ "{-# LANGUAGE DerivingStrategies #-}",
                 "{-# LANGUAGE DeriveGeneric #-}",
+                "{-# LANGUAGE RecordWildCards #-}",
                 "",
                 "module FIX.Messages.Header where",
                 "",
+                "import Data.Maybe",
                 "import GHC.Generics (Generic)",
+                "import FIX.Core",
+                "import FIX.Messages.Class",
                 ""
               ],
               imports,
-              [TH.pprint [messageDataDeclaration "Header" pieces]]
+              [ TH.pprint $ messagePiecesDataDeclaration "Header" pieces,
+                "renderHeader :: Header -> [Field]",
+                TH.pprint $ messagePiecesToFieldsFunction "Header" renderHeaderName pieces
+              ]
             ]
 
 messagesClassFile :: CodeGen
@@ -423,7 +469,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
         section =
           [ "-- | " <> show f,
             TH.pprint
-              [ messageDataDeclaration messageName messagePieces,
+              [ messagePiecesDataDeclaration messageName messagePieces,
                 InstanceD
                   Nothing
                   []
@@ -440,37 +486,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                           (NormalB (ConE (mkName ("MsgType_" <> T.unpack (T.toUpper messageName)))))
                           []
                       ],
-                    FunD
-                      (mkName "toMessageFields")
-                      [ Clause
-                          [ConP recordWildCardName [] []]
-                          ( NormalB
-                              ( AppE
-                                  (VarE (mkName "catMaybes"))
-                                  ( ListE
-                                      ( mapMaybe
-                                          ( \case
-                                              MessagePieceField t required ->
-                                                Just $
-                                                  AppE
-                                                    ( VarE
-                                                        ( mkName
-                                                            ( if required
-                                                                then "requiredFieldB"
-                                                                else "optionalFieldB"
-                                                            )
-                                                        )
-                                                    )
-                                                    (VarE (fieldName t))
-                                              _ -> Nothing
-                                          )
-                                          messagePieces
-                                      )
-                                  )
-                              )
-                          )
-                          []
-                      ],
+                    messagePiecesToFieldsFunction messageName (mkName "toMessageFields") messagePieces,
                     FunD
                       (mkName "fromMessageFields")
                       [ Clause
@@ -527,6 +543,9 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
               messagePiecesImports messagePieces,
               section
             ]
+
+messagesEnvelopeFile :: CodeGen
+messagesEnvelopeFile = genDataFile "fix-spec/src/FIX/Messages/Envelope.hs"
 
 messagesGenFile :: [MessageSpec] -> CodeGen
 messagesGenFile messageSpecs =

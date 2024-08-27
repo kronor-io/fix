@@ -1,33 +1,14 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module FIX.Messages.Class where
 
 import Control.Arrow (second)
-import Control.Monad
 import Control.Monad.Except
 import Control.Monad.State
-import qualified Data.ByteString as SB
-import Data.Maybe
 import Data.Proxy
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as TE
-import Data.Validity
-import Data.Word
 import FIX.Core
-import FIX.Fields.BeginString
-import FIX.Fields.BodyLength
-import FIX.Fields.CheckSum
-import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
-import FIX.Fields.SenderCompID
-import FIX.Fields.SenderSubID
-import FIX.Fields.SendingTime
-import FIX.Fields.TargetCompID
-import GHC.Generics (Generic)
-import Text.Printf
 
 type MessageP a = StateT [Field] (Except MessageParseError) a
 
@@ -86,154 +67,3 @@ requiredFieldB = Just . fieldB
 
 optionalFieldB :: (IsField a) => Maybe a -> Maybe Field
 optionalFieldB = (>>= requiredFieldB)
-
-data Header = Header
-  { messageHeaderBeginString :: !BeginString,
-    messageHeaderBodyLength :: !BodyLength,
-    messageHeaderMsgType :: !MsgType,
-    messageHeaderSender :: !SenderCompID,
-    messageHeaderSenderSubId :: !(Maybe SenderSubID),
-    messageHeaderTarget :: !TargetCompID,
-    messageHeaderMessageSequenceNumber :: !MsgSeqNum,
-    messageHeaderSendingTime :: !SendingTime
-  }
-  deriving (Show, Eq, Generic)
-
-instance Validity Header
-
-parseHeader :: MessageP Header
-parseHeader = do
-  messageHeaderBeginString <- requiredFieldP
-  messageHeaderBodyLength <- requiredFieldP
-  messageHeaderMsgType <- requiredFieldP
-  messageHeaderSender <- requiredFieldP
-  messageHeaderSenderSubId <- optionalFieldP
-  messageHeaderTarget <- requiredFieldP
-  messageHeaderMessageSequenceNumber <- requiredFieldP
-  messageHeaderSendingTime <- requiredFieldP
-  pure Header {..}
-
-renderHeader :: Header -> [Field]
-renderHeader Header {..} =
-  catMaybes
-    [ requiredFieldB messageHeaderBeginString,
-      requiredFieldB messageHeaderBodyLength,
-      requiredFieldB messageHeaderMsgType,
-      requiredFieldB messageHeaderSender,
-      optionalFieldB messageHeaderSenderSubId,
-      requiredFieldB messageHeaderTarget,
-      requiredFieldB messageHeaderMessageSequenceNumber,
-      requiredFieldB messageHeaderSendingTime
-    ]
-
-data MessageTrailer = MessageTrailer
-  { messageTrailerCheckSum :: !CheckSum
-  }
-  deriving (Show, Eq, Generic)
-
-instance Validity MessageTrailer
-
-parseMessageTrailer :: MessageP MessageTrailer
-parseMessageTrailer = do
-  messageTrailerCheckSum <- requiredFieldP
-  pure MessageTrailer {..}
-
-renderMessageTrailer :: MessageTrailer -> [Field]
-renderMessageTrailer MessageTrailer {..} =
-  catMaybes
-    [ requiredFieldB messageTrailerCheckSum
-    ]
-
-data Envelope a = Envelope
-  { envelopeHeader :: Header,
-    envelopeContents :: a,
-    envelopeTrailer :: MessageTrailer
-  }
-  deriving (Show, Eq, Generic)
-
-instance (Validity a) => Validity (Envelope a)
-
-fromMessage ::
-  forall a.
-  (IsMessage a) =>
-  Message ->
-  Either MessageParseError (Envelope a)
-fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
-  -- TODO consider erroring on unexpected fields?
-  envelopeHeader <- parseHeader
-  let actualTag = messageHeaderMsgType envelopeHeader
-  let expectedTag = messageType (Proxy :: Proxy a)
-  when (actualTag /= expectedTag) $ throwError $ MessageParseErrorMessageTypeMismatch actualTag expectedTag
-  envelopeContents <- fromMessageFields
-  envelopeTrailer <- parseMessageTrailer
-  pure Envelope {..}
-
-toMessage :: forall a. (IsMessage a) => Envelope a -> Message
-toMessage e'' =
-  let h = (envelopeHeader e'') {messageHeaderMsgType = messageType (Proxy :: Proxy a)}
-      e' = e'' {envelopeHeader = h}
-      e = fixEnvelopeCheckSum $ fixEnvelopeBodyLength e'
-   in Message
-        { messageFields =
-            concat
-              -- TODO figure out what to do about the message type being in the
-              -- header already
-              [ renderHeader (envelopeHeader e),
-                toMessageFields (envelopeContents e),
-                renderMessageTrailer (envelopeTrailer e)
-              ]
-        }
-
--- Has to happen _before_ fixEnvelopeCheckSum
-fixEnvelopeBodyLength :: (IsMessage a) => Envelope a -> Envelope a
-fixEnvelopeBodyLength e =
-  let bodyLength = computeBodyLength e
-   in e {envelopeHeader = (envelopeHeader e) {messageHeaderBodyLength = bodyLength}}
-
-computeBodyLength :: (IsMessage a) => Envelope a -> BodyLength
-computeBodyLength Envelope {..} =
-  let bytesBeforeBodyLength =
-        computeFieldsLength
-          [ fieldB $ messageHeaderBeginString envelopeHeader,
-            fieldB $ messageHeaderBodyLength envelopeHeader
-          ]
-      allFields =
-        concat
-          [ renderHeader envelopeHeader,
-            toMessageFields envelopeContents,
-            renderMessageTrailer envelopeTrailer
-          ]
-      bytesFromCheckSum = computeFieldsLength [fieldB $ messageTrailerCheckSum envelopeTrailer]
-   in BodyLength $
-        computeFieldsLength allFields
-          - bytesBeforeBodyLength
-          - bytesFromCheckSum
-
-computeFieldsLength :: [Field] -> Word
-computeFieldsLength fields =
-  let bytes = renderMessage (Message {messageFields = fields})
-   in fromIntegral $ SB.length bytes
-
-fixEnvelopeCheckSum ::
-  (IsMessage a) =>
-  Envelope a ->
-  Envelope a
-fixEnvelopeCheckSum e@Envelope {..} =
-  let fieldsUntilCheckSum =
-        concat
-          -- TODO figure out what to do about the message type being in the
-          -- header already
-          [ renderHeader envelopeHeader,
-            toMessageFields envelopeContents
-          ]
-      checkSum = computeCheckSum fieldsUntilCheckSum
-   in e {envelopeTrailer = envelopeTrailer {messageTrailerCheckSum = checkSum}}
-
-computeCheckSum :: [Field] -> CheckSum
-computeCheckSum fields =
-  let bytes = renderMessage (Message {messageFields = fields})
-      w = sum $ SB.unpack bytes
-   in renderCheckSum w
-
-renderCheckSum :: Word8 -> CheckSum
-renderCheckSum = CheckSum . SimpleBytes . TE.encodeUtf8 . T.pack . printf "%03d"
