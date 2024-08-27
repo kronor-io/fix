@@ -22,7 +22,6 @@ import Data.Validity.ByteString ()
 import Data.Validity.Text ()
 import Data.Validity.Time ()
 import Data.Void
-import Data.Word
 import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte
@@ -173,14 +172,14 @@ class IsFieldType a where
   toValue :: a -> ByteString
   fromValue :: ByteString -> Either String a
 
-instance IsFieldType Bool where
-  toValue = \case
-    True -> "Y"
-    False -> "N"
-  fromValue = \case
-    "Y" -> Right True
-    "N" -> Right False
-    s -> Left $ "Could not Read Bool: " <> show s
+-- instance IsFieldType Bool where
+--   toValue = \case
+--     True -> "Y"
+--     False -> "N"
+--   fromValue = \case
+--     "Y" -> Right True
+--     "N" -> Right False
+--     s -> Left $ "Could not Read Bool: " <> show s
 
 instance IsFieldType ByteString where
   toValue = id
@@ -226,14 +225,6 @@ instance IsFieldType SimpleBytes where
   fromValue = prettyValidate . SimpleBytes
 
 instance IsFieldType Word where
-  toValue = TE.encodeUtf8 . T.pack . show
-  fromValue sb =
-    let s = T.unpack $ TE.decodeLatin1 sb
-     in case readMaybe s of
-          Nothing -> Left $ "Could not Read Word from String: " <> show s
-          Just w -> Right w
-
-instance IsFieldType Word8 where
   toValue = TE.encodeUtf8 . T.pack . show
   fromValue sb =
     let s = T.unpack $ TE.decodeLatin1 sb

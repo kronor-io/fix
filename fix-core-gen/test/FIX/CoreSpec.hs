@@ -38,11 +38,11 @@ spec = do
     fieldTypeSpec @Int
   describe "Word" $ do
     fieldTypeSpec @Word
-  describe "UTCTime" $ do
+  describe "UTCTimestamp" $ do
     fieldTypeExampleSpec
       "20190605-11:57:29.363"
-      (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.363)))
+      (UTCTimestamp (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.363))))
     fieldTypeExampleSpec
       "20190605-11:57:29.360"
-      (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.360)))
-    fieldTypeSpec @UTCTime
+      (UTCTimestamp (UTCTime (fromGregorian 2019 06 05) (timeOfDayToTime (TimeOfDay 11 57 29.360))))
+    fieldTypeSpec @UTCTimestamp

@@ -3,13 +3,44 @@
 module FIX.CodeGen.Code where
 
 import Data.Char as Char
+import Data.Map (Map)
+import qualified Data.Map as M
 import Path
 import Path.IO
 import Paths_fix_codegen (getDataDir)
 import System.Process
+import UnliftIO
 
-copyDataFile :: Path Abs Dir -> FilePath -> IO ()
-copyDataFile outputDir filePath = do
+newtype CodeGen = CodeGen {unCodeGen :: Map FilePath GenContents}
+
+data GenContents
+  = GenHaskell !String
+  | GenHaskellDataFile
+
+instance Semigroup CodeGen where
+  (<>) (CodeGen m1) (CodeGen m2) = CodeGen (M.union m1 m2)
+
+instance Monoid CodeGen where
+  mempty = CodeGen M.empty
+  mappend = (<>)
+
+genHaskellFile :: FilePath -> String -> CodeGen
+genHaskellFile fp contents = CodeGen $ M.singleton fp $ GenHaskell contents
+
+genDataFile :: FilePath -> CodeGen
+genDataFile fp = CodeGen $ M.singleton fp GenHaskellDataFile
+
+-- We run all the IO here so that we can maximally use concurrency and only pass in the ouputDir once.
+runCodeGen :: Path Abs Dir -> CodeGen -> IO ()
+runCodeGen outputDir (CodeGen m) =
+  forConcurrently_ (M.toList m) $ \(fp, gc) -> case gc of
+    GenHaskell contents -> do
+      af <- resolveFile outputDir fp
+      writeHaskellCode af contents
+    GenHaskellDataFile -> copyHaskellDataFile outputDir fp
+
+copyHaskellDataFile :: Path Abs Dir -> FilePath -> IO ()
+copyHaskellDataFile outputDir filePath = do
   dataDir <- getDataDir >>= resolveDir'
   fromFile <- resolveFile dataDir $ "data/" <> filePath
   contents <- readFile (fromAbsFile fromFile)
