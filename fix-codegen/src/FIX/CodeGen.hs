@@ -42,6 +42,7 @@ runFixCodeGen = do
       let messageSpecs = specMessages spec
       writeMessagesFile settingOutputDir messageSpecs
       writeMessagesGenFile settingOutputDir messageSpecs
+      writeMessagesSpecFile settingOutputDir messageSpecs
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
 filterSpec Nothing spec = spec
@@ -521,6 +522,40 @@ writeMessagesGenFile outputDir messageSpecs = do
         ]
           : messagesImports
           : sections
+
+writeMessagesSpecFile :: Path Abs Dir -> [MessageSpec] -> IO ()
+writeMessagesSpecFile outputDir messageSpecs = do
+  messagesSpecFile <- resolveFile outputDir "fix-spec-gen/test/FIX/MessagesSpec.hs"
+  let imports =
+        map
+          ( \f ->
+              "import FIX.Messages." <> T.unpack (messageName f)
+          )
+          messageSpecs
+  statements <- forM messageSpecs $ \f -> do
+    let constructorName = messageSpecConstructorName f
+    pure $ NoBindS (AppTypeE (VarE (mkName "messageSpec")) (ConT constructorName))
+
+  writeHaskellCode messagesSpecFile $
+    unlines $
+      concat
+        [ [ "{-# OPTIONS_GHC -Wno-orphans #-}",
+            "{-# LANGUAGE TypeApplications #-}",
+            "",
+            "module FIX.MessagesSpec where",
+            "",
+            "import FIX.Core.TestUtils",
+            "import FIX.Messages.Gen ()",
+            "import Test.Syd",
+            ""
+          ],
+          imports,
+          [ TH.pprint
+              [ SigD (mkName "spec") (ConT (mkName "Spec")),
+                FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
+              ]
+          ]
+        ]
 
 writeHaskellCode :: Path Abs File -> String -> IO ()
 writeHaskellCode f source = do

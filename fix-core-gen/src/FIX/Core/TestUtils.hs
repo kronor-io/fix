@@ -9,6 +9,7 @@ module FIX.Core.TestUtils
     fieldTypeExampleSpec,
     fieldSpec,
     messageSpec,
+    goldenMessageSpec,
   )
 where
 
@@ -101,9 +102,8 @@ messageSpec ::
     Typeable a,
     IsMessage MessageType a
   ) =>
-  FilePath ->
   Spec
-messageSpec dir =
+messageSpec =
   describe (nameOf @a) $ do
     genValidSpec @a
     describe "fromMessage" $ do
@@ -129,25 +129,34 @@ messageSpec dir =
       it "renders to valid messages" $
         producesValid (toMessage :: Envelope a -> Message)
 
-    scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
-      af <- resolveFile' fp
-      when (fileExtension af == Just ".tagvalue") $
-        it "can parse this message and roundtrip it" $ do
-          contents <- SB.readFile (fromAbsFile af)
-          case parseMessage contents of
-            Left err -> expectationFailure err
-            Right message -> case fromMessage message of
-              Left parseErr ->
-                expectationFailure $
-                  unlines
-                    [ "Could not parse message envelope from untyped message:",
-                      show parseErr
-                    ]
-              Right a -> do
-                shouldBeValid (a :: Envelope a)
-                let renderedMessage = toMessage a
-                shouldBeValid renderedMessage
-                renderedMessage `shouldBe` message
-                let renderedBytes = renderMessage renderedMessage
-                shouldBeValid renderedBytes
-                renderedBytes `shouldBe` contents
+goldenMessageSpec ::
+  forall a.
+  ( Show a,
+    GenValid a,
+    IsMessage MessageType a
+  ) =>
+  FilePath ->
+  Spec
+goldenMessageSpec dir =
+  scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
+    af <- resolveFile' fp
+    when (fileExtension af == Just ".tagvalue") $
+      it "can parse this message and roundtrip it" $ do
+        contents <- SB.readFile (fromAbsFile af)
+        case parseMessage contents of
+          Left err -> expectationFailure err
+          Right message -> case fromMessage message of
+            Left parseErr ->
+              expectationFailure $
+                unlines
+                  [ "Could not parse message envelope from untyped message:",
+                    show parseErr
+                  ]
+            Right a -> do
+              shouldBeValid (a :: Envelope a)
+              let renderedMessage = toMessage a
+              shouldBeValid renderedMessage
+              renderedMessage `shouldBe` message
+              let renderedBytes = renderMessage renderedMessage
+              shouldBeValid renderedBytes
+              renderedBytes `shouldBe` contents
