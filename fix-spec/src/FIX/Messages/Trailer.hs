@@ -8,11 +8,10 @@ module FIX.Messages.Trailer where
 
 import Data.Maybe
 import Data.Validity
-import FIX.Core
+import FIX.Components.Class
 import FIX.Fields.CheckSum
 import FIX.Fields.Signature
 import FIX.Fields.SignatureLength
-import FIX.Messages.Class
 import GHC.Generics (Generic)
 
 data Trailer = Trailer
@@ -24,17 +23,15 @@ data Trailer = Trailer
 
 instance Validity Trailer
 
-renderTrailer :: Trailer -> [Field]
-renderTrailer ((Trailer {..})) =
-  catMaybes
-    [ optionalFieldB trailerSignatureLength,
-      optionalFieldB trailerSignature,
-      requiredFieldB trailerCheckSum
-    ]
-
-parseTrailer :: MessageP Trailer
-parseTrailer = do
-  trailerSignatureLength <- optionalFieldP
-  trailerSignature <- optionalFieldP
-  trailerCheckSum <- requiredFieldP
-  pure (Trailer {..})
+instance IsComponent Trailer where
+  toComponentFields ((Trailer {..})) =
+    catMaybes
+      [ optionalFieldB trailerSignatureLength,
+        optionalFieldB trailerSignature,
+        requiredFieldB trailerCheckSum
+      ]
+  fromComponentFields = do
+    trailerSignatureLength <- optionalFieldP
+    trailerSignature <- optionalFieldP
+    trailerCheckSum <- requiredFieldP
+    pure (Trailer {..})

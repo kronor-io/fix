@@ -10,6 +10,7 @@ build-type:     Simple
 
 library
   exposed-modules:
+      FIX.Components.Class
       FIX.Messages.Class
       FIX.Messages.Envelope
   other-modules:

@@ -43,6 +43,7 @@ runFixCodeGen = do
                   ],
             headerDataFile (specHeader spec),
             trailerDataFile (specTrailer spec),
+            genHaskellDataFile "fix-spec/src/FIX/Components/Class.hs",
             -- Messages
             let messageSpecs = specMessages spec
              in mconcat
@@ -484,12 +485,20 @@ messagePiecesFromFieldsFunction name funName pieces =
             []
         ]
 
+messagePiecesIsComponentInstance :: Text -> [MessagePiece] -> Dec
+messagePiecesIsComponentInstance name pieces =
+  InstanceD
+    Nothing
+    []
+    (AppT (ConT (mkName "IsComponent")) (ConT (mkName (T.unpack name))))
+    [ messagePiecesToFieldsFunction name (mkName "toComponentFields") pieces,
+      messagePiecesFromFieldsFunction name (mkName "fromComponentFields") pieces
+    ]
+
 headerDataFile :: [MessagePiece] -> CodeGen
 headerDataFile pieces =
   genHaskellFile "fix-spec/src/FIX/Messages/Header.hs" $
     let imports = messagePiecesImports pieces
-        renderHeaderName = mkName "renderHeader"
-        parseHeaderName = mkName "parseHeader"
      in unlines $
           concat
             [ [ "{-# LANGUAGE DerivingStrategies #-}",
@@ -501,17 +510,13 @@ headerDataFile pieces =
                 "import Data.Maybe",
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
-                "import FIX.Core",
-                "import FIX.Messages.Class",
+                "import FIX.Components.Class",
                 ""
               ],
               imports,
               [ TH.pprint $ messagePiecesDataDeclaration "Header" pieces,
                 TH.pprint $ validityInstance (mkName "Header"),
-                "renderHeader :: Header -> [Field]",
-                TH.pprint $ messagePiecesToFieldsFunction "Header" renderHeaderName pieces,
-                "parseHeader :: MessageP Header",
-                TH.pprint $ messagePiecesFromFieldsFunction "Header" parseHeaderName pieces
+                TH.pprint $ messagePiecesIsComponentInstance "Header" pieces
               ]
             ]
 
@@ -519,8 +524,6 @@ trailerDataFile :: [MessagePiece] -> CodeGen
 trailerDataFile pieces =
   genHaskellFile "fix-spec/src/FIX/Messages/Trailer.hs" $
     let imports = messagePiecesImports pieces
-        renderTrailerName = mkName "renderTrailer"
-        parseTrailerName = mkName "parseTrailer"
      in unlines $
           concat
             [ [ "{-# LANGUAGE DerivingStrategies #-}",
@@ -532,17 +535,13 @@ trailerDataFile pieces =
                 "import Data.Maybe",
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
-                "import FIX.Core",
-                "import FIX.Messages.Class",
+                "import FIX.Components.Class",
                 ""
               ],
               imports,
               [ TH.pprint $ messagePiecesDataDeclaration "Trailer" pieces,
                 TH.pprint $ validityInstance (mkName "Trailer"),
-                "renderTrailer :: Trailer -> [Field]",
-                TH.pprint $ messagePiecesToFieldsFunction "Trailer" renderTrailerName pieces,
-                "parseTrailer :: MessageP Trailer",
-                TH.pprint $ messagePiecesFromFieldsFunction "Trailer" parseTrailerName pieces
+                TH.pprint $ messagePiecesIsComponentInstance "Trailer" pieces
               ]
             ]
 
@@ -557,6 +556,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
             TH.pprint
               [ messagePiecesDataDeclaration messageName messagePieces,
                 validityInstance constructorName,
+                messagePiecesIsComponentInstance messageName messagePieces,
                 InstanceD
                   Nothing
                   []
@@ -567,9 +567,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                           [VarP (mkName "Proxy")]
                           (NormalB (ConE (mkTwoPartConstructorName "MsgType" messageName)))
                           []
-                      ],
-                    messagePiecesToFieldsFunction messageName (mkName "toMessageFields") messagePieces,
-                    messagePiecesFromFieldsFunction messageName (mkName "fromMessageFields") messagePieces
+                      ]
                   ]
               ]
           ]
@@ -584,6 +582,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                 "module FIX.Messages." <> T.unpack messageName <> " where",
                 "",
                 "import Data.Validity",
+                "import FIX.Components.Class",
                 "import FIX.Messages.Class",
                 "import FIX.Fields.MsgType",
                 "import GHC.Generics (Generic)",

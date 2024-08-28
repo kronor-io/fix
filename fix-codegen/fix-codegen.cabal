@@ -18,6 +18,7 @@ data-files:
     data/fix-spec/default.nix
     data/fix-spec/fix-spec.cabal
     data/fix-spec/package.yaml
+    data/fix-spec/src/FIX/Components/Class.hs
     data/fix-spec/src/FIX/Messages/Class.hs
     data/fix-spec/src/FIX/Messages/Envelope.hs
 
@@ -33,7 +34,6 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , casing
     , containers
     , opt-env-conf
     , path

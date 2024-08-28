@@ -11,6 +11,7 @@ module FIX.Messages.Heartbeat where
 import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
+import FIX.Components.Class
 import FIX.Fields.MsgType
 import FIX.Fields.TestReqID
 import FIX.Messages.Class
@@ -22,9 +23,11 @@ data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
 
 instance Validity Heartbeat
 
-instance IsMessage Heartbeat where
-  messageType Proxy = MsgTypeHeartbeat
-  toMessageFields ((Heartbeat {..})) = catMaybes [optionalFieldB heartbeatTestReqID]
-  fromMessageFields = do
+instance IsComponent Heartbeat where
+  toComponentFields ((Heartbeat {..})) = catMaybes [optionalFieldB heartbeatTestReqID]
+  fromComponentFields = do
     heartbeatTestReqID <- optionalFieldP
     pure (Heartbeat {..})
+
+instance IsMessage Heartbeat where
+  messageType Proxy = MsgTypeHeartbeat

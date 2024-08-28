@@ -8,7 +8,7 @@ module FIX.Messages.Header where
 
 import Data.Maybe
 import Data.Validity
-import FIX.Core
+import FIX.Components.Class
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
 import FIX.Fields.DeliverToCompID
@@ -35,7 +35,6 @@ import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
 import FIX.Fields.XmlData
 import FIX.Fields.XmlDataLen
-import FIX.Messages.Class
 import GHC.Generics (Generic)
 
 data Header = Header
@@ -70,63 +69,61 @@ data Header = Header
 
 instance Validity Header
 
-renderHeader :: Header -> [Field]
-renderHeader ((Header {..})) =
-  catMaybes
-    [ requiredFieldB headerBeginString,
-      requiredFieldB headerBodyLength,
-      requiredFieldB headerMsgType,
-      requiredFieldB headerSenderCompID,
-      requiredFieldB headerTargetCompID,
-      optionalFieldB headerOnBehalfOfCompID,
-      optionalFieldB headerDeliverToCompID,
-      optionalFieldB headerSecureDataLen,
-      optionalFieldB headerSecureData,
-      requiredFieldB headerMsgSeqNum,
-      optionalFieldB headerSenderSubID,
-      optionalFieldB headerSenderLocationID,
-      optionalFieldB headerTargetSubID,
-      optionalFieldB headerTargetLocationID,
-      optionalFieldB headerOnBehalfOfSubID,
-      optionalFieldB headerOnBehalfOfLocationID,
-      optionalFieldB headerDeliverToSubID,
-      optionalFieldB headerDeliverToLocationID,
-      optionalFieldB headerPossDupFlag,
-      optionalFieldB headerPossResend,
-      requiredFieldB headerSendingTime,
-      optionalFieldB headerOrigSendingTime,
-      optionalFieldB headerXmlDataLen,
-      optionalFieldB headerXmlData,
-      optionalFieldB headerMessageEncoding,
-      optionalFieldB headerLastMsgSeqNumProcessed
-    ]
-
-parseHeader :: MessageP Header
-parseHeader = do
-  headerBeginString <- requiredFieldP
-  headerBodyLength <- requiredFieldP
-  headerMsgType <- requiredFieldP
-  headerSenderCompID <- requiredFieldP
-  headerTargetCompID <- requiredFieldP
-  headerOnBehalfOfCompID <- optionalFieldP
-  headerDeliverToCompID <- optionalFieldP
-  headerSecureDataLen <- optionalFieldP
-  headerSecureData <- optionalFieldP
-  headerMsgSeqNum <- requiredFieldP
-  headerSenderSubID <- optionalFieldP
-  headerSenderLocationID <- optionalFieldP
-  headerTargetSubID <- optionalFieldP
-  headerTargetLocationID <- optionalFieldP
-  headerOnBehalfOfSubID <- optionalFieldP
-  headerOnBehalfOfLocationID <- optionalFieldP
-  headerDeliverToSubID <- optionalFieldP
-  headerDeliverToLocationID <- optionalFieldP
-  headerPossDupFlag <- optionalFieldP
-  headerPossResend <- optionalFieldP
-  headerSendingTime <- requiredFieldP
-  headerOrigSendingTime <- optionalFieldP
-  headerXmlDataLen <- optionalFieldP
-  headerXmlData <- optionalFieldP
-  headerMessageEncoding <- optionalFieldP
-  headerLastMsgSeqNumProcessed <- optionalFieldP
-  pure (Header {..})
+instance IsComponent Header where
+  toComponentFields ((Header {..})) =
+    catMaybes
+      [ requiredFieldB headerBeginString,
+        requiredFieldB headerBodyLength,
+        requiredFieldB headerMsgType,
+        requiredFieldB headerSenderCompID,
+        requiredFieldB headerTargetCompID,
+        optionalFieldB headerOnBehalfOfCompID,
+        optionalFieldB headerDeliverToCompID,
+        optionalFieldB headerSecureDataLen,
+        optionalFieldB headerSecureData,
+        requiredFieldB headerMsgSeqNum,
+        optionalFieldB headerSenderSubID,
+        optionalFieldB headerSenderLocationID,
+        optionalFieldB headerTargetSubID,
+        optionalFieldB headerTargetLocationID,
+        optionalFieldB headerOnBehalfOfSubID,
+        optionalFieldB headerOnBehalfOfLocationID,
+        optionalFieldB headerDeliverToSubID,
+        optionalFieldB headerDeliverToLocationID,
+        optionalFieldB headerPossDupFlag,
+        optionalFieldB headerPossResend,
+        requiredFieldB headerSendingTime,
+        optionalFieldB headerOrigSendingTime,
+        optionalFieldB headerXmlDataLen,
+        optionalFieldB headerXmlData,
+        optionalFieldB headerMessageEncoding,
+        optionalFieldB headerLastMsgSeqNumProcessed
+      ]
+  fromComponentFields = do
+    headerBeginString <- requiredFieldP
+    headerBodyLength <- requiredFieldP
+    headerMsgType <- requiredFieldP
+    headerSenderCompID <- requiredFieldP
+    headerTargetCompID <- requiredFieldP
+    headerOnBehalfOfCompID <- optionalFieldP
+    headerDeliverToCompID <- optionalFieldP
+    headerSecureDataLen <- optionalFieldP
+    headerSecureData <- optionalFieldP
+    headerMsgSeqNum <- requiredFieldP
+    headerSenderSubID <- optionalFieldP
+    headerSenderLocationID <- optionalFieldP
+    headerTargetSubID <- optionalFieldP
+    headerTargetLocationID <- optionalFieldP
+    headerOnBehalfOfSubID <- optionalFieldP
+    headerOnBehalfOfLocationID <- optionalFieldP
+    headerDeliverToSubID <- optionalFieldP
+    headerDeliverToLocationID <- optionalFieldP
+    headerPossDupFlag <- optionalFieldP
+    headerPossResend <- optionalFieldP
+    headerSendingTime <- requiredFieldP
+    headerOrigSendingTime <- optionalFieldP
+    headerXmlDataLen <- optionalFieldP
+    headerXmlData <- optionalFieldP
+    headerMessageEncoding <- optionalFieldP
+    headerLastMsgSeqNumProcessed <- optionalFieldP
+    pure (Header {..})

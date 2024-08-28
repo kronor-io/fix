@@ -11,6 +11,7 @@ module FIX.Messages.Logon where
 import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
+import FIX.Components.Class
 import FIX.Fields.EncryptMethod
 import FIX.Fields.HeartBtInt
 import FIX.Fields.MaxMessageSize
@@ -42,9 +43,8 @@ data Logon = Logon
 
 instance Validity Logon
 
-instance IsMessage Logon where
-  messageType Proxy = MsgTypeLogon
-  toMessageFields ((Logon {..})) =
+instance IsComponent Logon where
+  toComponentFields ((Logon {..})) =
     catMaybes
       [ requiredFieldB logonEncryptMethod,
         requiredFieldB logonHeartBtInt,
@@ -57,7 +57,7 @@ instance IsMessage Logon where
         optionalFieldB logonUsername,
         optionalFieldB logonPassword
       ]
-  fromMessageFields = do
+  fromComponentFields = do
     logonEncryptMethod <- requiredFieldP
     logonHeartBtInt <- requiredFieldP
     logonRawDataLength <- optionalFieldP
@@ -69,3 +69,6 @@ instance IsMessage Logon where
     logonUsername <- optionalFieldP
     logonPassword <- optionalFieldP
     pure (Logon {..})
+
+instance IsMessage Logon where
+  messageType Proxy = MsgTypeLogon

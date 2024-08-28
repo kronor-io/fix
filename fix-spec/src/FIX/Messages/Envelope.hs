@@ -15,6 +15,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import Data.Validity
 import Data.Word
+import FIX.Components.Class
 import FIX.Core
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
@@ -33,18 +34,30 @@ data Envelope a = Envelope
 
 instance (Validity a) => Validity (Envelope a)
 
+renderHeader :: Header -> [Field]
+renderHeader = toComponentFields
+
+renderTrailer :: Trailer -> [Field]
+renderTrailer = toComponentFields
+
+parseHeader :: ComponentP Header
+parseHeader = fromComponentFields
+
+parseTrailer :: ComponentP Trailer
+parseTrailer = fromComponentFields
+
 fromMessage ::
   forall a.
   (IsMessage a) =>
   Message ->
-  Either MessageParseError (Envelope a)
+  Either ComponentParseError (Envelope a)
 fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
   -- TODO consider erroring on unexpected fields?
   envelopeHeader <- parseHeader
   let actualTag = headerMsgType envelopeHeader
   let expectedTag = messageType (Proxy :: Proxy a)
-  when (actualTag /= expectedTag) $ throwError $ MessageParseErrorMessageTypeMismatch actualTag expectedTag
-  envelopeContents <- fromMessageFields
+  when (actualTag /= expectedTag) $ throwError $ ComponentParseErrorMsgTypeMismatch actualTag expectedTag
+  envelopeContents <- fromComponentFields
   envelopeTrailer <- parseTrailer
   pure Envelope {..}
 
@@ -59,7 +72,7 @@ toMessage e'' =
               -- TODO figure out what to do about the message type being in the
               -- header already
               [ renderHeader (envelopeHeader e),
-                toMessageFields (envelopeContents e),
+                toComponentFields (envelopeContents e),
                 renderTrailer (envelopeTrailer e)
               ]
         }
@@ -80,7 +93,7 @@ computeBodyLength Envelope {..} =
       allFields =
         concat
           [ renderHeader envelopeHeader,
-            toMessageFields envelopeContents,
+            toComponentFields envelopeContents,
             renderTrailer envelopeTrailer
           ]
       bytesFromCheckSum = computeFieldsLength [fieldB $ trailerCheckSum envelopeTrailer]
@@ -104,7 +117,7 @@ fixEnvelopeCheckSum e@Envelope {..} =
           -- TODO figure out what to do about the message type being in the
           -- header already
           [ renderHeader envelopeHeader,
-            toMessageFields envelopeContents
+            toComponentFields envelopeContents
           ]
       checkSum = computeCheckSum fieldsUntilCheckSum
    in e {envelopeTrailer = envelopeTrailer {trailerCheckSum = checkSum}}
