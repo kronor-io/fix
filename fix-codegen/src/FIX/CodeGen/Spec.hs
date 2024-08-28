@@ -26,9 +26,10 @@ import Text.Read
 import Text.XML as XML
 
 data Spec = Spec
-  { specHeader :: ![MessagePiece],
-    specFields :: ![FieldSpec],
+  { specFields :: ![FieldSpec],
+    specHeader :: ![MessagePiece],
     specTrailer :: ![MessagePiece],
+    specComponents :: ![ComponentSpec],
     specMessages :: ![MessageSpec]
   }
 
@@ -36,14 +37,17 @@ parseSpec :: Document -> Maybe Spec
 parseSpec doc = do
   let rootElements = subElements $ documentRoot doc
 
-  headerElement <- find ((== "header") . elementName) rootElements
-  specHeader <- mapM parseMessagePiece $ subElements headerElement
-
   fieldsElement <- find ((== "fields") . elementName) rootElements
   specFields <- mapM parseFieldSpec $ subElements fieldsElement
 
+  headerElement <- find ((== "header") . elementName) rootElements
+  specHeader <- mapM parseMessagePiece $ subElements headerElement
+
   trailerElement <- find ((== "trailer") . elementName) rootElements
   specTrailer <- mapM parseMessagePiece $ subElements trailerElement
+
+  componentsElement <- find ((== "components") . elementName) rootElements
+  specComponents <- mapM parseComponentSpec $ subElements componentsElement
 
   messagesElement <- find ((== "messages") . elementName) rootElements
   specMessages <- mapM parseMessageSpec $ subElements messagesElement
@@ -67,6 +71,19 @@ parseMessageSpec e@Element {..} = do
   messagePieces <- mapM parseMessagePiece $ subElements e
 
   pure MessageSpec {..}
+
+data ComponentSpec = ComponentSpec
+  { componentName :: !Text,
+    componentPieces :: ![MessagePiece]
+  }
+
+parseComponentSpec :: Element -> Maybe ComponentSpec
+parseComponentSpec e@Element {..} = do
+  guard $ elementName == "component"
+  componentName <- M.lookup "name" elementAttributes
+  componentPieces <- mapM parseMessagePiece $ subElements e
+
+  pure ComponentSpec {..}
 
 data MessagePiece
   = MessagePieceField !Text !Bool
