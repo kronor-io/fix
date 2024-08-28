@@ -69,9 +69,11 @@
           name = "test-coverage-report";
           packages = [
             "fix-core"
+            "fix-spec"
           ];
           coverage = [
             "fix-core-gen"
+            "fix-spec-gen"
           ];
         };
         weeder-check = pkgs.weeder-nix.makeWeederCheck {
