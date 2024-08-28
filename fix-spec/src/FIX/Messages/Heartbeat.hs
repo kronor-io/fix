@@ -17,7 +17,12 @@ import FIX.Fields.TestReqID
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
--- | MessageSpec {messageName = "Heartbeat", messageType = "0", messageCategory = "admin", messagePieces = [MessagePieceField "TestReqID" False]}
+-- | MessageSpec
+--   { messageName = "Heartbeat"
+--   , messageType = "0"
+--   , messageCategory = "admin"
+--   , messagePieces = [ MessagePieceField "TestReqID" False ]
+--   }
 data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
   deriving stock (Show, Eq, Generic)
 

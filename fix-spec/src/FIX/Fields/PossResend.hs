@@ -17,7 +17,17 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 97, fieldName = "PossResend", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
+-- | FieldSpec
+--   { fieldNumber = 97
+--   , fieldName = "PossResend"
+--   , fieldType = FieldTypeBoolean
+--   , fieldValues =
+--       [ FieldValueSpec
+--           { fieldValueEnum = "Y" , fieldValueDescription = "YES" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "N" , fieldValueDescription = "NO" }
+--       ]
+--   }
 data PossResend
   = PossResendYes
   | PossResendNo

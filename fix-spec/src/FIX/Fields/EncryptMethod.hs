@@ -17,7 +17,27 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 98, fieldName = "EncryptMethod", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NONE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PKCS"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "DES"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "PKCSDES"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "PGPDES"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PGPDESMD5"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "PEM"}]}
+-- | FieldSpec
+--   { fieldNumber = 98
+--   , fieldName = "EncryptMethod"
+--   , fieldType = FieldTypeInt
+--   , fieldValues =
+--       [ FieldValueSpec
+--           { fieldValueEnum = "0" , fieldValueDescription = "NONE" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "1" , fieldValueDescription = "PKCS" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "2" , fieldValueDescription = "DES" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "3" , fieldValueDescription = "PKCSDES" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "4" , fieldValueDescription = "PGPDES" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "5" , fieldValueDescription = "PGPDESMD5" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "6" , fieldValueDescription = "PEM" }
+--       ]
+--   }
 data EncryptMethod
   = EncryptMethodNone
   | EncryptMethodPkcs

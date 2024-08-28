@@ -26,7 +26,29 @@ import FIX.Fields.Username
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
--- | MessageSpec {messageName = "Logon", messageType = "A", messageCategory = "admin", messagePieces = [MessagePieceField "EncryptMethod" True,MessagePieceField "HeartBtInt" True,MessagePieceField "RawDataLength" False,MessagePieceField "RawData" False,MessagePieceField "ResetSeqNumFlag" False,MessagePieceField "NextExpectedMsgSeqNum" False,MessagePieceField "MaxMessageSize" False,MessagePieceGroup "NoMsgTypes" False [MessagePieceField "RefMsgType" False,MessagePieceField "MsgDirection" False],MessagePieceField "TestMessageIndicator" False,MessagePieceField "Username" False,MessagePieceField "Password" False]}
+-- | MessageSpec
+--   { messageName = "Logon"
+--   , messageType = "A"
+--   , messageCategory = "admin"
+--   , messagePieces =
+--       [ MessagePieceField "EncryptMethod" True
+--       , MessagePieceField "HeartBtInt" True
+--       , MessagePieceField "RawDataLength" False
+--       , MessagePieceField "RawData" False
+--       , MessagePieceField "ResetSeqNumFlag" False
+--       , MessagePieceField "NextExpectedMsgSeqNum" False
+--       , MessagePieceField "MaxMessageSize" False
+--       , MessagePieceGroup
+--           "NoMsgTypes"
+--           False
+--           [ MessagePieceField "RefMsgType" False
+--           , MessagePieceField "MsgDirection" False
+--           ]
+--       , MessagePieceField "TestMessageIndicator" False
+--       , MessagePieceField "Username" False
+--       , MessagePieceField "Password" False
+--       ]
+--   }
 data Logon = Logon
   { logonEncryptMethod :: !EncryptMethod,
     logonHeartBtInt :: !HeartBtInt,

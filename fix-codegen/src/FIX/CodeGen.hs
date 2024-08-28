@@ -19,6 +19,7 @@ import Path
 import Path.IO
 import Paths_fix_codegen (getDataDir)
 import System.Exit
+import Text.Show.Pretty (ppShow)
 import qualified Text.XML as XML
 
 runFixCodeGen :: IO ()
@@ -34,7 +35,13 @@ runFixCodeGen = do
 
       runCodeGen settingOutputDir $
         mconcat
-          [ let fieldSpecs = specFields spec
+          [ genDataFile "fix-spec/package.yaml",
+            genDataFile "fix-spec/fix-spec.cabal",
+            genDataFile "fix-spec/default.nix",
+            genDataFile "fix-spec-gen/package.yaml",
+            genDataFile "fix-spec-gen/fix-spec-gen.cabal",
+            genDataFile "fix-spec-gen/default.nix",
+            let fieldSpecs = specFields spec
              in mconcat
                   [ fieldsDataFiles fieldSpecs,
                     fieldsGenFile fieldSpecs,
@@ -43,17 +50,19 @@ runFixCodeGen = do
                   ],
             headerDataFile (specHeader spec),
             trailerDataFile (specTrailer spec),
-            genHaskellDataFile "fix-spec/src/FIX/Components/Class.hs",
+            -- Components
+            let componentSpecs = specComponents spec
+             in mconcat
+                  [ genHaskellDataFile "fix-spec/src/FIX/Components/Class.hs",
+                    componentsDataFiles componentSpecs
+                    -- componentsGenFile componentSpecs,
+                    -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
+                    -- componentsSpecFile componentSpecs
+                  ],
             -- Messages
             let messageSpecs = specMessages spec
              in mconcat
-                  [ genDataFile "fix-spec/package.yaml",
-                    genDataFile "fix-spec/fix-spec.cabal",
-                    genDataFile "fix-spec/default.nix",
-                    genDataFile "fix-spec-gen/package.yaml",
-                    genDataFile "fix-spec-gen/fix-spec-gen.cabal",
-                    genDataFile "fix-spec-gen/default.nix",
-                    genHaskellDataFile "fix-spec/src/FIX/Messages/Class.hs",
+                  [ genHaskellDataFile "fix-spec/src/FIX/Messages/Class.hs",
                     messagesDataFiles messageSpecs,
                     genHaskellDataFile "fix-spec/src/FIX/Messages/Envelope.hs",
                     messagesGenFile messageSpecs,
@@ -68,10 +77,20 @@ filterSpec :: Maybe (Set Text) -> Spec -> Spec
 filterSpec Nothing spec = spec
 filterSpec (Just messages) spec =
   let filteredMessages = filter (\m -> S.member (messageName m) messages) (specMessages spec)
+      pieceComponentNames :: MessagePiece -> Set Text
+      pieceComponentNames = \case
+        MessagePieceField _ _ -> S.empty
+        MessagePieceComponent c _ -> S.singleton c
+        MessagePieceGroup g _ ps -> S.insert g (foldMap pieceComponentNames ps)
+      messageComponents :: MessageSpec -> Set Text
+      messageComponents = foldMap pieceComponentNames . messagePieces
+      mentionedComponents :: Set Text
+      mentionedComponents = foldMap messageComponents filteredMessages
+      filteredCompoments = filter (\f -> S.member (componentName f) mentionedComponents) (specComponents spec)
       pieceFieldNames :: MessagePiece -> Set Text
       pieceFieldNames = \case
         MessagePieceField n _ -> S.singleton n
-        MessagePieceComponent c _ -> S.singleton c
+        MessagePieceComponent _ _ -> S.empty
         MessagePieceGroup g _ ps -> S.insert g (foldMap pieceFieldNames ps)
       messageFields :: MessageSpec -> Set Text
       messageFields = foldMap pieceFieldNames . messagePieces
@@ -84,23 +103,20 @@ filterSpec (Just messages) spec =
       filteredFields = filter (\f -> S.member (fieldName f) mentionedFields) (specFields spec)
    in spec
         { specMessages = filteredMessages,
+          specComponents = filteredCompoments,
           specFields = filteredFields
         }
 
 fieldSpecConstructorName :: FieldSpec -> Name
 fieldSpecConstructorName = mkName . T.unpack . fieldName
 
-mkTwoPartConstructorName :: Text -> Text -> Name
-mkTwoPartConstructorName sup sub =
-  mkName $
-    concat
-      [ upperHead (T.unpack sup),
-        toPascalCase (T.unpack sub)
-      ]
-
 fieldValueSpecConstructorName :: FieldSpec -> FieldValueSpec -> Name
 fieldValueSpecConstructorName FieldSpec {..} FieldValueSpec {..} =
-  mkTwoPartConstructorName fieldName fieldValueDescription
+  mkName $
+    concat
+      [ upperHead (T.unpack fieldName),
+        toPascalCase (T.unpack fieldValueDescription)
+      ]
 
 fieldsDataFiles :: [FieldSpec] -> CodeGen
 fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
@@ -118,7 +134,7 @@ fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
           FieldTypeUTCTimestamp -> ConT (mkName "UTCTimestamp")
           _ -> ConT (mkName "SimpleBytes")
         section =
-          [ "-- | " <> show f,
+          [ commentString $ ppShow f,
             TH.pprint
               [ if null fieldValues
                   then
@@ -412,12 +428,35 @@ messagePiecesImports =
   mapMaybe
     ( \case
         MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
+        MessagePieceComponent t _ -> Just $ "import FIX.Components." <> T.unpack t
         _ -> Nothing
     )
 
 messagePiecesToFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
 messagePiecesToFieldsFunction name funName pieces =
-  let recordWildCardName = mkName (T.unpack name <> "{..}")
+  let builders =
+        mapMaybe
+          ( \case
+              MessagePieceField t required ->
+                Just $
+                  AppE
+                    ( VarE
+                        ( mkName
+                            ( if required
+                                then "requiredFieldB"
+                                else "optionalFieldB"
+                            )
+                        )
+                    )
+                    (VarE (mkFieldName name t))
+              _ -> Nothing
+          )
+          pieces
+      recordWildCardName =
+        mkName $
+          -- We can get rid of this 'if' once all pieces have a definition
+          (if null builders then id else (<> "{..}"))
+            (T.unpack name)
    in FunD
         funName
         [ Clause
@@ -425,26 +464,7 @@ messagePiecesToFieldsFunction name funName pieces =
             ( NormalB
                 ( AppE
                     (VarE (mkName "catMaybes"))
-                    ( ListE
-                        ( mapMaybe
-                            ( \case
-                                MessagePieceField t required ->
-                                  Just $
-                                    AppE
-                                      ( VarE
-                                          ( mkName
-                                              ( if required
-                                                  then "requiredFieldB"
-                                                  else "optionalFieldB"
-                                              )
-                                          )
-                                      )
-                                      (VarE (mkFieldName name t))
-                                _ -> Nothing
-                            )
-                            pieces
-                        )
-                    )
+                    (ListE builders)
                 )
             )
             []
@@ -452,7 +472,29 @@ messagePiecesToFieldsFunction name funName pieces =
 
 messagePiecesFromFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
 messagePiecesFromFieldsFunction name funName pieces =
-  let recordWildCardName = mkName (T.unpack name <> "{..}")
+  let statements =
+        mapMaybe
+          ( \case
+              MessagePieceField t required ->
+                Just $
+                  BindS
+                    (VarP (mkFieldName name t))
+                    ( VarE
+                        ( mkName
+                            ( if required
+                                then "requiredFieldP"
+                                else "optionalFieldP"
+                            )
+                        )
+                    )
+              _ -> Nothing
+          )
+          pieces
+      recordWildCardName =
+        mkName $
+          -- We can get rid of this 'if' once all pieces have a definition
+          (if null statements then id else (<> "{..}"))
+            (T.unpack name)
    in FunD
         funName
         [ Clause
@@ -461,23 +503,7 @@ messagePiecesFromFieldsFunction name funName pieces =
                 ( DoE
                     Nothing
                     $ concat
-                      [ mapMaybe
-                          ( \case
-                              MessagePieceField t required ->
-                                Just $
-                                  BindS
-                                    (VarP (mkFieldName name t))
-                                    ( VarE
-                                        ( mkName
-                                            ( if required
-                                                then "requiredFieldP"
-                                                else "optionalFieldP"
-                                            )
-                                        )
-                                    )
-                              _ -> Nothing
-                          )
-                          pieces,
+                      [ statements,
                         [NoBindS $ AppE (VarE (mkName "pure")) (ConE recordWildCardName)]
                       ]
                 )
@@ -545,6 +571,46 @@ trailerDataFile pieces =
               ]
             ]
 
+componentSpecConstructorName :: ComponentSpec -> Name
+componentSpecConstructorName = mkName . T.unpack . componentName
+
+componentsDataFiles :: [ComponentSpec] -> CodeGen
+componentsDataFiles = foldMap $ \f@ComponentSpec {..} ->
+  genHaskellFile ("fix-spec/src/FIX/Components/" <> T.unpack componentName <> ".hs") $
+    let constructorName = componentSpecConstructorName f
+        -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
+
+        section =
+          [ commentString $ ppShow f,
+            TH.pprint
+              [ messagePiecesDataDeclaration componentName componentPieces,
+                validityInstance constructorName,
+                messagePiecesIsComponentInstance componentName componentPieces
+              ]
+          ]
+     in unlines $
+          concat
+            [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
+                "{-# LANGUAGE DeriveGeneric #-}",
+                "{-# LANGUAGE MultiParamTypeClasses #-}",
+                "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE RecordWildCards #-}",
+                "",
+                "module FIX.Components." <> T.unpack componentName <> " where",
+                "",
+                "import Data.Validity",
+                "import FIX.Components.Class",
+                "import FIX.Components.Class",
+                "import FIX.Fields.MsgType",
+                "import GHC.Generics (Generic)",
+                "import Data.Proxy",
+                "import Data.Maybe (catMaybes)",
+                ""
+              ],
+              messagePiecesImports componentPieces,
+              section
+            ]
+
 messagesDataFiles :: [MessageSpec] -> CodeGen
 messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
   genHaskellFile ("fix-spec/src/FIX/Messages/" <> T.unpack messageName <> ".hs") $
@@ -552,7 +618,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
         -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
 
         section =
-          [ "-- | " <> show f,
+          [ commentString $ ppShow f,
             TH.pprint
               [ messagePiecesDataDeclaration messageName messagePieces,
                 validityInstance constructorName,
@@ -565,7 +631,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                       (mkName "messageType")
                       [ Clause
                           [VarP (mkName "Proxy")]
-                          (NormalB (ConE (mkTwoPartConstructorName "MsgType" messageName)))
+                          (NormalB (ConE (mkName ("MsgType" <> upperHead (T.unpack messageName)))))
                           []
                       ]
                   ]
@@ -674,3 +740,10 @@ genTestResources = do
   let subdir = [reldir|fix-spec-gen/test_resources|]
   files <- fmap (fromMaybe []) $ forgivingAbsence $ snd <$> listDirRecurRel (dataDir </> subdir)
   pure $ foldMap (genDataFile . fromRelFile . (subdir </>)) files
+
+commentString :: String -> String
+commentString s =
+  let ls = lines s
+   in case ls of
+        [] -> []
+        (h : rest) -> unlines $ ("-- | " <> h) : map ("-- " <>) rest

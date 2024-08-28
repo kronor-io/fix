@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 52, fieldName = "SendingTime", fieldType = FieldTypeUTCTimestamp, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 52
+--   , fieldName = "SendingTime"
+--   , fieldType = FieldTypeUTCTimestamp
+--   , fieldValues = []
+--   }
 newtype SendingTime = SendingTime {unSendingTime :: UTCTimestamp}
   deriving stock (Show, Eq, Generic)
 

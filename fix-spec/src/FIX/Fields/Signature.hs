@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 89, fieldName = "Signature", fieldType = FieldTypeData, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 89
+--   , fieldName = "Signature"
+--   , fieldType = FieldTypeData
+--   , fieldValues = []
+--   }
 newtype Signature = Signature {unSignature :: DataBytes}
   deriving stock (Show, Eq, Generic)
 

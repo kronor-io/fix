@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 57, fieldName = "TargetSubID", fieldType = FieldTypeString, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 57
+--   , fieldName = "TargetSubID"
+--   , fieldType = FieldTypeString
+--   , fieldValues = []
+--   }
 newtype TargetSubID = TargetSubID {unTargetSubID :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 

@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 383, fieldName = "MaxMessageSize", fieldType = FieldTypeLength, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 383
+--   , fieldName = "MaxMessageSize"
+--   , fieldType = FieldTypeLength
+--   , fieldValues = []
+--   }
 newtype MaxMessageSize = MaxMessageSize {unMaxMessageSize :: Word}
   deriving stock (Show, Eq, Generic)
 

@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 10, fieldName = "CheckSum", fieldType = FieldTypeString, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 10
+--   , fieldName = "CheckSum"
+--   , fieldType = FieldTypeString
+--   , fieldValues = []
+--   }
 newtype CheckSum = CheckSum {unCheckSum :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 

@@ -15,12 +15,9 @@ library
       FIX.Fields.BeginString
       FIX.Fields.BodyLength
       FIX.Fields.CheckSum
-      FIX.Fields.ClOrdID
       FIX.Fields.DeliverToCompID
       FIX.Fields.DeliverToLocationID
       FIX.Fields.DeliverToSubID
-      FIX.Fields.EncodedText
-      FIX.Fields.EncodedTextLen
       FIX.Fields.EncryptMethod
       FIX.Fields.HeartBtInt
       FIX.Fields.HopCompID
@@ -38,17 +35,14 @@ library
       FIX.Fields.OnBehalfOfCompID
       FIX.Fields.OnBehalfOfLocationID
       FIX.Fields.OnBehalfOfSubID
-      FIX.Fields.OrderCapacity
       FIX.Fields.OrigSendingTime
       FIX.Fields.Password
       FIX.Fields.PossDupFlag
       FIX.Fields.PossResend
-      FIX.Fields.QuoteReqID
       FIX.Fields.RawData
       FIX.Fields.RawDataLength
       FIX.Fields.RefMsgType
       FIX.Fields.ResetSeqNumFlag
-      FIX.Fields.RFQReqID
       FIX.Fields.SecureData
       FIX.Fields.SecureDataLen
       FIX.Fields.SenderCompID
@@ -62,7 +56,6 @@ library
       FIX.Fields.TargetSubID
       FIX.Fields.TestMessageIndicator
       FIX.Fields.TestReqID
-      FIX.Fields.Text
       FIX.Fields.Username
       FIX.Fields.XmlData
       FIX.Fields.XmlDataLen

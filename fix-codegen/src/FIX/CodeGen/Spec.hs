@@ -6,6 +6,7 @@
 module FIX.CodeGen.Spec
   ( Spec (..),
     MessageSpec (..),
+    ComponentSpec (..),
     MessagePiece (..),
     FieldSpec (..),
     FieldValueSpec (..),
@@ -76,6 +77,7 @@ data ComponentSpec = ComponentSpec
   { componentName :: !Text,
     componentPieces :: ![MessagePiece]
   }
+  deriving (Show)
 
 parseComponentSpec :: Element -> Maybe ComponentSpec
 parseComponentSpec e@Element {..} = do

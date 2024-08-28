@@ -139,8 +139,8 @@ tagIsLen = \case
   352 -> True
   445 -> True
   350 -> True
+  355 -> True
   356 -> True
-  354 -> True
   362 -> True
   364 -> True
   _ -> False

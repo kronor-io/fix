@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 554, fieldName = "Password", fieldType = FieldTypeString, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 554
+--   , fieldName = "Password"
+--   , fieldType = FieldTypeString
+--   , fieldValues = []
+--   }
 newtype Password = Password {unPassword :: SimpleBytes}
   deriving stock (Show, Eq, Generic)
 

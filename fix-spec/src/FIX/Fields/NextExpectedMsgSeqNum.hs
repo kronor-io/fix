@@ -17,7 +17,12 @@ import GHC.Generics (Generic)
 
 {-# ANN module ("HLint: ignore" :: String) #-}
 
--- | FieldSpec {fieldNumber = 789, fieldName = "NextExpectedMsgSeqNum", fieldType = FieldTypeSeqNum, fieldValues = []}
+-- | FieldSpec
+--   { fieldNumber = 789
+--   , fieldName = "NextExpectedMsgSeqNum"
+--   , fieldType = FieldTypeSeqNum
+--   , fieldValues = []
+--   }
 newtype NextExpectedMsgSeqNum = NextExpectedMsgSeqNum {unNextExpectedMsgSeqNum :: Word}
   deriving stock (Show, Eq, Generic)
 

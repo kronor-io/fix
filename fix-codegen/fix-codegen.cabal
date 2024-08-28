@@ -38,6 +38,7 @@ library
     , opt-env-conf
     , path
     , path-io
+    , pretty-show
     , process
     , template-haskell
     , text
