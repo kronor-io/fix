@@ -1,6 +1,7 @@
 {-# LANGUAGE ApplicativeDo #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module FIX.CodeGen (runFixCodeGen) where
@@ -15,6 +16,8 @@ import FIX.CodeGen.OptParse
 import FIX.CodeGen.Spec
 import Language.Haskell.TH as TH
 import Path
+import Path.IO
+import Paths_fix_codegen (getDataDir)
 import System.Exit
 import qualified Text.XML as XML
 
@@ -26,6 +29,8 @@ runFixCodeGen = do
     Nothing -> die "Failed to parse specfication."
     Just spec' -> do
       let spec = filterSpec settingMessages spec'
+
+      testResourcesFiles <- genTestResources
 
       runCodeGen settingOutputDir $
         mconcat
@@ -48,7 +53,8 @@ runFixCodeGen = do
                     messagesTestUtilsFile,
                     messagesSpecFile messageSpecs
                   ],
-            specDiscoverFile
+            specDiscoverFile,
+            testResourcesFiles
           ]
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
@@ -532,7 +538,7 @@ trailerDataFile pieces =
             ]
 
 messagesClassFile :: CodeGen
-messagesClassFile = genDataFile "fix-spec/src/FIX/Messages/Class.hs"
+messagesClassFile = genHaskellDataFile "fix-spec/src/FIX/Messages/Class.hs"
 
 messagesDataFiles :: [MessageSpec] -> CodeGen
 messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
@@ -584,7 +590,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
             ]
 
 messagesEnvelopeFile :: CodeGen
-messagesEnvelopeFile = genDataFile "fix-spec/src/FIX/Messages/Envelope.hs"
+messagesEnvelopeFile = genHaskellDataFile "fix-spec/src/FIX/Messages/Envelope.hs"
 
 messagesGenFile :: [MessageSpec] -> CodeGen
 messagesGenFile messageSpecs =
@@ -625,7 +631,7 @@ messagesGenFile messageSpecs =
               : sections
 
 messagesTestUtilsFile :: CodeGen
-messagesTestUtilsFile = genDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs"
+messagesTestUtilsFile = genHaskellDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs"
 
 messagesSpecFile :: [MessageSpec] -> CodeGen
 messagesSpecFile messageSpecs =
@@ -664,4 +670,11 @@ messagesSpecFile messageSpecs =
             ]
 
 specDiscoverFile :: CodeGen
-specDiscoverFile = genDataFile "fix-spec-gen/test/Spec.hs"
+specDiscoverFile = genHaskellDataFile "fix-spec-gen/test/Spec.hs"
+
+genTestResources :: IO CodeGen
+genTestResources = do
+  dataDir <- getDataDir >>= resolveDir' >>= (`resolveDir` "data")
+  let subdir = [reldir|fix-spec-gen/test_resources|]
+  files <- fmap (fromMaybe []) $ forgivingAbsence $ snd <$> listDirRecurRel (dataDir </> subdir)
+  pure $ foldMap (genDataFile . fromRelFile . (subdir </>)) files

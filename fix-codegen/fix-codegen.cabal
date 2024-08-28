@@ -10,6 +10,8 @@ build-type:     Simple
 data-files:
     data/fix-spec-gen/src/FIX/Messages/TestUtils.hs
     data/fix-spec-gen/test/Spec.hs
+    data/fix-spec-gen/test_resources/messages/Heartbeat/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logon/example.tagvalue
     data/fix-spec/src/FIX/Messages/Class.hs
     data/fix-spec/src/FIX/Messages/Envelope.hs
 

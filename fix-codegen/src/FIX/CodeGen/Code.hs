@@ -16,6 +16,7 @@ newtype CodeGen = CodeGen {unCodeGen :: Map FilePath GenContents}
 data GenContents
   = GenHaskell !String
   | GenHaskellDataFile
+  | GenDataFile
 
 instance Semigroup CodeGen where
   (<>) (CodeGen m1) (CodeGen m2) = CodeGen (M.union m1 m2)
@@ -27,8 +28,11 @@ instance Monoid CodeGen where
 genHaskellFile :: FilePath -> String -> CodeGen
 genHaskellFile fp contents = CodeGen $ M.singleton fp $ GenHaskell contents
 
+genHaskellDataFile :: FilePath -> CodeGen
+genHaskellDataFile fp = CodeGen $ M.singleton fp GenHaskellDataFile
+
 genDataFile :: FilePath -> CodeGen
-genDataFile fp = CodeGen $ M.singleton fp GenHaskellDataFile
+genDataFile fp = CodeGen $ M.singleton fp GenDataFile
 
 -- We run all the IO here so that we can maximally use concurrency and only pass in the ouputDir once.
 runCodeGen :: Path Abs Dir -> CodeGen -> IO ()
@@ -38,11 +42,17 @@ runCodeGen outputDir (CodeGen m) =
       af <- resolveFile outputDir fp
       writeHaskellCode af contents
     GenHaskellDataFile -> copyHaskellDataFile outputDir fp
+    GenDataFile -> do
+      dataDir <- getDataDir >>= resolveDir' >>= (`resolveDir` "data")
+      from <- resolveFile dataDir fp
+      to <- resolveFile outputDir fp
+      ensureDir (parent to)
+      copyFile from to
 
 copyHaskellDataFile :: Path Abs Dir -> FilePath -> IO ()
 copyHaskellDataFile outputDir filePath = do
-  dataDir <- getDataDir >>= resolveDir'
-  fromFile <- resolveFile dataDir $ "data/" <> filePath
+  dataDir <- getDataDir >>= resolveDir' >>= (`resolveDir` "data")
+  fromFile <- resolveFile dataDir filePath
   contents <- readFile (fromAbsFile fromFile)
   messagesClassFile <- resolveFile outputDir filePath
   writeHaskellCode messagesClassFile contents
