@@ -1,0 +1,48 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           fix-spec-gen
+version:        0.0.0.0
+build-type:     Simple
+
+library
+  exposed-modules:
+      FIX.Messages.TestUtils
+  other-modules:
+      Paths_fix_spec_gen
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , fix-core
+    , fix-core-gen
+    , fix-spec
+    , genvalidity
+    , genvalidity-bytestring
+    , genvalidity-sydtest
+    , path
+    , path-io
+    , sydtest
+  default-language: Haskell2010
+
+test-suite fix-spec-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_fix_spec_gen
+  hs-source-dirs:
+      test/
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+  build-tool-depends:
+      sydtest-discover:sydtest-discover
+  build-depends:
+      base >=4.7 && <5
+    , fix-core-gen
+    , fix-spec
+    , fix-spec-gen
+    , sydtest
+  default-language: Haskell2010

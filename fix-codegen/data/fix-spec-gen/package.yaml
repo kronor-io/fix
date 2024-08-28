@@ -1,0 +1,35 @@
+name: fix-spec-gen
+version: 0.0.0.0
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+  dependencies:
+  - bytestring
+  - fix-core
+  - fix-core-gen
+  - fix-spec
+  - genvalidity
+  - genvalidity-bytestring
+  - genvalidity-sydtest
+  - path
+  - path-io
+  - sydtest
+
+tests:
+  fix-spec-test:
+    main: Spec.hs
+    source-dirs: test/
+    build-tools: sydtest-discover
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -Wall
+    dependencies:
+    - fix-core-gen
+    - fix-spec
+    - fix-spec-gen
+    - sydtest

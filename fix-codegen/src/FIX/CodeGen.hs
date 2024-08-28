@@ -46,14 +46,20 @@ runFixCodeGen = do
             -- Messages
             let messageSpecs = specMessages spec
              in mconcat
-                  [ messagesClassFile,
+                  [ genDataFile "fix-spec/package.yaml",
+                    genDataFile "fix-spec/fix-spec.cabal",
+                    genDataFile "fix-spec/default.nix",
+                    genDataFile "fix-spec-gen/package.yaml",
+                    genDataFile "fix-spec-gen/fix-spec-gen.cabal",
+                    genDataFile "fix-spec-gen/default.nix",
+                    genHaskellDataFile "fix-spec/src/FIX/Messages/Class.hs",
                     messagesDataFiles messageSpecs,
-                    messagesEnvelopeFile,
+                    genHaskellDataFile "fix-spec/src/FIX/Messages/Envelope.hs",
                     messagesGenFile messageSpecs,
-                    messagesTestUtilsFile,
+                    genHaskellDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs",
                     messagesSpecFile messageSpecs
                   ],
-            specDiscoverFile,
+            genHaskellDataFile "fix-spec-gen/test/Spec.hs",
             testResourcesFiles
           ]
 
@@ -537,9 +543,6 @@ trailerDataFile pieces =
               ]
             ]
 
-messagesClassFile :: CodeGen
-messagesClassFile = genHaskellDataFile "fix-spec/src/FIX/Messages/Class.hs"
-
 messagesDataFiles :: [MessageSpec] -> CodeGen
 messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
   genHaskellFile ("fix-spec/src/FIX/Messages/" <> T.unpack messageName <> ".hs") $
@@ -589,9 +592,6 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
               section
             ]
 
-messagesEnvelopeFile :: CodeGen
-messagesEnvelopeFile = genHaskellDataFile "fix-spec/src/FIX/Messages/Envelope.hs"
-
 messagesGenFile :: [MessageSpec] -> CodeGen
 messagesGenFile messageSpecs =
   genHaskellFile "fix-spec-gen/src/FIX/Messages/Gen.hs" $
@@ -630,9 +630,6 @@ messagesGenFile messageSpecs =
                 ]
               : sections
 
-messagesTestUtilsFile :: CodeGen
-messagesTestUtilsFile = genHaskellDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs"
-
 messagesSpecFile :: [MessageSpec] -> CodeGen
 messagesSpecFile messageSpecs =
   genHaskellFile "fix-spec-gen/test/FIX/MessagesSpec.hs" $
@@ -668,9 +665,6 @@ messagesSpecFile messageSpecs =
                   ]
               ]
             ]
-
-specDiscoverFile :: CodeGen
-specDiscoverFile = genHaskellDataFile "fix-spec-gen/test/Spec.hs"
 
 genTestResources :: IO CodeGen
 genTestResources = do

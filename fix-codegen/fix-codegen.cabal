@@ -8,10 +8,16 @@ name:           fix-codegen
 version:        0.0.0.0
 build-type:     Simple
 data-files:
+    data/fix-spec-gen/default.nix
+    data/fix-spec-gen/fix-spec-gen.cabal
+    data/fix-spec-gen/package.yaml
     data/fix-spec-gen/src/FIX/Messages/TestUtils.hs
     data/fix-spec-gen/test/Spec.hs
     data/fix-spec-gen/test_resources/messages/Heartbeat/example.tagvalue
     data/fix-spec-gen/test_resources/messages/Logon/example.tagvalue
+    data/fix-spec/default.nix
+    data/fix-spec/fix-spec.cabal
+    data/fix-spec/package.yaml
     data/fix-spec/src/FIX/Messages/Class.hs
     data/fix-spec/src/FIX/Messages/Envelope.hs
 
