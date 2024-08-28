@@ -19,8 +19,8 @@ import GHC.Generics (Generic)
 
 -- | FieldSpec {fieldNumber = 385, fieldName = "MsgDirection", fieldType = FieldTypeChar, fieldValues = [FieldValueSpec {fieldValueEnum = "S", fieldValueDescription = "SEND"},FieldValueSpec {fieldValueEnum = "R", fieldValueDescription = "RECEIVE"}]}
 data MsgDirection
-  = MsgDirection_SEND
-  | MsgDirection_RECEIVE
+  = MsgDirectionSend
+  | MsgDirectionReceive
   deriving stock (Show, Eq, Generic)
 
 instance Validity MsgDirection
@@ -29,9 +29,9 @@ instance IsField MsgDirection where
   fieldTag Proxy = 385
   fieldIsData Proxy = False
   fieldToValue = \case
-    MsgDirection_SEND -> "S"
-    MsgDirection_RECEIVE -> "R"
+    MsgDirectionSend -> "S"
+    MsgDirectionReceive -> "R"
   fieldFromValue = \case
-    "S" -> Right MsgDirection_SEND
-    "R" -> Right MsgDirection_RECEIVE
+    "S" -> Right MsgDirectionSend
+    "R" -> Right MsgDirectionReceive
     v -> Left ("Unknown MsgDirection: " <> show v)

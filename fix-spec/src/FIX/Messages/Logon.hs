@@ -43,7 +43,7 @@ data Logon = Logon
 instance Validity Logon
 
 instance IsMessage Logon where
-  messageType Proxy = MsgType_LOGON
+  messageType Proxy = MsgTypeLogon
   toMessageFields ((Logon {..})) =
     catMaybes
       [ requiredFieldB logonEncryptMethod,

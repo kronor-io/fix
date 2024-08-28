@@ -19,8 +19,8 @@ import GHC.Generics (Generic)
 
 -- | FieldSpec {fieldNumber = 43, fieldName = "PossDupFlag", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
 data PossDupFlag
-  = PossDupFlag_YES
-  | PossDupFlag_NO
+  = PossDupFlagYes
+  | PossDupFlagNo
   deriving stock (Show, Eq, Generic)
 
 instance Validity PossDupFlag
@@ -29,9 +29,9 @@ instance IsField PossDupFlag where
   fieldTag Proxy = 43
   fieldIsData Proxy = False
   fieldToValue = \case
-    PossDupFlag_YES -> "Y"
-    PossDupFlag_NO -> "N"
+    PossDupFlagYes -> "Y"
+    PossDupFlagNo -> "N"
   fieldFromValue = \case
-    "Y" -> Right PossDupFlag_YES
-    "N" -> Right PossDupFlag_NO
+    "Y" -> Right PossDupFlagYes
+    "N" -> Right PossDupFlagNo
     v -> Left ("Unknown PossDupFlag: " <> show v)

@@ -23,7 +23,7 @@ data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
 instance Validity Heartbeat
 
 instance IsMessage Heartbeat where
-  messageType Proxy = MsgType_HEARTBEAT
+  messageType Proxy = MsgTypeHeartbeat
   toMessageFields ((Heartbeat {..})) = catMaybes [optionalFieldB heartbeatTestReqID]
   fromMessageFields = do
     heartbeatTestReqID <- optionalFieldP

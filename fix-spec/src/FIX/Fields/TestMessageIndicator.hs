@@ -19,8 +19,8 @@ import GHC.Generics (Generic)
 
 -- | FieldSpec {fieldNumber = 464, fieldName = "TestMessageIndicator", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
 data TestMessageIndicator
-  = TestMessageIndicator_YES
-  | TestMessageIndicator_NO
+  = TestMessageIndicatorYes
+  | TestMessageIndicatorNo
   deriving stock (Show, Eq, Generic)
 
 instance Validity TestMessageIndicator
@@ -29,9 +29,9 @@ instance IsField TestMessageIndicator where
   fieldTag Proxy = 464
   fieldIsData Proxy = False
   fieldToValue = \case
-    TestMessageIndicator_YES -> "Y"
-    TestMessageIndicator_NO -> "N"
+    TestMessageIndicatorYes -> "Y"
+    TestMessageIndicatorNo -> "N"
   fieldFromValue = \case
-    "Y" -> Right TestMessageIndicator_YES
-    "N" -> Right TestMessageIndicator_NO
+    "Y" -> Right TestMessageIndicatorYes
+    "N" -> Right TestMessageIndicatorNo
     v -> Left ("Unknown TestMessageIndicator: " <> show v)

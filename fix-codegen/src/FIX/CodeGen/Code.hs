@@ -74,7 +74,36 @@ disclaimer =
 runOrmoluOn :: Path Abs File -> IO ()
 runOrmoluOn f = callProcess "ormolu" ["-i", "-c", fromAbsFile f]
 
+toCamelCase :: String -> String
+toCamelCase = lowerHead . toPascalCase
+
+toPascalCase :: String -> String
+toPascalCase = upperHead . unSpacer Char.toUpper . map Char.toLower
+
+unSpacer :: (Char -> Char) -> String -> String
+unSpacer funcFirst = go
+  where
+    go = \case
+      [] -> []
+      [c] -> [c]
+      (h : t : rest)
+        | isSpacer h -> funcFirst t : go rest
+        | otherwise -> h : go (t : rest)
+    isSpacer = \case
+      '_' -> True
+      '-' -> True
+      ' ' -> True
+      '.' -> True
+      '\t' -> True
+      _ -> False
+
+upperHead :: String -> String
+upperHead = modHead Char.toUpper
+
 lowerHead :: String -> String
-lowerHead = \case
+lowerHead = modHead Char.toLower
+
+modHead :: (Char -> Char) -> String -> String
+modHead func = \case
   [] -> []
-  (c : cs) -> Char.toLower c : cs
+  (c : cs) -> func c : cs

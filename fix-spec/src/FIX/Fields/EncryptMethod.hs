@@ -19,13 +19,13 @@ import GHC.Generics (Generic)
 
 -- | FieldSpec {fieldNumber = 98, fieldName = "EncryptMethod", fieldType = FieldTypeInt, fieldValues = [FieldValueSpec {fieldValueEnum = "0", fieldValueDescription = "NONE"},FieldValueSpec {fieldValueEnum = "1", fieldValueDescription = "PKCS"},FieldValueSpec {fieldValueEnum = "2", fieldValueDescription = "DES"},FieldValueSpec {fieldValueEnum = "3", fieldValueDescription = "PKCSDES"},FieldValueSpec {fieldValueEnum = "4", fieldValueDescription = "PGPDES"},FieldValueSpec {fieldValueEnum = "5", fieldValueDescription = "PGPDESMD5"},FieldValueSpec {fieldValueEnum = "6", fieldValueDescription = "PEM"}]}
 data EncryptMethod
-  = EncryptMethod_NONE
-  | EncryptMethod_PKCS
-  | EncryptMethod_DES
-  | EncryptMethod_PKCSDES
-  | EncryptMethod_PGPDES
-  | EncryptMethod_PGPDESMD5
-  | EncryptMethod_PEM
+  = EncryptMethodNone
+  | EncryptMethodPkcs
+  | EncryptMethodDes
+  | EncryptMethodPkcsdes
+  | EncryptMethodPgpdes
+  | EncryptMethodPgpdesmd5
+  | EncryptMethodPem
   deriving stock (Show, Eq, Generic)
 
 instance Validity EncryptMethod
@@ -34,19 +34,19 @@ instance IsField EncryptMethod where
   fieldTag Proxy = 98
   fieldIsData Proxy = False
   fieldToValue = \case
-    EncryptMethod_NONE -> "0"
-    EncryptMethod_PKCS -> "1"
-    EncryptMethod_DES -> "2"
-    EncryptMethod_PKCSDES -> "3"
-    EncryptMethod_PGPDES -> "4"
-    EncryptMethod_PGPDESMD5 -> "5"
-    EncryptMethod_PEM -> "6"
+    EncryptMethodNone -> "0"
+    EncryptMethodPkcs -> "1"
+    EncryptMethodDes -> "2"
+    EncryptMethodPkcsdes -> "3"
+    EncryptMethodPgpdes -> "4"
+    EncryptMethodPgpdesmd5 -> "5"
+    EncryptMethodPem -> "6"
   fieldFromValue = \case
-    "0" -> Right EncryptMethod_NONE
-    "1" -> Right EncryptMethod_PKCS
-    "2" -> Right EncryptMethod_DES
-    "3" -> Right EncryptMethod_PKCSDES
-    "4" -> Right EncryptMethod_PGPDES
-    "5" -> Right EncryptMethod_PGPDESMD5
-    "6" -> Right EncryptMethod_PEM
+    "0" -> Right EncryptMethodNone
+    "1" -> Right EncryptMethodPkcs
+    "2" -> Right EncryptMethodDes
+    "3" -> Right EncryptMethodPkcsdes
+    "4" -> Right EncryptMethodPgpdes
+    "5" -> Right EncryptMethodPgpdesmd5
+    "6" -> Right EncryptMethodPem
     v -> Left ("Unknown EncryptMethod: " <> show v)

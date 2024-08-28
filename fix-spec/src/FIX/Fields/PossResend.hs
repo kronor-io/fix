@@ -19,8 +19,8 @@ import GHC.Generics (Generic)
 
 -- | FieldSpec {fieldNumber = 97, fieldName = "PossResend", fieldType = FieldTypeBoolean, fieldValues = [FieldValueSpec {fieldValueEnum = "Y", fieldValueDescription = "YES"},FieldValueSpec {fieldValueEnum = "N", fieldValueDescription = "NO"}]}
 data PossResend
-  = PossResend_YES
-  | PossResend_NO
+  = PossResendYes
+  | PossResendNo
   deriving stock (Show, Eq, Generic)
 
 instance Validity PossResend
@@ -29,9 +29,9 @@ instance IsField PossResend where
   fieldTag Proxy = 97
   fieldIsData Proxy = False
   fieldToValue = \case
-    PossResend_YES -> "Y"
-    PossResend_NO -> "N"
+    PossResendYes -> "Y"
+    PossResendNo -> "N"
   fieldFromValue = \case
-    "Y" -> Right PossResend_YES
-    "N" -> Right PossResend_NO
+    "Y" -> Right PossResendYes
+    "N" -> Right PossResendNo
     v -> Left ("Unknown PossResend: " <> show v)

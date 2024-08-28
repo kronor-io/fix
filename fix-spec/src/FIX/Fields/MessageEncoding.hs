@@ -19,10 +19,10 @@ import GHC.Generics (Generic)
 
 -- | FieldSpec {fieldNumber = 347, fieldName = "MessageEncoding", fieldType = FieldTypeString, fieldValues = [FieldValueSpec {fieldValueEnum = "ISO-2022-JP", fieldValueDescription = "ISO2022_JP"},FieldValueSpec {fieldValueEnum = "EUC-JP", fieldValueDescription = "EUCJP"},FieldValueSpec {fieldValueEnum = "Shift_JIS", fieldValueDescription = "SHIFT_JIS"},FieldValueSpec {fieldValueEnum = "UTF-8", fieldValueDescription = "UTF8"}]}
 data MessageEncoding
-  = MessageEncoding_ISO2022_JP
-  | MessageEncoding_EUCJP
-  | MessageEncoding_SHIFT_JIS
-  | MessageEncoding_UTF8
+  = MessageEncodingIso2022Jp
+  | MessageEncodingEucjp
+  | MessageEncodingShiftJis
+  | MessageEncodingUtf8
   deriving stock (Show, Eq, Generic)
 
 instance Validity MessageEncoding
@@ -31,13 +31,13 @@ instance IsField MessageEncoding where
   fieldTag Proxy = 347
   fieldIsData Proxy = False
   fieldToValue = \case
-    MessageEncoding_ISO2022_JP -> "ISO-2022-JP"
-    MessageEncoding_EUCJP -> "EUC-JP"
-    MessageEncoding_SHIFT_JIS -> "Shift_JIS"
-    MessageEncoding_UTF8 -> "UTF-8"
+    MessageEncodingIso2022Jp -> "ISO-2022-JP"
+    MessageEncodingEucjp -> "EUC-JP"
+    MessageEncodingShiftJis -> "Shift_JIS"
+    MessageEncodingUtf8 -> "UTF-8"
   fieldFromValue = \case
-    "ISO-2022-JP" -> Right MessageEncoding_ISO2022_JP
-    "EUC-JP" -> Right MessageEncoding_EUCJP
-    "Shift_JIS" -> Right MessageEncoding_SHIFT_JIS
-    "UTF-8" -> Right MessageEncoding_UTF8
+    "ISO-2022-JP" -> Right MessageEncodingIso2022Jp
+    "EUC-JP" -> Right MessageEncodingEucjp
+    "Shift_JIS" -> Right MessageEncodingShiftJis
+    "UTF-8" -> Right MessageEncodingUtf8
     v -> Left ("Unknown MessageEncoding: " <> show v)

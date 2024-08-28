@@ -89,14 +89,17 @@ filterSpec (Just messages) spec =
 fieldSpecConstructorName :: FieldSpec -> Name
 fieldSpecConstructorName = mkName . T.unpack . fieldName
 
-fieldValueSpecConstructorName :: FieldSpec -> FieldValueSpec -> Name
-fieldValueSpecConstructorName FieldSpec {..} FieldValueSpec {..} =
+mkTwoPartConstructorName :: Text -> Text -> Name
+mkTwoPartConstructorName sup sub =
   mkName $
     concat
-      [ T.unpack fieldName,
-        "_",
-        T.unpack fieldValueDescription -- TODO fix the casing
+      [ upperHead (T.unpack sup),
+        toPascalCase (T.unpack sub)
       ]
+
+fieldValueSpecConstructorName :: FieldSpec -> FieldValueSpec -> Name
+fieldValueSpecConstructorName FieldSpec {..} FieldValueSpec {..} =
+  mkTwoPartConstructorName fieldName fieldValueDescription
 
 fieldsDataFiles :: [FieldSpec] -> CodeGen
 fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
@@ -562,7 +565,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                       (mkName "messageType")
                       [ Clause
                           [VarP (mkName "Proxy")]
-                          (NormalB (ConE (mkName ("MsgType_" <> T.unpack (T.toUpper messageName)))))
+                          (NormalB (ConE (mkTwoPartConstructorName "MsgType" messageName)))
                           []
                       ],
                     messagePiecesToFieldsFunction messageName (mkName "toMessageFields") messagePieces,
