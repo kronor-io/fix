@@ -74,9 +74,6 @@ disclaimer =
 runOrmoluOn :: Path Abs File -> IO ()
 runOrmoluOn f = callProcess "ormolu" ["-i", "-c", fromAbsFile f]
 
-toCamelCase :: String -> String
-toCamelCase = lowerHead . toPascalCase
-
 toPascalCase :: String -> String
 toPascalCase = upperHead . unSpacer Char.toUpper . map Char.toLower
 
