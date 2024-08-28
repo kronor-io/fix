@@ -12,4 +12,6 @@ import FIX.Messages.TestUtils
 import Test.Syd
 
 spec :: Spec
-spec = do messageSpec @Heartbeat; messageSpec @Logon
+spec = do
+  messageSpec @Heartbeat "Heartbeat"
+  messageSpec @Logon "Logon"

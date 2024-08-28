@@ -638,7 +638,11 @@ messagesSpecFile messageSpecs =
             messageSpecs
         statements = flip map messageSpecs $ \f ->
           let constructorName = messageSpecConstructorName f
-           in NoBindS (AppTypeE (VarE (mkName "messageSpec")) (ConT constructorName))
+           in NoBindS
+                ( AppE
+                    (AppTypeE (VarE (mkName "messageSpec")) (ConT constructorName))
+                    (LitE (StringL (T.unpack (messageName f))))
+                )
      in unlines $
           concat
             [ [ "{-# OPTIONS_GHC -Wno-orphans #-}",
