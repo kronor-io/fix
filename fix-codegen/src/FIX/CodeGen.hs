@@ -409,29 +409,26 @@ messagePiecesDataDeclaration name pieces =
         Nothing
         [ RecC
             constructorName
-            ( mapMaybe
+            ( map
                 ( \case
                     MessagePieceField t required ->
-                      Just
-                        ( mkFieldName name t,
-                          Bang NoSourceUnpackedness SourceStrict,
-                          requiredFunc required $
-                            ConT (mkName (T.unpack t))
-                        )
+                      ( mkFieldName name t,
+                        Bang NoSourceUnpackedness SourceStrict,
+                        requiredFunc required $
+                          ConT (mkName (T.unpack t))
+                      )
                     MessagePieceComponent c required ->
-                      Just
-                        ( mkFieldName name c,
-                          Bang NoSourceUnpackedness SourceStrict,
-                          requiredFunc required $
-                            ConT (mkName (T.unpack c))
-                        )
+                      ( mkFieldName name c,
+                        Bang NoSourceUnpackedness SourceStrict,
+                        requiredFunc required $
+                          ConT (mkName (T.unpack c))
+                      )
                     MessagePieceGroup gs required ->
-                      Just
-                        ( mkFieldName name (groupSpecConstructorName gs),
-                          Bang NoSourceUnpackedness SourceStrict,
-                          requiredFunc required $
-                            AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
-                        )
+                      ( mkFieldName name (groupSpecConstructorName gs),
+                        Bang NoSourceUnpackedness SourceStrict,
+                        requiredFunc required $
+                          AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
+                      )
                 )
                 pieces
             )
@@ -464,21 +461,41 @@ messagePiecesImports =
 messagePiecesToFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
 messagePiecesToFieldsFunction name funName pieces =
   let builders =
-        mapMaybe
+        map
           ( \case
               MessagePieceField t required ->
-                Just $
-                  AppE
-                    ( VarE
-                        ( mkName
-                            ( if required
-                                then "requiredFieldB"
-                                else "optionalFieldB"
-                            )
-                        )
-                    )
-                    (VarE (mkFieldName name t))
-              _ -> Nothing
+                AppE
+                  ( VarE
+                      ( mkName
+                          ( if required
+                              then "requiredFieldB"
+                              else "optionalFieldB"
+                          )
+                      )
+                  )
+                  (VarE (mkFieldName name t))
+              MessagePieceComponent c required ->
+                AppE
+                  ( VarE
+                      ( mkName
+                          ( if required
+                              then "requiredComponentB"
+                              else "optionalComponentB"
+                          )
+                      )
+                  )
+                  (VarE (mkFieldName name c))
+              MessagePieceGroup gs required ->
+                AppE
+                  ( VarE
+                      ( mkName
+                          ( if required
+                              then "requiredGroupB"
+                              else "optionalGroupB"
+                          )
+                      )
+                  )
+                  (VarE (mkFieldName name (groupSpecConstructorName gs)))
           )
           pieces
       recordWildCardName =
@@ -492,7 +509,7 @@ messagePiecesToFieldsFunction name funName pieces =
             [ConP recordWildCardName [] []]
             ( NormalB
                 ( AppE
-                    (VarE (mkName "catMaybes"))
+                    (VarE (mkName "concat"))
                     (ListE builders)
                 )
             )
@@ -502,21 +519,41 @@ messagePiecesToFieldsFunction name funName pieces =
 messagePiecesFromFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
 messagePiecesFromFieldsFunction name funName pieces =
   let statements =
-        mapMaybe
+        map
           ( \case
               MessagePieceField t required ->
-                Just $
-                  BindS
-                    (VarP (mkFieldName name t))
-                    ( VarE
-                        ( mkName
-                            ( if required
-                                then "requiredFieldP"
-                                else "optionalFieldP"
-                            )
-                        )
-                    )
-              _ -> Nothing
+                BindS
+                  (VarP (mkFieldName name t))
+                  ( VarE
+                      ( mkName
+                          ( if required
+                              then "requiredFieldP"
+                              else "optionalFieldP"
+                          )
+                      )
+                  )
+              MessagePieceComponent c required ->
+                BindS
+                  (VarP (mkFieldName name c))
+                  ( VarE
+                      ( mkName
+                          ( if required
+                              then "requiredComponentP"
+                              else "optionalComponentP"
+                          )
+                      )
+                  )
+              MessagePieceGroup gs required ->
+                BindS
+                  (VarP (mkFieldName name (groupSpecConstructorName gs)))
+                  ( VarE
+                      ( mkName
+                          ( if required
+                              then "requiredGroupP"
+                              else "optionalGroupP"
+                          )
+                      )
+                  )
           )
           pieces
       recordWildCardName =
@@ -567,6 +604,7 @@ headerDataFile pieces =
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
                 "import FIX.Components.Class",
+                "import FIX.Groups.Class",
                 ""
               ],
               imports,
@@ -588,7 +626,6 @@ trailerDataFile pieces =
                 "",
                 "module FIX.Messages.Trailer where",
                 "",
-                "import Data.Maybe",
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
                 "import FIX.Components.Class",
@@ -644,7 +681,6 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                     "import FIX.Fields.MsgType",
                     "import GHC.Generics (Generic)",
                     "import Data.Proxy",
-                    "import Data.Maybe (catMaybes)",
                     ""
                   ],
                   messagePiecesImports groupPieces,
@@ -684,7 +720,6 @@ componentsDataFiles = foldMap $ \f@ComponentSpec {..} ->
                 "import FIX.Fields.MsgType",
                 "import GHC.Generics (Generic)",
                 "import Data.Proxy",
-                "import Data.Maybe (catMaybes)",
                 ""
               ],
               messagePiecesImports componentPieces,
@@ -730,11 +765,11 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                 "import Data.Validity",
                 "import Data.List.NonEmpty (NonEmpty)",
                 "import FIX.Components.Class",
+                "import FIX.Groups.Class",
                 "import FIX.Messages.Class",
                 "import FIX.Fields.MsgType",
                 "import GHC.Generics (Generic)",
                 "import Data.Proxy",
-                "import Data.Maybe (catMaybes)",
                 ""
               ],
               messagePiecesImports messagePieces,

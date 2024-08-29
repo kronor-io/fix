@@ -9,7 +9,6 @@
 module FIX.Messages.Logon where
 
 import Data.List.NonEmpty (NonEmpty)
-import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
@@ -24,6 +23,7 @@ import FIX.Fields.RawDataLength
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.Username
+import FIX.Groups.Class
 import FIX.Groups.MsgTypes
 import FIX.Messages.Class
 import GHC.Generics (Generic)
@@ -73,7 +73,7 @@ instance Validity Logon
 
 instance IsComponent Logon where
   toComponentFields ((Logon {..})) =
-    catMaybes
+    concat
       [ requiredFieldB logonEncryptMethod,
         requiredFieldB logonHeartBtInt,
         optionalFieldB logonRawDataLength,
@@ -81,6 +81,7 @@ instance IsComponent Logon where
         optionalFieldB logonResetSeqNumFlag,
         optionalFieldB logonNextExpectedMsgSeqNum,
         optionalFieldB logonMaxMessageSize,
+        optionalGroupB logonMsgTypes,
         optionalFieldB logonTestMessageIndicator,
         optionalFieldB logonUsername,
         optionalFieldB logonPassword
@@ -93,6 +94,7 @@ instance IsComponent Logon where
     logonResetSeqNumFlag <- optionalFieldP
     logonNextExpectedMsgSeqNum <- optionalFieldP
     logonMaxMessageSize <- optionalFieldP
+    logonMsgTypes <- optionalGroupP
     logonTestMessageIndicator <- optionalFieldP
     logonUsername <- optionalFieldP
     logonPassword <- optionalFieldP

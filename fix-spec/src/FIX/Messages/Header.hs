@@ -36,6 +36,7 @@ import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
 import FIX.Fields.XmlData
 import FIX.Fields.XmlDataLen
+import FIX.Groups.Class
 import FIX.Groups.Hops
 import GHC.Generics (Generic)
 
@@ -74,7 +75,7 @@ instance Validity Header
 
 instance IsComponent Header where
   toComponentFields ((Header {..})) =
-    catMaybes
+    concat
       [ requiredFieldB headerBeginString,
         requiredFieldB headerBodyLength,
         requiredFieldB headerMsgType,
@@ -100,7 +101,8 @@ instance IsComponent Header where
         optionalFieldB headerXmlDataLen,
         optionalFieldB headerXmlData,
         optionalFieldB headerMessageEncoding,
-        optionalFieldB headerLastMsgSeqNumProcessed
+        optionalFieldB headerLastMsgSeqNumProcessed,
+        optionalGroupB headerHops
       ]
   fromComponentFields = do
     headerBeginString <- requiredFieldP
@@ -129,4 +131,5 @@ instance IsComponent Header where
     headerXmlData <- optionalFieldP
     headerMessageEncoding <- optionalFieldP
     headerLastMsgSeqNumProcessed <- optionalFieldP
+    headerHops <- optionalGroupP
     pure (Header {..})

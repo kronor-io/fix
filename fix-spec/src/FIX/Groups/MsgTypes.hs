@@ -8,7 +8,6 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Groups.MsgTypes where
 
-import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
@@ -35,7 +34,7 @@ instance Validity MsgTypes
 
 instance IsComponent MsgTypes where
   toComponentFields ((MsgTypes {..})) =
-    catMaybes
+    concat
       [ optionalFieldB msgTypesRefMsgType,
         optionalFieldB msgTypesMsgDirection
       ]

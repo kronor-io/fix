@@ -64,8 +64,14 @@ fieldB a =
             (fieldToValue a)
         )
 
-requiredFieldB :: (IsField a) => a -> Maybe Field
-requiredFieldB = Just . fieldB
+requiredFieldB :: (IsField a) => a -> [Field]
+requiredFieldB = pure . fieldB
 
-optionalFieldB :: (IsField a) => Maybe a -> Maybe Field
-optionalFieldB = (>>= requiredFieldB)
+optionalFieldB :: (IsField a) => Maybe a -> [Field]
+optionalFieldB = maybe [] requiredFieldB
+
+requiredComponentB :: (IsComponent a) => a -> [Field]
+requiredComponentB = toComponentFields
+
+optionalComponentB :: (IsComponent a) => Maybe a -> [Field]
+optionalComponentB = maybe [] requiredComponentB

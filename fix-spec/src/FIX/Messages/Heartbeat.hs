@@ -9,12 +9,12 @@
 module FIX.Messages.Heartbeat where
 
 import Data.List.NonEmpty (NonEmpty)
-import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
 import FIX.Fields.MsgType
 import FIX.Fields.TestReqID
+import FIX.Groups.Class
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -30,7 +30,7 @@ data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
 instance Validity Heartbeat
 
 instance IsComponent Heartbeat where
-  toComponentFields ((Heartbeat {..})) = catMaybes [optionalFieldB heartbeatTestReqID]
+  toComponentFields ((Heartbeat {..})) = concat [optionalFieldB heartbeatTestReqID]
   fromComponentFields = do
     heartbeatTestReqID <- optionalFieldP
     pure (Heartbeat {..})

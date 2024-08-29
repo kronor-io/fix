@@ -6,7 +6,6 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Messages.Trailer where
 
-import Data.Maybe
 import Data.Validity
 import FIX.Components.Class
 import FIX.Fields.CheckSum
@@ -25,7 +24,7 @@ instance Validity Trailer
 
 instance IsComponent Trailer where
   toComponentFields ((Trailer {..})) =
-    catMaybes
+    concat
       [ optionalFieldB trailerSignatureLength,
         optionalFieldB trailerSignature,
         requiredFieldB trailerCheckSum
