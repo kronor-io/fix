@@ -81,7 +81,7 @@ filterSpec (Just messages) spec =
       pieceComponentNames = \case
         MessagePieceField _ _ -> S.empty
         MessagePieceComponent c _ -> S.singleton c
-        MessagePieceGroup g _ ps -> S.insert g (foldMap pieceComponentNames ps)
+        MessagePieceGroup ps _ -> foldMap pieceComponentNames (groupPieces ps)
       messageComponents :: MessageSpec -> Set Text
       messageComponents = foldMap pieceComponentNames . messagePieces
       mentionedComponents :: Set Text
@@ -91,7 +91,7 @@ filterSpec (Just messages) spec =
       pieceFieldNames = \case
         MessagePieceField n _ -> S.singleton n
         MessagePieceComponent _ _ -> S.empty
-        MessagePieceGroup g _ ps -> S.insert g (foldMap pieceFieldNames ps)
+        MessagePieceGroup gs _ -> S.insert (groupName gs) (foldMap pieceFieldNames (groupPieces gs))
       messageFields :: MessageSpec -> Set Text
       messageFields = foldMap pieceFieldNames . messagePieces
       mentionedFields =

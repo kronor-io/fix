@@ -7,6 +7,7 @@ module FIX.CodeGen.Spec
   ( Spec (..),
     MessageSpec (..),
     ComponentSpec (..),
+    GroupSpec (..),
     MessagePiece (..),
     FieldSpec (..),
     FieldValueSpec (..),
@@ -90,7 +91,7 @@ parseComponentSpec e@Element {..} = do
 data MessagePiece
   = MessagePieceField !Text !Bool
   | MessagePieceComponent !Text !Bool
-  | MessagePieceGroup !Text !Bool ![MessagePiece]
+  | MessagePieceGroup !GroupSpec !Bool
   deriving (Show)
 
 parseMessagePiece :: Element -> Maybe MessagePiece
@@ -105,10 +106,10 @@ parseMessagePiece e@Element {..} =
       required <- M.lookup "required" elementAttributes >>= parseRequired
       pure $ MessagePieceComponent name required
     "group" -> do
-      name <- M.lookup "name" elementAttributes
+      groupName <- M.lookup "name" elementAttributes
       required <- M.lookup "required" elementAttributes >>= parseRequired
       groupPieces <- mapM parseMessagePiece $ subElements e
-      pure $ MessagePieceGroup name required groupPieces
+      pure $ MessagePieceGroup GroupSpec {..} required
     _ -> Nothing
 
 parseRequired :: Text -> Maybe Bool
@@ -116,6 +117,12 @@ parseRequired = \case
   "Y" -> pure True
   "N" -> pure False
   _ -> Nothing
+
+data GroupSpec = GroupSpec
+  { groupName :: !Text,
+    groupPieces :: ![MessagePiece]
+  }
+  deriving (Show)
 
 data FieldSpec = FieldSpec
   { fieldNumber :: !Word,

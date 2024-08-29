@@ -39,11 +39,14 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "NextExpectedMsgSeqNum" False
 --       , MessagePieceField "MaxMessageSize" False
 --       , MessagePieceGroup
---           "NoMsgTypes"
+--           GroupSpec
+--             { groupName = "NoMsgTypes"
+--             , groupPieces =
+--                 [ MessagePieceField "RefMsgType" False
+--                 , MessagePieceField "MsgDirection" False
+--                 ]
+--             }
 --           False
---           [ MessagePieceField "RefMsgType" False
---           , MessagePieceField "MsgDirection" False
---           ]
 --       , MessagePieceField "TestMessageIndicator" False
 --       , MessagePieceField "Username" False
 --       , MessagePieceField "Password" False
