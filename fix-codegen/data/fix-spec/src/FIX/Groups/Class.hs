@@ -12,7 +12,7 @@ import Data.Proxy
 import FIX.Components.Class
 import FIX.Core
 
-class (IsField (GroupNumField a), IsComponent a) => IsGroup a where
+class (IsField (GroupNumField a), IsComponent a) => IsGroupElement a where
   type GroupNumField a :: Type
   mkGroupNum :: Proxy a -> Word -> GroupNumField a
   countGroupNum :: Proxy a -> GroupNumField a -> Word
@@ -22,16 +22,16 @@ class (IsField (GroupNumField a), IsComponent a) => IsGroup a where
 -- @
 -- Within a repeating group, field sequence is strictly defined by a group definition.
 -- @
-requiredGroupB :: (IsGroup a) => NonEmpty a -> [Field]
+requiredGroupB :: (IsGroupElement a) => NonEmpty a -> [Field]
 requiredGroupB = concatMap toComponentFields
 
-optionalGroupB :: (IsGroup a) => [a] -> [Field]
+optionalGroupB :: (IsGroupElement a) => [a] -> [Field]
 optionalGroupB = concatMap toComponentFields
 
 -- @
 -- The NumInGroup field is required and must be larger than zero if the repeating group is required,
 -- @
-requiredGroupP :: forall a. (IsGroup a) => ComponentP (NonEmpty a)
+requiredGroupP :: forall a. (IsGroupElement a) => ComponentP (NonEmpty a)
 requiredGroupP = do
   gn <- requiredFieldP
   let count = countGroupNum (Proxy :: Proxy a) gn
@@ -40,7 +40,7 @@ requiredGroupP = do
     Nothing -> error "TODO typed error"
     Just ne -> pure ne
 
-optionalGroupP :: forall a. (IsGroup a) => ComponentP [a]
+optionalGroupP :: forall a. (IsGroupElement a) => ComponentP [a]
 optionalGroupP = do
   gn <- optionalFieldP
   let count = maybe 0 (countGroupNum (Proxy :: Proxy a)) gn

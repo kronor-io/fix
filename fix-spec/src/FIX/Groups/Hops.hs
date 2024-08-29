@@ -50,7 +50,7 @@ instance IsComponent Hops where
     hopsHopRefID <- optionalFieldP
     pure (Hops {..})
 
-instance IsGroup Hops where
+instance IsGroupElement Hops where
   type GroupNumField Hops = NoHops
   mkGroupNum Proxy = NoHops
   countGroupNum Proxy = unNoHops

@@ -45,7 +45,7 @@ instance IsComponent MsgTypes where
     msgTypesMsgDirection <- optionalFieldP
     pure (MsgTypes {..})
 
-instance IsGroup MsgTypes where
+instance IsGroupElement MsgTypes where
   type GroupNumField MsgTypes = NoMsgTypes
   mkGroupNum Proxy = NoMsgTypes
   countGroupNum Proxy = unNoMsgTypes

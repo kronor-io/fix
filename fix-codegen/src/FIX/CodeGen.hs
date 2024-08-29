@@ -665,7 +665,7 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                     InstanceD
                       Nothing
                       []
-                      (AppT (ConT (mkName "IsGroup")) (ConT (mkName (T.unpack constructorName))))
+                      (AppT (ConT (mkName "IsGroupElement")) (ConT (mkName (T.unpack constructorName))))
                       [ TySynD
                           (mkName "GroupNumField")
                           [PlainTV (mkName (T.unpack constructorName)) ()]
