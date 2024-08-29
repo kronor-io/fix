@@ -7,6 +7,7 @@
 module FIX.Groups.Class where
 
 import Control.Monad
+import Control.Monad.Reader
 import Data.Kind
 import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NE
@@ -24,11 +25,15 @@ class (IsField (GroupNumField a), IsComponent a) => IsGroupElement a where
 -- @
 -- Within a repeating group, field sequence is strictly defined by a group definition.
 -- @
-requiredGroupB :: (IsGroupElement a) => NonEmpty a -> [Field]
-requiredGroupB = concatMap toComponentFields
+requiredGroupB :: forall a. (IsGroupElement a) => NonEmpty a -> [Field]
+requiredGroupB ne = do
+  fieldB (mkGroupNum (Proxy :: Proxy a) (fromIntegral (length ne)))
+    : concatMap toComponentFields ne
 
 optionalGroupB :: (IsGroupElement a) => [a] -> [Field]
-optionalGroupB = concatMap toComponentFields
+optionalGroupB es = case NE.nonEmpty es of
+  Nothing -> []
+  Just ne -> requiredGroupB ne
 
 -- @
 -- The NumInGroup field is required and must be larger than zero if the repeating group is required,
@@ -36,11 +41,12 @@ optionalGroupB = concatMap toComponentFields
 requiredGroupP :: forall a. (IsGroupElement a) => ComponentP (NonEmpty a)
 requiredGroupP = do
   gn <- requiredFieldP
-  let count = countGroupNum (Proxy :: Proxy a) gn
-  elems <- replicateM (fromIntegral count) requiredComponentP
-  case NE.nonEmpty elems of
-    Nothing -> error "TODO typed error"
-    Just ne -> pure ne
+  local (const True) $ do
+    let count = countGroupNum (Proxy :: Proxy a) gn
+    elems <- replicateM (fromIntegral count) requiredComponentP
+    case NE.nonEmpty elems of
+      Nothing -> error "TODO typed error"
+      Just ne -> pure ne
 
 optionalGroupP :: forall a. (IsGroupElement a) => ComponentP [a]
 optionalGroupP = do

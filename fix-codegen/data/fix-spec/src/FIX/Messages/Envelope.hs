@@ -6,6 +6,7 @@ module FIX.Messages.Envelope where
 
 import Control.Monad
 import Control.Monad.Except
+import Control.Monad.Reader
 import Control.Monad.State
 import qualified Data.ByteString as SB
 import Data.Proxy
@@ -49,7 +50,7 @@ fromMessage ::
   (IsMessage a) =>
   Message ->
   Either ComponentParseError (Envelope a)
-fromMessage message = runExcept $ flip evalStateT (messageFields message) $ do
+fromMessage message = runExcept $ flip evalStateT (messageFields message) $ flip runReaderT False $ do
   -- TODO consider erroring on unexpected fields?
   envelopeHeader <- parseHeader
   let actualTag = headerMsgType envelopeHeader

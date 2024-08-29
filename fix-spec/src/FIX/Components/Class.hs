@@ -7,12 +7,14 @@ module FIX.Components.Class where
 
 import Control.Arrow (second)
 import Control.Monad.Except
+import Control.Monad.Reader
 import Control.Monad.State
 import Data.Proxy
 import FIX.Core
 import FIX.Fields.MsgType
 
-type ComponentP a = StateT [Field] (Except ComponentParseError) a
+-- The bool indicates whether fields must be parsed in order (in a group)
+type ComponentP a = ReaderT Bool (StateT [Field] (Except ComponentParseError)) a
 
 tryComponentP :: ComponentP a -> ComponentP (Maybe a)
 tryComponentP = undefined
@@ -38,6 +40,7 @@ requiredFieldP = do
 
 optionalFieldP :: forall a. (IsField a) => ComponentP (Maybe a)
 optionalFieldP = do
+  inOrder <- ask
   fields <- get
   let tag = fieldTag (Proxy :: Proxy a)
   let go = \case
@@ -45,7 +48,10 @@ optionalFieldP = do
         (f@(Field t v) : fs) ->
           if t == tag
             then pure (v, fs)
-            else second (f :) <$> go fs
+            else
+              if inOrder
+                then Nothing
+                else second (f :) <$> go fs
 
   case go fields of
     Nothing -> pure Nothing
