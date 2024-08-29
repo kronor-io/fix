@@ -599,7 +599,6 @@ headerDataFile pieces =
                 "",
                 "module FIX.Messages.Header where",
                 "",
-                "import Data.Maybe",
                 "import Data.List.NonEmpty (NonEmpty)",
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
@@ -662,16 +661,26 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                 TH.pprint
                   [ messagePiecesDataDeclaration constructorName groupPieces,
                     validityInstance (mkName (T.unpack constructorName)),
-                    messagePiecesIsComponentInstance constructorName groupPieces
+                    messagePiecesIsComponentInstance constructorName groupPieces,
+                    InstanceD
+                      Nothing
+                      []
+                      (AppT (ConT (mkName "IsGroup")) (ConT (mkName (T.unpack constructorName))))
+                      [ TySynD
+                          (mkName "GroupNumField")
+                          [PlainTV (mkName (T.unpack constructorName)) ()]
+                          (ConT (mkName (T.unpack groupName)))
+                      ]
                   ]
               ]
          in unlines $
               concat
                 [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
                     "{-# LANGUAGE DeriveGeneric #-}",
-                    "{-# LANGUAGE MultiParamTypeClasses #-}",
                     "{-# LANGUAGE DerivingStrategies #-}",
+                    "{-# LANGUAGE MultiParamTypeClasses #-}",
                     "{-# LANGUAGE RecordWildCards #-}",
+                    "{-# LANGUAGE TypeFamilies #-}",
                     "",
                     "module FIX.Groups." <> T.unpack constructorName <> " where",
                     "",
@@ -681,6 +690,8 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                     "import FIX.Fields.MsgType",
                     "import GHC.Generics (Generic)",
                     "import Data.Proxy",
+                    "",
+                    "import FIX.Fields." <> T.unpack groupName,
                     ""
                   ],
                   messagePiecesImports groupPieces,

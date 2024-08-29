@@ -7,7 +7,6 @@
 module FIX.Messages.Header where
 
 import Data.List.NonEmpty (NonEmpty)
-import Data.Maybe
 import Data.Validity
 import FIX.Components.Class
 import FIX.Fields.BeginString
