@@ -594,45 +594,45 @@ gatherGroupSpecs Spec {..} =
         foldMap pieceGroupSpecs specTrailer
       ]
 
-groupSpecConstructorName :: GroupSpec -> Name
-groupSpecConstructorName = mkName . T.unpack . groupName
+groupSpecConstructorName :: GroupSpec -> Text
+groupSpecConstructorName = (\t -> fromMaybe t $ T.stripPrefix "No" t) . groupName
 
 groupsDataFiles :: [GroupSpec] -> CodeGen
 groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
-  genHaskellFile ("fix-spec/src/FIX/Groups/" <> T.unpack groupName <> ".hs") $
-    let constructorName = groupSpecConstructorName f
+  let constructorName = groupSpecConstructorName f
+   in genHaskellFile ("fix-spec/src/FIX/Groups/" <> T.unpack constructorName <> ".hs") $
         -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
 
-        section =
-          [ commentString $ ppShow f,
-            TH.pprint
-              [ messagePiecesDataDeclaration groupName groupPieces,
-                validityInstance constructorName,
-                messagePiecesIsComponentInstance groupName groupPieces
+        let section =
+              [ commentString $ ppShow f,
+                TH.pprint
+                  [ messagePiecesDataDeclaration constructorName groupPieces,
+                    validityInstance (mkName (T.unpack constructorName)),
+                    messagePiecesIsComponentInstance constructorName groupPieces
+                  ]
               ]
-          ]
-     in unlines $
-          concat
-            [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
-                "{-# LANGUAGE DeriveGeneric #-}",
-                "{-# LANGUAGE MultiParamTypeClasses #-}",
-                "{-# LANGUAGE DerivingStrategies #-}",
-                "{-# LANGUAGE RecordWildCards #-}",
-                "",
-                "module FIX.Groups." <> T.unpack groupName <> " where",
-                "",
-                "import Data.Validity",
-                "import FIX.Groups.Class",
-                "import FIX.Components.Class",
-                "import FIX.Fields.MsgType",
-                "import GHC.Generics (Generic)",
-                "import Data.Proxy",
-                "import Data.Maybe (catMaybes)",
-                ""
-              ],
-              messagePiecesImports groupPieces,
-              section
-            ]
+         in unlines $
+              concat
+                [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
+                    "{-# LANGUAGE DeriveGeneric #-}",
+                    "{-# LANGUAGE MultiParamTypeClasses #-}",
+                    "{-# LANGUAGE DerivingStrategies #-}",
+                    "{-# LANGUAGE RecordWildCards #-}",
+                    "",
+                    "module FIX.Groups." <> T.unpack constructorName <> " where",
+                    "",
+                    "import Data.Validity",
+                    "import FIX.Groups.Class",
+                    "import FIX.Components.Class",
+                    "import FIX.Fields.MsgType",
+                    "import GHC.Generics (Generic)",
+                    "import Data.Proxy",
+                    "import Data.Maybe (catMaybes)",
+                    ""
+                  ],
+                  messagePiecesImports groupPieces,
+                  section
+                ]
 
 componentSpecConstructorName :: ComponentSpec -> Name
 componentSpecConstructorName = mkName . T.unpack . componentName
