@@ -52,3 +52,5 @@ instance IsComponent Hops where
 
 instance IsGroup Hops where
   type GroupNumField Hops = NoHops
+  mkGroupNum Proxy = NoHops
+  countGroupNum Proxy = unNoHops

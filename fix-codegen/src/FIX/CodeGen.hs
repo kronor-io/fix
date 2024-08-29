@@ -426,8 +426,9 @@ messagePiecesDataDeclaration name pieces =
                     MessagePieceGroup gs required ->
                       ( mkFieldName name (groupSpecConstructorName gs),
                         Bang NoSourceUnpackedness SourceStrict,
-                        requiredFunc required $
-                          AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
+                        if required
+                          then AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
+                          else AppT ListT (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
                       )
                 )
                 pieces
@@ -599,7 +600,6 @@ headerDataFile pieces =
                 "",
                 "module FIX.Messages.Header where",
                 "",
-                "import Data.List.NonEmpty (NonEmpty)",
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
                 "import FIX.Components.Class",
@@ -669,7 +669,21 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                       [ TySynD
                           (mkName "GroupNumField")
                           [PlainTV (mkName (T.unpack constructorName)) ()]
-                          (ConT (mkName (T.unpack groupName)))
+                          (ConT (mkName (T.unpack groupName))),
+                        FunD
+                          (mkName "mkGroupNum")
+                          [ Clause
+                              [VarP (mkName "Proxy")]
+                              (NormalB (ConE (mkName (T.unpack groupName))))
+                              []
+                          ],
+                        FunD
+                          (mkName "countGroupNum")
+                          [ Clause
+                              [VarP (mkName "Proxy")]
+                              (NormalB (ConE (mkName ("un" <> T.unpack groupName))))
+                              []
+                          ]
                       ]
                   ]
               ]

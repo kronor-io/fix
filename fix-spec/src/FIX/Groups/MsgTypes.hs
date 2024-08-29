@@ -47,3 +47,5 @@ instance IsComponent MsgTypes where
 
 instance IsGroup MsgTypes where
   type GroupNumField MsgTypes = NoMsgTypes
+  mkGroupNum Proxy = NoMsgTypes
+  countGroupNum Proxy = unNoMsgTypes

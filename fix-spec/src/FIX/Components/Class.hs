@@ -14,6 +14,9 @@ import FIX.Fields.MsgType
 
 type ComponentP a = StateT [Field] (Except ComponentParseError) a
 
+tryComponentP :: ComponentP a -> ComponentP (Maybe a)
+tryComponentP = undefined
+
 data ComponentParseError
   = -- TODO get this constructor out of here and into a message parse error
     ComponentParseErrorMsgTypeMismatch !MsgType !MsgType
@@ -75,3 +78,9 @@ requiredComponentB = toComponentFields
 
 optionalComponentB :: (IsComponent a) => Maybe a -> [Field]
 optionalComponentB = maybe [] requiredComponentB
+
+requiredComponentP :: (IsComponent a) => ComponentP a
+requiredComponentP = fromComponentFields
+
+optionalComponentP :: (IsComponent a) => ComponentP (Maybe a)
+optionalComponentP = tryComponentP requiredComponentP

@@ -6,7 +6,6 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Messages.Header where
 
-import Data.List.NonEmpty (NonEmpty)
 import Data.Validity
 import FIX.Components.Class
 import FIX.Fields.BeginString
@@ -66,7 +65,7 @@ data Header = Header
     headerXmlData :: !(Maybe XmlData),
     headerMessageEncoding :: !(Maybe MessageEncoding),
     headerLastMsgSeqNumProcessed :: !(Maybe LastMsgSeqNumProcessed),
-    headerHops :: !(Maybe (NonEmpty Hops))
+    headerHops :: ![Hops]
   }
   deriving stock (Show, Eq, Generic)
 

@@ -62,7 +62,7 @@ data Logon = Logon
     logonResetSeqNumFlag :: !(Maybe ResetSeqNumFlag),
     logonNextExpectedMsgSeqNum :: !(Maybe NextExpectedMsgSeqNum),
     logonMaxMessageSize :: !(Maybe MaxMessageSize),
-    logonMsgTypes :: !(Maybe (NonEmpty MsgTypes)),
+    logonMsgTypes :: ![MsgTypes],
     logonTestMessageIndicator :: !(Maybe TestMessageIndicator),
     logonUsername :: !(Maybe Username),
     logonPassword :: !(Maybe Password)
