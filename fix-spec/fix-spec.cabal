@@ -59,6 +59,8 @@ library
       FIX.Fields.Username
       FIX.Fields.XmlData
       FIX.Fields.XmlDataLen
+      FIX.Groups.Class
+      FIX.Groups.NoHops
       FIX.Messages.Class
       FIX.Messages.Envelope
       FIX.Messages.Header

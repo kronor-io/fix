@@ -50,6 +50,15 @@ runFixCodeGen = do
                   ],
             headerDataFile (specHeader spec),
             trailerDataFile (specTrailer spec),
+            -- Groups
+            let groupSpecs = gatherGroupSpecs spec
+             in mconcat
+                  [ genHaskellDataFile "fix-spec/src/FIX/Groups/Class.hs",
+                    groupsDataFiles groupSpecs
+                    -- componentsGenFile componentSpecs,
+                    -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
+                    -- componentsSpecFile componentSpecs
+                  ],
             -- Components
             let componentSpecs = specComponents spec
              in mconcat
@@ -106,6 +115,12 @@ filterSpec (Just messages) spec =
           specComponents = filteredCompoments,
           specFields = filteredFields
         }
+
+pieceGroupSpecs :: MessagePiece -> Set GroupSpec
+pieceGroupSpecs = \case
+  MessagePieceGroup gs _ -> S.insert gs (foldMap pieceGroupSpecs (groupPieces gs))
+  MessagePieceField _ _ -> S.empty
+  MessagePieceComponent _ _ -> S.empty
 
 fieldSpecConstructorName :: FieldSpec -> Name
 fieldSpecConstructorName = mkName . T.unpack . fieldName
@@ -569,6 +584,54 @@ trailerDataFile pieces =
                 TH.pprint $ validityInstance (mkName "Trailer"),
                 TH.pprint $ messagePiecesIsComponentInstance "Trailer" pieces
               ]
+            ]
+
+gatherGroupSpecs :: Spec -> [GroupSpec]
+gatherGroupSpecs Spec {..} =
+  S.toList $
+    mconcat
+      [ foldMap pieceGroupSpecs specHeader,
+        foldMap pieceGroupSpecs specTrailer
+      ]
+
+groupSpecConstructorName :: GroupSpec -> Name
+groupSpecConstructorName = mkName . T.unpack . groupName
+
+groupsDataFiles :: [GroupSpec] -> CodeGen
+groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
+  genHaskellFile ("fix-spec/src/FIX/Groups/" <> T.unpack groupName <> ".hs") $
+    let constructorName = groupSpecConstructorName f
+        -- This is an ugly hack because Language.Haskell.TH.Syntax does not have any syntax for record wildcards
+
+        section =
+          [ commentString $ ppShow f,
+            TH.pprint
+              [ messagePiecesDataDeclaration groupName groupPieces,
+                validityInstance constructorName,
+                messagePiecesIsComponentInstance groupName groupPieces
+              ]
+          ]
+     in unlines $
+          concat
+            [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
+                "{-# LANGUAGE DeriveGeneric #-}",
+                "{-# LANGUAGE MultiParamTypeClasses #-}",
+                "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE RecordWildCards #-}",
+                "",
+                "module FIX.Groups." <> T.unpack groupName <> " where",
+                "",
+                "import Data.Validity",
+                "import FIX.Groups.Class",
+                "import FIX.Components.Class",
+                "import FIX.Fields.MsgType",
+                "import GHC.Generics (Generic)",
+                "import Data.Proxy",
+                "import Data.Maybe (catMaybes)",
+                ""
+              ],
+              messagePiecesImports groupPieces,
+              section
             ]
 
 componentSpecConstructorName :: ComponentSpec -> Name

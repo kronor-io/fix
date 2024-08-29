@@ -92,7 +92,7 @@ data MessagePiece
   = MessagePieceField !Text !Bool
   | MessagePieceComponent !Text !Bool
   | MessagePieceGroup !GroupSpec !Bool
-  deriving (Show)
+  deriving (Show, Eq, Ord)
 
 parseMessagePiece :: Element -> Maybe MessagePiece
 parseMessagePiece e@Element {..} =
@@ -122,7 +122,7 @@ data GroupSpec = GroupSpec
   { groupName :: !Text,
     groupPieces :: ![MessagePiece]
   }
-  deriving (Show)
+  deriving (Show, Eq, Ord)
 
 data FieldSpec = FieldSpec
   { fieldNumber :: !Word,
