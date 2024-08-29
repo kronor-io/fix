@@ -30,6 +30,7 @@ runFixCodeGen = do
     Nothing -> die "Failed to parse specfication."
     Just spec' -> do
       let spec = filterSpec settingMessages spec'
+      let groupSpecs = gatherGroupSpecs spec
 
       testResourcesFiles <- genTestResources
 
@@ -51,20 +52,19 @@ runFixCodeGen = do
             headerDataFile (specHeader spec),
             trailerDataFile (specTrailer spec),
             -- Groups
-            let groupSpecs = gatherGroupSpecs spec
-             in mconcat
-                  [ genHaskellDataFile "fix-spec/src/FIX/Groups/Class.hs",
-                    groupsDataFiles groupSpecs
-                    -- componentsGenFile componentSpecs,
-                    -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
-                    -- componentsSpecFile componentSpecs
-                  ],
+            mconcat
+              [ genHaskellDataFile "fix-spec/src/FIX/Groups/Class.hs",
+                groupsDataFiles groupSpecs
+                -- componentsGenFile componentSpecs,
+                -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
+                -- componentsSpecFile componentSpecs
+              ],
             -- Components
             let componentSpecs = specComponents spec
              in mconcat
                   [ genHaskellDataFile "fix-spec/src/FIX/Components/Class.hs",
-                    componentsDataFiles componentSpecs
-                    -- componentsGenFile componentSpecs,
+                    componentsDataFiles componentSpecs,
+                    componentsGenFile groupSpecs componentSpecs
                     -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
                     -- componentsSpecFile componentSpecs
                   ],
@@ -737,6 +737,49 @@ componentsDataFiles = foldMap $ \f@ComponentSpec {..} ->
               section
             ]
 
+componentsGenFile :: [GroupSpec] -> [ComponentSpec] -> CodeGen
+componentsGenFile groupSpecs componentSpecs =
+  genHaskellFile "fix-spec-gen/src/FIX/Components/Gen.hs" $
+    let componentsImports =
+          map
+            ( \f ->
+                "import FIX.Components." <> T.unpack (componentName f)
+            )
+            componentSpecs
+        groupsImports =
+          map
+            ( \f ->
+                "import FIX.Groups." <> T.unpack (groupSpecConstructorName f)
+            )
+            groupSpecs
+        componentsSections = flip map componentSpecs $ \f ->
+          let constructorName = componentSpecConstructorName f
+           in [ TH.pprint
+                  [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
+                  ]
+              ]
+        groupsSections = flip map groupSpecs $ \f ->
+          let constructorName = groupSpecConstructorName f
+           in [ TH.pprint
+                  [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT (mkName (T.unpack constructorName)))) []
+                  ]
+              ]
+     in unlines $
+          concat $
+            [ "{-# OPTIONS_GHC -Wno-orphans #-}",
+              "",
+              "module FIX.Components.Gen where",
+              "",
+              "import Data.GenValidity",
+              "import Data.GenValidity.ByteString ()",
+              "import FIX.Fields.Gen ()",
+              ""
+            ]
+              : componentsImports
+              : groupsImports
+              : groupsSections
+              ++ componentsSections
+
 messagesDataFiles :: [MessageSpec] -> CodeGen
 messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
   genHaskellFile ("fix-spec/src/FIX/Messages/" <> T.unpack messageName <> ".hs") $
@@ -811,6 +854,7 @@ messagesGenFile messageSpecs =
               "import Data.GenValidity",
               "import Data.GenValidity.ByteString ()",
               "import FIX.Fields.Gen ()",
+              "import FIX.Components.Gen ()",
               "import FIX.Messages.Header",
               "import FIX.Messages.Trailer",
               "import FIX.Messages.Envelope",

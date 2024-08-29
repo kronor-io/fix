@@ -6,6 +6,7 @@ module FIX.Messages.Gen where
 
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
+import FIX.Components.Gen ()
 import FIX.Fields.Gen ()
 import FIX.Messages.Envelope
 import FIX.Messages.Header

@@ -10,6 +10,7 @@ build-type:     Simple
 
 library
   exposed-modules:
+      FIX.Components.Gen
       FIX.Fields.Gen
       FIX.Messages.Gen
       FIX.Messages.TestUtils
