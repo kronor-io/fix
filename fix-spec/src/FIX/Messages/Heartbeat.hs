@@ -8,6 +8,7 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Messages.Heartbeat where
 
+import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity

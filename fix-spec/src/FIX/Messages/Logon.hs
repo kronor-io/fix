@@ -8,6 +8,7 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Messages.Logon where
 
+import Data.List.NonEmpty (NonEmpty)
 import Data.Maybe (catMaybes)
 import Data.Proxy
 import Data.Validity
@@ -23,6 +24,7 @@ import FIX.Fields.RawDataLength
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.Username
+import FIX.Groups.MsgTypes
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -60,6 +62,7 @@ data Logon = Logon
     logonResetSeqNumFlag :: !(Maybe ResetSeqNumFlag),
     logonNextExpectedMsgSeqNum :: !(Maybe NextExpectedMsgSeqNum),
     logonMaxMessageSize :: !(Maybe MaxMessageSize),
+    logonMsgTypes :: !(Maybe (NonEmpty MsgTypes)),
     logonTestMessageIndicator :: !(Maybe TestMessageIndicator),
     logonUsername :: !(Maybe Username),
     logonPassword :: !(Maybe Password)

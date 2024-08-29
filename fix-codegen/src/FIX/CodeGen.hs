@@ -398,6 +398,10 @@ mkFieldName name t = mkName $ lowerHead (T.unpack name) <> T.unpack t
 messagePiecesDataDeclaration :: Text -> [MessagePiece] -> Dec
 messagePiecesDataDeclaration name pieces =
   let constructorName = mkName (T.unpack name)
+      requiredFunc r =
+        if r
+          then id
+          else AppT (ConT (mkName "Maybe"))
    in DataD
         []
         constructorName
@@ -411,13 +415,23 @@ messagePiecesDataDeclaration name pieces =
                       Just
                         ( mkFieldName name t,
                           Bang NoSourceUnpackedness SourceStrict,
-                          ( if required
-                              then id
-                              else AppT (ConT (mkName "Maybe"))
-                          )
-                            $ ConT (mkName (T.unpack t))
+                          requiredFunc required $
+                            ConT (mkName (T.unpack t))
                         )
-                    _ -> Nothing -- TODO define them all
+                    MessagePieceComponent c required ->
+                      Just
+                        ( mkFieldName name c,
+                          Bang NoSourceUnpackedness SourceStrict,
+                          requiredFunc required $
+                            ConT (mkName (T.unpack c))
+                        )
+                    MessagePieceGroup gs required ->
+                      Just
+                        ( mkFieldName name (groupSpecConstructorName gs),
+                          Bang NoSourceUnpackedness SourceStrict,
+                          requiredFunc required $
+                            AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
+                        )
                 )
                 pieces
             )
@@ -440,11 +454,11 @@ validityInstance typeName =
 
 messagePiecesImports :: [MessagePiece] -> [String]
 messagePiecesImports =
-  mapMaybe
+  map
     ( \case
-        MessagePieceField t _ -> Just $ "import FIX.Fields." <> T.unpack t
-        MessagePieceComponent t _ -> Just $ "import FIX.Components." <> T.unpack t
-        _ -> Nothing
+        MessagePieceField t _ -> "import FIX.Fields." <> T.unpack t
+        MessagePieceComponent t _ -> "import FIX.Components." <> T.unpack t
+        MessagePieceGroup gs _ -> "import FIX.Groups." <> T.unpack (groupSpecConstructorName gs)
     )
 
 messagePiecesToFieldsFunction :: Text -> Name -> [MessagePiece] -> Dec
@@ -549,6 +563,7 @@ headerDataFile pieces =
                 "module FIX.Messages.Header where",
                 "",
                 "import Data.Maybe",
+                "import Data.List.NonEmpty (NonEmpty)",
                 "import Data.Validity",
                 "import GHC.Generics (Generic)",
                 "import FIX.Components.Class",
@@ -591,7 +606,9 @@ gatherGroupSpecs Spec {..} =
   S.toList $
     mconcat
       [ foldMap pieceGroupSpecs specHeader,
-        foldMap pieceGroupSpecs specTrailer
+        foldMap pieceGroupSpecs specTrailer,
+        foldMap pieceGroupSpecs $ foldMap componentPieces specComponents,
+        foldMap pieceGroupSpecs $ foldMap messagePieces specMessages
       ]
 
 groupSpecConstructorName :: GroupSpec -> Text
@@ -711,6 +728,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                 "module FIX.Messages." <> T.unpack messageName <> " where",
                 "",
                 "import Data.Validity",
+                "import Data.List.NonEmpty (NonEmpty)",
                 "import FIX.Components.Class",
                 "import FIX.Messages.Class",
                 "import FIX.Fields.MsgType",
