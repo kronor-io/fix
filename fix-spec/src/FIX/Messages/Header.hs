@@ -35,7 +35,7 @@ import FIX.Fields.TargetSubID
 import FIX.Fields.XmlData
 import FIX.Fields.XmlDataLen
 import FIX.Groups.Class
-import FIX.Groups.Hops
+import FIX.Groups.HopsGroupElem
 import GHC.Generics (Generic)
 
 data Header = Header
@@ -65,7 +65,7 @@ data Header = Header
     headerXmlData :: !(Maybe XmlData),
     headerMessageEncoding :: !(Maybe MessageEncoding),
     headerLastMsgSeqNumProcessed :: !(Maybe LastMsgSeqNumProcessed),
-    headerHops :: ![Hops]
+    headerHopsGroup :: ![HopsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -100,7 +100,7 @@ instance IsComponent Header where
         optionalFieldB headerXmlData,
         optionalFieldB headerMessageEncoding,
         optionalFieldB headerLastMsgSeqNumProcessed,
-        optionalGroupB headerHops
+        optionalGroupB headerHopsGroup
       ]
   fromComponentFields = do
     headerBeginString <- requiredFieldP
@@ -129,5 +129,5 @@ instance IsComponent Header where
     headerXmlData <- optionalFieldP
     headerMessageEncoding <- optionalFieldP
     headerLastMsgSeqNumProcessed <- optionalFieldP
-    headerHops <- optionalGroupP
+    headerHopsGroup <- optionalGroupP
     pure (Header {..})

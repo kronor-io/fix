@@ -7,8 +7,8 @@ module FIX.ComponentsSpec where
 
 import FIX.Components.Gen ()
 import FIX.Components.TestUtils
-import FIX.Groups.Hops
-import FIX.Groups.MsgTypes
+import FIX.Groups.HopsGroupElem
+import FIX.Groups.MsgTypesGroupElem
 import FIX.Groups.TestUtils
 import Test.Syd
 import Test.Syd.Validity
@@ -18,14 +18,14 @@ spec = do
   describe
     "NoHops"
     ( do
-        genValidSpec @Hops
-        componentSpec @Hops
-        groupSpec @Hops
+        genValidSpec @HopsGroupElem
+        componentSpec @HopsGroupElem
+        groupSpec @HopsGroupElem
     )
   describe
     "NoMsgTypes"
     ( do
-        genValidSpec @MsgTypes
-        componentSpec @MsgTypes
-        groupSpec @MsgTypes
+        genValidSpec @MsgTypesGroupElem
+        componentSpec @MsgTypesGroupElem
+        groupSpec @MsgTypesGroupElem
     )

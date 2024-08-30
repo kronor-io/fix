@@ -24,7 +24,7 @@ import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.Username
 import FIX.Groups.Class
-import FIX.Groups.MsgTypes
+import FIX.Groups.MsgTypesGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -62,7 +62,7 @@ data Logon = Logon
     logonResetSeqNumFlag :: !(Maybe ResetSeqNumFlag),
     logonNextExpectedMsgSeqNum :: !(Maybe NextExpectedMsgSeqNum),
     logonMaxMessageSize :: !(Maybe MaxMessageSize),
-    logonMsgTypes :: ![MsgTypes],
+    logonMsgTypesGroup :: ![MsgTypesGroupElem],
     logonTestMessageIndicator :: !(Maybe TestMessageIndicator),
     logonUsername :: !(Maybe Username),
     logonPassword :: !(Maybe Password)
@@ -81,7 +81,7 @@ instance IsComponent Logon where
         optionalFieldB logonResetSeqNumFlag,
         optionalFieldB logonNextExpectedMsgSeqNum,
         optionalFieldB logonMaxMessageSize,
-        optionalGroupB logonMsgTypes,
+        optionalGroupB logonMsgTypesGroup,
         optionalFieldB logonTestMessageIndicator,
         optionalFieldB logonUsername,
         optionalFieldB logonPassword
@@ -94,7 +94,7 @@ instance IsComponent Logon where
     logonResetSeqNumFlag <- optionalFieldP
     logonNextExpectedMsgSeqNum <- optionalFieldP
     logonMaxMessageSize <- optionalFieldP
-    logonMsgTypes <- optionalGroupP
+    logonMsgTypesGroup <- optionalGroupP
     logonTestMessageIndicator <- optionalFieldP
     logonUsername <- optionalFieldP
     logonPassword <- optionalFieldP

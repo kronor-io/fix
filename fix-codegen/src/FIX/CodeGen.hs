@@ -92,21 +92,39 @@ filterSpec (Just messages) spec =
         MessagePieceField _ _ -> S.empty
         MessagePieceComponent c _ -> S.singleton c
         MessagePieceGroup ps _ -> foldMap pieceComponentNames (groupPieces ps)
+      componentComponents :: ComponentSpec -> Set Text
+      componentComponents = foldMap pieceComponentNames . componentPieces
       messageComponents :: MessageSpec -> Set Text
       messageComponents = foldMap pieceComponentNames . messagePieces
+      gatherComponentFixpoint :: Set Text -> Set Text
+      gatherComponentFixpoint mentionedRoots =
+        let cs = filter ((`S.member` mentionedRoots) . componentName) (specComponents spec)
+            newCompoments = foldMap componentComponents cs
+            newRoots = S.union mentionedRoots newCompoments
+         in if newRoots == mentionedRoots then newRoots else gatherComponentFixpoint newRoots
       mentionedComponents :: Set Text
-      mentionedComponents = foldMap messageComponents filteredMessages
+      mentionedComponents =
+        gatherComponentFixpoint $
+          S.unions
+            [ foldMap pieceComponentNames (specHeader spec),
+              foldMap pieceComponentNames (specTrailer spec),
+              -- foldMap messageComponents filteredMessages
+              foldMap messageComponents filteredMessages
+            ]
       filteredCompoments = filter (\f -> S.member (componentName f) mentionedComponents) (specComponents spec)
       pieceFieldNames :: MessagePiece -> Set Text
       pieceFieldNames = \case
         MessagePieceField n _ -> S.singleton n
         MessagePieceComponent _ _ -> S.empty
         MessagePieceGroup gs _ -> S.insert (groupName gs) (foldMap pieceFieldNames (groupPieces gs))
+      componentFields :: ComponentSpec -> Set Text
+      componentFields = foldMap pieceFieldNames . componentPieces
       messageFields :: MessageSpec -> Set Text
       messageFields = foldMap pieceFieldNames . messagePieces
       mentionedFields =
         S.unions
           [ foldMap pieceFieldNames (specHeader spec),
+            foldMap componentFields filteredCompoments,
             foldMap messageFields filteredMessages,
             foldMap pieceFieldNames (specTrailer spec)
           ]
@@ -465,7 +483,7 @@ messagePiecesDataDeclaration name pieces =
                           ConT (mkName (T.unpack c))
                       )
                     MessagePieceGroup gs required ->
-                      ( mkFieldName name (groupSpecConstructorName gs),
+                      ( groupSpecGroupFieldName name gs,
                         Bang NoSourceUnpackedness SourceStrict,
                         if required
                           then AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))
@@ -537,7 +555,7 @@ messagePiecesToFieldsFunction name funName pieces =
                           )
                       )
                   )
-                  (VarE (mkFieldName name (groupSpecConstructorName gs)))
+                  (VarE (groupSpecGroupFieldName name gs))
           )
           pieces
       recordWildCardName =
@@ -587,7 +605,7 @@ messagePiecesFromFieldsFunction name funName pieces =
                   )
               MessagePieceGroup gs required ->
                 BindS
-                  (VarP (mkFieldName name (groupSpecConstructorName gs)))
+                  (VarP (groupSpecGroupFieldName name gs))
                   ( VarE
                       ( mkName
                           ( if required
@@ -689,7 +707,10 @@ gatherGroupSpecs Spec {..} =
       ]
 
 groupSpecConstructorName :: GroupSpec -> Text
-groupSpecConstructorName = (\t -> fromMaybe t $ T.stripPrefix "No" t) . groupName
+groupSpecConstructorName = (<> "GroupElem") . (\t -> fromMaybe t $ T.stripPrefix "No" t) . groupName
+
+groupSpecGroupFieldName :: Text -> GroupSpec -> Name
+groupSpecGroupFieldName name gs = mkName $ lowerHead $ T.unpack $ (name <>) . (<> "Group") . (\t -> fromMaybe t $ T.stripPrefix "No" t) $ groupName gs
 
 groupsDataFiles :: [GroupSpec] -> CodeGen
 groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
@@ -781,7 +802,8 @@ componentsDataFiles = foldMap $ \f@ComponentSpec {..} ->
                 "module FIX.Components." <> T.unpack componentName <> " where",
                 "",
                 "import Data.Validity",
-                "import FIX.Components.Class",
+                "import Data.List.NonEmpty (NonEmpty)",
+                "import FIX.Groups.Class",
                 "import FIX.Components.Class",
                 "import FIX.Fields.MsgType",
                 "import GHC.Generics (Generic)",

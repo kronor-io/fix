@@ -60,8 +60,8 @@ library
       FIX.Fields.XmlData
       FIX.Fields.XmlDataLen
       FIX.Groups.Class
-      FIX.Groups.Hops
-      FIX.Groups.MsgTypes
+      FIX.Groups.HopsGroupElem
+      FIX.Groups.MsgTypesGroupElem
       FIX.Messages.Class
       FIX.Messages.Envelope
       FIX.Messages.Header

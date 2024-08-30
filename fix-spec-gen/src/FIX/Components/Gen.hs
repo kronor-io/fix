@@ -7,9 +7,9 @@ module FIX.Components.Gen where
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
 import FIX.Fields.Gen ()
-import FIX.Groups.Hops
-import FIX.Groups.MsgTypes
+import FIX.Groups.HopsGroupElem
+import FIX.Groups.MsgTypesGroupElem
 
-instance GenValid Hops
+instance GenValid HopsGroupElem
 
-instance GenValid MsgTypes
+instance GenValid MsgTypesGroupElem
