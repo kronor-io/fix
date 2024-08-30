@@ -7,53 +7,9 @@ module FIX.Fields.Gen where
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
 import FIX.Core.Gen ()
-import FIX.Fields.BeginString
-import FIX.Fields.BodyLength
-import FIX.Fields.CheckSum
-import FIX.Fields.DeliverToCompID
-import FIX.Fields.DeliverToLocationID
-import FIX.Fields.DeliverToSubID
-import FIX.Fields.EncryptMethod
-import FIX.Fields.HeartBtInt
-import FIX.Fields.HopCompID
-import FIX.Fields.HopRefID
-import FIX.Fields.HopSendingTime
-import FIX.Fields.LastMsgSeqNumProcessed
-import FIX.Fields.MaxMessageSize
-import FIX.Fields.MessageEncoding
-import FIX.Fields.MsgDirection
-import FIX.Fields.MsgSeqNum
-import FIX.Fields.MsgType
-import FIX.Fields.NextExpectedMsgSeqNum
-import FIX.Fields.NoHops
-import FIX.Fields.NoMsgTypes
-import FIX.Fields.OnBehalfOfCompID
-import FIX.Fields.OnBehalfOfLocationID
-import FIX.Fields.OnBehalfOfSubID
-import FIX.Fields.OrigSendingTime
-import FIX.Fields.Password
-import FIX.Fields.PossDupFlag
-import FIX.Fields.PossResend
-import FIX.Fields.RawData
-import FIX.Fields.RawDataLength
-import FIX.Fields.RefMsgType
-import FIX.Fields.ResetSeqNumFlag
-import FIX.Fields.SecureData
-import FIX.Fields.SecureDataLen
-import FIX.Fields.SenderCompID
-import FIX.Fields.SenderLocationID
-import FIX.Fields.SenderSubID
-import FIX.Fields.SendingTime
-import FIX.Fields.Signature
-import FIX.Fields.SignatureLength
-import FIX.Fields.TargetCompID
-import FIX.Fields.TargetLocationID
-import FIX.Fields.TargetSubID
-import FIX.Fields.TestMessageIndicator
-import FIX.Fields.TestReqID
-import FIX.Fields.Username
-import FIX.Fields.XmlData
-import FIX.Fields.XmlDataLen
+import FIX.Fields
+
+instance GenValid AnyField
 
 instance GenValid BeginString
 

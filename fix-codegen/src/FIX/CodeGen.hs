@@ -374,13 +374,7 @@ fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
 fieldsGenFile :: [FieldSpec] -> CodeGen
 fieldsGenFile fieldSpecs =
   genHaskellFile "fix-spec-gen/src/FIX/Fields/Gen.hs" $
-    let imports =
-          map
-            ( \f ->
-                "import FIX.Fields." <> T.unpack (fieldName f)
-            )
-            fieldSpecs
-        sections = flip map fieldSpecs $ \f ->
+    let sections = flip map fieldSpecs $ \f ->
           let constructorName = fieldSpecConstructorName f
            in [ TH.pprint
                   [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
@@ -395,9 +389,11 @@ fieldsGenFile fieldSpecs =
               "import Data.GenValidity",
               "import Data.GenValidity.ByteString ()",
               "import FIX.Core.Gen ()",
+              "import FIX.Fields",
+              "",
+              "instance GenValid AnyField",
               ""
             ]
-              : imports
               : sections
 
 fieldsSpecFile :: [FieldSpec] -> CodeGen
@@ -442,10 +438,42 @@ topLevelFieldsFile fieldSpecs =
             fieldSpecs
      in unlines $
           concat
-            [ [ "module FIX.Fields (module X) where",
+            [ [ "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE DeriveGeneric #-}",
+                "module FIX.Fields (AnyField(..), module X) where",
+                "",
+                "import GHC.Generics (Generic)",
+                "import Data.Validity",
                 ""
               ],
-              imports
+              imports,
+              [ TH.pprint
+                  [ DataD
+                      []
+                      (mkName "AnyField")
+                      []
+                      Nothing
+                      ( map
+                          ( \fs ->
+                              NormalC
+                                (mkName (T.unpack ("Some" <> fieldName fs)))
+                                [ ( Bang NoSourceUnpackedness SourceStrict,
+                                    ConT (fieldSpecConstructorName fs)
+                                  )
+                                ]
+                          )
+                          fieldSpecs
+                      )
+                      [ DerivClause
+                          (Just StockStrategy)
+                          [ ConT (mkName "Show"),
+                            ConT (mkName "Eq"),
+                            ConT (mkName "Generic")
+                          ]
+                      ],
+                    validityInstance (mkName "AnyField")
+                  ]
+              ]
             ]
 
 messageSpecConstructorName :: MessageSpec -> Name
