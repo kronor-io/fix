@@ -54,9 +54,9 @@ runFixCodeGen = do
             -- Groups
             mconcat
               [ genHaskellDataFile "fix-spec/src/FIX/Groups/Class.hs",
-                groupsDataFiles groupSpecs
+                groupsDataFiles groupSpecs,
                 -- componentsGenFile componentSpecs,
-                -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
+                genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs"
                 -- componentsSpecFile componentSpecs
               ],
             -- Components
@@ -935,10 +935,23 @@ messagesSpecFile messageSpecs =
             messageSpecs
         statements = flip map messageSpecs $ \f ->
           let constructorName = messageSpecConstructorName f
+              nameLitE = LitE (StringL (T.unpack (messageName f)))
            in NoBindS
                 ( AppE
-                    (AppTypeE (VarE (mkName "messageSpec")) (ConT constructorName))
-                    (LitE (StringL (T.unpack (messageName f))))
+                    (AppE (VarE (mkName "describe")) nameLitE)
+                    ( DoE
+                        Nothing
+                        [ NoBindS
+                            (AppTypeE (VarE (mkName "genValidSpec")) (ConT constructorName)),
+                          NoBindS
+                            (AppTypeE (VarE (mkName "componentSpec")) (ConT constructorName)),
+                          NoBindS
+                            ( AppE
+                                (AppTypeE (VarE (mkName "messageSpec")) (ConT constructorName))
+                                nameLitE
+                            )
+                        ]
+                    )
                 )
      in unlines $
           concat
@@ -947,9 +960,11 @@ messagesSpecFile messageSpecs =
                 "",
                 "module FIX.MessagesSpec where",
                 "",
+                "import FIX.Components.TestUtils",
                 "import FIX.Messages.TestUtils",
                 "import FIX.Messages.Gen ()",
                 "import Test.Syd",
+                "import Test.Syd.Validity",
                 ""
               ],
               imports,

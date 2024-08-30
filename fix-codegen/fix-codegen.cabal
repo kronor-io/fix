@@ -11,6 +11,7 @@ data-files:
     data/fix-spec-gen/default.nix
     data/fix-spec-gen/fix-spec-gen.cabal
     data/fix-spec-gen/package.yaml
+    data/fix-spec-gen/src/FIX/Components/TestUtils.hs
     data/fix-spec-gen/src/FIX/Messages/TestUtils.hs
     data/fix-spec-gen/test/Spec.hs
     data/fix-spec-gen/test_resources/messages/Heartbeat/example.tagvalue

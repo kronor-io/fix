@@ -11,6 +11,7 @@ build-type:     Simple
 library
   exposed-modules:
       FIX.Components.Gen
+      FIX.Components.TestUtils
       FIX.Fields.Gen
       FIX.Messages.Gen
       FIX.Messages.TestUtils
@@ -49,5 +50,6 @@ test-suite fix-spec-test
     , fix-core-gen
     , fix-spec
     , fix-spec-gen
+    , genvalidity-sydtest
     , sydtest
   default-language: Haskell2010

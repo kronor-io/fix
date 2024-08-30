@@ -32,4 +32,5 @@ tests:
     - fix-core-gen
     - fix-spec
     - fix-spec-gen
+    - genvalidity-sydtest
     - sydtest

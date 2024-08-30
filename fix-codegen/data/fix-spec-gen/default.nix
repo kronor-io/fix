@@ -10,7 +10,9 @@ mkDerivation {
     base bytestring fix-core fix-core-gen fix-spec genvalidity
     genvalidity-bytestring genvalidity-sydtest path path-io sydtest
   ];
-  testHaskellDepends = [ base fix-core-gen fix-spec sydtest ];
+  testHaskellDepends = [
+    base fix-core-gen fix-spec genvalidity-sydtest sydtest
+  ];
   testToolDepends = [ sydtest-discover ];
   license = "unknown";
 }

@@ -14,6 +14,9 @@ import FIX.Fields.MsgType
 -- The bool indicates whether fields must be parsed in order (in a group)
 type ComponentP a = ReaderT Bool (StateT [Field] (Except ComponentParseError)) a
 
+runComponentP :: [Field] -> ComponentP a -> Either ComponentParseError a
+runComponentP fields func = runExcept $ evalStateT (runReaderT func False) fields
+
 tryComponentP :: ComponentP a -> ComponentP (Maybe a)
 tryComponentP = undefined
 
