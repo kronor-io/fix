@@ -9,6 +9,7 @@ import FIX.Components.Gen ()
 import FIX.Components.TestUtils
 import FIX.Groups.Hops
 import FIX.Groups.MsgTypes
+import FIX.Groups.TestUtils
 import Test.Syd
 import Test.Syd.Validity
 
@@ -19,10 +20,12 @@ spec = do
     ( do
         genValidSpec @Hops
         componentSpec @Hops
+        groupSpec @Hops
     )
   describe
     "NoMsgTypes"
     ( do
         genValidSpec @MsgTypes
         componentSpec @MsgTypes
+        groupSpec @MsgTypes
     )

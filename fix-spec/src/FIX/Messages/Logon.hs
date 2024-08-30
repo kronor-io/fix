@@ -73,7 +73,7 @@ instance Validity Logon
 
 instance IsComponent Logon where
   toComponentFields ((Logon {..})) =
-    concat
+    mconcat
       [ requiredFieldB logonEncryptMethod,
         requiredFieldB logonHeartBtInt,
         optionalFieldB logonRawDataLength,

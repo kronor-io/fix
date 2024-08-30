@@ -13,6 +13,7 @@ library
       FIX.Components.Gen
       FIX.Components.TestUtils
       FIX.Fields.Gen
+      FIX.Groups.TestUtils
       FIX.Messages.Gen
       FIX.Messages.TestUtils
   other-modules:

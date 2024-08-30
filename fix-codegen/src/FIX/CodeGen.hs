@@ -54,9 +54,9 @@ runFixCodeGen = do
             -- Groups
             mconcat
               [ genHaskellDataFile "fix-spec/src/FIX/Groups/Class.hs",
-                groupsDataFiles groupSpecs
+                groupsDataFiles groupSpecs,
                 -- groupsGenFile groupSpecs,
-                -- genHaskellDataFile "fix-spec-gen/src/FIX/Groups/TestUtils.hs",
+                genHaskellDataFile "fix-spec-gen/src/FIX/Groups/TestUtils.hs"
                 -- groupsSpecFile groupSpecs
               ],
             -- Components
@@ -551,7 +551,7 @@ messagePiecesToFieldsFunction name funName pieces =
             [ConP recordWildCardName [] []]
             ( NormalB
                 ( AppE
-                    (VarE (mkName "concat"))
+                    (VarE (mkName "mconcat"))
                     (ListE builders)
                 )
             )
@@ -863,7 +863,9 @@ componentsSpecFile groupSpecs componentSpecs =
                         [ NoBindS
                             (AppTypeE (VarE (mkName "genValidSpec")) conType),
                           NoBindS
-                            (AppTypeE (VarE (mkName "componentSpec")) conType)
+                            (AppTypeE (VarE (mkName "componentSpec")) conType),
+                          NoBindS
+                            (AppTypeE (VarE (mkName "groupSpec")) conType)
                         ]
                     )
                 )
@@ -890,6 +892,7 @@ componentsSpecFile groupSpecs componentSpecs =
                 "",
                 "module FIX.ComponentsSpec where",
                 "",
+                "import FIX.Groups.TestUtils",
                 "import FIX.Components.TestUtils",
                 "import FIX.Components.Gen ()",
                 "import Test.Syd",

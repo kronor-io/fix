@@ -39,7 +39,7 @@ instance Validity Hops
 
 instance IsComponent Hops where
   toComponentFields ((Hops {..})) =
-    concat
+    mconcat
       [ requiredFieldB hopsHopCompID,
         optionalFieldB hopsHopSendingTime,
         optionalFieldB hopsHopRefID

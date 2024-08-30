@@ -11,6 +11,7 @@ build-type:     Simple
 library
   exposed-modules:
       FIX.Components.TestUtils
+      FIX.Groups.TestUtils
       FIX.Messages.TestUtils
   other-modules:
       Paths_fix_spec_gen

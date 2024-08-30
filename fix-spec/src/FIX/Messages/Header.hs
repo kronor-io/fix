@@ -73,7 +73,7 @@ instance Validity Header
 
 instance IsComponent Header where
   toComponentFields ((Header {..})) =
-    concat
+    mconcat
       [ requiredFieldB headerBeginString,
         requiredFieldB headerBodyLength,
         requiredFieldB headerMsgType,

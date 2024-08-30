@@ -12,6 +12,7 @@ data-files:
     data/fix-spec-gen/fix-spec-gen.cabal
     data/fix-spec-gen/package.yaml
     data/fix-spec-gen/src/FIX/Components/TestUtils.hs
+    data/fix-spec-gen/src/FIX/Groups/TestUtils.hs
     data/fix-spec-gen/src/FIX/Messages/TestUtils.hs
     data/fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs
     data/fix-spec-gen/test/Spec.hs

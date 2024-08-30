@@ -36,7 +36,7 @@ instance Validity MsgTypes
 
 instance IsComponent MsgTypes where
   toComponentFields ((MsgTypes {..})) =
-    concat
+    mconcat
       [ requiredFieldB msgTypesRefMsgType,
         optionalFieldB msgTypesMsgDirection
       ]

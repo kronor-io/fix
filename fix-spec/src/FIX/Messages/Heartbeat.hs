@@ -30,7 +30,7 @@ data Heartbeat = Heartbeat {heartbeatTestReqID :: !(Maybe TestReqID)}
 instance Validity Heartbeat
 
 instance IsComponent Heartbeat where
-  toComponentFields ((Heartbeat {..})) = concat [optionalFieldB heartbeatTestReqID]
+  toComponentFields ((Heartbeat {..})) = mconcat [optionalFieldB heartbeatTestReqID]
   fromComponentFields = do
     heartbeatTestReqID <- optionalFieldP
     pure (Heartbeat {..})

@@ -24,7 +24,7 @@ instance Validity Trailer
 
 instance IsComponent Trailer where
   toComponentFields ((Trailer {..})) =
-    concat
+    mconcat
       [ optionalFieldB trailerSignatureLength,
         optionalFieldB trailerSignature,
         requiredFieldB trailerCheckSum
