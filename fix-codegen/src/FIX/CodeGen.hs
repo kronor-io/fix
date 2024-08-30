@@ -54,19 +54,19 @@ runFixCodeGen = do
             -- Groups
             mconcat
               [ genHaskellDataFile "fix-spec/src/FIX/Groups/Class.hs",
-                groupsDataFiles groupSpecs,
-                -- componentsGenFile componentSpecs,
-                genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs"
-                -- componentsSpecFile componentSpecs
+                groupsDataFiles groupSpecs
+                -- groupsGenFile groupSpecs,
+                -- genHaskellDataFile "fix-spec-gen/src/FIX/Groups/TestUtils.hs",
+                -- groupsSpecFile groupSpecs
               ],
             -- Components
             let componentSpecs = specComponents spec
              in mconcat
                   [ genHaskellDataFile "fix-spec/src/FIX/Components/Class.hs",
                     componentsDataFiles componentSpecs,
-                    componentsGenFile groupSpecs componentSpecs
-                    -- genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
-                    -- componentsSpecFile componentSpecs
+                    componentsGenFile groupSpecs componentSpecs,
+                    genHaskellDataFile "fix-spec-gen/src/FIX/Components/TestUtils.hs",
+                    componentsSpecFile groupSpecs componentSpecs
                   ],
             -- Messages
             let messageSpecs = specMessages spec
@@ -834,6 +834,87 @@ componentsGenFile groupSpecs componentSpecs =
               : groupsImports
               : groupsSections
               ++ componentsSections
+
+componentsSpecFile :: [GroupSpec] -> [ComponentSpec] -> CodeGen
+componentsSpecFile groupSpecs componentSpecs =
+  genHaskellFile "fix-spec-gen/test/FIX/ComponentsSpec.hs" $
+    let componentsImports =
+          map
+            ( \f ->
+                "import FIX.Components." <> T.unpack (componentName f)
+            )
+            componentSpecs
+        groupsImports =
+          map
+            ( \f ->
+                "import FIX.Groups." <> T.unpack (groupSpecConstructorName f)
+            )
+            groupSpecs
+
+        groupStatements = flip map groupSpecs $ \f ->
+          let constructorName = groupSpecConstructorName f
+              conType = ConT (mkName (T.unpack constructorName))
+              nameLitE = LitE (StringL (T.unpack (groupName f)))
+           in NoBindS
+                ( AppE
+                    (AppE (VarE (mkName "describe")) nameLitE)
+                    ( DoE
+                        Nothing
+                        [ NoBindS
+                            (AppTypeE (VarE (mkName "genValidSpec")) conType),
+                          NoBindS
+                            (AppTypeE (VarE (mkName "componentSpec")) conType)
+                        ]
+                    )
+                )
+        componentStatements = flip map componentSpecs $ \f ->
+          let constructorName = componentSpecConstructorName f
+              nameLitE = LitE (StringL (T.unpack (componentName f)))
+           in NoBindS
+                ( AppE
+                    (AppE (VarE (mkName "describe")) nameLitE)
+                    ( DoE
+                        Nothing
+                        [ NoBindS
+                            (AppTypeE (VarE (mkName "genValidSpec")) (ConT constructorName)),
+                          NoBindS
+                            (AppTypeE (VarE (mkName "componentSpec")) (ConT constructorName))
+                        ]
+                    )
+                )
+        statements = groupStatements <> componentStatements
+     in unlines $
+          concat
+            [ [ "{-# OPTIONS_GHC -Wno-unused-imports #-}",
+                "{-# LANGUAGE TypeApplications #-}",
+                "",
+                "module FIX.ComponentsSpec where",
+                "",
+                "import FIX.Components.TestUtils",
+                "import FIX.Components.Gen ()",
+                "import Test.Syd",
+                "import Test.Syd.Validity",
+                ""
+              ],
+              groupsImports,
+              componentsImports,
+              [ TH.pprint
+                  [ SigD (mkName "spec") (ConT (mkName "Spec")),
+                    FunD
+                      (mkName "spec")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( if null statements
+                                  then AppE (VarE (mkName "pure")) (VarE (mkName "()"))
+                                  else DoE Nothing statements
+                              )
+                          )
+                          []
+                      ]
+                  ]
+              ]
+            ]
 
 messagesDataFiles :: [MessageSpec] -> CodeGen
 messagesDataFiles = foldMap $ \f@MessageSpec {..} ->

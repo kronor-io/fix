@@ -5,7 +5,9 @@ roots = [
   "^Main.main$",
   # Generated
   "Paths_",
+  "FIX.Components",
   "FIX.Fields",
+  "FIX.Groups",
   "FIX.Messages",
 ]
 root-instances = [
