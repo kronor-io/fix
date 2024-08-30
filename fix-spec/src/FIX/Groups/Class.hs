@@ -51,5 +51,6 @@ requiredGroupP = do
 optionalGroupP :: forall a. (IsGroupElement a) => ComponentP [a]
 optionalGroupP = do
   gn <- optionalFieldP
-  let count = maybe 0 (countGroupNum (Proxy :: Proxy a)) gn
-  replicateM (fromIntegral count) requiredComponentP
+  local (const True) $ do
+    let count = maybe 0 (countGroupNum (Proxy :: Proxy a)) gn
+    replicateM (fromIntegral count) requiredComponentP
