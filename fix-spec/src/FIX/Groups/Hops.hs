@@ -23,13 +23,13 @@ import GHC.Generics (Generic)
 -- | GroupSpec
 --   { groupName = "NoHops"
 --   , groupPieces =
---       [ MessagePieceField "HopCompID" False
+--       [ MessagePieceField "HopCompID" True
 --       , MessagePieceField "HopSendingTime" False
 --       , MessagePieceField "HopRefID" False
 --       ]
 --   }
 data Hops = Hops
-  { hopsHopCompID :: !(Maybe HopCompID),
+  { hopsHopCompID :: !HopCompID,
     hopsHopSendingTime :: !(Maybe HopSendingTime),
     hopsHopRefID :: !(Maybe HopRefID)
   }
@@ -40,12 +40,12 @@ instance Validity Hops
 instance IsComponent Hops where
   toComponentFields ((Hops {..})) =
     concat
-      [ optionalFieldB hopsHopCompID,
+      [ requiredFieldB hopsHopCompID,
         optionalFieldB hopsHopSendingTime,
         optionalFieldB hopsHopRefID
       ]
   fromComponentFields = do
-    hopsHopCompID <- optionalFieldP
+    hopsHopCompID <- requiredFieldP
     hopsHopSendingTime <- optionalFieldP
     hopsHopRefID <- optionalFieldP
     pure (Hops {..})

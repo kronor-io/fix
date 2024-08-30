@@ -29,7 +29,7 @@ runFixCodeGen = do
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
     Just spec' -> do
-      let spec = filterSpec settingMessages spec'
+      let spec = makeFirstGroupElementsRequired $ filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
 
       testResourcesFiles <- genTestResources
@@ -115,6 +115,47 @@ filterSpec (Just messages) spec =
           specComponents = filteredCompoments,
           specFields = filteredFields
         }
+
+-- @
+-- If the repeating group is used, the first field of the repeating group
+-- entry is required. In other words, it is conditionally required if the
+-- NoXXX field is greater than zero.
+-- @
+makeFirstGroupElementsRequired :: Spec -> Spec
+makeFirstGroupElementsRequired spec =
+  Spec
+    { specFields = specFields spec,
+      specHeader = goPieces (specHeader spec),
+      specTrailer = goPieces (specTrailer spec),
+      specComponents = map goComponent (specComponents spec),
+      specMessages = map goMessage (specMessages spec)
+    }
+  where
+    goMessage ms = ms {messagePieces = goPieces (messagePieces ms)}
+    goComponent cs = cs {componentPieces = goPieces (componentPieces cs)}
+    goPieces = map goPiece
+    goPiece = \case
+      p@MessagePieceField {} -> p
+      p@MessagePieceComponent {} -> p
+      MessagePieceGroup gs r -> MessagePieceGroup (go gs) r
+
+    go :: GroupSpec -> GroupSpec
+    go gs =
+      GroupSpec
+        { groupName = groupName gs,
+          groupPieces = goFirst (goPieces (groupPieces gs))
+        }
+
+    goFirst :: [MessagePiece] -> [MessagePiece]
+    goFirst = \case
+      [] -> []
+      (p : ps) -> makeFirstRequired p : ps
+
+    makeFirstRequired :: MessagePiece -> MessagePiece
+    makeFirstRequired = \case
+      MessagePieceField f _ -> MessagePieceField f True
+      MessagePieceComponent c _ -> MessagePieceComponent c True
+      MessagePieceGroup gs _ -> MessagePieceGroup gs True
 
 pieceGroupSpecs :: MessagePiece -> Set GroupSpec
 pieceGroupSpecs = \case

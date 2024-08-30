@@ -22,12 +22,12 @@ import GHC.Generics (Generic)
 -- | GroupSpec
 --   { groupName = "NoMsgTypes"
 --   , groupPieces =
---       [ MessagePieceField "RefMsgType" False
+--       [ MessagePieceField "RefMsgType" True
 --       , MessagePieceField "MsgDirection" False
 --       ]
 --   }
 data MsgTypes = MsgTypes
-  { msgTypesRefMsgType :: !(Maybe RefMsgType),
+  { msgTypesRefMsgType :: !RefMsgType,
     msgTypesMsgDirection :: !(Maybe MsgDirection)
   }
   deriving stock (Show, Eq, Generic)
@@ -37,11 +37,11 @@ instance Validity MsgTypes
 instance IsComponent MsgTypes where
   toComponentFields ((MsgTypes {..})) =
     concat
-      [ optionalFieldB msgTypesRefMsgType,
+      [ requiredFieldB msgTypesRefMsgType,
         optionalFieldB msgTypesMsgDirection
       ]
   fromComponentFields = do
-    msgTypesRefMsgType <- optionalFieldP
+    msgTypesRefMsgType <- requiredFieldP
     msgTypesMsgDirection <- optionalFieldP
     pure (MsgTypes {..})
 
