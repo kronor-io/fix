@@ -76,7 +76,8 @@ runFixCodeGen = do
                     genHaskellDataFile "fix-spec/src/FIX/Messages/Envelope.hs",
                     messagesGenFile messageSpecs,
                     genHaskellDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs",
-                    messagesSpecFile messageSpecs
+                    messagesSpecFile messageSpecs,
+                    genHaskellDataFile "fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs"
                   ],
             genHaskellDataFile "fix-spec-gen/test/Spec.hs",
             testResourcesFiles
@@ -395,8 +396,7 @@ fieldsSpecFile fieldSpecs =
            in NoBindS (AppTypeE (VarE (mkName "fieldSpec")) (ConT constructorName))
      in unlines $
           concat
-            [ [ "{-# OPTIONS_GHC -Wno-orphans #-}",
-                "{-# LANGUAGE TypeApplications #-}",
+            [ [ "{-# LANGUAGE TypeApplications #-}",
                 "",
                 "module FIX.FieldsSpec where",
                 "",
