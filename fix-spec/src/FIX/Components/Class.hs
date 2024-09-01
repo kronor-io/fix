@@ -11,12 +11,12 @@ import Control.Monad.Reader
 import Control.Monad.State
 import Data.Proxy
 import FIX.Core
-import FIX.Fields.MsgType
+import FIX.Fields
 
 -- The bool indicates whether fields must be parsed in order (in a group)
-type ComponentP a = ReaderT Bool (StateT [Field] (Except ComponentParseError)) a
+type ComponentP a = ReaderT Bool (StateT [AnyField] (Except ComponentParseError)) a
 
-runComponentP :: [Field] -> ComponentP a -> Either ComponentParseError a
+runComponentP :: [AnyField] -> ComponentP a -> Either ComponentParseError a
 runComponentP fields func = runExcept $ evalStateT (runReaderT func False) fields
 
 tryComponentP :: ComponentP a -> ComponentP (Maybe a)
@@ -30,10 +30,14 @@ data ComponentParseError
   deriving (Show)
 
 class IsComponent a where
-  toComponentFields :: a -> [Field]
+  toComponentFields :: a -> [AnyField]
   fromComponentFields :: ComponentP a
 
-requiredFieldP :: forall a. (IsField a) => ComponentP a
+class (IsField a) => IsAnyField a where
+  unpackAnyField :: AnyField -> Maybe a
+  packAnyField :: a -> AnyField
+
+requiredFieldP :: forall a. (IsAnyField a) => ComponentP a
 requiredFieldP = do
   let tag = fieldTag (Proxy :: Proxy a)
   mA <- optionalFieldP
@@ -41,51 +45,36 @@ requiredFieldP = do
     Nothing -> throwError $ ComponentParseErrorMissingField tag
     Just a -> pure a
 
-optionalFieldP :: forall a. (IsField a) => ComponentP (Maybe a)
+optionalFieldP :: forall a. (IsAnyField a) => ComponentP (Maybe a)
 optionalFieldP = do
   inOrder <- ask
   fields <- get
-  let tag = fieldTag (Proxy :: Proxy a)
   let go = \case
         [] -> Nothing
-        (f@(Field t v) : fs) ->
-          if t == tag
-            then pure (v, fs)
-            else
+        (af : fs) ->
+          case unpackAnyField af of
+            Just f -> pure (f, fs)
+            Nothing ->
               if inOrder
                 then Nothing
-                else second (f :) <$> go fs
+                else second (af :) <$> go fs
 
   case go fields of
     Nothing -> pure Nothing
-    Just (b, fields') -> case fieldFromValue (valueByteString b) of
-      Left err -> throwError $ ComponentParseErrorFieldParseError tag err
-      Right v -> do
-        put fields'
-        pure (Just v)
+    Just (f, fields') -> do
+      put fields'
+      pure (Just f)
 
-fieldB :: forall a. (IsField a) => a -> Field
-fieldB a =
-  let p = (Proxy :: Proxy a)
-   in Field
-        (fieldTag p)
-        ( ( if fieldIsData p
-              then ValueData
-              else ValueSimple
-          )
-            (fieldToValue a)
-        )
+requiredFieldB :: (IsAnyField a) => a -> [AnyField]
+requiredFieldB = pure . packAnyField
 
-requiredFieldB :: (IsField a) => a -> [Field]
-requiredFieldB = pure . fieldB
-
-optionalFieldB :: (IsField a) => Maybe a -> [Field]
+optionalFieldB :: (IsAnyField a) => Maybe a -> [AnyField]
 optionalFieldB = maybe [] requiredFieldB
 
-requiredComponentB :: (IsComponent a) => a -> [Field]
+requiredComponentB :: (IsComponent a) => a -> [AnyField]
 requiredComponentB = toComponentFields
 
-optionalComponentB :: (IsComponent a) => Maybe a -> [Field]
+optionalComponentB :: (IsComponent a) => Maybe a -> [AnyField]
 optionalComponentB = maybe [] requiredComponentB
 
 requiredComponentP :: (IsComponent a) => ComponentP a

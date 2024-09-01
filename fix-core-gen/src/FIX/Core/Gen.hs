@@ -27,23 +27,5 @@ genDataValue = genValid `suchThat` (not . SB.null)
 instance GenValid DataBytes where
   genValid = DataBytes <$> genDataValue
 
-instance GenValid Value where
-  genValid =
-    oneof
-      [ ValueSimple <$> genSimpleValue,
-        ValueData <$> genDataValue
-      ]
-
-instance GenValid Field where
-  genValid = do
-    tag <- genValid
-    Field tag
-      <$> ( if tagIsLen tag
-              then ValueData <$> genDataValue
-              else ValueSimple <$> genSimpleValue
-          )
-
 instance GenValid UTCTimestamp where
   genValid = mkUTCTimestamp <$> genValid
-
-instance GenValid Message
