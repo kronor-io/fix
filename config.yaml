@@ -1,4 +1,4 @@
 messages:
   - Logon
   - Heartbeat
-    # - QuoteRequest
+  - QuoteRequest

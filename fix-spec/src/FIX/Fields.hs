@@ -19,149 +19,839 @@ import qualified Data.ByteString.Builder as ByteString
 import Data.Validity
 import Data.Void (Void)
 import FIX.Core
+import FIX.Fields.Account as X
+import FIX.Fields.AccountType as X
+import FIX.Fields.AcctIDSource as X
+import FIX.Fields.AgreementCurrency as X
+import FIX.Fields.AgreementDate as X
+import FIX.Fields.AgreementDesc as X
+import FIX.Fields.AgreementID as X
 import FIX.Fields.BeginString as X
+import FIX.Fields.BenchmarkCurveCurrency as X
+import FIX.Fields.BenchmarkCurveName as X
+import FIX.Fields.BenchmarkCurvePoint as X
+import FIX.Fields.BenchmarkPrice as X
+import FIX.Fields.BenchmarkPriceType as X
+import FIX.Fields.BenchmarkSecurityID as X
+import FIX.Fields.BenchmarkSecurityIDSource as X
 import FIX.Fields.BodyLength as X
+import FIX.Fields.CFICode as X
+import FIX.Fields.CPProgram as X
+import FIX.Fields.CPRegType as X
+import FIX.Fields.CashOrderQty as X
 import FIX.Fields.CheckSum as X
+import FIX.Fields.ClOrdID as X
+import FIX.Fields.ContractMultiplier as X
+import FIX.Fields.ContractSettlMonth as X
+import FIX.Fields.CountryOfIssue as X
+import FIX.Fields.CouponPaymentDate as X
+import FIX.Fields.CouponRate as X
+import FIX.Fields.CreditRating as X
+import FIX.Fields.Currency as X
+import FIX.Fields.DatedDate as X
 import FIX.Fields.DeliverToCompID as X
 import FIX.Fields.DeliverToLocationID as X
 import FIX.Fields.DeliverToSubID as X
+import FIX.Fields.DeliveryType as X
+import FIX.Fields.EncodedIssuer as X
+import FIX.Fields.EncodedLegIssuer as X
+import FIX.Fields.EncodedLegSecurityDesc as X
+import FIX.Fields.EncodedSecurityDesc as X
+import FIX.Fields.EncodedText as X
+import FIX.Fields.EncodedUnderlyingIssuer as X
+import FIX.Fields.EncodedUnderlyingSecurityDesc as X
 import FIX.Fields.EncryptMethod as X
+import FIX.Fields.EndDate as X
+import FIX.Fields.EventDate as X
+import FIX.Fields.EventPx as X
+import FIX.Fields.EventText as X
+import FIX.Fields.EventType as X
+import FIX.Fields.ExpireTime as X
+import FIX.Fields.Factor as X
 import FIX.Fields.HeartBtInt as X
 import FIX.Fields.HopCompID as X
 import FIX.Fields.HopRefID as X
 import FIX.Fields.HopSendingTime as X
+import FIX.Fields.InstrRegistry as X
+import FIX.Fields.InterestAccrualDate as X
+import FIX.Fields.IssueDate as X
+import FIX.Fields.Issuer as X
 import FIX.Fields.LastMsgSeqNumProcessed as X
+import FIX.Fields.LegBenchmarkCurveCurrency as X
+import FIX.Fields.LegBenchmarkCurveName as X
+import FIX.Fields.LegBenchmarkCurvePoint as X
+import FIX.Fields.LegBenchmarkPrice as X
+import FIX.Fields.LegBenchmarkPriceType as X
+import FIX.Fields.LegCFICode as X
+import FIX.Fields.LegContractMultiplier as X
+import FIX.Fields.LegContractSettlMonth as X
+import FIX.Fields.LegCountryOfIssue as X
+import FIX.Fields.LegCouponPaymentDate as X
+import FIX.Fields.LegCouponRate as X
+import FIX.Fields.LegCreditRating as X
+import FIX.Fields.LegCurrency as X
+import FIX.Fields.LegDatedDate as X
+import FIX.Fields.LegFactor as X
+import FIX.Fields.LegInstrRegistry as X
+import FIX.Fields.LegInterestAccrualDate as X
+import FIX.Fields.LegIssueDate as X
+import FIX.Fields.LegIssuer as X
+import FIX.Fields.LegLocaleOfIssue as X
+import FIX.Fields.LegMaturityDate as X
+import FIX.Fields.LegMaturityMonthYear as X
+import FIX.Fields.LegOptAttribute as X
+import FIX.Fields.LegPool as X
+import FIX.Fields.LegProduct as X
+import FIX.Fields.LegQty as X
+import FIX.Fields.LegRatioQty as X
+import FIX.Fields.LegRedemptionDate as X
+import FIX.Fields.LegRepoCollateralSecurityType as X
+import FIX.Fields.LegRepurchaseRate as X
+import FIX.Fields.LegRepurchaseTerm as X
+import FIX.Fields.LegSecurityAltID as X
+import FIX.Fields.LegSecurityAltIDSource as X
+import FIX.Fields.LegSecurityDesc as X
+import FIX.Fields.LegSecurityExchange as X
+import FIX.Fields.LegSecurityID as X
+import FIX.Fields.LegSecurityIDSource as X
+import FIX.Fields.LegSecuritySubType as X
+import FIX.Fields.LegSecurityType as X
+import FIX.Fields.LegSettlDate as X
+import FIX.Fields.LegSettlType as X
+import FIX.Fields.LegSide as X
+import FIX.Fields.LegStateOrProvinceOfIssue as X
+import FIX.Fields.LegStipulationType as X
+import FIX.Fields.LegStipulationValue as X
+import FIX.Fields.LegStrikeCurrency as X
+import FIX.Fields.LegStrikePrice as X
+import FIX.Fields.LegSwapType as X
+import FIX.Fields.LegSymbol as X
+import FIX.Fields.LegSymbolSfx as X
+import FIX.Fields.LocaleOfIssue as X
+import FIX.Fields.MarginRatio as X
+import FIX.Fields.MaturityDate as X
+import FIX.Fields.MaturityMonthYear as X
 import FIX.Fields.MaxMessageSize as X
 import FIX.Fields.MessageEncoding as X
 import FIX.Fields.MsgDirection as X
 import FIX.Fields.MsgSeqNum as X
 import FIX.Fields.MsgType as X
+import FIX.Fields.NestedPartyID as X
+import FIX.Fields.NestedPartyIDSource as X
+import FIX.Fields.NestedPartyRole as X
+import FIX.Fields.NestedPartySubID as X
+import FIX.Fields.NestedPartySubIDType as X
 import FIX.Fields.NextExpectedMsgSeqNum as X
+import FIX.Fields.NoEvents as X
 import FIX.Fields.NoHops as X
+import FIX.Fields.NoLegSecurityAltID as X
+import FIX.Fields.NoLegStipulations as X
+import FIX.Fields.NoLegs as X
 import FIX.Fields.NoMsgTypes as X
+import FIX.Fields.NoNestedPartyIDs as X
+import FIX.Fields.NoNestedPartySubIDs as X
+import FIX.Fields.NoPartyIDs as X
+import FIX.Fields.NoPartySubIDs as X
+import FIX.Fields.NoQuoteQualifiers as X
+import FIX.Fields.NoRelatedSym as X
+import FIX.Fields.NoSecurityAltID as X
+import FIX.Fields.NoStipulations as X
+import FIX.Fields.NoUnderlyingSecurityAltID as X
+import FIX.Fields.NoUnderlyingStips as X
+import FIX.Fields.NoUnderlyings as X
 import FIX.Fields.OnBehalfOfCompID as X
 import FIX.Fields.OnBehalfOfLocationID as X
 import FIX.Fields.OnBehalfOfSubID as X
+import FIX.Fields.OptAttribute as X
+import FIX.Fields.OrdType as X
+import FIX.Fields.OrderCapacity as X
+import FIX.Fields.OrderPercent as X
+import FIX.Fields.OrderQty as X
+import FIX.Fields.OrderQty2 as X
 import FIX.Fields.OrigSendingTime as X
+import FIX.Fields.PartyID as X
+import FIX.Fields.PartyIDSource as X
+import FIX.Fields.PartyRole as X
+import FIX.Fields.PartySubID as X
+import FIX.Fields.PartySubIDType as X
 import FIX.Fields.Password as X
+import FIX.Fields.Pool as X
 import FIX.Fields.PossDupFlag as X
 import FIX.Fields.PossResend as X
+import FIX.Fields.PrevClosePx as X
+import FIX.Fields.Price as X
+import FIX.Fields.Price2 as X
+import FIX.Fields.PriceType as X
+import FIX.Fields.Product as X
+import FIX.Fields.PutOrCall as X
+import FIX.Fields.QtyType as X
+import FIX.Fields.QuotePriceType as X
+import FIX.Fields.QuoteQualifier as X
+import FIX.Fields.QuoteReqID as X
+import FIX.Fields.QuoteRequestType as X
+import FIX.Fields.QuoteType as X
+import FIX.Fields.RFQReqID as X
 import FIX.Fields.RawData as X
+import FIX.Fields.RedemptionDate as X
 import FIX.Fields.RefMsgType as X
+import FIX.Fields.RepoCollateralSecurityType as X
+import FIX.Fields.RepurchaseRate as X
+import FIX.Fields.RepurchaseTerm as X
 import FIX.Fields.ResetSeqNumFlag as X
+import FIX.Fields.RoundingDirection as X
+import FIX.Fields.RoundingModulus as X
 import FIX.Fields.SecureData as X
+import FIX.Fields.SecurityAltID as X
+import FIX.Fields.SecurityAltIDSource as X
+import FIX.Fields.SecurityDesc as X
+import FIX.Fields.SecurityExchange as X
+import FIX.Fields.SecurityID as X
+import FIX.Fields.SecurityIDSource as X
+import FIX.Fields.SecuritySubType as X
+import FIX.Fields.SecurityType as X
 import FIX.Fields.SenderCompID as X
 import FIX.Fields.SenderLocationID as X
 import FIX.Fields.SenderSubID as X
 import FIX.Fields.SendingTime as X
+import FIX.Fields.SettlDate as X
+import FIX.Fields.SettlDate2 as X
+import FIX.Fields.SettlType as X
+import FIX.Fields.Side as X
 import FIX.Fields.Signature as X
 import FIX.Fields.SignatureLength as X
+import FIX.Fields.Spread as X
+import FIX.Fields.StartDate as X
+import FIX.Fields.StateOrProvinceOfIssue as X
+import FIX.Fields.StipulationType as X
+import FIX.Fields.StipulationValue as X
+import FIX.Fields.StrikeCurrency as X
+import FIX.Fields.StrikePrice as X
+import FIX.Fields.Symbol as X
+import FIX.Fields.SymbolSfx as X
 import FIX.Fields.TargetCompID as X
 import FIX.Fields.TargetLocationID as X
 import FIX.Fields.TargetSubID as X
+import FIX.Fields.TerminationType as X
 import FIX.Fields.TestMessageIndicator as X
 import FIX.Fields.TestReqID as X
+import FIX.Fields.Text as X
+import FIX.Fields.TradeOriginationDate as X
+import FIX.Fields.TradingSessionID as X
+import FIX.Fields.TradingSessionSubID as X
+import FIX.Fields.TransactTime as X
+import FIX.Fields.UnderlyingCFICode as X
+import FIX.Fields.UnderlyingCPProgram as X
+import FIX.Fields.UnderlyingCPRegType as X
+import FIX.Fields.UnderlyingContractMultiplier as X
+import FIX.Fields.UnderlyingCountryOfIssue as X
+import FIX.Fields.UnderlyingCouponPaymentDate as X
+import FIX.Fields.UnderlyingCouponRate as X
+import FIX.Fields.UnderlyingCreditRating as X
+import FIX.Fields.UnderlyingCurrency as X
+import FIX.Fields.UnderlyingCurrentValue as X
+import FIX.Fields.UnderlyingDirtyPrice as X
+import FIX.Fields.UnderlyingEndPrice as X
+import FIX.Fields.UnderlyingEndValue as X
+import FIX.Fields.UnderlyingFactor as X
+import FIX.Fields.UnderlyingInstrRegistry as X
+import FIX.Fields.UnderlyingIssueDate as X
+import FIX.Fields.UnderlyingIssuer as X
+import FIX.Fields.UnderlyingLocaleOfIssue as X
+import FIX.Fields.UnderlyingMaturityDate as X
+import FIX.Fields.UnderlyingMaturityMonthYear as X
+import FIX.Fields.UnderlyingOptAttribute as X
+import FIX.Fields.UnderlyingProduct as X
+import FIX.Fields.UnderlyingPutOrCall as X
+import FIX.Fields.UnderlyingPx as X
+import FIX.Fields.UnderlyingQty as X
+import FIX.Fields.UnderlyingRedemptionDate as X
+import FIX.Fields.UnderlyingRepoCollateralSecurityType as X
+import FIX.Fields.UnderlyingRepurchaseRate as X
+import FIX.Fields.UnderlyingRepurchaseTerm as X
+import FIX.Fields.UnderlyingSecurityAltID as X
+import FIX.Fields.UnderlyingSecurityAltIDSource as X
+import FIX.Fields.UnderlyingSecurityDesc as X
+import FIX.Fields.UnderlyingSecurityExchange as X
+import FIX.Fields.UnderlyingSecurityID as X
+import FIX.Fields.UnderlyingSecurityIDSource as X
+import FIX.Fields.UnderlyingSecuritySubType as X
+import FIX.Fields.UnderlyingSecurityType as X
+import FIX.Fields.UnderlyingStartValue as X
+import FIX.Fields.UnderlyingStateOrProvinceOfIssue as X
+import FIX.Fields.UnderlyingStipType as X
+import FIX.Fields.UnderlyingStipValue as X
+import FIX.Fields.UnderlyingStrikeCurrency as X
+import FIX.Fields.UnderlyingStrikePrice as X
+import FIX.Fields.UnderlyingSymbol as X
+import FIX.Fields.UnderlyingSymbolSfx as X
 import FIX.Fields.Username as X
+import FIX.Fields.ValidUntilTime as X
 import FIX.Fields.XmlData as X
+import FIX.Fields.Yield as X
+import FIX.Fields.YieldCalcDate as X
+import FIX.Fields.YieldRedemptionDate as X
+import FIX.Fields.YieldRedemptionPrice as X
+import FIX.Fields.YieldRedemptionPriceType as X
+import FIX.Fields.YieldType as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte.Lexer
 
 data AnyField
-  = SomeBeginString !BeginString
+  = SomeAccount !Account
+  | SomeBeginString !BeginString
   | SomeBodyLength !BodyLength
   | SomeCheckSum !CheckSum
+  | SomeClOrdID !ClOrdID
+  | SomeCurrency !Currency
+  | SomeSecurityIDSource !SecurityIDSource
   | SomeMsgSeqNum !MsgSeqNum
   | SomeMsgType !MsgType
+  | SomeOrderQty !OrderQty
+  | SomeOrdType !OrdType
   | SomePossDupFlag !PossDupFlag
+  | SomePrice !Price
+  | SomeSecurityID !SecurityID
   | SomeSenderCompID !SenderCompID
   | SomeSenderSubID !SenderSubID
   | SomeSendingTime !SendingTime
+  | SomeSide !Side
+  | SomeSymbol !Symbol
   | SomeTargetCompID !TargetCompID
   | SomeTargetSubID !TargetSubID
+  | SomeText !Text
+  | SomeTransactTime !TransactTime
+  | SomeValidUntilTime !ValidUntilTime
+  | SomeSettlType !SettlType
+  | SomeSettlDate !SettlDate
+  | SomeSymbolSfx !SymbolSfx
   | SomeSignature !Signature
   | SomeSecureData !SecureData
   | SomeSignatureLength !SignatureLength
   | SomeRawData !RawData
   | SomePossResend !PossResend
   | SomeEncryptMethod !EncryptMethod
+  | SomeIssuer !Issuer
+  | SomeSecurityDesc !SecurityDesc
   | SomeHeartBtInt !HeartBtInt
   | SomeTestReqID !TestReqID
   | SomeOnBehalfOfCompID !OnBehalfOfCompID
   | SomeOnBehalfOfSubID !OnBehalfOfSubID
   | SomeOrigSendingTime !OrigSendingTime
+  | SomeExpireTime !ExpireTime
   | SomeDeliverToCompID !DeliverToCompID
   | SomeDeliverToSubID !DeliverToSubID
+  | SomeQuoteReqID !QuoteReqID
+  | SomePrevClosePx !PrevClosePx
   | SomeResetSeqNumFlag !ResetSeqNumFlag
   | SomeSenderLocationID !SenderLocationID
   | SomeTargetLocationID !TargetLocationID
   | SomeOnBehalfOfLocationID !OnBehalfOfLocationID
   | SomeDeliverToLocationID !DeliverToLocationID
+  | SomeNoRelatedSym !NoRelatedSym
+  | SomeCashOrderQty !CashOrderQty
+  | SomeSecurityType !SecurityType
+  | SomeOrderQty2 !OrderQty2
+  | SomeSettlDate2 !SettlDate2
+  | SomeMaturityMonthYear !MaturityMonthYear
+  | SomePutOrCall !PutOrCall
+  | SomeStrikePrice !StrikePrice
+  | SomeOptAttribute !OptAttribute
+  | SomeSecurityExchange !SecurityExchange
   | SomeXmlData !XmlData
+  | SomeSpread !Spread
+  | SomeBenchmarkCurveCurrency !BenchmarkCurveCurrency
+  | SomeBenchmarkCurveName !BenchmarkCurveName
+  | SomeBenchmarkCurvePoint !BenchmarkCurvePoint
+  | SomeCouponRate !CouponRate
+  | SomeCouponPaymentDate !CouponPaymentDate
+  | SomeIssueDate !IssueDate
+  | SomeRepurchaseTerm !RepurchaseTerm
+  | SomeRepurchaseRate !RepurchaseRate
+  | SomeFactor !Factor
+  | SomeTradeOriginationDate !TradeOriginationDate
+  | SomeContractMultiplier !ContractMultiplier
+  | SomeNoStipulations !NoStipulations
+  | SomeStipulationType !StipulationType
+  | SomeStipulationValue !StipulationValue
+  | SomeYieldType !YieldType
+  | SomeYield !Yield
+  | SomeRepoCollateralSecurityType !RepoCollateralSecurityType
+  | SomeRedemptionDate !RedemptionDate
+  | SomeUnderlyingCouponPaymentDate !UnderlyingCouponPaymentDate
+  | SomeUnderlyingIssueDate !UnderlyingIssueDate
+  | SomeUnderlyingRepoCollateralSecurityType !UnderlyingRepoCollateralSecurityType
+  | SomeUnderlyingRepurchaseTerm !UnderlyingRepurchaseTerm
+  | SomeUnderlyingRepurchaseRate !UnderlyingRepurchaseRate
+  | SomeUnderlyingFactor !UnderlyingFactor
+  | SomeUnderlyingRedemptionDate !UnderlyingRedemptionDate
+  | SomeLegCouponPaymentDate !LegCouponPaymentDate
+  | SomeLegIssueDate !LegIssueDate
+  | SomeLegRepoCollateralSecurityType !LegRepoCollateralSecurityType
+  | SomeLegRepurchaseTerm !LegRepurchaseTerm
+  | SomeLegRepurchaseRate !LegRepurchaseRate
+  | SomeLegFactor !LegFactor
+  | SomeLegRedemptionDate !LegRedemptionDate
+  | SomeCreditRating !CreditRating
+  | SomeUnderlyingCreditRating !UnderlyingCreditRating
+  | SomeLegCreditRating !LegCreditRating
+  | SomeQuoteRequestType !QuoteRequestType
+  | SomeUnderlyingSecurityIDSource !UnderlyingSecurityIDSource
+  | SomeUnderlyingIssuer !UnderlyingIssuer
+  | SomeUnderlyingSecurityDesc !UnderlyingSecurityDesc
+  | SomeUnderlyingSecurityExchange !UnderlyingSecurityExchange
+  | SomeUnderlyingSecurityID !UnderlyingSecurityID
+  | SomeUnderlyingSecurityType !UnderlyingSecurityType
+  | SomeUnderlyingSymbol !UnderlyingSymbol
+  | SomeUnderlyingSymbolSfx !UnderlyingSymbolSfx
+  | SomeUnderlyingMaturityMonthYear !UnderlyingMaturityMonthYear
+  | SomeUnderlyingPutOrCall !UnderlyingPutOrCall
+  | SomeUnderlyingStrikePrice !UnderlyingStrikePrice
+  | SomeUnderlyingOptAttribute !UnderlyingOptAttribute
+  | SomeUnderlyingCurrency !UnderlyingCurrency
+  | SomeTradingSessionID !TradingSessionID
   | SomeMessageEncoding !MessageEncoding
+  | SomeEncodedIssuer !EncodedIssuer
+  | SomeEncodedSecurityDesc !EncodedSecurityDesc
+  | SomeEncodedText !EncodedText
+  | SomeEncodedUnderlyingIssuer !EncodedUnderlyingIssuer
+  | SomeEncodedUnderlyingSecurityDesc !EncodedUnderlyingSecurityDesc
   | SomeLastMsgSeqNumProcessed !LastMsgSeqNumProcessed
   | SomeRefMsgType !RefMsgType
   | SomeMaxMessageSize !MaxMessageSize
   | SomeNoMsgTypes !NoMsgTypes
   | SomeMsgDirection !MsgDirection
+  | SomePriceType !PriceType
+  | SomeUnderlyingCouponRate !UnderlyingCouponRate
+  | SomeUnderlyingContractMultiplier !UnderlyingContractMultiplier
+  | SomePartyIDSource !PartyIDSource
+  | SomePartyID !PartyID
+  | SomePartyRole !PartyRole
+  | SomeNoPartyIDs !NoPartyIDs
+  | SomeNoSecurityAltID !NoSecurityAltID
+  | SomeSecurityAltID !SecurityAltID
+  | SomeSecurityAltIDSource !SecurityAltIDSource
+  | SomeNoUnderlyingSecurityAltID !NoUnderlyingSecurityAltID
+  | SomeUnderlyingSecurityAltID !UnderlyingSecurityAltID
+  | SomeUnderlyingSecurityAltIDSource !UnderlyingSecurityAltIDSource
+  | SomeProduct !Product
+  | SomeCFICode !CFICode
+  | SomeUnderlyingProduct !UnderlyingProduct
+  | SomeUnderlyingCFICode !UnderlyingCFICode
   | SomeTestMessageIndicator !TestMessageIndicator
+  | SomeRoundingDirection !RoundingDirection
+  | SomeRoundingModulus !RoundingModulus
+  | SomeCountryOfIssue !CountryOfIssue
+  | SomeStateOrProvinceOfIssue !StateOrProvinceOfIssue
+  | SomeLocaleOfIssue !LocaleOfIssue
+  | SomeOrderPercent !OrderPercent
+  | SomePartySubID !PartySubID
+  | SomeNestedPartyID !NestedPartyID
+  | SomeNestedPartyIDSource !NestedPartyIDSource
+  | SomeOrderCapacity !OrderCapacity
+  | SomeQuoteType !QuoteType
+  | SomeNestedPartyRole !NestedPartyRole
+  | SomeNoNestedPartyIDs !NoNestedPartyIDs
+  | SomeMaturityDate !MaturityDate
+  | SomeUnderlyingMaturityDate !UnderlyingMaturityDate
+  | SomeInstrRegistry !InstrRegistry
+  | SomeNestedPartySubID !NestedPartySubID
   | SomeUsername !Username
   | SomePassword !Password
+  | SomeNoLegs !NoLegs
+  | SomeLegCurrency !LegCurrency
+  | SomeAccountType !AccountType
+  | SomeLegSettlType !LegSettlType
+  | SomeLegSettlDate !LegSettlDate
+  | SomeUnderlyingCountryOfIssue !UnderlyingCountryOfIssue
+  | SomeUnderlyingStateOrProvinceOfIssue !UnderlyingStateOrProvinceOfIssue
+  | SomeUnderlyingLocaleOfIssue !UnderlyingLocaleOfIssue
+  | SomeUnderlyingInstrRegistry !UnderlyingInstrRegistry
+  | SomeLegCountryOfIssue !LegCountryOfIssue
+  | SomeLegStateOrProvinceOfIssue !LegStateOrProvinceOfIssue
+  | SomeLegLocaleOfIssue !LegLocaleOfIssue
+  | SomeLegInstrRegistry !LegInstrRegistry
+  | SomeLegSymbol !LegSymbol
+  | SomeLegSymbolSfx !LegSymbolSfx
+  | SomeLegSecurityID !LegSecurityID
+  | SomeLegSecurityIDSource !LegSecurityIDSource
+  | SomeNoLegSecurityAltID !NoLegSecurityAltID
+  | SomeLegSecurityAltID !LegSecurityAltID
+  | SomeLegSecurityAltIDSource !LegSecurityAltIDSource
+  | SomeLegProduct !LegProduct
+  | SomeLegCFICode !LegCFICode
+  | SomeLegSecurityType !LegSecurityType
+  | SomeLegMaturityMonthYear !LegMaturityMonthYear
+  | SomeLegMaturityDate !LegMaturityDate
+  | SomeLegStrikePrice !LegStrikePrice
+  | SomeLegOptAttribute !LegOptAttribute
+  | SomeLegContractMultiplier !LegContractMultiplier
+  | SomeLegCouponRate !LegCouponRate
+  | SomeLegSecurityExchange !LegSecurityExchange
+  | SomeLegIssuer !LegIssuer
+  | SomeEncodedLegIssuer !EncodedLegIssuer
+  | SomeLegSecurityDesc !LegSecurityDesc
+  | SomeEncodedLegSecurityDesc !EncodedLegSecurityDesc
+  | SomeLegRatioQty !LegRatioQty
+  | SomeLegSide !LegSide
+  | SomeTradingSessionSubID !TradingSessionSubID
   | SomeNoHops !NoHops
   | SomeHopCompID !HopCompID
   | SomeHopSendingTime !HopSendingTime
   | SomeHopRefID !HopRefID
+  | SomePrice2 !Price2
+  | SomeRFQReqID !RFQReqID
+  | SomeAcctIDSource !AcctIDSource
+  | SomeBenchmarkPrice !BenchmarkPrice
+  | SomeBenchmarkPriceType !BenchmarkPriceType
+  | SomeContractSettlMonth !ContractSettlMonth
+  | SomeLegBenchmarkCurveCurrency !LegBenchmarkCurveCurrency
+  | SomeLegBenchmarkCurveName !LegBenchmarkCurveName
+  | SomeLegBenchmarkCurvePoint !LegBenchmarkCurvePoint
+  | SomeLegBenchmarkPrice !LegBenchmarkPrice
+  | SomeLegBenchmarkPriceType !LegBenchmarkPriceType
+  | SomeNoLegStipulations !NoLegStipulations
+  | SomeLegQty !LegQty
+  | SomeLegStipulationType !LegStipulationType
+  | SomeLegStipulationValue !LegStipulationValue
+  | SomeLegSwapType !LegSwapType
+  | SomePool !Pool
+  | SomeQuotePriceType !QuotePriceType
+  | SomeQuoteQualifier !QuoteQualifier
+  | SomeYieldRedemptionDate !YieldRedemptionDate
+  | SomeYieldRedemptionPrice !YieldRedemptionPrice
+  | SomeYieldRedemptionPriceType !YieldRedemptionPriceType
+  | SomeBenchmarkSecurityID !BenchmarkSecurityID
+  | SomeYieldCalcDate !YieldCalcDate
+  | SomeNoUnderlyings !NoUnderlyings
+  | SomeNoQuoteQualifiers !NoQuoteQualifiers
+  | SomeLegDatedDate !LegDatedDate
+  | SomeLegPool !LegPool
+  | SomeBenchmarkSecurityIDSource !BenchmarkSecurityIDSource
+  | SomeSecuritySubType !SecuritySubType
+  | SomeUnderlyingSecuritySubType !UnderlyingSecuritySubType
+  | SomeLegSecuritySubType !LegSecuritySubType
+  | SomeTerminationType !TerminationType
   | SomeNextExpectedMsgSeqNum !NextExpectedMsgSeqNum
+  | SomeNoPartySubIDs !NoPartySubIDs
+  | SomePartySubIDType !PartySubIDType
+  | SomeNoNestedPartySubIDs !NoNestedPartySubIDs
+  | SomeNestedPartySubIDType !NestedPartySubIDType
+  | SomeUnderlyingPx !UnderlyingPx
+  | SomeQtyType !QtyType
+  | SomeNoEvents !NoEvents
+  | SomeEventType !EventType
+  | SomeEventDate !EventDate
+  | SomeEventPx !EventPx
+  | SomeEventText !EventText
+  | SomeDatedDate !DatedDate
+  | SomeInterestAccrualDate !InterestAccrualDate
+  | SomeCPProgram !CPProgram
+  | SomeCPRegType !CPRegType
+  | SomeUnderlyingCPProgram !UnderlyingCPProgram
+  | SomeUnderlyingCPRegType !UnderlyingCPRegType
+  | SomeUnderlyingQty !UnderlyingQty
+  | SomeUnderlyingDirtyPrice !UnderlyingDirtyPrice
+  | SomeUnderlyingEndPrice !UnderlyingEndPrice
+  | SomeUnderlyingStartValue !UnderlyingStartValue
+  | SomeUnderlyingCurrentValue !UnderlyingCurrentValue
+  | SomeUnderlyingEndValue !UnderlyingEndValue
+  | SomeNoUnderlyingStips !NoUnderlyingStips
+  | SomeUnderlyingStipType !UnderlyingStipType
+  | SomeUnderlyingStipValue !UnderlyingStipValue
+  | SomeMarginRatio !MarginRatio
+  | SomeAgreementDesc !AgreementDesc
+  | SomeAgreementID !AgreementID
+  | SomeAgreementDate !AgreementDate
+  | SomeStartDate !StartDate
+  | SomeEndDate !EndDate
+  | SomeAgreementCurrency !AgreementCurrency
+  | SomeDeliveryType !DeliveryType
+  | SomeUnderlyingStrikeCurrency !UnderlyingStrikeCurrency
+  | SomeLegStrikeCurrency !LegStrikeCurrency
+  | SomeStrikeCurrency !StrikeCurrency
+  | SomeLegContractSettlMonth !LegContractSettlMonth
+  | SomeLegInterestAccrualDate !LegInterestAccrualDate
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyField
 
 anyFieldB :: AnyField -> ByteString.Builder
 anyFieldB = \case
+  SomeAccount f -> fieldB f
   SomeBeginString f -> fieldB f
   SomeBodyLength f -> fieldB f
   SomeCheckSum f -> fieldB f
+  SomeClOrdID f -> fieldB f
+  SomeCurrency f -> fieldB f
+  SomeSecurityIDSource f -> fieldB f
   SomeMsgSeqNum f -> fieldB f
   SomeMsgType f -> fieldB f
+  SomeOrderQty f -> fieldB f
+  SomeOrdType f -> fieldB f
   SomePossDupFlag f -> fieldB f
+  SomePrice f -> fieldB f
+  SomeSecurityID f -> fieldB f
   SomeSenderCompID f -> fieldB f
   SomeSenderSubID f -> fieldB f
   SomeSendingTime f -> fieldB f
+  SomeSide f -> fieldB f
+  SomeSymbol f -> fieldB f
   SomeTargetCompID f -> fieldB f
   SomeTargetSubID f -> fieldB f
+  SomeText f -> fieldB f
+  SomeTransactTime f -> fieldB f
+  SomeValidUntilTime f -> fieldB f
+  SomeSettlType f -> fieldB f
+  SomeSettlDate f -> fieldB f
+  SomeSymbolSfx f -> fieldB f
   SomeSignature f -> fieldB f
   SomeSecureData f -> fieldB f
   SomeSignatureLength f -> fieldB f
   SomeRawData f -> fieldB f
   SomePossResend f -> fieldB f
   SomeEncryptMethod f -> fieldB f
+  SomeIssuer f -> fieldB f
+  SomeSecurityDesc f -> fieldB f
   SomeHeartBtInt f -> fieldB f
   SomeTestReqID f -> fieldB f
   SomeOnBehalfOfCompID f -> fieldB f
   SomeOnBehalfOfSubID f -> fieldB f
   SomeOrigSendingTime f -> fieldB f
+  SomeExpireTime f -> fieldB f
   SomeDeliverToCompID f -> fieldB f
   SomeDeliverToSubID f -> fieldB f
+  SomeQuoteReqID f -> fieldB f
+  SomePrevClosePx f -> fieldB f
   SomeResetSeqNumFlag f -> fieldB f
   SomeSenderLocationID f -> fieldB f
   SomeTargetLocationID f -> fieldB f
   SomeOnBehalfOfLocationID f -> fieldB f
   SomeDeliverToLocationID f -> fieldB f
+  SomeNoRelatedSym f -> fieldB f
+  SomeCashOrderQty f -> fieldB f
+  SomeSecurityType f -> fieldB f
+  SomeOrderQty2 f -> fieldB f
+  SomeSettlDate2 f -> fieldB f
+  SomeMaturityMonthYear f -> fieldB f
+  SomePutOrCall f -> fieldB f
+  SomeStrikePrice f -> fieldB f
+  SomeOptAttribute f -> fieldB f
+  SomeSecurityExchange f -> fieldB f
   SomeXmlData f -> fieldB f
+  SomeSpread f -> fieldB f
+  SomeBenchmarkCurveCurrency f -> fieldB f
+  SomeBenchmarkCurveName f -> fieldB f
+  SomeBenchmarkCurvePoint f -> fieldB f
+  SomeCouponRate f -> fieldB f
+  SomeCouponPaymentDate f -> fieldB f
+  SomeIssueDate f -> fieldB f
+  SomeRepurchaseTerm f -> fieldB f
+  SomeRepurchaseRate f -> fieldB f
+  SomeFactor f -> fieldB f
+  SomeTradeOriginationDate f -> fieldB f
+  SomeContractMultiplier f -> fieldB f
+  SomeNoStipulations f -> fieldB f
+  SomeStipulationType f -> fieldB f
+  SomeStipulationValue f -> fieldB f
+  SomeYieldType f -> fieldB f
+  SomeYield f -> fieldB f
+  SomeRepoCollateralSecurityType f -> fieldB f
+  SomeRedemptionDate f -> fieldB f
+  SomeUnderlyingCouponPaymentDate f -> fieldB f
+  SomeUnderlyingIssueDate f -> fieldB f
+  SomeUnderlyingRepoCollateralSecurityType f -> fieldB f
+  SomeUnderlyingRepurchaseTerm f -> fieldB f
+  SomeUnderlyingRepurchaseRate f -> fieldB f
+  SomeUnderlyingFactor f -> fieldB f
+  SomeUnderlyingRedemptionDate f -> fieldB f
+  SomeLegCouponPaymentDate f -> fieldB f
+  SomeLegIssueDate f -> fieldB f
+  SomeLegRepoCollateralSecurityType f -> fieldB f
+  SomeLegRepurchaseTerm f -> fieldB f
+  SomeLegRepurchaseRate f -> fieldB f
+  SomeLegFactor f -> fieldB f
+  SomeLegRedemptionDate f -> fieldB f
+  SomeCreditRating f -> fieldB f
+  SomeUnderlyingCreditRating f -> fieldB f
+  SomeLegCreditRating f -> fieldB f
+  SomeQuoteRequestType f -> fieldB f
+  SomeUnderlyingSecurityIDSource f -> fieldB f
+  SomeUnderlyingIssuer f -> fieldB f
+  SomeUnderlyingSecurityDesc f -> fieldB f
+  SomeUnderlyingSecurityExchange f -> fieldB f
+  SomeUnderlyingSecurityID f -> fieldB f
+  SomeUnderlyingSecurityType f -> fieldB f
+  SomeUnderlyingSymbol f -> fieldB f
+  SomeUnderlyingSymbolSfx f -> fieldB f
+  SomeUnderlyingMaturityMonthYear f -> fieldB f
+  SomeUnderlyingPutOrCall f -> fieldB f
+  SomeUnderlyingStrikePrice f -> fieldB f
+  SomeUnderlyingOptAttribute f -> fieldB f
+  SomeUnderlyingCurrency f -> fieldB f
+  SomeTradingSessionID f -> fieldB f
   SomeMessageEncoding f -> fieldB f
+  SomeEncodedIssuer f -> fieldB f
+  SomeEncodedSecurityDesc f -> fieldB f
+  SomeEncodedText f -> fieldB f
+  SomeEncodedUnderlyingIssuer f -> fieldB f
+  SomeEncodedUnderlyingSecurityDesc f -> fieldB f
   SomeLastMsgSeqNumProcessed f -> fieldB f
   SomeRefMsgType f -> fieldB f
   SomeMaxMessageSize f -> fieldB f
   SomeNoMsgTypes f -> fieldB f
   SomeMsgDirection f -> fieldB f
+  SomePriceType f -> fieldB f
+  SomeUnderlyingCouponRate f -> fieldB f
+  SomeUnderlyingContractMultiplier f -> fieldB f
+  SomePartyIDSource f -> fieldB f
+  SomePartyID f -> fieldB f
+  SomePartyRole f -> fieldB f
+  SomeNoPartyIDs f -> fieldB f
+  SomeNoSecurityAltID f -> fieldB f
+  SomeSecurityAltID f -> fieldB f
+  SomeSecurityAltIDSource f -> fieldB f
+  SomeNoUnderlyingSecurityAltID f -> fieldB f
+  SomeUnderlyingSecurityAltID f -> fieldB f
+  SomeUnderlyingSecurityAltIDSource f -> fieldB f
+  SomeProduct f -> fieldB f
+  SomeCFICode f -> fieldB f
+  SomeUnderlyingProduct f -> fieldB f
+  SomeUnderlyingCFICode f -> fieldB f
   SomeTestMessageIndicator f -> fieldB f
+  SomeRoundingDirection f -> fieldB f
+  SomeRoundingModulus f -> fieldB f
+  SomeCountryOfIssue f -> fieldB f
+  SomeStateOrProvinceOfIssue f -> fieldB f
+  SomeLocaleOfIssue f -> fieldB f
+  SomeOrderPercent f -> fieldB f
+  SomePartySubID f -> fieldB f
+  SomeNestedPartyID f -> fieldB f
+  SomeNestedPartyIDSource f -> fieldB f
+  SomeOrderCapacity f -> fieldB f
+  SomeQuoteType f -> fieldB f
+  SomeNestedPartyRole f -> fieldB f
+  SomeNoNestedPartyIDs f -> fieldB f
+  SomeMaturityDate f -> fieldB f
+  SomeUnderlyingMaturityDate f -> fieldB f
+  SomeInstrRegistry f -> fieldB f
+  SomeNestedPartySubID f -> fieldB f
   SomeUsername f -> fieldB f
   SomePassword f -> fieldB f
+  SomeNoLegs f -> fieldB f
+  SomeLegCurrency f -> fieldB f
+  SomeAccountType f -> fieldB f
+  SomeLegSettlType f -> fieldB f
+  SomeLegSettlDate f -> fieldB f
+  SomeUnderlyingCountryOfIssue f -> fieldB f
+  SomeUnderlyingStateOrProvinceOfIssue f -> fieldB f
+  SomeUnderlyingLocaleOfIssue f -> fieldB f
+  SomeUnderlyingInstrRegistry f -> fieldB f
+  SomeLegCountryOfIssue f -> fieldB f
+  SomeLegStateOrProvinceOfIssue f -> fieldB f
+  SomeLegLocaleOfIssue f -> fieldB f
+  SomeLegInstrRegistry f -> fieldB f
+  SomeLegSymbol f -> fieldB f
+  SomeLegSymbolSfx f -> fieldB f
+  SomeLegSecurityID f -> fieldB f
+  SomeLegSecurityIDSource f -> fieldB f
+  SomeNoLegSecurityAltID f -> fieldB f
+  SomeLegSecurityAltID f -> fieldB f
+  SomeLegSecurityAltIDSource f -> fieldB f
+  SomeLegProduct f -> fieldB f
+  SomeLegCFICode f -> fieldB f
+  SomeLegSecurityType f -> fieldB f
+  SomeLegMaturityMonthYear f -> fieldB f
+  SomeLegMaturityDate f -> fieldB f
+  SomeLegStrikePrice f -> fieldB f
+  SomeLegOptAttribute f -> fieldB f
+  SomeLegContractMultiplier f -> fieldB f
+  SomeLegCouponRate f -> fieldB f
+  SomeLegSecurityExchange f -> fieldB f
+  SomeLegIssuer f -> fieldB f
+  SomeEncodedLegIssuer f -> fieldB f
+  SomeLegSecurityDesc f -> fieldB f
+  SomeEncodedLegSecurityDesc f -> fieldB f
+  SomeLegRatioQty f -> fieldB f
+  SomeLegSide f -> fieldB f
+  SomeTradingSessionSubID f -> fieldB f
   SomeNoHops f -> fieldB f
   SomeHopCompID f -> fieldB f
   SomeHopSendingTime f -> fieldB f
   SomeHopRefID f -> fieldB f
+  SomePrice2 f -> fieldB f
+  SomeRFQReqID f -> fieldB f
+  SomeAcctIDSource f -> fieldB f
+  SomeBenchmarkPrice f -> fieldB f
+  SomeBenchmarkPriceType f -> fieldB f
+  SomeContractSettlMonth f -> fieldB f
+  SomeLegBenchmarkCurveCurrency f -> fieldB f
+  SomeLegBenchmarkCurveName f -> fieldB f
+  SomeLegBenchmarkCurvePoint f -> fieldB f
+  SomeLegBenchmarkPrice f -> fieldB f
+  SomeLegBenchmarkPriceType f -> fieldB f
+  SomeNoLegStipulations f -> fieldB f
+  SomeLegQty f -> fieldB f
+  SomeLegStipulationType f -> fieldB f
+  SomeLegStipulationValue f -> fieldB f
+  SomeLegSwapType f -> fieldB f
+  SomePool f -> fieldB f
+  SomeQuotePriceType f -> fieldB f
+  SomeQuoteQualifier f -> fieldB f
+  SomeYieldRedemptionDate f -> fieldB f
+  SomeYieldRedemptionPrice f -> fieldB f
+  SomeYieldRedemptionPriceType f -> fieldB f
+  SomeBenchmarkSecurityID f -> fieldB f
+  SomeYieldCalcDate f -> fieldB f
+  SomeNoUnderlyings f -> fieldB f
+  SomeNoQuoteQualifiers f -> fieldB f
+  SomeLegDatedDate f -> fieldB f
+  SomeLegPool f -> fieldB f
+  SomeBenchmarkSecurityIDSource f -> fieldB f
+  SomeSecuritySubType f -> fieldB f
+  SomeUnderlyingSecuritySubType f -> fieldB f
+  SomeLegSecuritySubType f -> fieldB f
+  SomeTerminationType f -> fieldB f
   SomeNextExpectedMsgSeqNum f -> fieldB f
+  SomeNoPartySubIDs f -> fieldB f
+  SomePartySubIDType f -> fieldB f
+  SomeNoNestedPartySubIDs f -> fieldB f
+  SomeNestedPartySubIDType f -> fieldB f
+  SomeUnderlyingPx f -> fieldB f
+  SomeQtyType f -> fieldB f
+  SomeNoEvents f -> fieldB f
+  SomeEventType f -> fieldB f
+  SomeEventDate f -> fieldB f
+  SomeEventPx f -> fieldB f
+  SomeEventText f -> fieldB f
+  SomeDatedDate f -> fieldB f
+  SomeInterestAccrualDate f -> fieldB f
+  SomeCPProgram f -> fieldB f
+  SomeCPRegType f -> fieldB f
+  SomeUnderlyingCPProgram f -> fieldB f
+  SomeUnderlyingCPRegType f -> fieldB f
+  SomeUnderlyingQty f -> fieldB f
+  SomeUnderlyingDirtyPrice f -> fieldB f
+  SomeUnderlyingEndPrice f -> fieldB f
+  SomeUnderlyingStartValue f -> fieldB f
+  SomeUnderlyingCurrentValue f -> fieldB f
+  SomeUnderlyingEndValue f -> fieldB f
+  SomeNoUnderlyingStips f -> fieldB f
+  SomeUnderlyingStipType f -> fieldB f
+  SomeUnderlyingStipValue f -> fieldB f
+  SomeMarginRatio f -> fieldB f
+  SomeAgreementDesc f -> fieldB f
+  SomeAgreementID f -> fieldB f
+  SomeAgreementDate f -> fieldB f
+  SomeStartDate f -> fieldB f
+  SomeEndDate f -> fieldB f
+  SomeAgreementCurrency f -> fieldB f
+  SomeDeliveryType f -> fieldB f
+  SomeUnderlyingStrikeCurrency f -> fieldB f
+  SomeLegStrikeCurrency f -> fieldB f
+  SomeStrikeCurrency f -> fieldB f
+  SomeLegContractSettlMonth f -> fieldB f
+  SomeLegInterestAccrualDate f -> fieldB f
 
 anyFieldP :: Parsec Void ByteString AnyField
 anyFieldP = do
@@ -169,55 +859,291 @@ anyFieldP = do
   let fp :: forall f. (IsField f) => Parsec Void ByteString f
       fp = fieldP tag
   case tag of
+    1 -> SomeAccount <$> fp
     8 -> SomeBeginString <$> fp
     9 -> SomeBodyLength <$> fp
     10 -> SomeCheckSum <$> fp
+    11 -> SomeClOrdID <$> fp
+    15 -> SomeCurrency <$> fp
+    22 -> SomeSecurityIDSource <$> fp
     34 -> SomeMsgSeqNum <$> fp
     35 -> SomeMsgType <$> fp
+    38 -> SomeOrderQty <$> fp
+    40 -> SomeOrdType <$> fp
     43 -> SomePossDupFlag <$> fp
+    44 -> SomePrice <$> fp
+    48 -> SomeSecurityID <$> fp
     49 -> SomeSenderCompID <$> fp
     50 -> SomeSenderSubID <$> fp
     52 -> SomeSendingTime <$> fp
+    54 -> SomeSide <$> fp
+    55 -> SomeSymbol <$> fp
     56 -> SomeTargetCompID <$> fp
     57 -> SomeTargetSubID <$> fp
+    58 -> SomeText <$> fp
+    60 -> SomeTransactTime <$> fp
+    62 -> SomeValidUntilTime <$> fp
+    63 -> SomeSettlType <$> fp
+    64 -> SomeSettlDate <$> fp
+    65 -> SomeSymbolSfx <$> fp
     88 -> SomeSignature <$> fp
     90 -> SomeSecureData <$> fp
     93 -> SomeSignatureLength <$> fp
     95 -> SomeRawData <$> fp
     97 -> SomePossResend <$> fp
     98 -> SomeEncryptMethod <$> fp
+    106 -> SomeIssuer <$> fp
+    107 -> SomeSecurityDesc <$> fp
     108 -> SomeHeartBtInt <$> fp
     112 -> SomeTestReqID <$> fp
     115 -> SomeOnBehalfOfCompID <$> fp
     116 -> SomeOnBehalfOfSubID <$> fp
     122 -> SomeOrigSendingTime <$> fp
+    126 -> SomeExpireTime <$> fp
     128 -> SomeDeliverToCompID <$> fp
     129 -> SomeDeliverToSubID <$> fp
+    131 -> SomeQuoteReqID <$> fp
+    140 -> SomePrevClosePx <$> fp
     141 -> SomeResetSeqNumFlag <$> fp
     142 -> SomeSenderLocationID <$> fp
     143 -> SomeTargetLocationID <$> fp
     144 -> SomeOnBehalfOfLocationID <$> fp
     145 -> SomeDeliverToLocationID <$> fp
+    146 -> SomeNoRelatedSym <$> fp
+    152 -> SomeCashOrderQty <$> fp
+    167 -> SomeSecurityType <$> fp
+    192 -> SomeOrderQty2 <$> fp
+    193 -> SomeSettlDate2 <$> fp
+    200 -> SomeMaturityMonthYear <$> fp
+    201 -> SomePutOrCall <$> fp
+    202 -> SomeStrikePrice <$> fp
+    206 -> SomeOptAttribute <$> fp
+    207 -> SomeSecurityExchange <$> fp
     212 -> SomeXmlData <$> fp
+    218 -> SomeSpread <$> fp
+    220 -> SomeBenchmarkCurveCurrency <$> fp
+    221 -> SomeBenchmarkCurveName <$> fp
+    222 -> SomeBenchmarkCurvePoint <$> fp
+    223 -> SomeCouponRate <$> fp
+    224 -> SomeCouponPaymentDate <$> fp
+    225 -> SomeIssueDate <$> fp
+    226 -> SomeRepurchaseTerm <$> fp
+    227 -> SomeRepurchaseRate <$> fp
+    228 -> SomeFactor <$> fp
+    229 -> SomeTradeOriginationDate <$> fp
+    231 -> SomeContractMultiplier <$> fp
+    232 -> SomeNoStipulations <$> fp
+    233 -> SomeStipulationType <$> fp
+    234 -> SomeStipulationValue <$> fp
+    235 -> SomeYieldType <$> fp
+    236 -> SomeYield <$> fp
+    239 -> SomeRepoCollateralSecurityType <$> fp
+    240 -> SomeRedemptionDate <$> fp
+    241 -> SomeUnderlyingCouponPaymentDate <$> fp
+    242 -> SomeUnderlyingIssueDate <$> fp
+    243 -> SomeUnderlyingRepoCollateralSecurityType <$> fp
+    244 -> SomeUnderlyingRepurchaseTerm <$> fp
+    245 -> SomeUnderlyingRepurchaseRate <$> fp
+    246 -> SomeUnderlyingFactor <$> fp
+    247 -> SomeUnderlyingRedemptionDate <$> fp
+    248 -> SomeLegCouponPaymentDate <$> fp
+    249 -> SomeLegIssueDate <$> fp
+    250 -> SomeLegRepoCollateralSecurityType <$> fp
+    251 -> SomeLegRepurchaseTerm <$> fp
+    252 -> SomeLegRepurchaseRate <$> fp
+    253 -> SomeLegFactor <$> fp
+    254 -> SomeLegRedemptionDate <$> fp
+    255 -> SomeCreditRating <$> fp
+    256 -> SomeUnderlyingCreditRating <$> fp
+    257 -> SomeLegCreditRating <$> fp
+    303 -> SomeQuoteRequestType <$> fp
+    305 -> SomeUnderlyingSecurityIDSource <$> fp
+    306 -> SomeUnderlyingIssuer <$> fp
+    307 -> SomeUnderlyingSecurityDesc <$> fp
+    308 -> SomeUnderlyingSecurityExchange <$> fp
+    309 -> SomeUnderlyingSecurityID <$> fp
+    310 -> SomeUnderlyingSecurityType <$> fp
+    311 -> SomeUnderlyingSymbol <$> fp
+    312 -> SomeUnderlyingSymbolSfx <$> fp
+    313 -> SomeUnderlyingMaturityMonthYear <$> fp
+    315 -> SomeUnderlyingPutOrCall <$> fp
+    316 -> SomeUnderlyingStrikePrice <$> fp
+    317 -> SomeUnderlyingOptAttribute <$> fp
+    318 -> SomeUnderlyingCurrency <$> fp
+    336 -> SomeTradingSessionID <$> fp
     347 -> SomeMessageEncoding <$> fp
+    348 -> SomeEncodedIssuer <$> fp
+    350 -> SomeEncodedSecurityDesc <$> fp
+    354 -> SomeEncodedText <$> fp
+    362 -> SomeEncodedUnderlyingIssuer <$> fp
+    364 -> SomeEncodedUnderlyingSecurityDesc <$> fp
     369 -> SomeLastMsgSeqNumProcessed <$> fp
     372 -> SomeRefMsgType <$> fp
     383 -> SomeMaxMessageSize <$> fp
     384 -> SomeNoMsgTypes <$> fp
     385 -> SomeMsgDirection <$> fp
+    423 -> SomePriceType <$> fp
+    435 -> SomeUnderlyingCouponRate <$> fp
+    436 -> SomeUnderlyingContractMultiplier <$> fp
+    447 -> SomePartyIDSource <$> fp
+    448 -> SomePartyID <$> fp
+    452 -> SomePartyRole <$> fp
+    453 -> SomeNoPartyIDs <$> fp
+    454 -> SomeNoSecurityAltID <$> fp
+    455 -> SomeSecurityAltID <$> fp
+    456 -> SomeSecurityAltIDSource <$> fp
+    457 -> SomeNoUnderlyingSecurityAltID <$> fp
+    458 -> SomeUnderlyingSecurityAltID <$> fp
+    459 -> SomeUnderlyingSecurityAltIDSource <$> fp
+    460 -> SomeProduct <$> fp
+    461 -> SomeCFICode <$> fp
+    462 -> SomeUnderlyingProduct <$> fp
+    463 -> SomeUnderlyingCFICode <$> fp
     464 -> SomeTestMessageIndicator <$> fp
+    468 -> SomeRoundingDirection <$> fp
+    469 -> SomeRoundingModulus <$> fp
+    470 -> SomeCountryOfIssue <$> fp
+    471 -> SomeStateOrProvinceOfIssue <$> fp
+    472 -> SomeLocaleOfIssue <$> fp
+    516 -> SomeOrderPercent <$> fp
+    523 -> SomePartySubID <$> fp
+    524 -> SomeNestedPartyID <$> fp
+    525 -> SomeNestedPartyIDSource <$> fp
+    528 -> SomeOrderCapacity <$> fp
+    537 -> SomeQuoteType <$> fp
+    538 -> SomeNestedPartyRole <$> fp
+    539 -> SomeNoNestedPartyIDs <$> fp
+    541 -> SomeMaturityDate <$> fp
+    542 -> SomeUnderlyingMaturityDate <$> fp
+    543 -> SomeInstrRegistry <$> fp
+    545 -> SomeNestedPartySubID <$> fp
     553 -> SomeUsername <$> fp
     554 -> SomePassword <$> fp
+    555 -> SomeNoLegs <$> fp
+    556 -> SomeLegCurrency <$> fp
+    581 -> SomeAccountType <$> fp
+    587 -> SomeLegSettlType <$> fp
+    588 -> SomeLegSettlDate <$> fp
+    592 -> SomeUnderlyingCountryOfIssue <$> fp
+    593 -> SomeUnderlyingStateOrProvinceOfIssue <$> fp
+    594 -> SomeUnderlyingLocaleOfIssue <$> fp
+    595 -> SomeUnderlyingInstrRegistry <$> fp
+    596 -> SomeLegCountryOfIssue <$> fp
+    597 -> SomeLegStateOrProvinceOfIssue <$> fp
+    598 -> SomeLegLocaleOfIssue <$> fp
+    599 -> SomeLegInstrRegistry <$> fp
+    600 -> SomeLegSymbol <$> fp
+    601 -> SomeLegSymbolSfx <$> fp
+    602 -> SomeLegSecurityID <$> fp
+    603 -> SomeLegSecurityIDSource <$> fp
+    604 -> SomeNoLegSecurityAltID <$> fp
+    605 -> SomeLegSecurityAltID <$> fp
+    606 -> SomeLegSecurityAltIDSource <$> fp
+    607 -> SomeLegProduct <$> fp
+    608 -> SomeLegCFICode <$> fp
+    609 -> SomeLegSecurityType <$> fp
+    610 -> SomeLegMaturityMonthYear <$> fp
+    611 -> SomeLegMaturityDate <$> fp
+    612 -> SomeLegStrikePrice <$> fp
+    613 -> SomeLegOptAttribute <$> fp
+    614 -> SomeLegContractMultiplier <$> fp
+    615 -> SomeLegCouponRate <$> fp
+    616 -> SomeLegSecurityExchange <$> fp
+    617 -> SomeLegIssuer <$> fp
+    618 -> SomeEncodedLegIssuer <$> fp
+    620 -> SomeLegSecurityDesc <$> fp
+    621 -> SomeEncodedLegSecurityDesc <$> fp
+    623 -> SomeLegRatioQty <$> fp
+    624 -> SomeLegSide <$> fp
+    625 -> SomeTradingSessionSubID <$> fp
     627 -> SomeNoHops <$> fp
     628 -> SomeHopCompID <$> fp
     629 -> SomeHopSendingTime <$> fp
     630 -> SomeHopRefID <$> fp
+    640 -> SomePrice2 <$> fp
+    644 -> SomeRFQReqID <$> fp
+    660 -> SomeAcctIDSource <$> fp
+    662 -> SomeBenchmarkPrice <$> fp
+    663 -> SomeBenchmarkPriceType <$> fp
+    667 -> SomeContractSettlMonth <$> fp
+    676 -> SomeLegBenchmarkCurveCurrency <$> fp
+    677 -> SomeLegBenchmarkCurveName <$> fp
+    678 -> SomeLegBenchmarkCurvePoint <$> fp
+    679 -> SomeLegBenchmarkPrice <$> fp
+    680 -> SomeLegBenchmarkPriceType <$> fp
+    683 -> SomeNoLegStipulations <$> fp
+    687 -> SomeLegQty <$> fp
+    688 -> SomeLegStipulationType <$> fp
+    689 -> SomeLegStipulationValue <$> fp
+    690 -> SomeLegSwapType <$> fp
+    691 -> SomePool <$> fp
+    692 -> SomeQuotePriceType <$> fp
+    695 -> SomeQuoteQualifier <$> fp
+    696 -> SomeYieldRedemptionDate <$> fp
+    697 -> SomeYieldRedemptionPrice <$> fp
+    698 -> SomeYieldRedemptionPriceType <$> fp
+    699 -> SomeBenchmarkSecurityID <$> fp
+    701 -> SomeYieldCalcDate <$> fp
+    711 -> SomeNoUnderlyings <$> fp
+    735 -> SomeNoQuoteQualifiers <$> fp
+    739 -> SomeLegDatedDate <$> fp
+    740 -> SomeLegPool <$> fp
+    761 -> SomeBenchmarkSecurityIDSource <$> fp
+    762 -> SomeSecuritySubType <$> fp
+    763 -> SomeUnderlyingSecuritySubType <$> fp
+    764 -> SomeLegSecuritySubType <$> fp
+    788 -> SomeTerminationType <$> fp
     789 -> SomeNextExpectedMsgSeqNum <$> fp
+    802 -> SomeNoPartySubIDs <$> fp
+    803 -> SomePartySubIDType <$> fp
+    804 -> SomeNoNestedPartySubIDs <$> fp
+    805 -> SomeNestedPartySubIDType <$> fp
+    810 -> SomeUnderlyingPx <$> fp
+    854 -> SomeQtyType <$> fp
+    864 -> SomeNoEvents <$> fp
+    865 -> SomeEventType <$> fp
+    866 -> SomeEventDate <$> fp
+    867 -> SomeEventPx <$> fp
+    868 -> SomeEventText <$> fp
+    873 -> SomeDatedDate <$> fp
+    874 -> SomeInterestAccrualDate <$> fp
+    875 -> SomeCPProgram <$> fp
+    876 -> SomeCPRegType <$> fp
+    877 -> SomeUnderlyingCPProgram <$> fp
+    878 -> SomeUnderlyingCPRegType <$> fp
+    879 -> SomeUnderlyingQty <$> fp
+    882 -> SomeUnderlyingDirtyPrice <$> fp
+    883 -> SomeUnderlyingEndPrice <$> fp
+    884 -> SomeUnderlyingStartValue <$> fp
+    885 -> SomeUnderlyingCurrentValue <$> fp
+    886 -> SomeUnderlyingEndValue <$> fp
+    887 -> SomeNoUnderlyingStips <$> fp
+    888 -> SomeUnderlyingStipType <$> fp
+    889 -> SomeUnderlyingStipValue <$> fp
+    898 -> SomeMarginRatio <$> fp
+    913 -> SomeAgreementDesc <$> fp
+    914 -> SomeAgreementID <$> fp
+    915 -> SomeAgreementDate <$> fp
+    916 -> SomeStartDate <$> fp
+    917 -> SomeEndDate <$> fp
+    918 -> SomeAgreementCurrency <$> fp
+    919 -> SomeDeliveryType <$> fp
+    941 -> SomeUnderlyingStrikeCurrency <$> fp
+    942 -> SomeLegStrikeCurrency <$> fp
+    947 -> SomeStrikeCurrency <$> fp
+    955 -> SomeLegContractSettlMonth <$> fp
+    956 -> SomeLegInterestAccrualDate <$> fp
     _ -> fail "Unknown field tag"
 
 class (IsField a) => IsAnyField a where
   unpackAnyField :: AnyField -> Maybe a
   packAnyField :: a -> AnyField
+
+instance IsAnyField Account where
+  packAnyField = SomeAccount
+  unpackAnyField = \case
+    SomeAccount f -> Just f
+    _ -> Nothing
 
 instance IsAnyField BeginString where
   packAnyField = SomeBeginString
@@ -237,6 +1163,24 @@ instance IsAnyField CheckSum where
     SomeCheckSum f -> Just f
     _ -> Nothing
 
+instance IsAnyField ClOrdID where
+  packAnyField = SomeClOrdID
+  unpackAnyField = \case
+    SomeClOrdID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Currency where
+  packAnyField = SomeCurrency
+  unpackAnyField = \case
+    SomeCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityIDSource where
+  packAnyField = SomeSecurityIDSource
+  unpackAnyField = \case
+    SomeSecurityIDSource f -> Just f
+    _ -> Nothing
+
 instance IsAnyField MsgSeqNum where
   packAnyField = SomeMsgSeqNum
   unpackAnyField = \case
@@ -249,10 +1193,34 @@ instance IsAnyField MsgType where
     SomeMsgType f -> Just f
     _ -> Nothing
 
+instance IsAnyField OrderQty where
+  packAnyField = SomeOrderQty
+  unpackAnyField = \case
+    SomeOrderQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrdType where
+  packAnyField = SomeOrdType
+  unpackAnyField = \case
+    SomeOrdType f -> Just f
+    _ -> Nothing
+
 instance IsAnyField PossDupFlag where
   packAnyField = SomePossDupFlag
   unpackAnyField = \case
     SomePossDupFlag f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Price where
+  packAnyField = SomePrice
+  unpackAnyField = \case
+    SomePrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityID where
+  packAnyField = SomeSecurityID
+  unpackAnyField = \case
+    SomeSecurityID f -> Just f
     _ -> Nothing
 
 instance IsAnyField SenderCompID where
@@ -273,6 +1241,18 @@ instance IsAnyField SendingTime where
     SomeSendingTime f -> Just f
     _ -> Nothing
 
+instance IsAnyField Side where
+  packAnyField = SomeSide
+  unpackAnyField = \case
+    SomeSide f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Symbol where
+  packAnyField = SomeSymbol
+  unpackAnyField = \case
+    SomeSymbol f -> Just f
+    _ -> Nothing
+
 instance IsAnyField TargetCompID where
   packAnyField = SomeTargetCompID
   unpackAnyField = \case
@@ -283,6 +1263,42 @@ instance IsAnyField TargetSubID where
   packAnyField = SomeTargetSubID
   unpackAnyField = \case
     SomeTargetSubID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Text where
+  packAnyField = SomeText
+  unpackAnyField = \case
+    SomeText f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TransactTime where
+  packAnyField = SomeTransactTime
+  unpackAnyField = \case
+    SomeTransactTime f -> Just f
+    _ -> Nothing
+
+instance IsAnyField ValidUntilTime where
+  packAnyField = SomeValidUntilTime
+  unpackAnyField = \case
+    SomeValidUntilTime f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SettlType where
+  packAnyField = SomeSettlType
+  unpackAnyField = \case
+    SomeSettlType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SettlDate where
+  packAnyField = SomeSettlDate
+  unpackAnyField = \case
+    SomeSettlDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SymbolSfx where
+  packAnyField = SomeSymbolSfx
+  unpackAnyField = \case
+    SomeSymbolSfx f -> Just f
     _ -> Nothing
 
 instance IsAnyField Signature where
@@ -321,6 +1337,18 @@ instance IsAnyField EncryptMethod where
     SomeEncryptMethod f -> Just f
     _ -> Nothing
 
+instance IsAnyField Issuer where
+  packAnyField = SomeIssuer
+  unpackAnyField = \case
+    SomeIssuer f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityDesc where
+  packAnyField = SomeSecurityDesc
+  unpackAnyField = \case
+    SomeSecurityDesc f -> Just f
+    _ -> Nothing
+
 instance IsAnyField HeartBtInt where
   packAnyField = SomeHeartBtInt
   unpackAnyField = \case
@@ -351,6 +1379,12 @@ instance IsAnyField OrigSendingTime where
     SomeOrigSendingTime f -> Just f
     _ -> Nothing
 
+instance IsAnyField ExpireTime where
+  packAnyField = SomeExpireTime
+  unpackAnyField = \case
+    SomeExpireTime f -> Just f
+    _ -> Nothing
+
 instance IsAnyField DeliverToCompID where
   packAnyField = SomeDeliverToCompID
   unpackAnyField = \case
@@ -361,6 +1395,18 @@ instance IsAnyField DeliverToSubID where
   packAnyField = SomeDeliverToSubID
   unpackAnyField = \case
     SomeDeliverToSubID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteReqID where
+  packAnyField = SomeQuoteReqID
+  unpackAnyField = \case
+    SomeQuoteReqID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PrevClosePx where
+  packAnyField = SomePrevClosePx
+  unpackAnyField = \case
+    SomePrevClosePx f -> Just f
     _ -> Nothing
 
 instance IsAnyField ResetSeqNumFlag where
@@ -393,16 +1439,412 @@ instance IsAnyField DeliverToLocationID where
     SomeDeliverToLocationID f -> Just f
     _ -> Nothing
 
+instance IsAnyField NoRelatedSym where
+  packAnyField = SomeNoRelatedSym
+  unpackAnyField = \case
+    SomeNoRelatedSym f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CashOrderQty where
+  packAnyField = SomeCashOrderQty
+  unpackAnyField = \case
+    SomeCashOrderQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityType where
+  packAnyField = SomeSecurityType
+  unpackAnyField = \case
+    SomeSecurityType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderQty2 where
+  packAnyField = SomeOrderQty2
+  unpackAnyField = \case
+    SomeOrderQty2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SettlDate2 where
+  packAnyField = SomeSettlDate2
+  unpackAnyField = \case
+    SomeSettlDate2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MaturityMonthYear where
+  packAnyField = SomeMaturityMonthYear
+  unpackAnyField = \case
+    SomeMaturityMonthYear f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PutOrCall where
+  packAnyField = SomePutOrCall
+  unpackAnyField = \case
+    SomePutOrCall f -> Just f
+    _ -> Nothing
+
+instance IsAnyField StrikePrice where
+  packAnyField = SomeStrikePrice
+  unpackAnyField = \case
+    SomeStrikePrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OptAttribute where
+  packAnyField = SomeOptAttribute
+  unpackAnyField = \case
+    SomeOptAttribute f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityExchange where
+  packAnyField = SomeSecurityExchange
+  unpackAnyField = \case
+    SomeSecurityExchange f -> Just f
+    _ -> Nothing
+
 instance IsAnyField XmlData where
   packAnyField = SomeXmlData
   unpackAnyField = \case
     SomeXmlData f -> Just f
     _ -> Nothing
 
+instance IsAnyField Spread where
+  packAnyField = SomeSpread
+  unpackAnyField = \case
+    SomeSpread f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkCurveCurrency where
+  packAnyField = SomeBenchmarkCurveCurrency
+  unpackAnyField = \case
+    SomeBenchmarkCurveCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkCurveName where
+  packAnyField = SomeBenchmarkCurveName
+  unpackAnyField = \case
+    SomeBenchmarkCurveName f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkCurvePoint where
+  packAnyField = SomeBenchmarkCurvePoint
+  unpackAnyField = \case
+    SomeBenchmarkCurvePoint f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CouponRate where
+  packAnyField = SomeCouponRate
+  unpackAnyField = \case
+    SomeCouponRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CouponPaymentDate where
+  packAnyField = SomeCouponPaymentDate
+  unpackAnyField = \case
+    SomeCouponPaymentDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField IssueDate where
+  packAnyField = SomeIssueDate
+  unpackAnyField = \case
+    SomeIssueDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RepurchaseTerm where
+  packAnyField = SomeRepurchaseTerm
+  unpackAnyField = \case
+    SomeRepurchaseTerm f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RepurchaseRate where
+  packAnyField = SomeRepurchaseRate
+  unpackAnyField = \case
+    SomeRepurchaseRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Factor where
+  packAnyField = SomeFactor
+  unpackAnyField = \case
+    SomeFactor f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TradeOriginationDate where
+  packAnyField = SomeTradeOriginationDate
+  unpackAnyField = \case
+    SomeTradeOriginationDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField ContractMultiplier where
+  packAnyField = SomeContractMultiplier
+  unpackAnyField = \case
+    SomeContractMultiplier f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoStipulations where
+  packAnyField = SomeNoStipulations
+  unpackAnyField = \case
+    SomeNoStipulations f -> Just f
+    _ -> Nothing
+
+instance IsAnyField StipulationType where
+  packAnyField = SomeStipulationType
+  unpackAnyField = \case
+    SomeStipulationType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField StipulationValue where
+  packAnyField = SomeStipulationValue
+  unpackAnyField = \case
+    SomeStipulationValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField YieldType where
+  packAnyField = SomeYieldType
+  unpackAnyField = \case
+    SomeYieldType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Yield where
+  packAnyField = SomeYield
+  unpackAnyField = \case
+    SomeYield f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RepoCollateralSecurityType where
+  packAnyField = SomeRepoCollateralSecurityType
+  unpackAnyField = \case
+    SomeRepoCollateralSecurityType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RedemptionDate where
+  packAnyField = SomeRedemptionDate
+  unpackAnyField = \case
+    SomeRedemptionDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCouponPaymentDate where
+  packAnyField = SomeUnderlyingCouponPaymentDate
+  unpackAnyField = \case
+    SomeUnderlyingCouponPaymentDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingIssueDate where
+  packAnyField = SomeUnderlyingIssueDate
+  unpackAnyField = \case
+    SomeUnderlyingIssueDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingRepoCollateralSecurityType where
+  packAnyField = SomeUnderlyingRepoCollateralSecurityType
+  unpackAnyField = \case
+    SomeUnderlyingRepoCollateralSecurityType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingRepurchaseTerm where
+  packAnyField = SomeUnderlyingRepurchaseTerm
+  unpackAnyField = \case
+    SomeUnderlyingRepurchaseTerm f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingRepurchaseRate where
+  packAnyField = SomeUnderlyingRepurchaseRate
+  unpackAnyField = \case
+    SomeUnderlyingRepurchaseRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingFactor where
+  packAnyField = SomeUnderlyingFactor
+  unpackAnyField = \case
+    SomeUnderlyingFactor f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingRedemptionDate where
+  packAnyField = SomeUnderlyingRedemptionDate
+  unpackAnyField = \case
+    SomeUnderlyingRedemptionDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegCouponPaymentDate where
+  packAnyField = SomeLegCouponPaymentDate
+  unpackAnyField = \case
+    SomeLegCouponPaymentDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegIssueDate where
+  packAnyField = SomeLegIssueDate
+  unpackAnyField = \case
+    SomeLegIssueDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegRepoCollateralSecurityType where
+  packAnyField = SomeLegRepoCollateralSecurityType
+  unpackAnyField = \case
+    SomeLegRepoCollateralSecurityType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegRepurchaseTerm where
+  packAnyField = SomeLegRepurchaseTerm
+  unpackAnyField = \case
+    SomeLegRepurchaseTerm f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegRepurchaseRate where
+  packAnyField = SomeLegRepurchaseRate
+  unpackAnyField = \case
+    SomeLegRepurchaseRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegFactor where
+  packAnyField = SomeLegFactor
+  unpackAnyField = \case
+    SomeLegFactor f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegRedemptionDate where
+  packAnyField = SomeLegRedemptionDate
+  unpackAnyField = \case
+    SomeLegRedemptionDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CreditRating where
+  packAnyField = SomeCreditRating
+  unpackAnyField = \case
+    SomeCreditRating f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCreditRating where
+  packAnyField = SomeUnderlyingCreditRating
+  unpackAnyField = \case
+    SomeUnderlyingCreditRating f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegCreditRating where
+  packAnyField = SomeLegCreditRating
+  unpackAnyField = \case
+    SomeLegCreditRating f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteRequestType where
+  packAnyField = SomeQuoteRequestType
+  unpackAnyField = \case
+    SomeQuoteRequestType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityIDSource where
+  packAnyField = SomeUnderlyingSecurityIDSource
+  unpackAnyField = \case
+    SomeUnderlyingSecurityIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingIssuer where
+  packAnyField = SomeUnderlyingIssuer
+  unpackAnyField = \case
+    SomeUnderlyingIssuer f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityDesc where
+  packAnyField = SomeUnderlyingSecurityDesc
+  unpackAnyField = \case
+    SomeUnderlyingSecurityDesc f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityExchange where
+  packAnyField = SomeUnderlyingSecurityExchange
+  unpackAnyField = \case
+    SomeUnderlyingSecurityExchange f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityID where
+  packAnyField = SomeUnderlyingSecurityID
+  unpackAnyField = \case
+    SomeUnderlyingSecurityID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityType where
+  packAnyField = SomeUnderlyingSecurityType
+  unpackAnyField = \case
+    SomeUnderlyingSecurityType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSymbol where
+  packAnyField = SomeUnderlyingSymbol
+  unpackAnyField = \case
+    SomeUnderlyingSymbol f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSymbolSfx where
+  packAnyField = SomeUnderlyingSymbolSfx
+  unpackAnyField = \case
+    SomeUnderlyingSymbolSfx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingMaturityMonthYear where
+  packAnyField = SomeUnderlyingMaturityMonthYear
+  unpackAnyField = \case
+    SomeUnderlyingMaturityMonthYear f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingPutOrCall where
+  packAnyField = SomeUnderlyingPutOrCall
+  unpackAnyField = \case
+    SomeUnderlyingPutOrCall f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingStrikePrice where
+  packAnyField = SomeUnderlyingStrikePrice
+  unpackAnyField = \case
+    SomeUnderlyingStrikePrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingOptAttribute where
+  packAnyField = SomeUnderlyingOptAttribute
+  unpackAnyField = \case
+    SomeUnderlyingOptAttribute f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCurrency where
+  packAnyField = SomeUnderlyingCurrency
+  unpackAnyField = \case
+    SomeUnderlyingCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TradingSessionID where
+  packAnyField = SomeTradingSessionID
+  unpackAnyField = \case
+    SomeTradingSessionID f -> Just f
+    _ -> Nothing
+
 instance IsAnyField MessageEncoding where
   packAnyField = SomeMessageEncoding
   unpackAnyField = \case
     SomeMessageEncoding f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedIssuer where
+  packAnyField = SomeEncodedIssuer
+  unpackAnyField = \case
+    SomeEncodedIssuer f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedSecurityDesc where
+  packAnyField = SomeEncodedSecurityDesc
+  unpackAnyField = \case
+    SomeEncodedSecurityDesc f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedText where
+  packAnyField = SomeEncodedText
+  unpackAnyField = \case
+    SomeEncodedText f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedUnderlyingIssuer where
+  packAnyField = SomeEncodedUnderlyingIssuer
+  unpackAnyField = \case
+    SomeEncodedUnderlyingIssuer f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedUnderlyingSecurityDesc where
+  packAnyField = SomeEncodedUnderlyingSecurityDesc
+  unpackAnyField = \case
+    SomeEncodedUnderlyingSecurityDesc f -> Just f
     _ -> Nothing
 
 instance IsAnyField LastMsgSeqNumProcessed where
@@ -435,10 +1877,214 @@ instance IsAnyField MsgDirection where
     SomeMsgDirection f -> Just f
     _ -> Nothing
 
+instance IsAnyField PriceType where
+  packAnyField = SomePriceType
+  unpackAnyField = \case
+    SomePriceType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCouponRate where
+  packAnyField = SomeUnderlyingCouponRate
+  unpackAnyField = \case
+    SomeUnderlyingCouponRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingContractMultiplier where
+  packAnyField = SomeUnderlyingContractMultiplier
+  unpackAnyField = \case
+    SomeUnderlyingContractMultiplier f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartyIDSource where
+  packAnyField = SomePartyIDSource
+  unpackAnyField = \case
+    SomePartyIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartyID where
+  packAnyField = SomePartyID
+  unpackAnyField = \case
+    SomePartyID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartyRole where
+  packAnyField = SomePartyRole
+  unpackAnyField = \case
+    SomePartyRole f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoPartyIDs where
+  packAnyField = SomeNoPartyIDs
+  unpackAnyField = \case
+    SomeNoPartyIDs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoSecurityAltID where
+  packAnyField = SomeNoSecurityAltID
+  unpackAnyField = \case
+    SomeNoSecurityAltID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityAltID where
+  packAnyField = SomeSecurityAltID
+  unpackAnyField = \case
+    SomeSecurityAltID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityAltIDSource where
+  packAnyField = SomeSecurityAltIDSource
+  unpackAnyField = \case
+    SomeSecurityAltIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoUnderlyingSecurityAltID where
+  packAnyField = SomeNoUnderlyingSecurityAltID
+  unpackAnyField = \case
+    SomeNoUnderlyingSecurityAltID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityAltID where
+  packAnyField = SomeUnderlyingSecurityAltID
+  unpackAnyField = \case
+    SomeUnderlyingSecurityAltID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityAltIDSource where
+  packAnyField = SomeUnderlyingSecurityAltIDSource
+  unpackAnyField = \case
+    SomeUnderlyingSecurityAltIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Product where
+  packAnyField = SomeProduct
+  unpackAnyField = \case
+    SomeProduct f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CFICode where
+  packAnyField = SomeCFICode
+  unpackAnyField = \case
+    SomeCFICode f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingProduct where
+  packAnyField = SomeUnderlyingProduct
+  unpackAnyField = \case
+    SomeUnderlyingProduct f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCFICode where
+  packAnyField = SomeUnderlyingCFICode
+  unpackAnyField = \case
+    SomeUnderlyingCFICode f -> Just f
+    _ -> Nothing
+
 instance IsAnyField TestMessageIndicator where
   packAnyField = SomeTestMessageIndicator
   unpackAnyField = \case
     SomeTestMessageIndicator f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RoundingDirection where
+  packAnyField = SomeRoundingDirection
+  unpackAnyField = \case
+    SomeRoundingDirection f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RoundingModulus where
+  packAnyField = SomeRoundingModulus
+  unpackAnyField = \case
+    SomeRoundingModulus f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CountryOfIssue where
+  packAnyField = SomeCountryOfIssue
+  unpackAnyField = \case
+    SomeCountryOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField StateOrProvinceOfIssue where
+  packAnyField = SomeStateOrProvinceOfIssue
+  unpackAnyField = \case
+    SomeStateOrProvinceOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LocaleOfIssue where
+  packAnyField = SomeLocaleOfIssue
+  unpackAnyField = \case
+    SomeLocaleOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderPercent where
+  packAnyField = SomeOrderPercent
+  unpackAnyField = \case
+    SomeOrderPercent f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartySubID where
+  packAnyField = SomePartySubID
+  unpackAnyField = \case
+    SomePartySubID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyID where
+  packAnyField = SomeNestedPartyID
+  unpackAnyField = \case
+    SomeNestedPartyID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyIDSource where
+  packAnyField = SomeNestedPartyIDSource
+  unpackAnyField = \case
+    SomeNestedPartyIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderCapacity where
+  packAnyField = SomeOrderCapacity
+  unpackAnyField = \case
+    SomeOrderCapacity f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteType where
+  packAnyField = SomeQuoteType
+  unpackAnyField = \case
+    SomeQuoteType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyRole where
+  packAnyField = SomeNestedPartyRole
+  unpackAnyField = \case
+    SomeNestedPartyRole f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoNestedPartyIDs where
+  packAnyField = SomeNoNestedPartyIDs
+  unpackAnyField = \case
+    SomeNoNestedPartyIDs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MaturityDate where
+  packAnyField = SomeMaturityDate
+  unpackAnyField = \case
+    SomeMaturityDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingMaturityDate where
+  packAnyField = SomeUnderlyingMaturityDate
+  unpackAnyField = \case
+    SomeUnderlyingMaturityDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField InstrRegistry where
+  packAnyField = SomeInstrRegistry
+  unpackAnyField = \case
+    SomeInstrRegistry f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartySubID where
+  packAnyField = SomeNestedPartySubID
+  unpackAnyField = \case
+    SomeNestedPartySubID f -> Just f
     _ -> Nothing
 
 instance IsAnyField Username where
@@ -451,6 +2097,228 @@ instance IsAnyField Password where
   packAnyField = SomePassword
   unpackAnyField = \case
     SomePassword f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoLegs where
+  packAnyField = SomeNoLegs
+  unpackAnyField = \case
+    SomeNoLegs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegCurrency where
+  packAnyField = SomeLegCurrency
+  unpackAnyField = \case
+    SomeLegCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AccountType where
+  packAnyField = SomeAccountType
+  unpackAnyField = \case
+    SomeAccountType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSettlType where
+  packAnyField = SomeLegSettlType
+  unpackAnyField = \case
+    SomeLegSettlType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSettlDate where
+  packAnyField = SomeLegSettlDate
+  unpackAnyField = \case
+    SomeLegSettlDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCountryOfIssue where
+  packAnyField = SomeUnderlyingCountryOfIssue
+  unpackAnyField = \case
+    SomeUnderlyingCountryOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingStateOrProvinceOfIssue where
+  packAnyField = SomeUnderlyingStateOrProvinceOfIssue
+  unpackAnyField = \case
+    SomeUnderlyingStateOrProvinceOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingLocaleOfIssue where
+  packAnyField = SomeUnderlyingLocaleOfIssue
+  unpackAnyField = \case
+    SomeUnderlyingLocaleOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingInstrRegistry where
+  packAnyField = SomeUnderlyingInstrRegistry
+  unpackAnyField = \case
+    SomeUnderlyingInstrRegistry f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegCountryOfIssue where
+  packAnyField = SomeLegCountryOfIssue
+  unpackAnyField = \case
+    SomeLegCountryOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegStateOrProvinceOfIssue where
+  packAnyField = SomeLegStateOrProvinceOfIssue
+  unpackAnyField = \case
+    SomeLegStateOrProvinceOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegLocaleOfIssue where
+  packAnyField = SomeLegLocaleOfIssue
+  unpackAnyField = \case
+    SomeLegLocaleOfIssue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegInstrRegistry where
+  packAnyField = SomeLegInstrRegistry
+  unpackAnyField = \case
+    SomeLegInstrRegistry f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSymbol where
+  packAnyField = SomeLegSymbol
+  unpackAnyField = \case
+    SomeLegSymbol f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSymbolSfx where
+  packAnyField = SomeLegSymbolSfx
+  unpackAnyField = \case
+    SomeLegSymbolSfx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityID where
+  packAnyField = SomeLegSecurityID
+  unpackAnyField = \case
+    SomeLegSecurityID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityIDSource where
+  packAnyField = SomeLegSecurityIDSource
+  unpackAnyField = \case
+    SomeLegSecurityIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoLegSecurityAltID where
+  packAnyField = SomeNoLegSecurityAltID
+  unpackAnyField = \case
+    SomeNoLegSecurityAltID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityAltID where
+  packAnyField = SomeLegSecurityAltID
+  unpackAnyField = \case
+    SomeLegSecurityAltID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityAltIDSource where
+  packAnyField = SomeLegSecurityAltIDSource
+  unpackAnyField = \case
+    SomeLegSecurityAltIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegProduct where
+  packAnyField = SomeLegProduct
+  unpackAnyField = \case
+    SomeLegProduct f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegCFICode where
+  packAnyField = SomeLegCFICode
+  unpackAnyField = \case
+    SomeLegCFICode f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityType where
+  packAnyField = SomeLegSecurityType
+  unpackAnyField = \case
+    SomeLegSecurityType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegMaturityMonthYear where
+  packAnyField = SomeLegMaturityMonthYear
+  unpackAnyField = \case
+    SomeLegMaturityMonthYear f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegMaturityDate where
+  packAnyField = SomeLegMaturityDate
+  unpackAnyField = \case
+    SomeLegMaturityDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegStrikePrice where
+  packAnyField = SomeLegStrikePrice
+  unpackAnyField = \case
+    SomeLegStrikePrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegOptAttribute where
+  packAnyField = SomeLegOptAttribute
+  unpackAnyField = \case
+    SomeLegOptAttribute f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegContractMultiplier where
+  packAnyField = SomeLegContractMultiplier
+  unpackAnyField = \case
+    SomeLegContractMultiplier f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegCouponRate where
+  packAnyField = SomeLegCouponRate
+  unpackAnyField = \case
+    SomeLegCouponRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityExchange where
+  packAnyField = SomeLegSecurityExchange
+  unpackAnyField = \case
+    SomeLegSecurityExchange f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegIssuer where
+  packAnyField = SomeLegIssuer
+  unpackAnyField = \case
+    SomeLegIssuer f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedLegIssuer where
+  packAnyField = SomeEncodedLegIssuer
+  unpackAnyField = \case
+    SomeEncodedLegIssuer f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecurityDesc where
+  packAnyField = SomeLegSecurityDesc
+  unpackAnyField = \case
+    SomeLegSecurityDesc f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedLegSecurityDesc where
+  packAnyField = SomeEncodedLegSecurityDesc
+  unpackAnyField = \case
+    SomeEncodedLegSecurityDesc f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegRatioQty where
+  packAnyField = SomeLegRatioQty
+  unpackAnyField = \case
+    SomeLegRatioQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSide where
+  packAnyField = SomeLegSide
+  unpackAnyField = \case
+    SomeLegSide f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TradingSessionSubID where
+  packAnyField = SomeTradingSessionSubID
+  unpackAnyField = \case
+    SomeTradingSessionSubID f -> Just f
     _ -> Nothing
 
 instance IsAnyField NoHops where
@@ -477,8 +2345,440 @@ instance IsAnyField HopRefID where
     SomeHopRefID f -> Just f
     _ -> Nothing
 
+instance IsAnyField Price2 where
+  packAnyField = SomePrice2
+  unpackAnyField = \case
+    SomePrice2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RFQReqID where
+  packAnyField = SomeRFQReqID
+  unpackAnyField = \case
+    SomeRFQReqID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AcctIDSource where
+  packAnyField = SomeAcctIDSource
+  unpackAnyField = \case
+    SomeAcctIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkPrice where
+  packAnyField = SomeBenchmarkPrice
+  unpackAnyField = \case
+    SomeBenchmarkPrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkPriceType where
+  packAnyField = SomeBenchmarkPriceType
+  unpackAnyField = \case
+    SomeBenchmarkPriceType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField ContractSettlMonth where
+  packAnyField = SomeContractSettlMonth
+  unpackAnyField = \case
+    SomeContractSettlMonth f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBenchmarkCurveCurrency where
+  packAnyField = SomeLegBenchmarkCurveCurrency
+  unpackAnyField = \case
+    SomeLegBenchmarkCurveCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBenchmarkCurveName where
+  packAnyField = SomeLegBenchmarkCurveName
+  unpackAnyField = \case
+    SomeLegBenchmarkCurveName f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBenchmarkCurvePoint where
+  packAnyField = SomeLegBenchmarkCurvePoint
+  unpackAnyField = \case
+    SomeLegBenchmarkCurvePoint f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBenchmarkPrice where
+  packAnyField = SomeLegBenchmarkPrice
+  unpackAnyField = \case
+    SomeLegBenchmarkPrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBenchmarkPriceType where
+  packAnyField = SomeLegBenchmarkPriceType
+  unpackAnyField = \case
+    SomeLegBenchmarkPriceType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoLegStipulations where
+  packAnyField = SomeNoLegStipulations
+  unpackAnyField = \case
+    SomeNoLegStipulations f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegQty where
+  packAnyField = SomeLegQty
+  unpackAnyField = \case
+    SomeLegQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegStipulationType where
+  packAnyField = SomeLegStipulationType
+  unpackAnyField = \case
+    SomeLegStipulationType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegStipulationValue where
+  packAnyField = SomeLegStipulationValue
+  unpackAnyField = \case
+    SomeLegStipulationValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSwapType where
+  packAnyField = SomeLegSwapType
+  unpackAnyField = \case
+    SomeLegSwapType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Pool where
+  packAnyField = SomePool
+  unpackAnyField = \case
+    SomePool f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuotePriceType where
+  packAnyField = SomeQuotePriceType
+  unpackAnyField = \case
+    SomeQuotePriceType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteQualifier where
+  packAnyField = SomeQuoteQualifier
+  unpackAnyField = \case
+    SomeQuoteQualifier f -> Just f
+    _ -> Nothing
+
+instance IsAnyField YieldRedemptionDate where
+  packAnyField = SomeYieldRedemptionDate
+  unpackAnyField = \case
+    SomeYieldRedemptionDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField YieldRedemptionPrice where
+  packAnyField = SomeYieldRedemptionPrice
+  unpackAnyField = \case
+    SomeYieldRedemptionPrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField YieldRedemptionPriceType where
+  packAnyField = SomeYieldRedemptionPriceType
+  unpackAnyField = \case
+    SomeYieldRedemptionPriceType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkSecurityID where
+  packAnyField = SomeBenchmarkSecurityID
+  unpackAnyField = \case
+    SomeBenchmarkSecurityID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField YieldCalcDate where
+  packAnyField = SomeYieldCalcDate
+  unpackAnyField = \case
+    SomeYieldCalcDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoUnderlyings where
+  packAnyField = SomeNoUnderlyings
+  unpackAnyField = \case
+    SomeNoUnderlyings f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoQuoteQualifiers where
+  packAnyField = SomeNoQuoteQualifiers
+  unpackAnyField = \case
+    SomeNoQuoteQualifiers f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegDatedDate where
+  packAnyField = SomeLegDatedDate
+  unpackAnyField = \case
+    SomeLegDatedDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegPool where
+  packAnyField = SomeLegPool
+  unpackAnyField = \case
+    SomeLegPool f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BenchmarkSecurityIDSource where
+  packAnyField = SomeBenchmarkSecurityIDSource
+  unpackAnyField = \case
+    SomeBenchmarkSecurityIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecuritySubType where
+  packAnyField = SomeSecuritySubType
+  unpackAnyField = \case
+    SomeSecuritySubType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecuritySubType where
+  packAnyField = SomeUnderlyingSecuritySubType
+  unpackAnyField = \case
+    SomeUnderlyingSecuritySubType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSecuritySubType where
+  packAnyField = SomeLegSecuritySubType
+  unpackAnyField = \case
+    SomeLegSecuritySubType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TerminationType where
+  packAnyField = SomeTerminationType
+  unpackAnyField = \case
+    SomeTerminationType f -> Just f
+    _ -> Nothing
+
 instance IsAnyField NextExpectedMsgSeqNum where
   packAnyField = SomeNextExpectedMsgSeqNum
   unpackAnyField = \case
     SomeNextExpectedMsgSeqNum f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoPartySubIDs where
+  packAnyField = SomeNoPartySubIDs
+  unpackAnyField = \case
+    SomeNoPartySubIDs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartySubIDType where
+  packAnyField = SomePartySubIDType
+  unpackAnyField = \case
+    SomePartySubIDType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoNestedPartySubIDs where
+  packAnyField = SomeNoNestedPartySubIDs
+  unpackAnyField = \case
+    SomeNoNestedPartySubIDs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartySubIDType where
+  packAnyField = SomeNestedPartySubIDType
+  unpackAnyField = \case
+    SomeNestedPartySubIDType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingPx where
+  packAnyField = SomeUnderlyingPx
+  unpackAnyField = \case
+    SomeUnderlyingPx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QtyType where
+  packAnyField = SomeQtyType
+  unpackAnyField = \case
+    SomeQtyType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoEvents where
+  packAnyField = SomeNoEvents
+  unpackAnyField = \case
+    SomeNoEvents f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EventType where
+  packAnyField = SomeEventType
+  unpackAnyField = \case
+    SomeEventType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EventDate where
+  packAnyField = SomeEventDate
+  unpackAnyField = \case
+    SomeEventDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EventPx where
+  packAnyField = SomeEventPx
+  unpackAnyField = \case
+    SomeEventPx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EventText where
+  packAnyField = SomeEventText
+  unpackAnyField = \case
+    SomeEventText f -> Just f
+    _ -> Nothing
+
+instance IsAnyField DatedDate where
+  packAnyField = SomeDatedDate
+  unpackAnyField = \case
+    SomeDatedDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField InterestAccrualDate where
+  packAnyField = SomeInterestAccrualDate
+  unpackAnyField = \case
+    SomeInterestAccrualDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CPProgram where
+  packAnyField = SomeCPProgram
+  unpackAnyField = \case
+    SomeCPProgram f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CPRegType where
+  packAnyField = SomeCPRegType
+  unpackAnyField = \case
+    SomeCPRegType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCPProgram where
+  packAnyField = SomeUnderlyingCPProgram
+  unpackAnyField = \case
+    SomeUnderlyingCPProgram f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCPRegType where
+  packAnyField = SomeUnderlyingCPRegType
+  unpackAnyField = \case
+    SomeUnderlyingCPRegType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingQty where
+  packAnyField = SomeUnderlyingQty
+  unpackAnyField = \case
+    SomeUnderlyingQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingDirtyPrice where
+  packAnyField = SomeUnderlyingDirtyPrice
+  unpackAnyField = \case
+    SomeUnderlyingDirtyPrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingEndPrice where
+  packAnyField = SomeUnderlyingEndPrice
+  unpackAnyField = \case
+    SomeUnderlyingEndPrice f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingStartValue where
+  packAnyField = SomeUnderlyingStartValue
+  unpackAnyField = \case
+    SomeUnderlyingStartValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingCurrentValue where
+  packAnyField = SomeUnderlyingCurrentValue
+  unpackAnyField = \case
+    SomeUnderlyingCurrentValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingEndValue where
+  packAnyField = SomeUnderlyingEndValue
+  unpackAnyField = \case
+    SomeUnderlyingEndValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoUnderlyingStips where
+  packAnyField = SomeNoUnderlyingStips
+  unpackAnyField = \case
+    SomeNoUnderlyingStips f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingStipType where
+  packAnyField = SomeUnderlyingStipType
+  unpackAnyField = \case
+    SomeUnderlyingStipType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingStipValue where
+  packAnyField = SomeUnderlyingStipValue
+  unpackAnyField = \case
+    SomeUnderlyingStipValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MarginRatio where
+  packAnyField = SomeMarginRatio
+  unpackAnyField = \case
+    SomeMarginRatio f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AgreementDesc where
+  packAnyField = SomeAgreementDesc
+  unpackAnyField = \case
+    SomeAgreementDesc f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AgreementID where
+  packAnyField = SomeAgreementID
+  unpackAnyField = \case
+    SomeAgreementID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AgreementDate where
+  packAnyField = SomeAgreementDate
+  unpackAnyField = \case
+    SomeAgreementDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField StartDate where
+  packAnyField = SomeStartDate
+  unpackAnyField = \case
+    SomeStartDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EndDate where
+  packAnyField = SomeEndDate
+  unpackAnyField = \case
+    SomeEndDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AgreementCurrency where
+  packAnyField = SomeAgreementCurrency
+  unpackAnyField = \case
+    SomeAgreementCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField DeliveryType where
+  packAnyField = SomeDeliveryType
+  unpackAnyField = \case
+    SomeDeliveryType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingStrikeCurrency where
+  packAnyField = SomeUnderlyingStrikeCurrency
+  unpackAnyField = \case
+    SomeUnderlyingStrikeCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegStrikeCurrency where
+  packAnyField = SomeLegStrikeCurrency
+  unpackAnyField = \case
+    SomeLegStrikeCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField StrikeCurrency where
+  packAnyField = SomeStrikeCurrency
+  unpackAnyField = \case
+    SomeStrikeCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegContractSettlMonth where
+  packAnyField = SomeLegContractSettlMonth
+  unpackAnyField = \case
+    SomeLegContractSettlMonth f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegInterestAccrualDate where
+  packAnyField = SomeLegInterestAccrualDate
+  unpackAnyField = \case
+    SomeLegInterestAccrualDate f -> Just f
     _ -> Nothing

@@ -12,6 +12,7 @@ import FIX.Messages.Envelope
 import FIX.Messages.Header
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
+import FIX.Messages.QuoteRequest
 import FIX.Messages.Trailer
 
 instance GenValid Header
@@ -25,5 +26,9 @@ instance GenValid Heartbeat where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid Logon where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuoteRequest where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

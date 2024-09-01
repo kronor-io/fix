@@ -5,16 +5,61 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.ComponentsSpec where
 
+import FIX.Components.EvntGrp
+import FIX.Components.FinancingDetails
 import FIX.Components.Gen ()
+import FIX.Components.Instrument
+import FIX.Components.InstrumentLeg
+import FIX.Components.LegBenchmarkCurveData
+import FIX.Components.LegSecAltIDGrp
+import FIX.Components.LegStipulations
+import FIX.Components.NestedParties
+import FIX.Components.NstdPtysSubGrp
+import FIX.Components.OrderQtyData
+import FIX.Components.Parties
+import FIX.Components.PtysSubGrp
+import FIX.Components.QuotQualGrp
+import FIX.Components.QuotReqGrp
+import FIX.Components.QuotReqLegsGrp
+import FIX.Components.SecAltIDGrp
+import FIX.Components.SpreadOrBenchmarkCurveData
+import FIX.Components.Stipulations
 import FIX.Components.TestUtils
+import FIX.Components.UndInstrmtGrp
+import FIX.Components.UndSecAltIDGrp
+import FIX.Components.UnderlyingInstrument
+import FIX.Components.UnderlyingStipulations
+import FIX.Components.YieldData
+import FIX.Groups.EventsGroupElem
 import FIX.Groups.HopsGroupElem
+import FIX.Groups.LegSecurityAltIDGroupElem
+import FIX.Groups.LegStipulationsGroupElem
+import FIX.Groups.LegsGroupElem
 import FIX.Groups.MsgTypesGroupElem
+import FIX.Groups.NestedPartyIDsGroupElem
+import FIX.Groups.NestedPartySubIDsGroupElem
+import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.PartySubIDsGroupElem
+import FIX.Groups.QuoteQualifiersGroupElem
+import FIX.Groups.RelatedSymGroupElem
+import FIX.Groups.SecurityAltIDGroupElem
+import FIX.Groups.StipulationsGroupElem
 import FIX.Groups.TestUtils
+import FIX.Groups.UnderlyingSecurityAltIDGroupElem
+import FIX.Groups.UnderlyingStipsGroupElem
+import FIX.Groups.UnderlyingsGroupElem
 import Test.Syd
 import Test.Syd.Validity
 
 spec :: Spec
 spec = do
+  describe
+    "NoEvents"
+    ( do
+        genValidSpec @EventsGroupElem
+        componentSpec @EventsGroupElem
+        groupSpec @EventsGroupElem
+    )
   describe
     "NoHops"
     ( do
@@ -23,9 +68,245 @@ spec = do
         groupSpec @HopsGroupElem
     )
   describe
+    "NoLegSecurityAltID"
+    ( do
+        genValidSpec @LegSecurityAltIDGroupElem
+        componentSpec @LegSecurityAltIDGroupElem
+        groupSpec @LegSecurityAltIDGroupElem
+    )
+  describe
+    "NoLegStipulations"
+    ( do
+        genValidSpec @LegStipulationsGroupElem
+        componentSpec @LegStipulationsGroupElem
+        groupSpec @LegStipulationsGroupElem
+    )
+  describe
+    "NoLegs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
     "NoMsgTypes"
     ( do
         genValidSpec @MsgTypesGroupElem
         componentSpec @MsgTypesGroupElem
         groupSpec @MsgTypesGroupElem
+    )
+  describe
+    "NoNestedPartyIDs"
+    ( do
+        genValidSpec @NestedPartyIDsGroupElem
+        componentSpec @NestedPartyIDsGroupElem
+        groupSpec @NestedPartyIDsGroupElem
+    )
+  describe
+    "NoNestedPartySubIDs"
+    ( do
+        genValidSpec @NestedPartySubIDsGroupElem
+        componentSpec @NestedPartySubIDsGroupElem
+        groupSpec @NestedPartySubIDsGroupElem
+    )
+  describe
+    "NoPartyIDs"
+    ( do
+        genValidSpec @PartyIDsGroupElem
+        componentSpec @PartyIDsGroupElem
+        groupSpec @PartyIDsGroupElem
+    )
+  describe
+    "NoPartySubIDs"
+    ( do
+        genValidSpec @PartySubIDsGroupElem
+        componentSpec @PartySubIDsGroupElem
+        groupSpec @PartySubIDsGroupElem
+    )
+  describe
+    "NoQuoteQualifiers"
+    ( do
+        genValidSpec @QuoteQualifiersGroupElem
+        componentSpec @QuoteQualifiersGroupElem
+        groupSpec @QuoteQualifiersGroupElem
+    )
+  describe
+    "NoRelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
+    )
+  describe
+    "NoSecurityAltID"
+    ( do
+        genValidSpec @SecurityAltIDGroupElem
+        componentSpec @SecurityAltIDGroupElem
+        groupSpec @SecurityAltIDGroupElem
+    )
+  describe
+    "NoStipulations"
+    ( do
+        genValidSpec @StipulationsGroupElem
+        componentSpec @StipulationsGroupElem
+        groupSpec @StipulationsGroupElem
+    )
+  describe
+    "NoUnderlyingSecurityAltID"
+    ( do
+        genValidSpec @UnderlyingSecurityAltIDGroupElem
+        componentSpec @UnderlyingSecurityAltIDGroupElem
+        groupSpec @UnderlyingSecurityAltIDGroupElem
+    )
+  describe
+    "NoUnderlyingStips"
+    ( do
+        genValidSpec @UnderlyingStipsGroupElem
+        componentSpec @UnderlyingStipsGroupElem
+        groupSpec @UnderlyingStipsGroupElem
+    )
+  describe
+    "NoUnderlyings"
+    ( do
+        genValidSpec @UnderlyingsGroupElem
+        componentSpec @UnderlyingsGroupElem
+        groupSpec @UnderlyingsGroupElem
+    )
+  describe
+    "FinancingDetails"
+    ( do
+        genValidSpec @FinancingDetails
+        componentSpec @FinancingDetails
+    )
+  describe
+    "Instrument"
+    ( do
+        genValidSpec @Instrument
+        componentSpec @Instrument
+    )
+  describe
+    "InstrumentLeg"
+    ( do
+        genValidSpec @InstrumentLeg
+        componentSpec @InstrumentLeg
+    )
+  describe
+    "LegBenchmarkCurveData"
+    ( do
+        genValidSpec @LegBenchmarkCurveData
+        componentSpec @LegBenchmarkCurveData
+    )
+  describe
+    "LegStipulations"
+    ( do
+        genValidSpec @LegStipulations
+        componentSpec @LegStipulations
+    )
+  describe
+    "NestedParties"
+    ( do
+        genValidSpec @NestedParties
+        componentSpec @NestedParties
+    )
+  describe
+    "OrderQtyData"
+    ( do
+        genValidSpec @OrderQtyData
+        componentSpec @OrderQtyData
+    )
+  describe
+    "Parties"
+    ( do
+        genValidSpec @Parties
+        componentSpec @Parties
+    )
+  describe
+    "SpreadOrBenchmarkCurveData"
+    ( do
+        genValidSpec @SpreadOrBenchmarkCurveData
+        componentSpec @SpreadOrBenchmarkCurveData
+    )
+  describe
+    "Stipulations"
+    ( do
+        genValidSpec @Stipulations
+        componentSpec @Stipulations
+    )
+  describe
+    "UnderlyingInstrument"
+    ( do
+        genValidSpec @UnderlyingInstrument
+        componentSpec @UnderlyingInstrument
+    )
+  describe
+    "YieldData"
+    ( do
+        genValidSpec @YieldData
+        componentSpec @YieldData
+    )
+  describe
+    "UnderlyingStipulations"
+    ( do
+        genValidSpec @UnderlyingStipulations
+        componentSpec @UnderlyingStipulations
+    )
+  describe
+    "QuotQualGrp"
+    ( do
+        genValidSpec @QuotQualGrp
+        componentSpec @QuotQualGrp
+    )
+  describe
+    "QuotReqGrp"
+    ( do
+        genValidSpec @QuotReqGrp
+        componentSpec @QuotReqGrp
+    )
+  describe
+    "QuotReqLegsGrp"
+    ( do
+        genValidSpec @QuotReqLegsGrp
+        componentSpec @QuotReqLegsGrp
+    )
+  describe
+    "UndInstrmtGrp"
+    ( do
+        genValidSpec @UndInstrmtGrp
+        componentSpec @UndInstrmtGrp
+    )
+  describe
+    "EvntGrp"
+    ( do
+        genValidSpec @EvntGrp
+        componentSpec @EvntGrp
+    )
+  describe
+    "SecAltIDGrp"
+    ( do
+        genValidSpec @SecAltIDGrp
+        componentSpec @SecAltIDGrp
+    )
+  describe
+    "LegSecAltIDGrp"
+    ( do
+        genValidSpec @LegSecAltIDGrp
+        componentSpec @LegSecAltIDGrp
+    )
+  describe
+    "UndSecAltIDGrp"
+    ( do
+        genValidSpec @UndSecAltIDGrp
+        componentSpec @UndSecAltIDGrp
+    )
+  describe
+    "PtysSubGrp"
+    ( do
+        genValidSpec @PtysSubGrp
+        componentSpec @PtysSubGrp
+    )
+  describe
+    "NstdPtysSubGrp"
+    ( do
+        genValidSpec @NstdPtysSubGrp
+        componentSpec @NstdPtysSubGrp
     )
