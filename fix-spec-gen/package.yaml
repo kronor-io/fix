@@ -28,8 +28,10 @@ tests:
     - -with-rtsopts=-N
     - -Wall
     dependencies:
+    - bytestring
     - fix-core-gen
     - fix-spec
     - fix-spec-gen
     - genvalidity-sydtest
+    - megaparsec
     - sydtest

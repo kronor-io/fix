@@ -37,6 +37,7 @@ test-suite fix-spec-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      FIX.AnyFieldSpec
       FIX.ComponentsSpec
       FIX.FieldsSpec
       FIX.Messages.EnvelopeSpec
@@ -49,9 +50,11 @@ test-suite fix-spec-test
       sydtest-discover:sydtest-discover
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , fix-core-gen
     , fix-spec
     , fix-spec-gen
     , genvalidity-sydtest
+    , megaparsec
     , sydtest
   default-language: Haskell2010

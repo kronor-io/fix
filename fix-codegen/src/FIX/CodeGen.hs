@@ -48,7 +48,8 @@ runFixCodeGen = do
                   [ fieldsDataFiles fieldSpecs,
                     fieldsGenFile fieldSpecs,
                     fieldsSpecFile fieldSpecs,
-                    topLevelFieldsFile fieldSpecs
+                    topLevelFieldsFile fieldSpecs,
+                    genHaskellDataFile "fix-spec-gen/test/FIX/AnyFieldSpec.hs"
                   ],
             headerDataFile (specHeader spec),
             trailerDataFile (specTrailer spec),
@@ -611,7 +612,17 @@ topLevelFieldsFile fieldSpecs =
                                                     [ map
                                                         ( \fs ->
                                                             Match
-                                                              (LitP (IntegerL (fromIntegral (fieldNumber fs))))
+                                                              ( LitP
+                                                                  ( IntegerL
+                                                                      ( fromIntegral $
+                                                                          ( if fieldTypeIsData (fieldType fs)
+                                                                              then pred
+                                                                              else id
+                                                                          )
+                                                                            (fieldNumber fs)
+                                                                      )
+                                                                  )
+                                                              )
                                                               ( NormalB
                                                                   ( InfixE
                                                                       (Just (ConE (anyFieldSpecConstructorName fs)))

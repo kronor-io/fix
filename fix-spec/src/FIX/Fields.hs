@@ -180,10 +180,10 @@ anyFieldP = do
     52 -> SomeSendingTime <$> fp
     56 -> SomeTargetCompID <$> fp
     57 -> SomeTargetSubID <$> fp
-    89 -> SomeSignature <$> fp
-    91 -> SomeSecureData <$> fp
+    88 -> SomeSignature <$> fp
+    90 -> SomeSecureData <$> fp
     93 -> SomeSignatureLength <$> fp
-    96 -> SomeRawData <$> fp
+    95 -> SomeRawData <$> fp
     97 -> SomePossResend <$> fp
     98 -> SomeEncryptMethod <$> fp
     108 -> SomeHeartBtInt <$> fp
@@ -198,7 +198,7 @@ anyFieldP = do
     143 -> SomeTargetLocationID <$> fp
     144 -> SomeOnBehalfOfLocationID <$> fp
     145 -> SomeDeliverToLocationID <$> fp
-    213 -> SomeXmlData <$> fp
+    212 -> SomeXmlData <$> fp
     347 -> SomeMessageEncoding <$> fp
     369 -> SomeLastMsgSeqNumProcessed <$> fp
     372 -> SomeRefMsgType <$> fp

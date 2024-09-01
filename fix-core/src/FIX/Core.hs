@@ -159,10 +159,10 @@ fieldP tag = do
   value <-
     if fieldIsData p
       then do
+        guard $ tag == pred ft
         len <- decimal
         void $ char 1 -- 'SOH'
         dataTag <- decimal
-        guard $ dataTag == succ tag
         guard $ dataTag == ft
         void $ char 61 -- '='
         takeP (Just "octet") len
@@ -182,11 +182,11 @@ fieldB f =
    in mconcat $
         if fieldIsData p
           then
-            [ BB.wordDec ft,
+            [ BB.wordDec (pred ft),
               BB.char7 '=',
               BB.intDec $ SB.length value,
               BB.char7 '\SOH',
-              BB.wordDec (pred ft),
+              BB.wordDec ft,
               BB.char7 '=',
               BB.byteString value,
               BB.char7 '\SOH'
