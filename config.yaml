@@ -1,4 +1,21 @@
 messages:
+  # System messages
   - Logon
   - Heartbeat
-  - QuoteRequest
+  # - TestRequest
+  # - ResendRequest
+  # - Reject
+  # - SequenceReset
+  # - Logout
+  # # Business messages
+  # - QuoteRequest
+  # - News
+  # - QuoteRequest
+  # - QuoteRequestReject
+  # - BusinessMessageReject
+  # - Quote
+  # - QuoteCancel
+  # - NewOrderSingle
+  # - ExecutionReport
+  # - SecurityDefinitionRequest
+  # - SecurityDefinition
