@@ -20,6 +20,10 @@ instance GenValid Trailer
 
 instance (GenValid a) => GenValid (Envelope a)
 
-instance GenValid Heartbeat
+instance GenValid Heartbeat where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid Logon
+instance GenValid Logon where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

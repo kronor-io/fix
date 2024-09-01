@@ -11,90 +11,178 @@ import FIX.Fields
 
 instance GenValid AnyField
 
-instance GenValid BeginString
+instance GenValid BeginString where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid BodyLength
+instance GenValid BodyLength where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid CheckSum
+instance GenValid CheckSum where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid MsgSeqNum
+instance GenValid MsgSeqNum where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid MsgType
+instance GenValid MsgType where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid PossDupFlag
+instance GenValid PossDupFlag where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid SenderCompID
+instance GenValid SenderCompID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid SenderSubID
+instance GenValid SenderSubID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid SendingTime
+instance GenValid SendingTime where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid TargetCompID
+instance GenValid TargetCompID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid TargetSubID
+instance GenValid TargetSubID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid Signature
+instance GenValid Signature where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid SecureData
+instance GenValid SecureData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid SignatureLength
+instance GenValid SignatureLength where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid RawData
+instance GenValid RawData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid PossResend
+instance GenValid PossResend where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid EncryptMethod
+instance GenValid EncryptMethod where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid HeartBtInt
+instance GenValid HeartBtInt where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid TestReqID
+instance GenValid TestReqID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid OnBehalfOfCompID
+instance GenValid OnBehalfOfCompID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid OnBehalfOfSubID
+instance GenValid OnBehalfOfSubID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid OrigSendingTime
+instance GenValid OrigSendingTime where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid DeliverToCompID
+instance GenValid DeliverToCompID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid DeliverToSubID
+instance GenValid DeliverToSubID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid ResetSeqNumFlag
+instance GenValid ResetSeqNumFlag where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid SenderLocationID
+instance GenValid SenderLocationID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid TargetLocationID
+instance GenValid TargetLocationID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid OnBehalfOfLocationID
+instance GenValid OnBehalfOfLocationID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid DeliverToLocationID
+instance GenValid DeliverToLocationID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid XmlData
+instance GenValid XmlData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid MessageEncoding
+instance GenValid MessageEncoding where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid LastMsgSeqNumProcessed
+instance GenValid LastMsgSeqNumProcessed where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid RefMsgType
+instance GenValid RefMsgType where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid MaxMessageSize
+instance GenValid MaxMessageSize where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid NoMsgTypes
+instance GenValid NoMsgTypes where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid MsgDirection
+instance GenValid MsgDirection where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid TestMessageIndicator
+instance GenValid TestMessageIndicator where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid Username
+instance GenValid Username where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid Password
+instance GenValid Password where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid NoHops
+instance GenValid NoHops where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid HopCompID
+instance GenValid HopCompID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid HopSendingTime
+instance GenValid HopSendingTime where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid HopRefID
+instance GenValid HopRefID where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid NextExpectedMsgSeqNum
+instance GenValid NextExpectedMsgSeqNum where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

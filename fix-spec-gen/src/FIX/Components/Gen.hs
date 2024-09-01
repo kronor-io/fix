@@ -10,6 +10,10 @@ import FIX.Fields.Gen ()
 import FIX.Groups.HopsGroupElem
 import FIX.Groups.MsgTypesGroupElem
 
-instance GenValid HopsGroupElem
+instance GenValid HopsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid MsgTypesGroupElem
+instance GenValid MsgTypesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

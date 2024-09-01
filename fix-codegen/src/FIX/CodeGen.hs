@@ -424,7 +424,7 @@ fieldsGenFile fieldSpecs =
     let sections = flip map fieldSpecs $ \f ->
           let constructorName = fieldSpecConstructorName f
            in [ TH.pprint
-                  [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
+                  [ genValidInstance constructorName
                   ]
               ]
      in unlines $
@@ -743,6 +743,32 @@ validityInstance typeName =
     []
     (AppT (ConT (mkName "Validity")) (ConT typeName))
     []
+
+genValidInstance :: Name -> Dec
+genValidInstance typeName =
+  InstanceD
+    Nothing
+    []
+    (AppT (ConT (mkName "GenValid")) (ConT typeName))
+    [ FunD
+        (mkName "genValid")
+        [ Clause
+            []
+            ( NormalB
+                (VarE (mkName "genValidStructurallyWithoutExtraChecking"))
+            )
+            []
+        ],
+      FunD
+        (mkName "shrinkValid")
+        [ Clause
+            []
+            ( NormalB
+                (VarE (mkName "shrinkValidStructurallyWithoutExtraFiltering"))
+            )
+            []
+        ]
+    ]
 
 messagePiecesImports :: [MessagePiece] -> [String]
 messagePiecesImports =
@@ -1067,13 +1093,13 @@ componentsGenFile groupSpecs componentSpecs =
         componentsSections = flip map componentSpecs $ \f ->
           let constructorName = componentSpecConstructorName f
            in [ TH.pprint
-                  [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
+                  [ genValidInstance constructorName
                   ]
               ]
         groupsSections = flip map groupSpecs $ \f ->
           let constructorName = groupSpecConstructorName f
            in [ TH.pprint
-                  [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT (mkName (T.unpack constructorName)))) []
+                  [ genValidInstance $ mkName $ T.unpack constructorName
                   ]
               ]
      in unlines $
@@ -1238,7 +1264,7 @@ messagesGenFile messageSpecs =
         sections = flip map messageSpecs $ \f ->
           let constructorName = messageSpecConstructorName f
            in [ TH.pprint
-                  [ InstanceD Nothing [] (AppT (ConT (mkName "GenValid")) (ConT constructorName)) []
+                  [ genValidInstance constructorName
                   ]
               ]
      in unlines $
