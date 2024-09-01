@@ -8,7 +8,6 @@ library:
   source-dirs: src
   dependencies:
   - bytestring
-  - fix-core
   - fix-core-gen
   - fix-spec
   - genvalidity

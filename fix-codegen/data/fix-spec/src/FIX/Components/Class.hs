@@ -31,10 +31,6 @@ class IsComponent a where
   toComponentFields :: a -> [AnyField]
   fromComponentFields :: ComponentP a
 
-class (IsField a) => IsAnyField a where
-  unpackAnyField :: AnyField -> Maybe a
-  packAnyField :: a -> AnyField
-
 requiredFieldP :: forall a. (IsAnyField a) => ComponentP a
 requiredFieldP = do
   let tag = fieldTag (Proxy :: Proxy a)

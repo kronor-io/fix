@@ -5,13 +5,11 @@
 
 module FIX.Core where
 
-import Control.Arrow (left)
 import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Builder as ByteString
-import qualified Data.ByteString.Lazy as LB
 import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE

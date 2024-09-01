@@ -7,7 +7,7 @@ module FIX.Components.TestUtils (componentSpec) where
 
 import FIX.Components.Class
 import FIX.Components.Gen ()
-import FIX.Core
+import FIX.Fields
 import Test.Syd
 import Test.Syd.Validity
 
@@ -35,4 +35,4 @@ componentSpec = do
 
   describe "toComponentFields" $ do
     it "renders to valid lists of fields" $
-      producesValid (toComponentFields :: a -> [Field])
+      producesValid (toComponentFields :: a -> [AnyField])

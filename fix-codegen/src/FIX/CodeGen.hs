@@ -443,7 +443,13 @@ topLevelFieldsFile fieldSpecs =
                 "{-# LANGUAGE DerivingStrategies #-}",
                 "{-# LANGUAGE LambdaCase #-}",
                 "{-# LANGUAGE ScopedTypeVariables #-}",
-                "module FIX.Fields (AnyField(..), anyFieldP, anyFieldB, module X) where",
+                "module FIX.Fields (",
+                "  AnyField(..),",
+                "  anyFieldP,",
+                "  anyFieldB,",
+                "  IsAnyField(..),",
+                "  module X",
+                ") where",
                 "",
                 "import Data.ByteString (ByteString)",
                 "import Data.Validity",
@@ -579,7 +585,44 @@ topLevelFieldsFile fieldSpecs =
                           )
                           []
                       ]
-                  ]
+                  ],
+                "class (IsField a) => IsAnyField a where",
+                "  unpackAnyField :: AnyField -> Maybe a",
+                "  packAnyField :: a -> AnyField",
+                TH.pprint $
+                  map
+                    ( \fs ->
+                        InstanceD
+                          Nothing
+                          []
+                          (AppT (ConT (mkName "IsAnyField")) (ConT (fieldSpecConstructorName fs)))
+                          [ FunD
+                              (mkName "packAnyField")
+                              [Clause [] (NormalB (ConE (anyFieldSpecConstructorName fs))) []],
+                            FunD
+                              (mkName "unpackAnyField")
+                              [ Clause
+                                  []
+                                  ( NormalB
+                                      ( LamCaseE
+                                          [ let varName = mkName "f"
+                                             in Match
+                                                  ( ConP
+                                                      (anyFieldSpecConstructorName fs)
+                                                      []
+                                                      [VarP varName]
+                                                  )
+                                                  (NormalB (AppE (ConE (mkName "Just")) (VarE varName)))
+                                                  [],
+                                            Match WildP (NormalB (ConE (mkName "Nothing"))) []
+                                          ]
+                                      )
+                                  )
+                                  []
+                              ]
+                          ]
+                    )
+                    fieldSpecs
               ]
             ]
 

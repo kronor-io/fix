@@ -8,7 +8,7 @@ module FIX.Messages.TestUtils (messageSpec) where
 import Control.Monad
 import qualified Data.ByteString as SB
 import Data.Typeable
-import FIX.Core
+import FIX.Fields
 import FIX.Messages.Class
 import FIX.Messages.Envelope
 import FIX.Messages.Gen ()
@@ -28,8 +28,8 @@ messageSpec ::
   FilePath ->
   Spec
 messageSpec dir = do
-  describe "fromMessage" $ do
-    it "roundtrips with toMessage" $
+  describe "fromFields" $ do
+    it "roundtrips with toFields" $
       forAllValid $ \envelopePrototype -> do
         let envelope =
               fixEnvelopeCheckSum $
@@ -37,8 +37,8 @@ messageSpec dir = do
                   envelopePrototype
                     { envelopeHeader = (envelopeHeader envelopePrototype) {headerMsgType = messageType (Proxy :: Proxy a)}
                     }
-        let rendered = toMessage (envelope :: Envelope a)
-        context (ppShow rendered) $ case fromMessage rendered of
+        let rendered = toFields (envelope :: Envelope a)
+        context (ppShow rendered) $ case fromFields rendered of
           Left parseErr ->
             expectationFailure $
               unlines
@@ -47,18 +47,18 @@ messageSpec dir = do
                 ]
           Right envelope' -> envelope' `shouldBe` envelope
 
-  describe "toMessage" $ do
+  describe "toFields" $ do
     it "renders to valid messages" $
-      producesValid (toMessage :: Envelope a -> Message)
+      producesValid (toFields :: Envelope a -> [AnyField])
 
   scenarioDir ("test_resources/messages/" ++ dir) $ \fp -> do
     af <- resolveFile' fp
     when (fileExtension af == Just ".tagvalue") $
       it "can parse this message and roundtrip it" $ do
         contents <- SB.readFile (fromAbsFile af)
-        case parseMessage contents of
+        case parseAnyFields contents of
           Left err -> expectationFailure err
-          Right message -> case fromMessage message of
+          Right message -> case fromFields message of
             Left parseErr ->
               expectationFailure $
                 unlines
@@ -67,9 +67,9 @@ messageSpec dir = do
                   ]
             Right a -> do
               shouldBeValid (a :: Envelope a)
-              let renderedMessage = toMessage a
+              let renderedMessage = toFields a
               shouldBeValid renderedMessage
               renderedMessage `shouldBe` message
-              let renderedBytes = renderMessage renderedMessage
+              let renderedBytes = renderAnyFields renderedMessage
               shouldBeValid renderedBytes
               renderedBytes `shouldBe` contents

@@ -13,9 +13,9 @@ import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NE
 import Data.Proxy
 import FIX.Components.Class
-import FIX.Core
+import FIX.Fields
 
-class (IsField (GroupNumField a), IsComponent a) => IsGroupElement a where
+class (IsAnyField (GroupNumField a), IsComponent a) => IsGroupElement a where
   type GroupNumField a :: Type
   mkGroupNum :: Proxy a -> Word -> GroupNumField a
   countGroupNum :: Proxy a -> GroupNumField a -> Word
@@ -25,12 +25,12 @@ class (IsField (GroupNumField a), IsComponent a) => IsGroupElement a where
 -- @
 -- Within a repeating group, field sequence is strictly defined by a group definition.
 -- @
-requiredGroupB :: forall a. (IsGroupElement a) => NonEmpty a -> [Field]
+requiredGroupB :: forall a. (IsGroupElement a) => NonEmpty a -> [AnyField]
 requiredGroupB ne = do
-  fieldB (mkGroupNum (Proxy :: Proxy a) (fromIntegral (length ne)))
+  packAnyField (mkGroupNum (Proxy :: Proxy a) (fromIntegral (length ne)))
     : concatMap toComponentFields ne
 
-optionalGroupB :: (IsGroupElement a) => [a] -> [Field]
+optionalGroupB :: (IsGroupElement a) => [a] -> [AnyField]
 optionalGroupB es = case NE.nonEmpty es of
   Nothing -> []
   Just ne -> requiredGroupB ne

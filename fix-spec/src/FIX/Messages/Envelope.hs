@@ -8,7 +8,10 @@ module FIX.Messages.Envelope where
 
 import Control.Monad
 import Control.Monad.Except
+import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
+import qualified Data.ByteString.Builder as Builder
+import qualified Data.ByteString.Lazy as LB
 import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
@@ -16,8 +19,7 @@ import Data.Validity
 import Data.Word
 import FIX.Components.Class
 import FIX.Core
-import FIX.Fields.BodyLength
-import FIX.Fields.CheckSum
+import FIX.Fields
 import FIX.Messages.Class
 import FIX.Messages.Header
 import FIX.Messages.Trailer
@@ -33,10 +35,10 @@ data Envelope a = Envelope
 
 instance (Validity a) => Validity (Envelope a)
 
-renderHeader :: Header -> [Field]
+renderHeader :: Header -> [AnyField]
 renderHeader = toComponentFields
 
-renderTrailer :: Trailer -> [Field]
+renderTrailer :: Trailer -> [AnyField]
 renderTrailer = toComponentFields
 
 parseHeader :: ComponentP Header
@@ -45,12 +47,12 @@ parseHeader = fromComponentFields
 parseTrailer :: ComponentP Trailer
 parseTrailer = fromComponentFields
 
-fromMessage ::
+fromFields ::
   forall a.
   (IsMessage a) =>
-  Message ->
+  [AnyField] ->
   Either ComponentParseError (Envelope a)
-fromMessage message = runComponentP (messageFields message) $ do
+fromFields fields = runComponentP fields $ do
   -- TODO consider erroring on unexpected fields?
   envelopeHeader <- parseHeader
   let actualTag = headerMsgType envelopeHeader
@@ -60,21 +62,24 @@ fromMessage message = runComponentP (messageFields message) $ do
   envelopeTrailer <- parseTrailer
   pure Envelope {..}
 
-toMessage :: forall a. (IsMessage a) => Envelope a -> Message
-toMessage e'' =
+toFields :: forall a. (IsMessage a) => Envelope a -> [AnyField]
+toFields e'' =
   let h = (envelopeHeader e'') {headerMsgType = messageType (Proxy :: Proxy a)}
       e' = e'' {envelopeHeader = h}
       e = fixEnvelopeCheckSum $ fixEnvelopeBodyLength e'
-   in Message
-        { messageFields =
-            concat
-              -- TODO figure out what to do about the message type being in the
-              -- header already
-              [ renderHeader (envelopeHeader e),
-                toComponentFields (envelopeContents e),
-                renderTrailer (envelopeTrailer e)
-              ]
-        }
+   in mconcat
+        -- TODO figure out what to do about the message type being in the
+        -- header already
+        [ renderHeader (envelopeHeader e),
+          toComponentFields (envelopeContents e),
+          renderTrailer (envelopeTrailer e)
+        ]
+
+parseAnyFields :: ByteString -> Either String [AnyField]
+parseAnyFields = undefined
+
+renderAnyFields :: [AnyField] -> ByteString
+renderAnyFields = LB.toStrict . Builder.toLazyByteString . foldMap anyFieldB
 
 -- Has to happen _before_ fixEnvelopeCheckSum
 fixEnvelopeBodyLength :: (IsMessage a) => Envelope a -> Envelope a
@@ -86,8 +91,8 @@ computeBodyLength :: (IsMessage a) => Envelope a -> BodyLength
 computeBodyLength Envelope {..} =
   let bytesBeforeBodyLength =
         computeFieldsLength
-          [ fieldB $ headerBeginString envelopeHeader,
-            fieldB $ headerBodyLength envelopeHeader
+          [ packAnyField $ headerBeginString envelopeHeader,
+            packAnyField $ headerBodyLength envelopeHeader
           ]
       allFields =
         concat
@@ -95,15 +100,18 @@ computeBodyLength Envelope {..} =
             toComponentFields envelopeContents,
             renderTrailer envelopeTrailer
           ]
-      bytesFromCheckSum = computeFieldsLength [fieldB $ trailerCheckSum envelopeTrailer]
+      bytesFromCheckSum =
+        computeFieldsLength
+          [ packAnyField $ trailerCheckSum envelopeTrailer
+          ]
    in BodyLength $
         computeFieldsLength allFields
           - bytesBeforeBodyLength
           - bytesFromCheckSum
 
-computeFieldsLength :: [Field] -> Word
+computeFieldsLength :: [AnyField] -> Word
 computeFieldsLength fields =
-  let bytes = renderMessage (Message {messageFields = fields})
+  let bytes = renderAnyFields fields
    in fromIntegral $ SB.length bytes
 
 fixEnvelopeCheckSum ::
@@ -121,9 +129,9 @@ fixEnvelopeCheckSum e@Envelope {..} =
       checkSum = computeCheckSum fieldsUntilCheckSum
    in e {envelopeTrailer = envelopeTrailer {trailerCheckSum = checkSum}}
 
-computeCheckSum :: [Field] -> CheckSum
+computeCheckSum :: [AnyField] -> CheckSum
 computeCheckSum fields =
-  let bytes = renderMessage (Message {messageFields = fields})
+  let bytes = renderAnyFields fields
       w = sum $ SB.unpack bytes
    in renderCheckSum w
 
