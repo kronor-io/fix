@@ -19,7 +19,14 @@ runComponentP :: [AnyField] -> ComponentP a -> Either ComponentParseError a
 runComponentP fields func = runExcept $ evalStateT (runReaderT func False) fields
 
 tryComponentP :: ComponentP a -> ComponentP (Maybe a)
-tryComponentP = undefined
+tryComponentP func = do
+  inOrder <- ask
+  fields <- get
+  case runExcept $ runStateT (runReaderT func inOrder) fields of
+    Left _ -> pure Nothing
+    Right (c, fields') -> do
+      put fields'
+      pure (Just c)
 
 data ComponentParseError
   = -- TODO get this constructor out of here and into a message parse error
