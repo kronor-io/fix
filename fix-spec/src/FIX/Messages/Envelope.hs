@@ -6,6 +6,7 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Messages.Envelope where
 
+import Control.Arrow (left)
 import Control.Monad
 import Control.Monad.Except
 import Data.ByteString (ByteString)
@@ -24,6 +25,7 @@ import FIX.Messages.Class
 import FIX.Messages.Header
 import FIX.Messages.Trailer
 import GHC.Generics (Generic)
+import Text.Megaparsec
 import Text.Printf
 
 data Envelope a = Envelope
@@ -76,7 +78,7 @@ toFields e'' =
         ]
 
 parseAnyFields :: ByteString -> Either String [AnyField]
-parseAnyFields = undefined
+parseAnyFields = left errorBundlePretty . parse (many anyFieldP) "<pure>"
 
 renderAnyFields :: [AnyField] -> ByteString
 renderAnyFields = LB.toStrict . Builder.toLazyByteString . foldMap anyFieldB

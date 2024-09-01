@@ -12,9 +12,7 @@ mkDerivation {
     genvalidity-sydtest genvalidity-text genvalidity-time QuickCheck
     sydtest
   ];
-  testHaskellDepends = [
-    base bytestring fix-core genvalidity-sydtest sydtest time
-  ];
+  testHaskellDepends = [ base bytestring fix-core sydtest time ];
   testToolDepends = [ sydtest-discover ];
   license = "unknown";
 }

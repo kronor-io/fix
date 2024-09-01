@@ -6,13 +6,11 @@
 module FIX.CoreSpec (spec) where
 
 import Data.ByteString (ByteString)
-import qualified Data.ByteString as SB
 import Data.Time
 import FIX.Core
 import FIX.Core.Gen ()
 import FIX.Core.TestUtils
 import Test.Syd
-import Test.Syd.Validity
 
 spec :: Spec
 spec = do

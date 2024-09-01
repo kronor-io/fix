@@ -33,6 +33,5 @@ tests:
     - bytestring
     - fix-core
     - fix-core-gen
-    - genvalidity-sydtest
     - sydtest
     - time

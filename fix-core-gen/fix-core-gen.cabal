@@ -47,7 +47,6 @@ test-suite fix-core-test
     , bytestring
     , fix-core
     , fix-core-gen
-    , genvalidity-sydtest
     , sydtest
     , time
   default-language: Haskell2010
