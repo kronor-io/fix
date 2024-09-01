@@ -165,7 +165,7 @@ data FieldType
   | FieldTypeUTCDateOnly
   | FieldTypeUTCTimeOnly
   | FieldTypeCountry
-  deriving (Show)
+  deriving (Show, Eq)
 
 parseFieldType :: Text -> Maybe FieldType
 parseFieldType = \case

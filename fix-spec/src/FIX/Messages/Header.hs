@@ -24,7 +24,6 @@ import FIX.Fields.OrigSendingTime
 import FIX.Fields.PossDupFlag
 import FIX.Fields.PossResend
 import FIX.Fields.SecureData
-import FIX.Fields.SecureDataLen
 import FIX.Fields.SenderCompID
 import FIX.Fields.SenderLocationID
 import FIX.Fields.SenderSubID
@@ -33,7 +32,6 @@ import FIX.Fields.TargetCompID
 import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
 import FIX.Fields.XmlData
-import FIX.Fields.XmlDataLen
 import FIX.Groups.Class
 import FIX.Groups.HopsGroupElem
 import GHC.Generics (Generic)
@@ -46,7 +44,6 @@ data Header = Header
     headerTargetCompID :: !TargetCompID,
     headerOnBehalfOfCompID :: !(Maybe OnBehalfOfCompID),
     headerDeliverToCompID :: !(Maybe DeliverToCompID),
-    headerSecureDataLen :: !(Maybe SecureDataLen),
     headerSecureData :: !(Maybe SecureData),
     headerMsgSeqNum :: !MsgSeqNum,
     headerSenderSubID :: !(Maybe SenderSubID),
@@ -61,7 +58,6 @@ data Header = Header
     headerPossResend :: !(Maybe PossResend),
     headerSendingTime :: !SendingTime,
     headerOrigSendingTime :: !(Maybe OrigSendingTime),
-    headerXmlDataLen :: !(Maybe XmlDataLen),
     headerXmlData :: !(Maybe XmlData),
     headerMessageEncoding :: !(Maybe MessageEncoding),
     headerLastMsgSeqNumProcessed :: !(Maybe LastMsgSeqNumProcessed),
@@ -81,7 +77,6 @@ instance IsComponent Header where
         requiredFieldB headerTargetCompID,
         optionalFieldB headerOnBehalfOfCompID,
         optionalFieldB headerDeliverToCompID,
-        optionalFieldB headerSecureDataLen,
         optionalFieldB headerSecureData,
         requiredFieldB headerMsgSeqNum,
         optionalFieldB headerSenderSubID,
@@ -96,7 +91,6 @@ instance IsComponent Header where
         optionalFieldB headerPossResend,
         requiredFieldB headerSendingTime,
         optionalFieldB headerOrigSendingTime,
-        optionalFieldB headerXmlDataLen,
         optionalFieldB headerXmlData,
         optionalFieldB headerMessageEncoding,
         optionalFieldB headerLastMsgSeqNumProcessed,
@@ -110,7 +104,6 @@ instance IsComponent Header where
     headerTargetCompID <- requiredFieldP
     headerOnBehalfOfCompID <- optionalFieldP
     headerDeliverToCompID <- optionalFieldP
-    headerSecureDataLen <- optionalFieldP
     headerSecureData <- optionalFieldP
     headerMsgSeqNum <- requiredFieldP
     headerSenderSubID <- optionalFieldP
@@ -125,7 +118,6 @@ instance IsComponent Header where
     headerPossResend <- optionalFieldP
     headerSendingTime <- requiredFieldP
     headerOrigSendingTime <- optionalFieldP
-    headerXmlDataLen <- optionalFieldP
     headerXmlData <- optionalFieldP
     headerMessageEncoding <- optionalFieldP
     headerLastMsgSeqNumProcessed <- optionalFieldP

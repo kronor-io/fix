@@ -40,11 +40,9 @@ library
       FIX.Fields.PossDupFlag
       FIX.Fields.PossResend
       FIX.Fields.RawData
-      FIX.Fields.RawDataLength
       FIX.Fields.RefMsgType
       FIX.Fields.ResetSeqNumFlag
       FIX.Fields.SecureData
-      FIX.Fields.SecureDataLen
       FIX.Fields.SenderCompID
       FIX.Fields.SenderLocationID
       FIX.Fields.SenderSubID
@@ -58,7 +56,6 @@ library
       FIX.Fields.TestReqID
       FIX.Fields.Username
       FIX.Fields.XmlData
-      FIX.Fields.XmlDataLen
       FIX.Groups.Class
       FIX.Groups.HopsGroupElem
       FIX.Groups.MsgTypesGroupElem

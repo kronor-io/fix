@@ -34,11 +34,9 @@ import FIX.Fields.Password
 import FIX.Fields.PossDupFlag
 import FIX.Fields.PossResend
 import FIX.Fields.RawData
-import FIX.Fields.RawDataLength
 import FIX.Fields.RefMsgType
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.SecureData
-import FIX.Fields.SecureDataLen
 import FIX.Fields.SenderCompID
 import FIX.Fields.SenderLocationID
 import FIX.Fields.SenderSubID
@@ -52,7 +50,6 @@ import FIX.Fields.TestMessageIndicator
 import FIX.Fields.TestReqID
 import FIX.Fields.Username
 import FIX.Fields.XmlData
-import FIX.Fields.XmlDataLen
 import Test.Syd
 
 spec :: Spec
@@ -69,10 +66,8 @@ spec = do
   fieldSpec @TargetCompID
   fieldSpec @TargetSubID
   fieldSpec @Signature
-  fieldSpec @SecureDataLen
   fieldSpec @SecureData
   fieldSpec @SignatureLength
-  fieldSpec @RawDataLength
   fieldSpec @RawData
   fieldSpec @PossResend
   fieldSpec @EncryptMethod
@@ -88,7 +83,6 @@ spec = do
   fieldSpec @TargetLocationID
   fieldSpec @OnBehalfOfLocationID
   fieldSpec @DeliverToLocationID
-  fieldSpec @XmlDataLen
   fieldSpec @XmlData
   fieldSpec @MessageEncoding
   fieldSpec @LastMsgSeqNumProcessed

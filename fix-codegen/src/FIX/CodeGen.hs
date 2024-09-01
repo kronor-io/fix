@@ -6,6 +6,7 @@
 
 module FIX.CodeGen (runFixCodeGen) where
 
+import Control.Monad
 import Data.Maybe
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -29,7 +30,7 @@ runFixCodeGen = do
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
     Just spec' -> do
-      let spec = makeFirstGroupElementsRequired $ filterSpec settingMessages spec'
+      let spec = makeFirstGroupElementsRequired $ foldDataFields $ filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
 
       testResourcesFiles <- genTestResources
@@ -134,6 +135,51 @@ filterSpec (Just messages) spec =
           specComponents = filteredCompoments,
           specFields = filteredFields
         }
+
+-- Remove Length fields because we handle those automatically
+foldDataFields :: Spec -> Spec
+foldDataFields spec =
+  Spec
+    { specFields = otherFieldSpecs,
+      specHeader = goMessagePieces (specHeader spec),
+      specTrailer = goMessagePieces (specTrailer spec),
+      specComponents = map goComponent (specComponents spec),
+      specMessages = map goMessage (specMessages spec)
+    }
+  where
+    (lengthFieldSpecs, otherFieldSpecs) = go (specFields spec)
+      where
+        go = \case
+          [] -> ([], [])
+          [fs] -> ([], [fs])
+          (f : g : rest)
+            | fieldType f == FieldTypeLength
+                && fieldTypeIsData (fieldType g) ->
+                let (ys, ns) = go rest
+                 in (f : ys, g : ns)
+            | otherwise ->
+                let (ys, ns) = go (g : rest)
+                 in (ys, f : ns)
+
+    lengthFieldNames :: Set Text
+    lengthFieldNames = S.fromList $ map fieldName lengthFieldSpecs
+    isDataLengthFieldName :: Text -> Bool
+    isDataLengthFieldName = (`S.member` lengthFieldNames)
+    goMessagePieces :: [MessagePiece] -> [MessagePiece]
+    goMessagePieces = mapMaybe goMessagePiece
+    goMessagePiece :: MessagePiece -> Maybe MessagePiece
+    goMessagePiece = \case
+      MessagePieceComponent c r -> Just $ MessagePieceComponent c r
+      MessagePieceGroup gs r -> Just $ MessagePieceGroup (goGroupSpec gs) r
+      MessagePieceField f r -> do
+        guard $ not $ isDataLengthFieldName f
+        pure $ MessagePieceField f r
+    goGroupSpec :: GroupSpec -> GroupSpec
+    goGroupSpec gs = gs {groupPieces = goMessagePieces (groupPieces gs)}
+    goComponent :: ComponentSpec -> ComponentSpec
+    goComponent cs = cs {componentPieces = goMessagePieces (componentPieces cs)}
+    goMessage :: MessageSpec -> MessageSpec
+    goMessage ms = ms {messagePieces = goMessagePieces (messagePieces ms)}
 
 -- @
 -- If the repeating group is used, the first field of the repeating group

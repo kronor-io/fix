@@ -35,13 +35,9 @@ instance GenValid TargetSubID
 
 instance GenValid Signature
 
-instance GenValid SecureDataLen
-
 instance GenValid SecureData
 
 instance GenValid SignatureLength
-
-instance GenValid RawDataLength
 
 instance GenValid RawData
 
@@ -72,8 +68,6 @@ instance GenValid TargetLocationID
 instance GenValid OnBehalfOfLocationID
 
 instance GenValid DeliverToLocationID
-
-instance GenValid XmlDataLen
 
 instance GenValid XmlData
 

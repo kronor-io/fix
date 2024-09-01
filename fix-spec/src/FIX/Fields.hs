@@ -47,11 +47,9 @@ import FIX.Fields.Password as X
 import FIX.Fields.PossDupFlag as X
 import FIX.Fields.PossResend as X
 import FIX.Fields.RawData as X
-import FIX.Fields.RawDataLength as X
 import FIX.Fields.RefMsgType as X
 import FIX.Fields.ResetSeqNumFlag as X
 import FIX.Fields.SecureData as X
-import FIX.Fields.SecureDataLen as X
 import FIX.Fields.SenderCompID as X
 import FIX.Fields.SenderLocationID as X
 import FIX.Fields.SenderSubID as X
@@ -65,7 +63,6 @@ import FIX.Fields.TestMessageIndicator as X
 import FIX.Fields.TestReqID as X
 import FIX.Fields.Username as X
 import FIX.Fields.XmlData as X
-import FIX.Fields.XmlDataLen as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte.Lexer
@@ -83,10 +80,8 @@ data AnyField
   | SomeTargetCompID !TargetCompID
   | SomeTargetSubID !TargetSubID
   | SomeSignature !Signature
-  | SomeSecureDataLen !SecureDataLen
   | SomeSecureData !SecureData
   | SomeSignatureLength !SignatureLength
-  | SomeRawDataLength !RawDataLength
   | SomeRawData !RawData
   | SomePossResend !PossResend
   | SomeEncryptMethod !EncryptMethod
@@ -102,7 +97,6 @@ data AnyField
   | SomeTargetLocationID !TargetLocationID
   | SomeOnBehalfOfLocationID !OnBehalfOfLocationID
   | SomeDeliverToLocationID !DeliverToLocationID
-  | SomeXmlDataLen !XmlDataLen
   | SomeXmlData !XmlData
   | SomeMessageEncoding !MessageEncoding
   | SomeLastMsgSeqNumProcessed !LastMsgSeqNumProcessed
@@ -136,10 +130,8 @@ anyFieldB = \case
   SomeTargetCompID f -> fieldB f
   SomeTargetSubID f -> fieldB f
   SomeSignature f -> fieldB f
-  SomeSecureDataLen f -> fieldB f
   SomeSecureData f -> fieldB f
   SomeSignatureLength f -> fieldB f
-  SomeRawDataLength f -> fieldB f
   SomeRawData f -> fieldB f
   SomePossResend f -> fieldB f
   SomeEncryptMethod f -> fieldB f
@@ -155,7 +147,6 @@ anyFieldB = \case
   SomeTargetLocationID f -> fieldB f
   SomeOnBehalfOfLocationID f -> fieldB f
   SomeDeliverToLocationID f -> fieldB f
-  SomeXmlDataLen f -> fieldB f
   SomeXmlData f -> fieldB f
   SomeMessageEncoding f -> fieldB f
   SomeLastMsgSeqNumProcessed f -> fieldB f
@@ -190,10 +181,8 @@ anyFieldP = do
     56 -> SomeTargetCompID <$> fp
     57 -> SomeTargetSubID <$> fp
     89 -> SomeSignature <$> fp
-    90 -> SomeSecureDataLen <$> fp
     91 -> SomeSecureData <$> fp
     93 -> SomeSignatureLength <$> fp
-    95 -> SomeRawDataLength <$> fp
     96 -> SomeRawData <$> fp
     97 -> SomePossResend <$> fp
     98 -> SomeEncryptMethod <$> fp
@@ -209,7 +198,6 @@ anyFieldP = do
     143 -> SomeTargetLocationID <$> fp
     144 -> SomeOnBehalfOfLocationID <$> fp
     145 -> SomeDeliverToLocationID <$> fp
-    212 -> SomeXmlDataLen <$> fp
     213 -> SomeXmlData <$> fp
     347 -> SomeMessageEncoding <$> fp
     369 -> SomeLastMsgSeqNumProcessed <$> fp
@@ -303,12 +291,6 @@ instance IsAnyField Signature where
     SomeSignature f -> Just f
     _ -> Nothing
 
-instance IsAnyField SecureDataLen where
-  packAnyField = SomeSecureDataLen
-  unpackAnyField = \case
-    SomeSecureDataLen f -> Just f
-    _ -> Nothing
-
 instance IsAnyField SecureData where
   packAnyField = SomeSecureData
   unpackAnyField = \case
@@ -319,12 +301,6 @@ instance IsAnyField SignatureLength where
   packAnyField = SomeSignatureLength
   unpackAnyField = \case
     SomeSignatureLength f -> Just f
-    _ -> Nothing
-
-instance IsAnyField RawDataLength where
-  packAnyField = SomeRawDataLength
-  unpackAnyField = \case
-    SomeRawDataLength f -> Just f
     _ -> Nothing
 
 instance IsAnyField RawData where
@@ -415,12 +391,6 @@ instance IsAnyField DeliverToLocationID where
   packAnyField = SomeDeliverToLocationID
   unpackAnyField = \case
     SomeDeliverToLocationID f -> Just f
-    _ -> Nothing
-
-instance IsAnyField XmlDataLen where
-  packAnyField = SomeXmlDataLen
-  unpackAnyField = \case
-    SomeXmlDataLen f -> Just f
     _ -> Nothing
 
 instance IsAnyField XmlData where

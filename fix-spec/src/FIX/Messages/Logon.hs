@@ -19,7 +19,6 @@ import FIX.Fields.MsgType
 import FIX.Fields.NextExpectedMsgSeqNum
 import FIX.Fields.Password
 import FIX.Fields.RawData
-import FIX.Fields.RawDataLength
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.Username
@@ -35,7 +34,6 @@ import GHC.Generics (Generic)
 --   , messagePieces =
 --       [ MessagePieceField "EncryptMethod" True
 --       , MessagePieceField "HeartBtInt" True
---       , MessagePieceField "RawDataLength" False
 --       , MessagePieceField "RawData" False
 --       , MessagePieceField "ResetSeqNumFlag" False
 --       , MessagePieceField "NextExpectedMsgSeqNum" False
@@ -57,7 +55,6 @@ import GHC.Generics (Generic)
 data Logon = Logon
   { logonEncryptMethod :: !EncryptMethod,
     logonHeartBtInt :: !HeartBtInt,
-    logonRawDataLength :: !(Maybe RawDataLength),
     logonRawData :: !(Maybe RawData),
     logonResetSeqNumFlag :: !(Maybe ResetSeqNumFlag),
     logonNextExpectedMsgSeqNum :: !(Maybe NextExpectedMsgSeqNum),
@@ -76,7 +73,6 @@ instance IsComponent Logon where
     mconcat
       [ requiredFieldB logonEncryptMethod,
         requiredFieldB logonHeartBtInt,
-        optionalFieldB logonRawDataLength,
         optionalFieldB logonRawData,
         optionalFieldB logonResetSeqNumFlag,
         optionalFieldB logonNextExpectedMsgSeqNum,
@@ -89,7 +85,6 @@ instance IsComponent Logon where
   fromComponentFields = do
     logonEncryptMethod <- requiredFieldP
     logonHeartBtInt <- requiredFieldP
-    logonRawDataLength <- optionalFieldP
     logonRawData <- optionalFieldP
     logonResetSeqNumFlag <- optionalFieldP
     logonNextExpectedMsgSeqNum <- optionalFieldP
