@@ -80,7 +80,8 @@ runFixCodeGen = do
                     messagesGenFile messageSpecs,
                     genHaskellDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs",
                     messagesSpecFile messageSpecs,
-                    genHaskellDataFile "fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs"
+                    genHaskellDataFile "fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs",
+                    topLevelMessagesFile messageSpecs
                   ],
             genHaskellDataFile "fix-spec-gen/test/Spec.hs",
             testResourcesFiles
@@ -1388,6 +1389,223 @@ messagesSpecFile messageSpecs =
                   [ SigD (mkName "spec") (ConT (mkName "Spec")),
                     FunD (mkName "spec") [Clause [] (NormalB (DoE Nothing statements)) []]
                   ]
+              ]
+            ]
+
+topLevelMessagesFile :: [MessageSpec] -> CodeGen
+topLevelMessagesFile messageSpecs =
+  genHaskellFile "fix-spec/src/FIX/Messages.hs" $
+    let imports =
+          map
+            ( \f ->
+                "import FIX.Messages." <> T.unpack (messageName f) <> " as X"
+            )
+            messageSpecs
+        anyMessageSpecConstructorName fs = mkName (T.unpack ("Some" <> messageName fs))
+     in unlines $
+          concat
+            [ [ "{-# LANGUAGE DeriveGeneric #-}",
+                "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE LambdaCase #-}",
+                "{-# LANGUAGE ScopedTypeVariables #-}",
+                "module FIX.Messages (",
+                "  AnyMessage(..),",
+                "  anyMessageP,",
+                "  anyMessageB,",
+                "  IsAnyMessage(..),",
+                "  module X",
+                ") where",
+                "",
+                "import Data.ByteString (ByteString)",
+                "import Data.Validity",
+                "import Data.Void (Void)",
+                "import FIX.Messages.Class",
+                "import FIX.Core",
+                "import GHC.Generics (Generic)",
+                "import Text.Megaparsec",
+                "import Text.Megaparsec.Byte.Lexer",
+                "import qualified Data.ByteString.Builder as ByteString",
+                ""
+              ],
+              imports,
+              [ TH.pprint
+                  [ DataD
+                      []
+                      (mkName "AnyMessage")
+                      []
+                      Nothing
+                      ( map
+                          ( \fs ->
+                              NormalC
+                                (anyMessageSpecConstructorName fs)
+                                [ ( Bang NoSourceUnpackedness SourceStrict,
+                                    ConT (messageSpecConstructorName fs)
+                                  )
+                                ]
+                          )
+                          messageSpecs
+                      )
+                      [ DerivClause
+                          (Just StockStrategy)
+                          [ ConT (mkName "Show"),
+                            ConT (mkName "Eq"),
+                            ConT (mkName "Generic")
+                          ]
+                      ],
+                    validityInstance (mkName "AnyMessage")
+                  ],
+                "anyMessageB :: AnyMessage -> ByteString.Builder",
+                TH.pprint
+                  [ FunD
+                      (mkName "anyMessageB")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( LamCaseE
+                                  ( map
+                                      ( \fs ->
+                                          let varName = mkName "f"
+                                           in Match
+                                                (ConP (anyMessageSpecConstructorName fs) [] [VarP varName])
+                                                ( NormalB
+                                                    (AppE (VarE (mkName "messageB")) (VarE varName))
+                                                )
+                                                []
+                                      )
+                                      messageSpecs
+                                  )
+                              )
+                          )
+                          []
+                      ]
+                  ],
+                "anyMessageP :: Parsec Void ByteString AnyMessage",
+                TH.pprint
+                  [ FunD
+                      (mkName "anyMessageP")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( DoE Nothing $
+                                  let tagVarName = mkName "typ"
+                                      helperName = mkName "mp"
+                                   in concat
+                                        [ [ BindS
+                                              (VarP tagVarName)
+                                              (VarE (mkName "decimal")),
+                                            LetS
+                                              [ SigD
+                                                  helperName
+                                                  ( let tyVarName = mkName "f"
+                                                     in ForallT
+                                                          [PlainTV tyVarName SpecifiedSpec]
+                                                          [AppT (ConT (mkName "IsMessage")) (VarT tyVarName)]
+                                                          ( AppT
+                                                              ( AppT
+                                                                  ( AppT
+                                                                      (ConT (mkName "Parsec"))
+                                                                      (ConT (mkName "Void"))
+                                                                  )
+                                                                  (ConT (mkName "ByteString"))
+                                                              )
+                                                              (VarT tyVarName)
+                                                          )
+                                                  ),
+                                                FunD
+                                                  helperName
+                                                  [ Clause
+                                                      []
+                                                      ( NormalB
+                                                          ( AppE
+                                                              (VarE (mkName "messageP"))
+                                                              (VarE tagVarName)
+                                                          )
+                                                      )
+                                                      []
+                                                  ]
+                                              ]
+                                          ],
+                                          [ NoBindS
+                                              ( CaseE (VarE tagVarName) $
+                                                  concat
+                                                    [ map
+                                                        ( \fs ->
+                                                            Match
+                                                              ( LitP
+                                                                  ( StringL
+                                                                      (T.unpack (messageType fs))
+                                                                  )
+                                                              )
+                                                              ( NormalB
+                                                                  ( InfixE
+                                                                      (Just (ConE (anyMessageSpecConstructorName fs)))
+                                                                      (VarE (mkName "<$>"))
+                                                                      (Just (VarE helperName))
+                                                                  )
+                                                              )
+                                                              []
+                                                        )
+                                                        messageSpecs,
+                                                      [ Match
+                                                          WildP
+                                                          ( NormalB
+                                                              ( AppE
+                                                                  (VarE (mkName "fail"))
+                                                                  ( InfixE
+                                                                      (Just (LitE (StringL "Unknown message tag: ")))
+                                                                      (VarE (mkName "<>"))
+                                                                      (Just (AppE (VarE (mkName "show")) (VarE tagVarName)))
+                                                                  )
+                                                              )
+                                                          )
+                                                          []
+                                                      ]
+                                                    ]
+                                              )
+                                          ]
+                                        ]
+                              )
+                          )
+                          []
+                      ]
+                  ],
+                "class (IsMessage a) => IsAnyMessage a where",
+                "  unpackAnyMessage :: AnyMessage -> Maybe a",
+                "  packAnyMessage :: a -> AnyMessage",
+                TH.pprint $
+                  map
+                    ( \fs ->
+                        InstanceD
+                          Nothing
+                          []
+                          (AppT (ConT (mkName "IsAnyMessage")) (ConT (messageSpecConstructorName fs)))
+                          [ FunD
+                              (mkName "packAnyMessage")
+                              [Clause [] (NormalB (ConE (anyMessageSpecConstructorName fs))) []],
+                            FunD
+                              (mkName "unpackAnyMessage")
+                              [ Clause
+                                  []
+                                  ( NormalB
+                                      ( LamCaseE
+                                          [ let varName = mkName "f"
+                                             in Match
+                                                  ( ConP
+                                                      (anyMessageSpecConstructorName fs)
+                                                      []
+                                                      [VarP varName]
+                                                  )
+                                                  (NormalB (AppE (ConE (mkName "Just")) (VarE varName)))
+                                                  [],
+                                            Match WildP (NormalB (ConE (mkName "Nothing"))) []
+                                          ]
+                                      )
+                                  )
+                                  []
+                              ]
+                          ]
+                    )
+                    messageSpecs
               ]
             ]
 

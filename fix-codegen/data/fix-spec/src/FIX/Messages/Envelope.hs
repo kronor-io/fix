@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -10,6 +11,7 @@ import Control.Monad.Except
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as Builder
+import qualified Data.ByteString.Builder as ByteString
 import qualified Data.ByteString.Lazy as LB
 import Data.DList (DList)
 import qualified Data.DList as DList
@@ -17,6 +19,7 @@ import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import Data.Validity
+import Data.Void
 import Data.Word
 import FIX.Components.Class
 import FIX.Core
@@ -33,7 +36,7 @@ data Envelope a = Envelope
     envelopeContents :: a,
     envelopeTrailer :: Trailer
   }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Generic, Functor)
 
 instance (Validity a) => Validity (Envelope a)
 
