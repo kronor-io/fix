@@ -27,7 +27,7 @@ import GHC.Generics (Generic)
 --                 [ MessagePieceField "NestedPartyID" True
 --                 , MessagePieceField "NestedPartyIDSource" False
 --                 , MessagePieceField "NestedPartyRole" False
---                 , MessagePieceComponent "NstdPtysSubGrp" False
+--                 , MessagePieceComponent "NstdPtysSubGrp" True
 --                 ]
 --             }
 --           False

@@ -64,7 +64,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "SymbolSfx" False
 --       , MessagePieceField "SecurityID" False
 --       , MessagePieceField "SecurityIDSource" False
---       , MessagePieceComponent "SecAltIDGrp" False
+--       , MessagePieceComponent "SecAltIDGrp" True
 --       , MessagePieceField "Product" False
 --       , MessagePieceField "CFICode" False
 --       , MessagePieceField "SecurityType" False
@@ -98,7 +98,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "ContractSettlMonth" False
 --       , MessagePieceField "CPProgram" False
 --       , MessagePieceField "CPRegType" False
---       , MessagePieceComponent "EvntGrp" False
+--       , MessagePieceComponent "EvntGrp" True
 --       , MessagePieceField "DatedDate" False
 --       , MessagePieceField "InterestAccrualDate" False
 --       ]
@@ -108,7 +108,7 @@ data Instrument = Instrument
     instrumentSymbolSfx :: !(Maybe SymbolSfx),
     instrumentSecurityID :: !(Maybe SecurityID),
     instrumentSecurityIDSource :: !(Maybe SecurityIDSource),
-    instrumentSecAltIDGrp :: !(Maybe SecAltIDGrp),
+    instrumentSecAltIDGrp :: !SecAltIDGrp,
     instrumentProduct :: !(Maybe Product),
     instrumentCFICode :: !(Maybe CFICode),
     instrumentSecurityType :: !(Maybe SecurityType),
@@ -142,7 +142,7 @@ data Instrument = Instrument
     instrumentContractSettlMonth :: !(Maybe ContractSettlMonth),
     instrumentCPProgram :: !(Maybe CPProgram),
     instrumentCPRegType :: !(Maybe CPRegType),
-    instrumentEvntGrp :: !(Maybe EvntGrp),
+    instrumentEvntGrp :: !EvntGrp,
     instrumentDatedDate :: !(Maybe DatedDate),
     instrumentInterestAccrualDate :: !(Maybe InterestAccrualDate)
   }
@@ -157,7 +157,7 @@ instance IsComponent Instrument where
         optionalFieldB instrumentSymbolSfx,
         optionalFieldB instrumentSecurityID,
         optionalFieldB instrumentSecurityIDSource,
-        optionalComponentB instrumentSecAltIDGrp,
+        requiredComponentB instrumentSecAltIDGrp,
         optionalFieldB instrumentProduct,
         optionalFieldB instrumentCFICode,
         optionalFieldB instrumentSecurityType,
@@ -191,7 +191,7 @@ instance IsComponent Instrument where
         optionalFieldB instrumentContractSettlMonth,
         optionalFieldB instrumentCPProgram,
         optionalFieldB instrumentCPRegType,
-        optionalComponentB instrumentEvntGrp,
+        requiredComponentB instrumentEvntGrp,
         optionalFieldB instrumentDatedDate,
         optionalFieldB instrumentInterestAccrualDate
       ]
@@ -200,7 +200,7 @@ instance IsComponent Instrument where
     instrumentSymbolSfx <- optionalFieldP
     instrumentSecurityID <- optionalFieldP
     instrumentSecurityIDSource <- optionalFieldP
-    instrumentSecAltIDGrp <- optionalComponentP
+    instrumentSecAltIDGrp <- requiredComponentP
     instrumentProduct <- optionalFieldP
     instrumentCFICode <- optionalFieldP
     instrumentSecurityType <- optionalFieldP
@@ -234,7 +234,7 @@ instance IsComponent Instrument where
     instrumentContractSettlMonth <- optionalFieldP
     instrumentCPProgram <- optionalFieldP
     instrumentCPRegType <- optionalFieldP
-    instrumentEvntGrp <- optionalComponentP
+    instrumentEvntGrp <- requiredComponentP
     instrumentDatedDate <- optionalFieldP
     instrumentInterestAccrualDate <- optionalFieldP
     pure (Instrument {..})

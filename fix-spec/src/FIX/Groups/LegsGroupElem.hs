@@ -33,9 +33,9 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "LegSwapType" False
 --       , MessagePieceField "LegSettlType" False
 --       , MessagePieceField "LegSettlDate" False
---       , MessagePieceComponent "LegStipulations" False
---       , MessagePieceComponent "NestedParties" False
---       , MessagePieceComponent "LegBenchmarkCurveData" False
+--       , MessagePieceComponent "LegStipulations" True
+--       , MessagePieceComponent "NestedParties" True
+--       , MessagePieceComponent "LegBenchmarkCurveData" True
 --       ]
 --   }
 data LegsGroupElem = LegsGroupElem
@@ -44,9 +44,9 @@ data LegsGroupElem = LegsGroupElem
     legsGroupElemLegSwapType :: !(Maybe LegSwapType),
     legsGroupElemLegSettlType :: !(Maybe LegSettlType),
     legsGroupElemLegSettlDate :: !(Maybe LegSettlDate),
-    legsGroupElemLegStipulations :: !(Maybe LegStipulations),
-    legsGroupElemNestedParties :: !(Maybe NestedParties),
-    legsGroupElemLegBenchmarkCurveData :: !(Maybe LegBenchmarkCurveData)
+    legsGroupElemLegStipulations :: !LegStipulations,
+    legsGroupElemNestedParties :: !NestedParties,
+    legsGroupElemLegBenchmarkCurveData :: !LegBenchmarkCurveData
   }
   deriving stock (Show, Eq, Generic)
 
@@ -60,9 +60,9 @@ instance IsComponent LegsGroupElem where
         optionalFieldB legsGroupElemLegSwapType,
         optionalFieldB legsGroupElemLegSettlType,
         optionalFieldB legsGroupElemLegSettlDate,
-        optionalComponentB legsGroupElemLegStipulations,
-        optionalComponentB legsGroupElemNestedParties,
-        optionalComponentB legsGroupElemLegBenchmarkCurveData
+        requiredComponentB legsGroupElemLegStipulations,
+        requiredComponentB legsGroupElemNestedParties,
+        requiredComponentB legsGroupElemLegBenchmarkCurveData
       ]
   fromComponentFields = do
     legsGroupElemInstrumentLeg <- requiredComponentP
@@ -70,9 +70,9 @@ instance IsComponent LegsGroupElem where
     legsGroupElemLegSwapType <- optionalFieldP
     legsGroupElemLegSettlType <- optionalFieldP
     legsGroupElemLegSettlDate <- optionalFieldP
-    legsGroupElemLegStipulations <- optionalComponentP
-    legsGroupElemNestedParties <- optionalComponentP
-    legsGroupElemLegBenchmarkCurveData <- optionalComponentP
+    legsGroupElemLegStipulations <- requiredComponentP
+    legsGroupElemNestedParties <- requiredComponentP
+    legsGroupElemLegBenchmarkCurveData <- requiredComponentP
     pure (LegsGroupElem {..})
 
 instance IsGroupElement LegsGroupElem where

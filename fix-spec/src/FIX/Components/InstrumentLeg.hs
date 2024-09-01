@@ -63,7 +63,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "LegSymbolSfx" False
 --       , MessagePieceField "LegSecurityID" False
 --       , MessagePieceField "LegSecurityIDSource" False
---       , MessagePieceComponent "LegSecAltIDGrp" False
+--       , MessagePieceComponent "LegSecAltIDGrp" True
 --       , MessagePieceField "LegProduct" False
 --       , MessagePieceField "LegCFICode" False
 --       , MessagePieceField "LegSecurityType" False
@@ -106,7 +106,7 @@ data InstrumentLeg = InstrumentLeg
     instrumentLegLegSymbolSfx :: !(Maybe LegSymbolSfx),
     instrumentLegLegSecurityID :: !(Maybe LegSecurityID),
     instrumentLegLegSecurityIDSource :: !(Maybe LegSecurityIDSource),
-    instrumentLegLegSecAltIDGrp :: !(Maybe LegSecAltIDGrp),
+    instrumentLegLegSecAltIDGrp :: !LegSecAltIDGrp,
     instrumentLegLegProduct :: !(Maybe LegProduct),
     instrumentLegLegCFICode :: !(Maybe LegCFICode),
     instrumentLegLegSecurityType :: !(Maybe LegSecurityType),
@@ -154,7 +154,7 @@ instance IsComponent InstrumentLeg where
         optionalFieldB instrumentLegLegSymbolSfx,
         optionalFieldB instrumentLegLegSecurityID,
         optionalFieldB instrumentLegLegSecurityIDSource,
-        optionalComponentB instrumentLegLegSecAltIDGrp,
+        requiredComponentB instrumentLegLegSecAltIDGrp,
         optionalFieldB instrumentLegLegProduct,
         optionalFieldB instrumentLegLegCFICode,
         optionalFieldB instrumentLegLegSecurityType,
@@ -196,7 +196,7 @@ instance IsComponent InstrumentLeg where
     instrumentLegLegSymbolSfx <- optionalFieldP
     instrumentLegLegSecurityID <- optionalFieldP
     instrumentLegLegSecurityIDSource <- optionalFieldP
-    instrumentLegLegSecAltIDGrp <- optionalComponentP
+    instrumentLegLegSecAltIDGrp <- requiredComponentP
     instrumentLegLegProduct <- optionalFieldP
     instrumentLegLegCFICode <- optionalFieldP
     instrumentLegLegSecurityType <- optionalFieldP

@@ -27,14 +27,14 @@ import GHC.Generics (Generic)
 --       [ MessagePieceField "NestedPartyID" True
 --       , MessagePieceField "NestedPartyIDSource" False
 --       , MessagePieceField "NestedPartyRole" False
---       , MessagePieceComponent "NstdPtysSubGrp" False
+--       , MessagePieceComponent "NstdPtysSubGrp" True
 --       ]
 --   }
 data NestedPartyIDsGroupElem = NestedPartyIDsGroupElem
   { nestedPartyIDsGroupElemNestedPartyID :: !NestedPartyID,
     nestedPartyIDsGroupElemNestedPartyIDSource :: !(Maybe NestedPartyIDSource),
     nestedPartyIDsGroupElemNestedPartyRole :: !(Maybe NestedPartyRole),
-    nestedPartyIDsGroupElemNstdPtysSubGrp :: !(Maybe NstdPtysSubGrp)
+    nestedPartyIDsGroupElemNstdPtysSubGrp :: !NstdPtysSubGrp
   }
   deriving stock (Show, Eq, Generic)
 
@@ -46,13 +46,13 @@ instance IsComponent NestedPartyIDsGroupElem where
       [ requiredFieldB nestedPartyIDsGroupElemNestedPartyID,
         optionalFieldB nestedPartyIDsGroupElemNestedPartyIDSource,
         optionalFieldB nestedPartyIDsGroupElemNestedPartyRole,
-        optionalComponentB nestedPartyIDsGroupElemNstdPtysSubGrp
+        requiredComponentB nestedPartyIDsGroupElemNstdPtysSubGrp
       ]
   fromComponentFields = do
     nestedPartyIDsGroupElemNestedPartyID <- requiredFieldP
     nestedPartyIDsGroupElemNestedPartyIDSource <- optionalFieldP
     nestedPartyIDsGroupElemNestedPartyRole <- optionalFieldP
-    nestedPartyIDsGroupElemNstdPtysSubGrp <- optionalComponentP
+    nestedPartyIDsGroupElemNstdPtysSubGrp <- requiredComponentP
     pure (NestedPartyIDsGroupElem {..})
 
 instance IsGroupElement NestedPartyIDsGroupElem where

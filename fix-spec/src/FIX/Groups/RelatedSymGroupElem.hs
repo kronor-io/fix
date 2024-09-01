@@ -55,8 +55,8 @@ import GHC.Generics (Generic)
 --   { groupName = "NoRelatedSym"
 --   , groupPieces =
 --       [ MessagePieceComponent "Instrument" True
---       , MessagePieceComponent "FinancingDetails" False
---       , MessagePieceComponent "UndInstrmtGrp" False
+--       , MessagePieceComponent "FinancingDetails" True
+--       , MessagePieceComponent "UndInstrmtGrp" True
 --       , MessagePieceField "PrevClosePx" False
 --       , MessagePieceField "QuoteRequestType" False
 --       , MessagePieceField "QuoteType" False
@@ -65,35 +65,35 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "TradeOriginationDate" False
 --       , MessagePieceField "Side" False
 --       , MessagePieceField "QtyType" False
---       , MessagePieceComponent "OrderQtyData" False
+--       , MessagePieceComponent "OrderQtyData" True
 --       , MessagePieceField "SettlType" False
 --       , MessagePieceField "SettlDate" False
 --       , MessagePieceField "SettlDate2" False
 --       , MessagePieceField "OrderQty2" False
 --       , MessagePieceField "Currency" False
---       , MessagePieceComponent "Stipulations" False
+--       , MessagePieceComponent "Stipulations" True
 --       , MessagePieceField "Account" False
 --       , MessagePieceField "AcctIDSource" False
 --       , MessagePieceField "AccountType" False
---       , MessagePieceComponent "QuotReqLegsGrp" False
---       , MessagePieceComponent "QuotQualGrp" False
+--       , MessagePieceComponent "QuotReqLegsGrp" True
+--       , MessagePieceComponent "QuotQualGrp" True
 --       , MessagePieceField "QuotePriceType" False
 --       , MessagePieceField "OrdType" False
 --       , MessagePieceField "ValidUntilTime" False
 --       , MessagePieceField "ExpireTime" False
 --       , MessagePieceField "TransactTime" False
---       , MessagePieceComponent "SpreadOrBenchmarkCurveData" False
+--       , MessagePieceComponent "SpreadOrBenchmarkCurveData" True
 --       , MessagePieceField "PriceType" False
 --       , MessagePieceField "Price" False
 --       , MessagePieceField "Price2" False
---       , MessagePieceComponent "YieldData" False
---       , MessagePieceComponent "Parties" False
+--       , MessagePieceComponent "YieldData" True
+--       , MessagePieceComponent "Parties" True
 --       ]
 --   }
 data RelatedSymGroupElem = RelatedSymGroupElem
   { relatedSymGroupElemInstrument :: !Instrument,
-    relatedSymGroupElemFinancingDetails :: !(Maybe FinancingDetails),
-    relatedSymGroupElemUndInstrmtGrp :: !(Maybe UndInstrmtGrp),
+    relatedSymGroupElemFinancingDetails :: !FinancingDetails,
+    relatedSymGroupElemUndInstrmtGrp :: !UndInstrmtGrp,
     relatedSymGroupElemPrevClosePx :: !(Maybe PrevClosePx),
     relatedSymGroupElemQuoteRequestType :: !(Maybe QuoteRequestType),
     relatedSymGroupElemQuoteType :: !(Maybe QuoteType),
@@ -102,29 +102,29 @@ data RelatedSymGroupElem = RelatedSymGroupElem
     relatedSymGroupElemTradeOriginationDate :: !(Maybe TradeOriginationDate),
     relatedSymGroupElemSide :: !(Maybe Side),
     relatedSymGroupElemQtyType :: !(Maybe QtyType),
-    relatedSymGroupElemOrderQtyData :: !(Maybe OrderQtyData),
+    relatedSymGroupElemOrderQtyData :: !OrderQtyData,
     relatedSymGroupElemSettlType :: !(Maybe SettlType),
     relatedSymGroupElemSettlDate :: !(Maybe SettlDate),
     relatedSymGroupElemSettlDate2 :: !(Maybe SettlDate2),
     relatedSymGroupElemOrderQty2 :: !(Maybe OrderQty2),
     relatedSymGroupElemCurrency :: !(Maybe Currency),
-    relatedSymGroupElemStipulations :: !(Maybe Stipulations),
+    relatedSymGroupElemStipulations :: !Stipulations,
     relatedSymGroupElemAccount :: !(Maybe Account),
     relatedSymGroupElemAcctIDSource :: !(Maybe AcctIDSource),
     relatedSymGroupElemAccountType :: !(Maybe AccountType),
-    relatedSymGroupElemQuotReqLegsGrp :: !(Maybe QuotReqLegsGrp),
-    relatedSymGroupElemQuotQualGrp :: !(Maybe QuotQualGrp),
+    relatedSymGroupElemQuotReqLegsGrp :: !QuotReqLegsGrp,
+    relatedSymGroupElemQuotQualGrp :: !QuotQualGrp,
     relatedSymGroupElemQuotePriceType :: !(Maybe QuotePriceType),
     relatedSymGroupElemOrdType :: !(Maybe OrdType),
     relatedSymGroupElemValidUntilTime :: !(Maybe ValidUntilTime),
     relatedSymGroupElemExpireTime :: !(Maybe ExpireTime),
     relatedSymGroupElemTransactTime :: !(Maybe TransactTime),
-    relatedSymGroupElemSpreadOrBenchmarkCurveData :: !(Maybe SpreadOrBenchmarkCurveData),
+    relatedSymGroupElemSpreadOrBenchmarkCurveData :: !SpreadOrBenchmarkCurveData,
     relatedSymGroupElemPriceType :: !(Maybe PriceType),
     relatedSymGroupElemPrice :: !(Maybe Price),
     relatedSymGroupElemPrice2 :: !(Maybe Price2),
-    relatedSymGroupElemYieldData :: !(Maybe YieldData),
-    relatedSymGroupElemParties :: !(Maybe Parties)
+    relatedSymGroupElemYieldData :: !YieldData,
+    relatedSymGroupElemParties :: !Parties
   }
   deriving stock (Show, Eq, Generic)
 
@@ -134,8 +134,8 @@ instance IsComponent RelatedSymGroupElem where
   toComponentFields ((RelatedSymGroupElem {..})) =
     mconcat
       [ requiredComponentB relatedSymGroupElemInstrument,
-        optionalComponentB relatedSymGroupElemFinancingDetails,
-        optionalComponentB relatedSymGroupElemUndInstrmtGrp,
+        requiredComponentB relatedSymGroupElemFinancingDetails,
+        requiredComponentB relatedSymGroupElemUndInstrmtGrp,
         optionalFieldB relatedSymGroupElemPrevClosePx,
         optionalFieldB relatedSymGroupElemQuoteRequestType,
         optionalFieldB relatedSymGroupElemQuoteType,
@@ -144,34 +144,34 @@ instance IsComponent RelatedSymGroupElem where
         optionalFieldB relatedSymGroupElemTradeOriginationDate,
         optionalFieldB relatedSymGroupElemSide,
         optionalFieldB relatedSymGroupElemQtyType,
-        optionalComponentB relatedSymGroupElemOrderQtyData,
+        requiredComponentB relatedSymGroupElemOrderQtyData,
         optionalFieldB relatedSymGroupElemSettlType,
         optionalFieldB relatedSymGroupElemSettlDate,
         optionalFieldB relatedSymGroupElemSettlDate2,
         optionalFieldB relatedSymGroupElemOrderQty2,
         optionalFieldB relatedSymGroupElemCurrency,
-        optionalComponentB relatedSymGroupElemStipulations,
+        requiredComponentB relatedSymGroupElemStipulations,
         optionalFieldB relatedSymGroupElemAccount,
         optionalFieldB relatedSymGroupElemAcctIDSource,
         optionalFieldB relatedSymGroupElemAccountType,
-        optionalComponentB relatedSymGroupElemQuotReqLegsGrp,
-        optionalComponentB relatedSymGroupElemQuotQualGrp,
+        requiredComponentB relatedSymGroupElemQuotReqLegsGrp,
+        requiredComponentB relatedSymGroupElemQuotQualGrp,
         optionalFieldB relatedSymGroupElemQuotePriceType,
         optionalFieldB relatedSymGroupElemOrdType,
         optionalFieldB relatedSymGroupElemValidUntilTime,
         optionalFieldB relatedSymGroupElemExpireTime,
         optionalFieldB relatedSymGroupElemTransactTime,
-        optionalComponentB relatedSymGroupElemSpreadOrBenchmarkCurveData,
+        requiredComponentB relatedSymGroupElemSpreadOrBenchmarkCurveData,
         optionalFieldB relatedSymGroupElemPriceType,
         optionalFieldB relatedSymGroupElemPrice,
         optionalFieldB relatedSymGroupElemPrice2,
-        optionalComponentB relatedSymGroupElemYieldData,
-        optionalComponentB relatedSymGroupElemParties
+        requiredComponentB relatedSymGroupElemYieldData,
+        requiredComponentB relatedSymGroupElemParties
       ]
   fromComponentFields = do
     relatedSymGroupElemInstrument <- requiredComponentP
-    relatedSymGroupElemFinancingDetails <- optionalComponentP
-    relatedSymGroupElemUndInstrmtGrp <- optionalComponentP
+    relatedSymGroupElemFinancingDetails <- requiredComponentP
+    relatedSymGroupElemUndInstrmtGrp <- requiredComponentP
     relatedSymGroupElemPrevClosePx <- optionalFieldP
     relatedSymGroupElemQuoteRequestType <- optionalFieldP
     relatedSymGroupElemQuoteType <- optionalFieldP
@@ -180,29 +180,29 @@ instance IsComponent RelatedSymGroupElem where
     relatedSymGroupElemTradeOriginationDate <- optionalFieldP
     relatedSymGroupElemSide <- optionalFieldP
     relatedSymGroupElemQtyType <- optionalFieldP
-    relatedSymGroupElemOrderQtyData <- optionalComponentP
+    relatedSymGroupElemOrderQtyData <- requiredComponentP
     relatedSymGroupElemSettlType <- optionalFieldP
     relatedSymGroupElemSettlDate <- optionalFieldP
     relatedSymGroupElemSettlDate2 <- optionalFieldP
     relatedSymGroupElemOrderQty2 <- optionalFieldP
     relatedSymGroupElemCurrency <- optionalFieldP
-    relatedSymGroupElemStipulations <- optionalComponentP
+    relatedSymGroupElemStipulations <- requiredComponentP
     relatedSymGroupElemAccount <- optionalFieldP
     relatedSymGroupElemAcctIDSource <- optionalFieldP
     relatedSymGroupElemAccountType <- optionalFieldP
-    relatedSymGroupElemQuotReqLegsGrp <- optionalComponentP
-    relatedSymGroupElemQuotQualGrp <- optionalComponentP
+    relatedSymGroupElemQuotReqLegsGrp <- requiredComponentP
+    relatedSymGroupElemQuotQualGrp <- requiredComponentP
     relatedSymGroupElemQuotePriceType <- optionalFieldP
     relatedSymGroupElemOrdType <- optionalFieldP
     relatedSymGroupElemValidUntilTime <- optionalFieldP
     relatedSymGroupElemExpireTime <- optionalFieldP
     relatedSymGroupElemTransactTime <- optionalFieldP
-    relatedSymGroupElemSpreadOrBenchmarkCurveData <- optionalComponentP
+    relatedSymGroupElemSpreadOrBenchmarkCurveData <- requiredComponentP
     relatedSymGroupElemPriceType <- optionalFieldP
     relatedSymGroupElemPrice <- optionalFieldP
     relatedSymGroupElemPrice2 <- optionalFieldP
-    relatedSymGroupElemYieldData <- optionalComponentP
-    relatedSymGroupElemParties <- optionalComponentP
+    relatedSymGroupElemYieldData <- requiredComponentP
+    relatedSymGroupElemParties <- requiredComponentP
     pure (RelatedSymGroupElem {..})
 
 instance IsGroupElement RelatedSymGroupElem where

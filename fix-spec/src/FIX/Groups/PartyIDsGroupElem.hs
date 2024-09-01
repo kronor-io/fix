@@ -27,14 +27,14 @@ import GHC.Generics (Generic)
 --       [ MessagePieceField "PartyID" True
 --       , MessagePieceField "PartyIDSource" False
 --       , MessagePieceField "PartyRole" False
---       , MessagePieceComponent "PtysSubGrp" False
+--       , MessagePieceComponent "PtysSubGrp" True
 --       ]
 --   }
 data PartyIDsGroupElem = PartyIDsGroupElem
   { partyIDsGroupElemPartyID :: !PartyID,
     partyIDsGroupElemPartyIDSource :: !(Maybe PartyIDSource),
     partyIDsGroupElemPartyRole :: !(Maybe PartyRole),
-    partyIDsGroupElemPtysSubGrp :: !(Maybe PtysSubGrp)
+    partyIDsGroupElemPtysSubGrp :: !PtysSubGrp
   }
   deriving stock (Show, Eq, Generic)
 
@@ -46,13 +46,13 @@ instance IsComponent PartyIDsGroupElem where
       [ requiredFieldB partyIDsGroupElemPartyID,
         optionalFieldB partyIDsGroupElemPartyIDSource,
         optionalFieldB partyIDsGroupElemPartyRole,
-        optionalComponentB partyIDsGroupElemPtysSubGrp
+        requiredComponentB partyIDsGroupElemPtysSubGrp
       ]
   fromComponentFields = do
     partyIDsGroupElemPartyID <- requiredFieldP
     partyIDsGroupElemPartyIDSource <- optionalFieldP
     partyIDsGroupElemPartyRole <- optionalFieldP
-    partyIDsGroupElemPtysSubGrp <- optionalComponentP
+    partyIDsGroupElemPtysSubGrp <- requiredComponentP
     pure (PartyIDsGroupElem {..})
 
 instance IsGroupElement PartyIDsGroupElem where

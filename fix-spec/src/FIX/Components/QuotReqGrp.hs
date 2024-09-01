@@ -25,8 +25,8 @@ import GHC.Generics (Generic)
 --             { groupName = "NoRelatedSym"
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
---                 , MessagePieceComponent "FinancingDetails" False
---                 , MessagePieceComponent "UndInstrmtGrp" False
+--                 , MessagePieceComponent "FinancingDetails" True
+--                 , MessagePieceComponent "UndInstrmtGrp" True
 --                 , MessagePieceField "PrevClosePx" False
 --                 , MessagePieceField "QuoteRequestType" False
 --                 , MessagePieceField "QuoteType" False
@@ -35,29 +35,29 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "TradeOriginationDate" False
 --                 , MessagePieceField "Side" False
 --                 , MessagePieceField "QtyType" False
---                 , MessagePieceComponent "OrderQtyData" False
+--                 , MessagePieceComponent "OrderQtyData" True
 --                 , MessagePieceField "SettlType" False
 --                 , MessagePieceField "SettlDate" False
 --                 , MessagePieceField "SettlDate2" False
 --                 , MessagePieceField "OrderQty2" False
 --                 , MessagePieceField "Currency" False
---                 , MessagePieceComponent "Stipulations" False
+--                 , MessagePieceComponent "Stipulations" True
 --                 , MessagePieceField "Account" False
 --                 , MessagePieceField "AcctIDSource" False
 --                 , MessagePieceField "AccountType" False
---                 , MessagePieceComponent "QuotReqLegsGrp" False
---                 , MessagePieceComponent "QuotQualGrp" False
+--                 , MessagePieceComponent "QuotReqLegsGrp" True
+--                 , MessagePieceComponent "QuotQualGrp" True
 --                 , MessagePieceField "QuotePriceType" False
 --                 , MessagePieceField "OrdType" False
 --                 , MessagePieceField "ValidUntilTime" False
 --                 , MessagePieceField "ExpireTime" False
 --                 , MessagePieceField "TransactTime" False
---                 , MessagePieceComponent "SpreadOrBenchmarkCurveData" False
+--                 , MessagePieceComponent "SpreadOrBenchmarkCurveData" True
 --                 , MessagePieceField "PriceType" False
 --                 , MessagePieceField "Price" False
 --                 , MessagePieceField "Price2" False
---                 , MessagePieceComponent "YieldData" False
---                 , MessagePieceComponent "Parties" False
+--                 , MessagePieceComponent "YieldData" True
+--                 , MessagePieceComponent "Parties" True
 --                 ]
 --             }
 --           True

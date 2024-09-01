@@ -29,9 +29,9 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "LegSwapType" False
 --                 , MessagePieceField "LegSettlType" False
 --                 , MessagePieceField "LegSettlDate" False
---                 , MessagePieceComponent "LegStipulations" False
---                 , MessagePieceComponent "NestedParties" False
---                 , MessagePieceComponent "LegBenchmarkCurveData" False
+--                 , MessagePieceComponent "LegStipulations" True
+--                 , MessagePieceComponent "NestedParties" True
+--                 , MessagePieceComponent "LegBenchmarkCurveData" True
 --                 ]
 --             }
 --           False

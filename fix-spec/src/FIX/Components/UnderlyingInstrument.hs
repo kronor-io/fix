@@ -68,7 +68,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "UnderlyingSymbolSfx" False
 --       , MessagePieceField "UnderlyingSecurityID" False
 --       , MessagePieceField "UnderlyingSecurityIDSource" False
---       , MessagePieceComponent "UndSecAltIDGrp" False
+--       , MessagePieceComponent "UndSecAltIDGrp" True
 --       , MessagePieceField "UnderlyingProduct" False
 --       , MessagePieceField "UnderlyingCFICode" False
 --       , MessagePieceField "UnderlyingSecurityType" False
@@ -108,7 +108,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "UnderlyingStartValue" False
 --       , MessagePieceField "UnderlyingCurrentValue" False
 --       , MessagePieceField "UnderlyingEndValue" False
---       , MessagePieceComponent "UnderlyingStipulations" False
+--       , MessagePieceComponent "UnderlyingStipulations" True
 --       ]
 --   }
 data UnderlyingInstrument = UnderlyingInstrument
@@ -116,7 +116,7 @@ data UnderlyingInstrument = UnderlyingInstrument
     underlyingInstrumentUnderlyingSymbolSfx :: !(Maybe UnderlyingSymbolSfx),
     underlyingInstrumentUnderlyingSecurityID :: !(Maybe UnderlyingSecurityID),
     underlyingInstrumentUnderlyingSecurityIDSource :: !(Maybe UnderlyingSecurityIDSource),
-    underlyingInstrumentUndSecAltIDGrp :: !(Maybe UndSecAltIDGrp),
+    underlyingInstrumentUndSecAltIDGrp :: !UndSecAltIDGrp,
     underlyingInstrumentUnderlyingProduct :: !(Maybe UnderlyingProduct),
     underlyingInstrumentUnderlyingCFICode :: !(Maybe UnderlyingCFICode),
     underlyingInstrumentUnderlyingSecurityType :: !(Maybe UnderlyingSecurityType),
@@ -156,7 +156,7 @@ data UnderlyingInstrument = UnderlyingInstrument
     underlyingInstrumentUnderlyingStartValue :: !(Maybe UnderlyingStartValue),
     underlyingInstrumentUnderlyingCurrentValue :: !(Maybe UnderlyingCurrentValue),
     underlyingInstrumentUnderlyingEndValue :: !(Maybe UnderlyingEndValue),
-    underlyingInstrumentUnderlyingStipulations :: !(Maybe UnderlyingStipulations)
+    underlyingInstrumentUnderlyingStipulations :: !UnderlyingStipulations
   }
   deriving stock (Show, Eq, Generic)
 
@@ -169,7 +169,7 @@ instance IsComponent UnderlyingInstrument where
         optionalFieldB underlyingInstrumentUnderlyingSymbolSfx,
         optionalFieldB underlyingInstrumentUnderlyingSecurityID,
         optionalFieldB underlyingInstrumentUnderlyingSecurityIDSource,
-        optionalComponentB underlyingInstrumentUndSecAltIDGrp,
+        requiredComponentB underlyingInstrumentUndSecAltIDGrp,
         optionalFieldB underlyingInstrumentUnderlyingProduct,
         optionalFieldB underlyingInstrumentUnderlyingCFICode,
         optionalFieldB underlyingInstrumentUnderlyingSecurityType,
@@ -209,14 +209,14 @@ instance IsComponent UnderlyingInstrument where
         optionalFieldB underlyingInstrumentUnderlyingStartValue,
         optionalFieldB underlyingInstrumentUnderlyingCurrentValue,
         optionalFieldB underlyingInstrumentUnderlyingEndValue,
-        optionalComponentB underlyingInstrumentUnderlyingStipulations
+        requiredComponentB underlyingInstrumentUnderlyingStipulations
       ]
   fromComponentFields = do
     underlyingInstrumentUnderlyingSymbol <- optionalFieldP
     underlyingInstrumentUnderlyingSymbolSfx <- optionalFieldP
     underlyingInstrumentUnderlyingSecurityID <- optionalFieldP
     underlyingInstrumentUnderlyingSecurityIDSource <- optionalFieldP
-    underlyingInstrumentUndSecAltIDGrp <- optionalComponentP
+    underlyingInstrumentUndSecAltIDGrp <- requiredComponentP
     underlyingInstrumentUnderlyingProduct <- optionalFieldP
     underlyingInstrumentUnderlyingCFICode <- optionalFieldP
     underlyingInstrumentUnderlyingSecurityType <- optionalFieldP
@@ -256,5 +256,5 @@ instance IsComponent UnderlyingInstrument where
     underlyingInstrumentUnderlyingStartValue <- optionalFieldP
     underlyingInstrumentUnderlyingCurrentValue <- optionalFieldP
     underlyingInstrumentUnderlyingEndValue <- optionalFieldP
-    underlyingInstrumentUnderlyingStipulations <- optionalComponentP
+    underlyingInstrumentUnderlyingStipulations <- requiredComponentP
     pure (UnderlyingInstrument {..})

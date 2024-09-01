@@ -27,7 +27,7 @@ import GHC.Generics (Generic)
 --                 [ MessagePieceField "PartyID" True
 --                 , MessagePieceField "PartyIDSource" False
 --                 , MessagePieceField "PartyRole" False
---                 , MessagePieceComponent "PtysSubGrp" False
+--                 , MessagePieceComponent "PtysSubGrp" True
 --                 ]
 --             }
 --           False

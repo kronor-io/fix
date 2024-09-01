@@ -7,6 +7,7 @@
 module FIX.CodeGen (runFixCodeGen) where
 
 import Control.Monad
+import Data.List (find)
 import Data.Maybe
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -30,7 +31,7 @@ runFixCodeGen = do
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
     Just spec' -> do
-      let spec = makeFirstGroupElementsRequired $ foldDataFields $ filterSpec settingMessages spec'
+      let spec = fixupNestedOptionals $ makeFirstGroupElementsRequired $ foldDataFields $ filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
 
       testResourcesFiles <- genTestResources
@@ -222,6 +223,41 @@ makeFirstGroupElementsRequired spec =
       MessagePieceField f _ -> MessagePieceField f True
       MessagePieceComponent c _ -> MessagePieceComponent c True
       MessagePieceGroup gs _ -> MessagePieceGroup gs True
+
+-- Components of which all fields are optional cannot be parsed unambiguously
+-- There is no way to render Just Nothing and Nothing render distinctly.
+fixupNestedOptionals :: Spec -> Spec
+fixupNestedOptionals spec =
+  Spec
+    { specFields = specFields spec,
+      specHeader = goPieces (specHeader spec),
+      specTrailer = goPieces (specTrailer spec),
+      specComponents = map goComponent (specComponents spec),
+      specMessages = map goMessage (specMessages spec)
+    }
+  where
+    pieceAllOptional = \case
+      MessagePieceField _ r -> not r
+      MessagePieceGroup _ r -> not r
+      MessagePieceComponent c r -> case find ((== c) . componentName) (specComponents spec) of
+        Nothing -> not r
+        Just cs -> piecesAllOptional (componentPieces cs)
+    piecesAllOptional = all pieceAllOptional
+    componentsWithOnlyOptionals :: Set Text
+    componentsWithOnlyOptionals =
+      S.fromList $
+        map componentName $
+          filter
+            (piecesAllOptional . componentPieces)
+            (specComponents spec)
+    goMessage ms = ms {messagePieces = goPieces (messagePieces ms)}
+    goComponent cs = cs {componentPieces = goPieces (componentPieces cs)}
+    goGroup gs = gs {groupPieces = goPieces (groupPieces gs)}
+    goPieces = map goPiece
+    goPiece = \case
+      p@MessagePieceField {} -> p
+      MessagePieceGroup gs r -> MessagePieceGroup (goGroup gs) r
+      MessagePieceComponent c r -> MessagePieceComponent c $ S.member c componentsWithOnlyOptionals || r
 
 pieceGroupSpecs :: MessagePiece -> Set GroupSpec
 pieceGroupSpecs = \case
