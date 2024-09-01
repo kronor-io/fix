@@ -11,6 +11,8 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as Builder
 import qualified Data.ByteString.Lazy as LB
+import Data.DList (DList)
+import qualified Data.DList as DList
 import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
@@ -35,10 +37,10 @@ data Envelope a = Envelope
 
 instance (Validity a) => Validity (Envelope a)
 
-renderHeader :: Header -> [AnyField]
+renderHeader :: Header -> DList AnyField
 renderHeader = toComponentFields
 
-renderTrailer :: Trailer -> [AnyField]
+renderTrailer :: Trailer -> DList AnyField
 renderTrailer = toComponentFields
 
 parseHeader :: ComponentP Header
@@ -67,13 +69,14 @@ toFields e'' =
   let h = (envelopeHeader e'') {headerMsgType = messageType (Proxy :: Proxy a)}
       e' = e'' {envelopeHeader = h}
       e = fixEnvelopeCheckSum $ fixEnvelopeBodyLength e'
-   in mconcat
-        -- TODO figure out what to do about the message type being in the
-        -- header already
-        [ renderHeader (envelopeHeader e),
-          toComponentFields (envelopeContents e),
-          renderTrailer (envelopeTrailer e)
-        ]
+   in DList.toList $
+        mconcat
+          -- TODO figure out what to do about the message type being in the
+          -- header already
+          [ renderHeader (envelopeHeader e),
+            toComponentFields (envelopeContents e),
+            renderTrailer (envelopeTrailer e)
+          ]
 
 parseAnyFields :: ByteString -> Either String [AnyField]
 parseAnyFields = left errorBundlePretty . parse (many anyFieldP) "<pure>"
@@ -95,11 +98,12 @@ computeBodyLength Envelope {..} =
             packAnyField $ headerBodyLength envelopeHeader
           ]
       allFields =
-        concat
-          [ renderHeader envelopeHeader,
-            toComponentFields envelopeContents,
-            renderTrailer envelopeTrailer
-          ]
+        DList.toList $
+          mconcat
+            [ renderHeader envelopeHeader,
+              toComponentFields envelopeContents,
+              renderTrailer envelopeTrailer
+            ]
       bytesFromCheckSum =
         computeFieldsLength
           [ packAnyField $ trailerCheckSum envelopeTrailer
@@ -120,12 +124,13 @@ fixEnvelopeCheckSum ::
   Envelope a
 fixEnvelopeCheckSum e@Envelope {..} =
   let fieldsUntilCheckSum =
-        concat
-          -- TODO figure out what to do about the message type being in the
-          -- header already
-          [ renderHeader envelopeHeader,
-            toComponentFields envelopeContents
-          ]
+        DList.toList $
+          mconcat
+            -- TODO figure out what to do about the message type being in the
+            -- header already
+            [ renderHeader envelopeHeader,
+              toComponentFields envelopeContents
+            ]
       checkSum = computeCheckSum fieldsUntilCheckSum
    in e {envelopeTrailer = envelopeTrailer {trailerCheckSum = checkSum}}
 

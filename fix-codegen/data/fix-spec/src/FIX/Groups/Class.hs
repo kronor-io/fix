@@ -6,6 +6,8 @@ module FIX.Groups.Class where
 
 import Control.Monad
 import Control.Monad.Reader
+import Data.DList (DList)
+import qualified Data.DList as DList
 import Data.Kind
 import Data.List.NonEmpty (NonEmpty)
 import qualified Data.List.NonEmpty as NE
@@ -23,14 +25,15 @@ class (IsAnyField (GroupNumField a), IsComponent a) => IsGroupElement a where
 -- @
 -- Within a repeating group, field sequence is strictly defined by a group definition.
 -- @
-requiredGroupB :: forall a. (IsGroupElement a) => NonEmpty a -> [AnyField]
+requiredGroupB :: forall a. (IsGroupElement a) => NonEmpty a -> DList AnyField
 requiredGroupB ne = do
-  packAnyField (mkGroupNum (Proxy :: Proxy a) (fromIntegral (length ne)))
-    : concatMap toComponentFields ne
+  DList.cons
+    (packAnyField (mkGroupNum (Proxy :: Proxy a) (fromIntegral (length ne))))
+    (foldMap toComponentFields ne)
 
-optionalGroupB :: (IsGroupElement a) => [a] -> [AnyField]
+optionalGroupB :: (IsGroupElement a) => [a] -> DList AnyField
 optionalGroupB es = case NE.nonEmpty es of
-  Nothing -> []
+  Nothing -> mempty
   Just ne -> requiredGroupB ne
 
 -- @

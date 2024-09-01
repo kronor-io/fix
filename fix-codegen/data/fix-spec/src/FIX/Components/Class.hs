@@ -7,6 +7,7 @@ import Control.Arrow (second)
 import Control.Monad.Except
 import Control.Monad.Reader
 import Control.Monad.State
+import Data.DList (DList)
 import Data.Proxy
 import FIX.Core
 import FIX.Fields
@@ -28,7 +29,7 @@ data ComponentParseError
   deriving (Show)
 
 class IsComponent a where
-  toComponentFields :: a -> [AnyField]
+  toComponentFields :: a -> DList AnyField
   fromComponentFields :: ComponentP a
 
 requiredFieldP :: forall a. (IsAnyField a) => ComponentP a
@@ -59,17 +60,17 @@ optionalFieldP = do
       put fields'
       pure (Just f)
 
-requiredFieldB :: (IsAnyField a) => a -> [AnyField]
+requiredFieldB :: (IsAnyField a) => a -> DList AnyField
 requiredFieldB = pure . packAnyField
 
-optionalFieldB :: (IsAnyField a) => Maybe a -> [AnyField]
-optionalFieldB = maybe [] requiredFieldB
+optionalFieldB :: (IsAnyField a) => Maybe a -> DList AnyField
+optionalFieldB = maybe mempty requiredFieldB
 
-requiredComponentB :: (IsComponent a) => a -> [AnyField]
+requiredComponentB :: (IsComponent a) => a -> DList AnyField
 requiredComponentB = toComponentFields
 
-optionalComponentB :: (IsComponent a) => Maybe a -> [AnyField]
-optionalComponentB = maybe [] requiredComponentB
+optionalComponentB :: (IsComponent a) => Maybe a -> DList AnyField
+optionalComponentB = maybe mempty requiredComponentB
 
 requiredComponentP :: (IsComponent a) => ComponentP a
 requiredComponentP = fromComponentFields

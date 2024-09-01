@@ -5,6 +5,7 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Components.TestUtils (componentSpec) where
 
+import qualified Data.DList as DList
 import FIX.Components.Class
 import FIX.Components.Gen ()
 import FIX.Fields
@@ -23,7 +24,7 @@ componentSpec = do
   describe "fromComponentFields" $ do
     it "roundtrips with toComponentFields" $
       forAllValid $ \a -> do
-        let rendered = toComponentFields (a :: a)
+        let rendered = DList.toList $ toComponentFields (a :: a)
         context (ppShow rendered) $ case runComponentP rendered fromComponentFields of
           Left parseErr ->
             expectationFailure $
@@ -35,4 +36,4 @@ componentSpec = do
 
   describe "toComponentFields" $ do
     it "renders to valid lists of fields" $
-      producesValid (toComponentFields :: a -> [AnyField])
+      producesValid (DList.toList . toComponentFields :: a -> [AnyField])

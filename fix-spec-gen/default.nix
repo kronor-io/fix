@@ -1,4 +1,4 @@
-{ mkDerivation, base, bytestring, fix-core-gen, fix-spec
+{ mkDerivation, base, bytestring, dlist, fix-core-gen, fix-spec
 , genvalidity, genvalidity-bytestring, genvalidity-sydtest, lib
 , megaparsec, path, path-io, sydtest, sydtest-discover
 }:
@@ -7,7 +7,7 @@ mkDerivation {
   version = "0.0.0.0";
   src = ./.;
   libraryHaskellDepends = [
-    base bytestring fix-core-gen fix-spec genvalidity
+    base bytestring dlist fix-core-gen fix-spec genvalidity
     genvalidity-bytestring genvalidity-sydtest path path-io sydtest
   ];
   testHaskellDepends = [
