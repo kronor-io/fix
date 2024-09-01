@@ -1133,7 +1133,7 @@ anyFieldP = do
     947 -> SomeStrikeCurrency <$> fp
     955 -> SomeLegContractSettlMonth <$> fp
     956 -> SomeLegInterestAccrualDate <$> fp
-    _ -> fail "Unknown field tag"
+    _ -> fail ("Unknown field tag: " <> show tag)
 
 class (IsField a) => IsAnyField a where
   unpackAnyField :: AnyField -> Maybe a

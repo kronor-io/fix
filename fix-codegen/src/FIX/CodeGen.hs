@@ -674,7 +674,11 @@ topLevelFieldsFile fieldSpecs =
                                                           ( NormalB
                                                               ( AppE
                                                                   (VarE (mkName "fail"))
-                                                                  (LitE (StringL "Unknown field tag"))
+                                                                  ( InfixE
+                                                                      (Just (LitE (StringL "Unknown field tag: ")))
+                                                                      (VarE (mkName "<>"))
+                                                                      (Just (AppE (VarE (mkName "show")) (VarE tagVarName)))
+                                                                  )
                                                               )
                                                           )
                                                           []
