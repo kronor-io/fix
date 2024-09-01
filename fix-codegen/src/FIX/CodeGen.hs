@@ -633,7 +633,16 @@ topLevelFieldsFile fieldSpecs =
                                                               []
                                                         )
                                                         fieldSpecs,
-                                                      [Match WildP (NormalB (VarE (mkName "undefined"))) []]
+                                                      [ Match
+                                                          WildP
+                                                          ( NormalB
+                                                              ( AppE
+                                                                  (VarE (mkName "fail"))
+                                                                  (LitE (StringL "Unknown field tag"))
+                                                              )
+                                                          )
+                                                          []
+                                                      ]
                                                     ]
                                               )
                                           ]

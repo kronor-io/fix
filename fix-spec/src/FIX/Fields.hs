@@ -213,7 +213,7 @@ anyFieldP = do
     629 -> SomeHopSendingTime <$> fp
     630 -> SomeHopRefID <$> fp
     789 -> SomeNextExpectedMsgSeqNum <$> fp
-    _ -> undefined
+    _ -> fail "Unknown field tag"
 
 class (IsField a) => IsAnyField a where
   unpackAnyField :: AnyField -> Maybe a
