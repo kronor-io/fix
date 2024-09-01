@@ -106,9 +106,9 @@ parseMessage = left errorBundlePretty . parse messageP "<pure>"
 --     the datatype of the field is data and the field is not immediately preceded by its associated Length field.
 
 messageP :: Parsec Void ByteString Message
-messageP = Message <$> many fieldP
+messageP = Message <$> many oneFieldP
   where
-    fieldP = do
+    oneFieldP = do
       tag <- decimal
       void $ char 61 -- '='
       if tagIsLen tag
@@ -289,3 +289,54 @@ class IsField a where
   fieldIsData :: Proxy a -> Bool
   fieldToValue :: a -> ByteString
   fieldFromValue :: ByteString -> Either String a
+
+-- Parses the value directly after the tag, including the '='.
+--
+-- The tag you pass in is for checking that the field was the right one
+-- and for error messages.
+fieldP :: forall a. (IsField a) => Tag -> Parsec Void ByteString a
+fieldP tag = do
+  let p = Proxy :: Proxy a
+  let ft = fieldTag p
+  void $ char 61 -- '='
+  value <-
+    if fieldIsData p
+      then do
+        len <- decimal
+        void $ char 1 -- 'SOH'
+        dataTag <- decimal
+        guard $ dataTag == succ tag
+        guard $ dataTag == ft
+        void $ char 61 -- '='
+        takeP (Just "octet") len
+      else do
+        guard $ tag == ft
+        SB.pack <$> many (noneOf [1])
+  void $ char 1 -- 'SOH'
+  case fieldFromValue value of
+    Left err -> fail err
+    Right a -> pure a
+
+fieldB :: forall a. (IsField a) => a -> ByteString.Builder
+fieldB f =
+  let p = Proxy :: Proxy a
+      ft = fieldTag p
+      value = fieldToValue f
+   in mconcat $
+        if fieldIsData p
+          then
+            [ BB.wordDec ft,
+              BB.char7 '=',
+              BB.intDec $ SB.length value,
+              BB.char7 '\SOH',
+              BB.wordDec (pred ft),
+              BB.char7 '=',
+              BB.byteString value,
+              BB.char7 '\SOH'
+            ]
+          else
+            [ BB.wordDec ft,
+              BB.char7 '=',
+              BB.byteString value,
+              BB.char7 '\SOH'
+            ]

@@ -9,6 +9,7 @@ library:
   dependencies:
   - bytestring
   - fix-core
+  - megaparsec
   - mtl
   - text
   - validity

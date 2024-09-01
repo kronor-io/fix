@@ -436,14 +436,23 @@ topLevelFieldsFile fieldSpecs =
                 "import FIX.Fields." <> T.unpack (fieldName f) <> " as X"
             )
             fieldSpecs
+        anyFieldSpecConstructorName fs = mkName (T.unpack ("Some" <> fieldName fs))
      in unlines $
           concat
-            [ [ "{-# LANGUAGE DerivingStrategies #-}",
-                "{-# LANGUAGE DeriveGeneric #-}",
-                "module FIX.Fields (AnyField(..), module X) where",
+            [ [ "{-# LANGUAGE DeriveGeneric #-}",
+                "{-# LANGUAGE DerivingStrategies #-}",
+                "{-# LANGUAGE LambdaCase #-}",
+                "{-# LANGUAGE ScopedTypeVariables #-}",
+                "module FIX.Fields (AnyField(..), anyFieldP, anyFieldB, module X) where",
                 "",
-                "import GHC.Generics (Generic)",
+                "import Data.ByteString (ByteString)",
                 "import Data.Validity",
+                "import Data.Void (Void)",
+                "import FIX.Core",
+                "import GHC.Generics (Generic)",
+                "import Text.Megaparsec",
+                "import Text.Megaparsec.Byte.Lexer",
+                "import qualified Data.ByteString.Builder as ByteString",
                 ""
               ],
               imports,
@@ -456,7 +465,7 @@ topLevelFieldsFile fieldSpecs =
                       ( map
                           ( \fs ->
                               NormalC
-                                (mkName (T.unpack ("Some" <> fieldName fs)))
+                                (anyFieldSpecConstructorName fs)
                                 [ ( Bang NoSourceUnpackedness SourceStrict,
                                     ConT (fieldSpecConstructorName fs)
                                   )
@@ -472,6 +481,104 @@ topLevelFieldsFile fieldSpecs =
                           ]
                       ],
                     validityInstance (mkName "AnyField")
+                  ],
+                "anyFieldB :: AnyField -> ByteString.Builder",
+                TH.pprint
+                  [ FunD
+                      (mkName "anyFieldB")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( LamCaseE
+                                  ( map
+                                      ( \fs ->
+                                          let varName = mkName "f"
+                                           in Match
+                                                (ConP (anyFieldSpecConstructorName fs) [] [VarP varName])
+                                                ( NormalB
+                                                    (AppE (VarE (mkName "fieldB")) (VarE varName))
+                                                )
+                                                []
+                                      )
+                                      fieldSpecs
+                                  )
+                              )
+                          )
+                          []
+                      ]
+                  ],
+                "anyFieldP :: Parsec Void ByteString AnyField",
+                TH.pprint
+                  [ FunD
+                      (mkName "anyFieldP")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( DoE Nothing $
+                                  let tagVarName = mkName "tag"
+                                      helperName = mkName "fp"
+                                   in concat
+                                        [ [ BindS
+                                              (VarP tagVarName)
+                                              (VarE (mkName "decimal")),
+                                            LetS
+                                              [ SigD
+                                                  helperName
+                                                  ( let tyVarName = mkName "f"
+                                                     in ForallT
+                                                          [PlainTV tyVarName SpecifiedSpec]
+                                                          [AppT (ConT (mkName "IsField")) (VarT tyVarName)]
+                                                          ( AppT
+                                                              ( AppT
+                                                                  ( AppT
+                                                                      (ConT (mkName "Parsec"))
+                                                                      (ConT (mkName "Void"))
+                                                                  )
+                                                                  (ConT (mkName "ByteString"))
+                                                              )
+                                                              (VarT tyVarName)
+                                                          )
+                                                  ),
+                                                FunD
+                                                  helperName
+                                                  [ Clause
+                                                      []
+                                                      ( NormalB
+                                                          ( AppE
+                                                              (VarE (mkName "fieldP"))
+                                                              (VarE tagVarName)
+                                                          )
+                                                      )
+                                                      []
+                                                  ]
+                                              ]
+                                          ],
+                                          [ NoBindS
+                                              ( CaseE (VarE tagVarName) $
+                                                  concat
+                                                    [ map
+                                                        ( \fs ->
+                                                            Match
+                                                              (LitP (IntegerL (fromIntegral (fieldNumber fs))))
+                                                              ( NormalB
+                                                                  ( InfixE
+                                                                      (Just (ConE (anyFieldSpecConstructorName fs)))
+                                                                      (VarE (mkName "<$>"))
+                                                                      (Just (VarE helperName))
+                                                                  )
+                                                              )
+                                                              []
+                                                        )
+                                                        fieldSpecs,
+                                                      [Match WildP (NormalB (VarE (mkName "undefined"))) []]
+                                                    ]
+                                              )
+                                          ]
+                                        ]
+                              )
+                          )
+                          []
+                      ]
                   ]
               ]
             ]
