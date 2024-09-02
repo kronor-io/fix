@@ -81,7 +81,8 @@ runFixCodeGen = do
                     genHaskellDataFile "fix-spec-gen/src/FIX/Messages/TestUtils.hs",
                     messagesSpecFile messageSpecs,
                     genHaskellDataFile "fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs",
-                    topLevelMessagesFile messageSpecs
+                    topLevelMessagesFile messageSpecs,
+                    genHaskellDataFile "fix-spec-gen/test/FIX/AnyMessageSpec.hs"
                   ],
             genHaskellDataFile "fix-spec-gen/test/Spec.hs",
             testResourcesFiles
@@ -1252,6 +1253,9 @@ componentsSpecFile groupSpecs componentSpecs =
               ]
             ]
 
+messageTypeConstructorName :: MessageSpec -> Name
+messageTypeConstructorName ms = mkName ("MsgType" <> upperHead (T.unpack (messageName ms)))
+
 messagesDataFiles :: [MessageSpec] -> CodeGen
 messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
   genHaskellFile ("fix-spec/src/FIX/Messages/" <> T.unpack messageName <> ".hs") $
@@ -1272,7 +1276,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                       (mkName "messageType")
                       [ Clause
                           [VarP (mkName "Proxy")]
-                          (NormalB (ConE (mkName ("MsgType" <> upperHead (T.unpack messageName)))))
+                          (NormalB (ConE (messageTypeConstructorName f)))
                           []
                       ]
                   ]
@@ -1305,13 +1309,7 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
 messagesGenFile :: [MessageSpec] -> CodeGen
 messagesGenFile messageSpecs =
   genHaskellFile "fix-spec-gen/src/FIX/Messages/Gen.hs" $
-    let messagesImports =
-          map
-            ( \f ->
-                "import FIX.Messages." <> T.unpack (messageName f)
-            )
-            messageSpecs
-        sections = flip map messageSpecs $ \f ->
+    let sections = flip map messageSpecs $ \f ->
           let constructorName = messageSpecConstructorName f
            in [ TH.pprint
                   [ genValidInstance constructorName
@@ -1330,15 +1328,14 @@ messagesGenFile messageSpecs =
               "import FIX.Messages.Header",
               "import FIX.Messages.Trailer",
               "import FIX.Messages.Envelope",
+              "import FIX.Messages",
+              "",
+              "instance GenValid Header",
+              "instance GenValid Trailer",
+              "instance (GenValid a) => GenValid (Envelope a)",
+              "instance GenValid AnyMessage",
               ""
             ]
-              : messagesImports
-              : [ "",
-                  "instance GenValid Header",
-                  "instance GenValid Trailer",
-                  "instance (GenValid a) => GenValid (Envelope a)",
-                  ""
-                ]
               : sections
 
 messagesSpecFile :: [MessageSpec] -> CodeGen
@@ -1407,6 +1404,7 @@ topLevelMessagesFile messageSpecs =
             [ [ "{-# LANGUAGE DeriveGeneric #-}",
                 "{-# LANGUAGE DerivingStrategies #-}",
                 "{-# LANGUAGE LambdaCase #-}",
+                "{-# LANGUAGE RecordWildCards #-}",
                 "{-# LANGUAGE ScopedTypeVariables #-}",
                 "module FIX.Messages (",
                 "  AnyMessage(..),",
@@ -1419,11 +1417,12 @@ topLevelMessagesFile messageSpecs =
                 "import Data.ByteString (ByteString)",
                 "import Data.Validity",
                 "import Data.Void (Void)",
-                "import FIX.Messages.Class",
                 "import FIX.Core",
+                "import FIX.Fields.MsgType",
+                "import FIX.Messages.Class",
+                "import FIX.Messages.Envelope",
                 "import GHC.Generics (Generic)",
                 "import Text.Megaparsec",
-                "import Text.Megaparsec.Byte.Lexer",
                 "import qualified Data.ByteString.Builder as ByteString",
                 ""
               ],
@@ -1454,21 +1453,31 @@ topLevelMessagesFile messageSpecs =
                       ],
                     validityInstance (mkName "AnyMessage")
                   ],
-                "anyMessageB :: AnyMessage -> ByteString.Builder",
+                "anyMessageB :: Envelope AnyMessage -> ByteString.Builder",
                 TH.pprint
                   [ FunD
                       (mkName "anyMessageB")
                       [ Clause
-                          []
+                          [ConP (mkName "Envelope{..}") [] []]
                           ( NormalB
-                              ( LamCaseE
+                              ( CaseE
+                                  (VarE (mkName "envelopeContents"))
                                   ( map
                                       ( \fs ->
                                           let varName = mkName "f"
                                            in Match
                                                 (ConP (anyMessageSpecConstructorName fs) [] [VarP varName])
                                                 ( NormalB
-                                                    (AppE (VarE (mkName "messageB")) (VarE varName))
+                                                    ( AppE
+                                                        ( AppE
+                                                            ( AppE
+                                                                (VarE (mkName "messageB"))
+                                                                (VarE (mkName "envelopeHeader"))
+                                                            )
+                                                            (VarE (mkName "envelopeTrailer"))
+                                                        )
+                                                        (VarE varName)
+                                                    )
                                                 )
                                                 []
                                       )
@@ -1479,7 +1488,7 @@ topLevelMessagesFile messageSpecs =
                           []
                       ]
                   ],
-                "anyMessageP :: Parsec Void ByteString AnyMessage",
+                "anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)",
                 TH.pprint
                   [ FunD
                       (mkName "anyMessageP")
@@ -1487,12 +1496,29 @@ topLevelMessagesFile messageSpecs =
                           []
                           ( NormalB
                               ( DoE Nothing $
-                                  let tagVarName = mkName "typ"
+                                  let bsVarName = mkName "bs"
+                                      blVarName = mkName "bl"
+                                      typVarName = mkName "typ"
                                       helperName = mkName "mp"
                                    in concat
                                         [ [ BindS
-                                              (VarP tagVarName)
-                                              (VarE (mkName "decimal")),
+                                              (VarP bsVarName)
+                                              ( AppE
+                                                  (VarE (mkName "fieldP"))
+                                                  (LitE (IntegerL 8))
+                                              ),
+                                            BindS
+                                              (VarP blVarName)
+                                              ( AppE
+                                                  (VarE (mkName "fieldP"))
+                                                  (LitE (IntegerL 9))
+                                              ),
+                                            BindS
+                                              (VarP typVarName)
+                                              ( AppE
+                                                  (VarE (mkName "fieldP"))
+                                                  (LitE (IntegerL 35))
+                                              ),
                                             LetS
                                               [ SigD
                                                   helperName
@@ -1508,7 +1534,10 @@ topLevelMessagesFile messageSpecs =
                                                                   )
                                                                   (ConT (mkName "ByteString"))
                                                               )
-                                                              (VarT tyVarName)
+                                                              ( AppT
+                                                                  (ConT (mkName "Envelope"))
+                                                                  (VarT tyVarName)
+                                                              )
                                                           )
                                                   ),
                                                 FunD
@@ -1517,8 +1546,14 @@ topLevelMessagesFile messageSpecs =
                                                       []
                                                       ( NormalB
                                                           ( AppE
-                                                              (VarE (mkName "messageP"))
-                                                              (VarE tagVarName)
+                                                              ( AppE
+                                                                  ( AppE
+                                                                      (VarE (mkName "messageP"))
+                                                                      (VarE bsVarName)
+                                                                  )
+                                                                  (VarE blVarName)
+                                                              )
+                                                              (VarE typVarName)
                                                           )
                                                       )
                                                       []
@@ -1526,19 +1561,20 @@ topLevelMessagesFile messageSpecs =
                                               ]
                                           ],
                                           [ NoBindS
-                                              ( CaseE (VarE tagVarName) $
+                                              ( CaseE (VarE typVarName) $
                                                   concat
                                                     [ map
                                                         ( \fs ->
                                                             Match
-                                                              ( LitP
-                                                                  ( StringL
-                                                                      (T.unpack (messageType fs))
-                                                                  )
-                                                              )
+                                                              (ConP (messageTypeConstructorName fs) [] [])
                                                               ( NormalB
                                                                   ( InfixE
-                                                                      (Just (ConE (anyMessageSpecConstructorName fs)))
+                                                                      ( Just
+                                                                          ( AppE
+                                                                              (VarE (mkName "fmap"))
+                                                                              (ConE (anyMessageSpecConstructorName fs))
+                                                                          )
+                                                                      )
                                                                       (VarE (mkName "<$>"))
                                                                       (Just (VarE helperName))
                                                                   )
@@ -1554,7 +1590,7 @@ topLevelMessagesFile messageSpecs =
                                                                   ( InfixE
                                                                       (Just (LitE (StringL "Unknown message tag: ")))
                                                                       (VarE (mkName "<>"))
-                                                                      (Just (AppE (VarE (mkName "show")) (VarE tagVarName)))
+                                                                      (Just (AppE (VarE (mkName "show")) (VarE typVarName)))
                                                                   )
                                                               )
                                                           )

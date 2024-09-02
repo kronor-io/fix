@@ -20,14 +20,13 @@ import qualified Data.ByteString.Builder as ByteString
 import Data.Validity
 import Data.Void (Void)
 import FIX.Core
-import FIX.Fields
+import FIX.Fields.MsgType
 import FIX.Messages.Class
 import FIX.Messages.Envelope
 import FIX.Messages.Heartbeat as X
 import FIX.Messages.Logon as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
-import Text.Megaparsec.Byte.Lexer
 
 data AnyMessage
   = SomeHeartbeat !Heartbeat
@@ -37,19 +36,19 @@ data AnyMessage
 instance Validity AnyMessage
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
-anyMessageB Envelope {..} =
-  let mb :: forall m. (IsMessage m) => m -> ByteString.Builder
-      mb = messageB envelopeHeader envelopeTrailer
-   in case envelopeContents of
-        SomeHeartbeat m -> mb m
-        SomeLogon m -> mb m
+anyMessageB ((Envelope {..})) = case envelopeContents of
+  SomeHeartbeat f -> messageB envelopeHeader envelopeTrailer f
+  SomeLogon f -> messageB envelopeHeader envelopeTrailer f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do
-  SomeBeginString bs <- anyFieldP
-  SomeBodyLength bl <- anyFieldP
-  SomeMsgType typ <- anyFieldP
-  let mp :: forall f. (IsMessage f) => Parsec Void ByteString (Envelope f)
+  bs <- fieldP 8
+  bl <- fieldP 9
+  typ <- fieldP 35
+  let mp ::
+        forall f.
+        (IsMessage f) =>
+        Parsec Void ByteString (Envelope f)
       mp = messageP bs bl typ
   case typ of
     MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp

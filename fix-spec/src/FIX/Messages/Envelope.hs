@@ -149,7 +149,8 @@ renderCheckSum :: Word8 -> CheckSum
 renderCheckSum = CheckSum . SimpleBytes . TE.encodeUtf8 . T.pack . printf "%03d"
 
 messageB :: (IsMessage a) => Header -> Trailer -> a -> ByteString.Builder
-messageB = undefined
+messageB envelopeHeader envelopeTrailer envelopeContents =
+  foldMap anyFieldB $ toFields Envelope {..}
 
 messageP :: (IsMessage a) => BeginString -> BodyLength -> MsgType -> Parsec Void ByteString (Envelope a)
 messageP = undefined

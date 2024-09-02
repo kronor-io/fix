@@ -8,10 +8,9 @@ import Data.GenValidity
 import Data.GenValidity.ByteString ()
 import FIX.Components.Gen ()
 import FIX.Fields.Gen ()
+import FIX.Messages
 import FIX.Messages.Envelope
 import FIX.Messages.Header
-import FIX.Messages.Heartbeat
-import FIX.Messages.Logon
 import FIX.Messages.Trailer
 
 instance GenValid Header
@@ -19,6 +18,8 @@ instance GenValid Header
 instance GenValid Trailer
 
 instance (GenValid a) => GenValid (Envelope a)
+
+instance GenValid AnyMessage
 
 instance GenValid Heartbeat where
   genValid = genValidStructurallyWithoutExtraChecking
