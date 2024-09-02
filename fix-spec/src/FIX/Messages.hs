@@ -19,8 +19,7 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString.Builder as ByteString
 import Data.Validity
 import Data.Void (Void)
-import FIX.Core
-import FIX.Fields.MsgType
+import FIX.Fields
 import FIX.Messages.Class
 import FIX.Messages.Envelope
 import FIX.Messages.Heartbeat as X
@@ -42,9 +41,9 @@ anyMessageB ((Envelope {..})) = case envelopeContents of
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do
-  bs <- fieldP 8
-  bl <- fieldP 9
-  typ <- fieldP 35
+  SomeBeginString bs <- anyFieldP
+  SomeBodyLength bl <- anyFieldP
+  SomeMsgType typ <- anyFieldP
   let mp ::
         forall f.
         (IsMessage f) =>

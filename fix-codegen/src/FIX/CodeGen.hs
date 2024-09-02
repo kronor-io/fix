@@ -1417,8 +1417,7 @@ topLevelMessagesFile messageSpecs =
                 "import Data.ByteString (ByteString)",
                 "import Data.Validity",
                 "import Data.Void (Void)",
-                "import FIX.Core",
-                "import FIX.Fields.MsgType",
+                "import FIX.Fields",
                 "import FIX.Messages.Class",
                 "import FIX.Messages.Envelope",
                 "import GHC.Generics (Generic)",
@@ -1502,23 +1501,14 @@ topLevelMessagesFile messageSpecs =
                                       helperName = mkName "mp"
                                    in concat
                                         [ [ BindS
-                                              (VarP bsVarName)
-                                              ( AppE
-                                                  (VarE (mkName "fieldP"))
-                                                  (LitE (IntegerL 8))
-                                              ),
+                                              (ConP (mkName "SomeBeginString") [] [VarP bsVarName])
+                                              (VarE (mkName "anyFieldP")),
                                             BindS
-                                              (VarP blVarName)
-                                              ( AppE
-                                                  (VarE (mkName "fieldP"))
-                                                  (LitE (IntegerL 9))
-                                              ),
+                                              (ConP (mkName "SomeBodyLength") [] [VarP blVarName])
+                                              (VarE (mkName "anyFieldP")),
                                             BindS
-                                              (VarP typVarName)
-                                              ( AppE
-                                                  (VarE (mkName "fieldP"))
-                                                  (LitE (IntegerL 35))
-                                              ),
+                                              (ConP (mkName "SomeMsgType") [] [VarP typVarName])
+                                              (VarE (mkName "anyFieldP")),
                                             LetS
                                               [ SigD
                                                   helperName
