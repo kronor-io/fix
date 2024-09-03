@@ -93,7 +93,7 @@ fixEnvelopeBodyLength e =
   let bodyLength = computeBodyLength e
    in e {envelopeHeader = (envelopeHeader e) {headerBodyLength = bodyLength}}
 
-computeBodyLength :: (IsMessage a) => Envelope a -> BodyLength
+computeBodyLength :: (IsComponent a) => Envelope a -> BodyLength
 computeBodyLength Envelope {..} =
   let bytesBeforeBodyLength =
         computeFieldsLength
@@ -122,7 +122,7 @@ computeFieldsLength fields =
    in fromIntegral $ SB.length bytes
 
 fixEnvelopeCheckSum ::
-  (IsMessage a) =>
+  (IsComponent a) =>
   Envelope a ->
   Envelope a
 fixEnvelopeCheckSum e@Envelope {..} =
@@ -148,7 +148,23 @@ renderCheckSum = CheckSum . SimpleBytes . TE.encodeUtf8 . T.pack . printf "%03d"
 
 messageB :: (IsMessage a) => Header -> Trailer -> a -> ByteString.Builder
 messageB envelopeHeader envelopeTrailer envelopeContents =
-  foldMap anyFieldB $ toFields Envelope {..}
+  foldMap anyFieldB $ toFields $ fixEnvelopeCheckSum $ fixEnvelopeBodyLength Envelope {..}
 
 messageP :: (IsMessage a) => BeginString -> BodyLength -> MsgType -> Parsec Void ByteString (Envelope a)
-messageP = undefined
+messageP bs bl@(BodyLength l) typ = do
+  let msgTypeBytes = computeFieldsLength [packAnyField typ]
+      bytesFromCheckSum =
+        computeFieldsLength
+          [ packAnyField $ renderCheckSum 0
+          ]
+  let bytesToRead = l - msgTypeBytes + bytesFromCheckSum
+  bytes <- takeP (Just "octet") (fromIntegral bytesToRead)
+  restFields <- case parseAnyFields bytes of
+    Left err -> fail err
+    Right fields -> pure fields
+  let allFields = [SomeBeginString bs, SomeBodyLength bl, SomeMsgType typ] ++ restFields
+  case fromFields allFields of
+    Left err -> fail $ show err
+    Right e -> do
+      -- TODO check the checksum
+      pure e

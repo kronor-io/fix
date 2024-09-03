@@ -5,6 +5,7 @@ module FIX.AnyMessageSpec (spec) where
 import qualified Data.ByteString.Builder as Builder
 import qualified Data.ByteString.Lazy as LB
 import FIX.Messages
+import FIX.Messages.Envelope
 import FIX.Messages.Gen ()
 import Test.Syd
 import Test.Syd.Validity
@@ -23,4 +24,4 @@ spec = do
          in context (show rendered) $
               case Megaparsec.parse anyMessageP "<test>" rendered of
                 Left err -> expectationFailure $ errorBundlePretty err
-                Right anyMessage' -> anyMessage' `shouldBe` anyMessage
+                Right anyMessage' -> envelopeContents anyMessage' `shouldBe` envelopeContents anyMessage
