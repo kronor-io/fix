@@ -85,7 +85,8 @@ runFixCodeGen = do
                     genHaskellDataFile "fix-spec-gen/test/FIX/AnyMessageSpec.hs"
                   ],
             genHaskellDataFile "fix-spec-gen/test/Spec.hs",
-            testResourcesFiles
+            testResourcesFiles,
+            genHaskellDataFile "fix-spec/src/FIX/Conduit.hs"
           ]
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
