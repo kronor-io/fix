@@ -24,11 +24,13 @@ import FIX.Messages.Class
 import FIX.Messages.Envelope
 import FIX.Messages.Heartbeat as X
 import FIX.Messages.Logon as X
+import FIX.Messages.Logout as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 
 data AnyMessage
   = SomeHeartbeat !Heartbeat
+  | SomeLogout !Logout
   | SomeLogon !Logon
   deriving stock (Show, Eq, Generic)
 
@@ -37,6 +39,7 @@ instance Validity AnyMessage
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
 anyMessageB ((Envelope {..})) = case envelopeContents of
   SomeHeartbeat f -> messageB envelopeHeader envelopeTrailer f
+  SomeLogout f -> messageB envelopeHeader envelopeTrailer f
   SomeLogon f -> messageB envelopeHeader envelopeTrailer f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
@@ -51,6 +54,7 @@ anyMessageP = do
       mp = messageP bs bl typ
   case typ of
     MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp
+    MsgTypeLogout -> fmap SomeLogout <$> mp
     MsgTypeLogon -> fmap SomeLogon <$> mp
     _ -> fail ("Unknown message tag: " <> show typ)
 
@@ -62,6 +66,12 @@ instance IsAnyMessage Heartbeat where
   packAnyMessage = SomeHeartbeat
   unpackAnyMessage = \case
     SomeHeartbeat f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage Logout where
+  packAnyMessage = SomeLogout
+  unpackAnyMessage = \case
+    SomeLogout f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage Logon where

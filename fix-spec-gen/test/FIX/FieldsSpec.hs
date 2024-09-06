@@ -11,6 +11,7 @@ import FIX.Fields.CheckSum
 import FIX.Fields.DeliverToCompID
 import FIX.Fields.DeliverToLocationID
 import FIX.Fields.DeliverToSubID
+import FIX.Fields.EncodedText
 import FIX.Fields.EncryptMethod
 import FIX.Fields.Gen ()
 import FIX.Fields.HeartBtInt
@@ -48,6 +49,7 @@ import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.TestReqID
+import FIX.Fields.Text
 import FIX.Fields.Username
 import FIX.Fields.XmlData
 import Test.Syd
@@ -65,6 +67,7 @@ spec = do
   fieldSpec @SendingTime
   fieldSpec @TargetCompID
   fieldSpec @TargetSubID
+  fieldSpec @Text
   fieldSpec @Signature
   fieldSpec @SecureData
   fieldSpec @SignatureLength
@@ -85,6 +88,7 @@ spec = do
   fieldSpec @DeliverToLocationID
   fieldSpec @XmlData
   fieldSpec @MessageEncoding
+  fieldSpec @EncodedText
   fieldSpec @LastMsgSeqNumProcessed
   fieldSpec @RefMsgType
   fieldSpec @MaxMessageSize

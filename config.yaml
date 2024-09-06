@@ -6,7 +6,7 @@ messages:
   # - ResendRequest
   # - Reject
   # - SequenceReset
-  # - Logout
+  - Logout
   # # Business messages
   # - QuoteRequest
   # - News

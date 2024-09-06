@@ -19,6 +19,7 @@ library
       FIX.Fields.DeliverToCompID
       FIX.Fields.DeliverToLocationID
       FIX.Fields.DeliverToSubID
+      FIX.Fields.EncodedText
       FIX.Fields.EncryptMethod
       FIX.Fields.HeartBtInt
       FIX.Fields.HopCompID
@@ -55,6 +56,7 @@ library
       FIX.Fields.TargetSubID
       FIX.Fields.TestMessageIndicator
       FIX.Fields.TestReqID
+      FIX.Fields.Text
       FIX.Fields.Username
       FIX.Fields.XmlData
       FIX.Groups.Class
@@ -66,6 +68,7 @@ library
       FIX.Messages.Header
       FIX.Messages.Heartbeat
       FIX.Messages.Logon
+      FIX.Messages.Logout
       FIX.Messages.Trailer
   other-modules:
       Paths_fix_spec

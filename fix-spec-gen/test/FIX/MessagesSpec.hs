@@ -9,6 +9,7 @@ import FIX.Components.TestUtils
 import FIX.Messages.Gen ()
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
+import FIX.Messages.Logout
 import FIX.Messages.TestUtils
 import Test.Syd
 import Test.Syd.Validity
@@ -21,6 +22,13 @@ spec = do
         genValidSpec @Heartbeat
         componentSpec @Heartbeat
         messageSpec @Heartbeat "Heartbeat"
+    )
+  describe
+    "Logout"
+    ( do
+        genValidSpec @Logout
+        componentSpec @Logout
+        messageSpec @Logout "Logout"
     )
   describe
     "Logon"

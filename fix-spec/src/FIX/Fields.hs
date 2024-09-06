@@ -25,6 +25,7 @@ import FIX.Fields.CheckSum as X
 import FIX.Fields.DeliverToCompID as X
 import FIX.Fields.DeliverToLocationID as X
 import FIX.Fields.DeliverToSubID as X
+import FIX.Fields.EncodedText as X
 import FIX.Fields.EncryptMethod as X
 import FIX.Fields.HeartBtInt as X
 import FIX.Fields.HopCompID as X
@@ -61,6 +62,7 @@ import FIX.Fields.TargetLocationID as X
 import FIX.Fields.TargetSubID as X
 import FIX.Fields.TestMessageIndicator as X
 import FIX.Fields.TestReqID as X
+import FIX.Fields.Text as X
 import FIX.Fields.Username as X
 import FIX.Fields.XmlData as X
 import GHC.Generics (Generic)
@@ -79,6 +81,7 @@ data AnyField
   | SomeSendingTime !SendingTime
   | SomeTargetCompID !TargetCompID
   | SomeTargetSubID !TargetSubID
+  | SomeText !Text
   | SomeSignature !Signature
   | SomeSecureData !SecureData
   | SomeSignatureLength !SignatureLength
@@ -99,6 +102,7 @@ data AnyField
   | SomeDeliverToLocationID !DeliverToLocationID
   | SomeXmlData !XmlData
   | SomeMessageEncoding !MessageEncoding
+  | SomeEncodedText !EncodedText
   | SomeLastMsgSeqNumProcessed !LastMsgSeqNumProcessed
   | SomeRefMsgType !RefMsgType
   | SomeMaxMessageSize !MaxMessageSize
@@ -129,6 +133,7 @@ anyFieldB = \case
   SomeSendingTime f -> fieldB f
   SomeTargetCompID f -> fieldB f
   SomeTargetSubID f -> fieldB f
+  SomeText f -> fieldB f
   SomeSignature f -> fieldB f
   SomeSecureData f -> fieldB f
   SomeSignatureLength f -> fieldB f
@@ -149,6 +154,7 @@ anyFieldB = \case
   SomeDeliverToLocationID f -> fieldB f
   SomeXmlData f -> fieldB f
   SomeMessageEncoding f -> fieldB f
+  SomeEncodedText f -> fieldB f
   SomeLastMsgSeqNumProcessed f -> fieldB f
   SomeRefMsgType f -> fieldB f
   SomeMaxMessageSize f -> fieldB f
@@ -180,6 +186,7 @@ anyFieldP = do
     52 -> SomeSendingTime <$> fp
     56 -> SomeTargetCompID <$> fp
     57 -> SomeTargetSubID <$> fp
+    58 -> SomeText <$> fp
     88 -> SomeSignature <$> fp
     90 -> SomeSecureData <$> fp
     93 -> SomeSignatureLength <$> fp
@@ -200,6 +207,7 @@ anyFieldP = do
     145 -> SomeDeliverToLocationID <$> fp
     212 -> SomeXmlData <$> fp
     347 -> SomeMessageEncoding <$> fp
+    354 -> SomeEncodedText <$> fp
     369 -> SomeLastMsgSeqNumProcessed <$> fp
     372 -> SomeRefMsgType <$> fp
     383 -> SomeMaxMessageSize <$> fp
@@ -283,6 +291,12 @@ instance IsAnyField TargetSubID where
   packAnyField = SomeTargetSubID
   unpackAnyField = \case
     SomeTargetSubID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Text where
+  packAnyField = SomeText
+  unpackAnyField = \case
+    SomeText f -> Just f
     _ -> Nothing
 
 instance IsAnyField Signature where
@@ -403,6 +417,12 @@ instance IsAnyField MessageEncoding where
   packAnyField = SomeMessageEncoding
   unpackAnyField = \case
     SomeMessageEncoding f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EncodedText where
+  packAnyField = SomeEncodedText
+  unpackAnyField = \case
+    SomeEncodedText f -> Just f
     _ -> Nothing
 
 instance IsAnyField LastMsgSeqNumProcessed where
