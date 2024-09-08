@@ -11,6 +11,26 @@ import FIX.Messages
 import FIX.Messages.Envelope
 import Text.Megaparsec as Megaparsec
 
+-- | Make a FIX application from a conduit
+--
+-- TODO handle:
+-- * Wrapping and unwrapping envelopes
+-- * Heartbeat
+--
+-- Idea: We might need to wrap the inner conduit in channels for this to
+-- work nicely.
+fixConduitApp ::
+  (PrimMonad m) =>
+  ConduitT (Envelope AnyMessage) (Envelope AnyMessage) m () ->
+  ConduitT ByteString ByteString m ()
+fixConduitApp appFunc =
+  anyMessageSource
+    .| C.concat
+    .| go
+    .| anyMessageSink
+  where
+    go = appFunc
+
 anyMessageSource ::
   forall m.
   (Monad m) =>
