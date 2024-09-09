@@ -1,4 +1,4 @@
-name: fix-spec
+name: fix-app
 version: 0.0.0.0
 
 dependencies:
@@ -9,12 +9,10 @@ library:
   dependencies:
   - bytestring
   - conduit
-  - dlist
-  - fix-core
+  - conduit-extra
+  - fix-spec
   - megaparsec
-  - mtl
-  - stm
+  - network
   - stm-chans
   - stm-conduit
-  - text
-  - validity
+  - unliftio

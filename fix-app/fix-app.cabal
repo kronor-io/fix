@@ -4,28 +4,26 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           fix-spec
+name:           fix-app
 version:        0.0.0.0
 build-type:     Simple
 
 library
   exposed-modules:
-      FIX.Components.Class
-      FIX.Groups.Class
-      FIX.Messages.Class
-      FIX.Messages.Envelope
+      FIX.Conduit
   other-modules:
-      Paths_fix_spec
+      Paths_fix_app
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
     , bytestring
     , conduit
-    , dlist
-    , fix-core
+    , conduit-extra
+    , fix-spec
     , megaparsec
-    , mtl
-    , text
-    , validity
+    , network
+    , stm-chans
+    , stm-conduit
+    , unliftio
   default-language: Haskell2010

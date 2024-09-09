@@ -26,7 +26,6 @@ data-files:
     data/fix-spec/fix-spec.cabal
     data/fix-spec/package.yaml
     data/fix-spec/src/FIX/Components/Class.hs
-    data/fix-spec/src/FIX/Conduit.hs
     data/fix-spec/src/FIX/Groups/Class.hs
     data/fix-spec/src/FIX/Messages/Class.hs
     data/fix-spec/src/FIX/Messages/Envelope.hs

@@ -5,6 +5,7 @@ packages:
 - fix-core-gen
 - fix-spec
 - fix-spec-gen
+- fix-app
 
 extra-deps:
 - github: NorfairKing/sydtest
