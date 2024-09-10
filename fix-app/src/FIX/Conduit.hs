@@ -1,5 +1,6 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
@@ -12,11 +13,13 @@ import Data.ByteString (ByteString)
 import qualified Data.Conduit.Combinators as C
 import Data.Conduit.Network
 import Data.Conduit.TQueue
+import FIX.Fields.CheckSum
 import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
 import FIX.Messages
 import FIX.Messages.Envelope
 import FIX.Messages.Header
+import FIX.Messages.Trailer
 import Network.Socket as Network
 import System.Exit
 import Text.Megaparsec as Megaparsec
@@ -53,7 +56,7 @@ runFIXApp sock headerPrototype userAppFunc = do
             sourceSocket sock
               .| anyMessageSource
               .| C.mapM
-                ( \errOrMsg -> case errOrMsg of
+                ( \case
                     Left err ->
                       die $
                         unlines
@@ -112,8 +115,10 @@ runFIXApp sock headerPrototype userAppFunc = do
   where
     systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 0)
       where
+        -- Pass in the "next" message sequence number to use when sending a
+        -- message or to expect when receiving a message.
         go :: MsgSeqNum -> m ()
-        go seqNum = do
+        go nextSeqNum = do
           inOrOut <-
             atomically $
               (Left <$> awaitOutsideMessage)
@@ -123,30 +128,38 @@ runFIXApp sock headerPrototype userAppFunc = do
               let anyMessageType :: AnyMessage -> MsgType
                   anyMessageType = undefined -- TODO: Generate this function
               let msgType = anyMessageType msgOut
-              let header = headerPrototype {headerMsgType = msgType}
+              let header =
+                    headerPrototype
+                      { headerMsgSeqNum = nextSeqNum,
+                        headerMsgType = msgType
+                      }
               let envelopeOut =
-                    fixEnvelopeCheckSum $
-                      fixEnvelopeBodyLength $
-                        Envelope
-                          { envelopeHeader = header,
-                            envelopeContents = msgOut
-                          }
+                    Envelope
+                      { envelopeHeader = header,
+                        envelopeContents = msgOut,
+                        envelopeTrailer =
+                          -- Empty trailer
+                          -- checksum will be fixed my by messageB
+                          Trailer
+                            { trailerSignatureLength = Nothing,
+                              trailerSignature = Nothing,
+                              trailerCheckSum = renderCheckSum 0
+                            }
+                      }
               sendMessageOut envelopeOut
-          -- Left msgIn -> do
-          --   passMessageToApp msgIn
-          undefined
-
---   sendingChan <- liftIO newChan
---   receivingChan <- liftIO newChan
---   let sendingFunc = liftIO . writeChan sendingChan
---   let receivingFunc = liftIO $ readChan receivingChan
---   let userApp = appFunc sendingFunc receivingFunc
---   let passMessage = liftIO . writeChan receivingChan
---   let sendMessage = liftIO $ readChan sendingChan
---   appWrapper userApp passMessage waitForMessage
---   where
---     appWrapper userApp passMessageToApp waitForMessageFromApp = do
---       pure ()
+              go (incrementMsgSeqNum nextSeqNum)
+            Left mMsgIn -> do
+              case mMsgIn of
+                Nothing -> error "Connection was broken early."
+                Just msgIn -> do
+                  -- TODO check msgSeqNum here
+                  let contents = envelopeContents msgIn
+                  -- TODO handle system messages here
+                  case contents of
+                    SomeLogout _ -> pure () -- Done
+                    _ -> do
+                      passMessageToApp contents
+                      go (incrementMsgSeqNum nextSeqNum)
 
 anyMessageSource ::
   forall m.

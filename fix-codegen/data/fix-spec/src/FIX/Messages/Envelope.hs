@@ -146,6 +146,9 @@ computeCheckSum fields =
 renderCheckSum :: Word8 -> CheckSum
 renderCheckSum = CheckSum . SimpleBytes . TE.encodeUtf8 . T.pack . printf "%03d"
 
+incrementMsgSeqNum :: MsgSeqNum -> MsgSeqNum
+incrementMsgSeqNum (MsgSeqNum w) = MsgSeqNum (succ w)
+
 messageB :: (IsMessage a) => Header -> Trailer -> a -> ByteString.Builder
 messageB envelopeHeader envelopeTrailer envelopeContents =
   foldMap anyFieldB $ toFields $ fixEnvelopeCheckSum $ fixEnvelopeBodyLength Envelope {..}
