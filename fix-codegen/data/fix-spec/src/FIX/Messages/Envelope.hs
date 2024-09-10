@@ -88,7 +88,7 @@ renderAnyFields :: [AnyField] -> ByteString
 renderAnyFields = LB.toStrict . Builder.toLazyByteString . foldMap anyFieldB
 
 -- Has to happen _before_ fixEnvelopeCheckSum
-fixEnvelopeBodyLength :: (IsMessage a) => Envelope a -> Envelope a
+fixEnvelopeBodyLength :: (IsComponent a) => Envelope a -> Envelope a
 fixEnvelopeBodyLength e =
   let bodyLength = computeBodyLength e
    in e {envelopeHeader = (envelopeHeader e) {headerBodyLength = bodyLength}}

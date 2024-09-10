@@ -13,8 +13,5 @@ library:
   - fix-core
   - megaparsec
   - mtl
-  - stm
-  - stm-chans
-  - stm-conduit
   - text
   - validity
