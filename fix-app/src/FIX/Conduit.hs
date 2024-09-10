@@ -4,18 +4,20 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module FIX.Conduit where
+module FIX.Conduit
+  ( FixHandle (..),
+    runFIXApp,
+  )
+where
 
 import Conduit
-import Control.Concurrent.Chan
 import Control.Concurrent.STM.TBMQueue
 import Data.ByteString (ByteString)
 import qualified Data.Conduit.Combinators as C
 import Data.Conduit.Network
 import Data.Conduit.TQueue
-import FIX.Fields.CheckSum
+import Debug.Trace
 import FIX.Fields.MsgSeqNum
-import FIX.Fields.MsgType
 import FIX.Messages
 import FIX.Messages.Envelope
 import FIX.Messages.Header
@@ -50,7 +52,8 @@ runFIXApp ::
 runFIXApp sock headerPrototype userAppFunc = do
   -- Receive one message at a time
   receivingQueue <- liftIO $ newTBMQueueIO 1
-  let receiver =
+  let receiver = do
+        traceM "Receiver starting."
         liftIO $
           runConduit $
             sourceSocket sock
@@ -66,45 +69,57 @@ runFIXApp sock headerPrototype userAppFunc = do
                     Right am -> pure am
                 )
               .| sinkTBMQueue receivingQueue
+        traceM "Receiver done."
       awaitOutsideMessage :: STM (Maybe (Envelope AnyMessage))
       awaitOutsideMessage = readTBMQueue receivingQueue
 
   -- Send one message at a time
   sendingQueue <- liftIO $ newTBMQueueIO 1
-  let sender =
+  let sender = do
+        traceM "Sender starting."
         liftIO $
           runConduit $
             sourceTBMQueue sendingQueue
               .| anyMessageSink
               .| sinkSocket sock
+        traceM "Sender done."
       sendMessageOut :: Envelope AnyMessage -> m ()
       sendMessageOut = atomically . writeTBMQueue sendingQueue
 
-  -- Concurrently because the receiver stops when the socket is closed and the
-  -- sender stops when the queue is closed by the system handler.
-  let interacter = concurrently_ receiver sender
+  -- We use race_ because the receiver will not stop if the socket stays open.
+  -- The sender can also stop early in case the socket is closed early, but in
+  -- that case we want the receiver to stop anyway.
+  let interacter = race_ receiver sender
 
   appInputQueue <- newTBQueueIO 1
   let passMessageToApp :: AnyMessage -> m ()
       passMessageToApp = atomically . writeTBQueue appInputQueue
       awaitMessage :: m AnyMessage
       awaitMessage = atomically $ readTBQueue appInputQueue
-  appOutputQueue <- newTBQueueIO 1
+  appOutputQueue <- liftIO $ newTBMQueueIO 1
   let sendMessage :: AnyMessage -> m ()
-      sendMessage = atomically . writeTBQueue appOutputQueue
-      readMessageFromApp :: STM AnyMessage
-      readMessageFromApp = readTBQueue appOutputQueue
+      sendMessage = atomically . writeTBMQueue appOutputQueue
+      readMessageFromApp :: STM (Maybe AnyMessage)
+      readMessageFromApp = readTBMQueue appOutputQueue
   let fixHandle = FixHandle {..}
   let userAppThread :: m ()
-      userAppThread = userAppFunc fixHandle
+      userAppThread = do
+        traceM "User app starting."
+        userAppFunc fixHandle
+        atomically $ closeTBMQueue appOutputQueue
+        traceM "User app done."
 
   let systemHandlerThread :: m ()
-      systemHandlerThread =
+      systemHandlerThread = do
+        traceM "System handler starting."
         systemHandler
           awaitOutsideMessage
           passMessageToApp
           readMessageFromApp
           sendMessageOut
+        atomically $ closeTBMQueue receivingQueue
+        atomically $ closeTBMQueue sendingQueue
+        traceM "System handler done."
 
   -- Concurently because the interacter stops (eventually) when the system
   -- handler is done.
@@ -112,7 +127,14 @@ runFIXApp sock headerPrototype userAppFunc = do
       systemThreads = concurrently_ interacter systemHandlerThread
 
   concurrently_ systemThreads userAppThread
+    `finally` liftIO (Network.close sock)
   where
+    systemHandler ::
+      STM (Maybe (Envelope AnyMessage)) ->
+      (AnyMessage -> m ()) ->
+      STM (Maybe AnyMessage) ->
+      (Envelope AnyMessage -> m ()) ->
+      m ()
     systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 0)
       where
         -- Pass in the "next" message sequence number to use when sending a
@@ -124,7 +146,9 @@ runFIXApp sock headerPrototype userAppFunc = do
               (Left <$> awaitOutsideMessage)
                 `orElse` (Right <$> readMessageFromApp)
           case inOrOut of
-            Right msgOut -> do
+            Right Nothing -> do
+              traceM "App finished early, without receiving a logout message."
+            Right (Just msgOut) -> do
               let msgType = anyMessageType msgOut
               let header =
                     headerPrototype
