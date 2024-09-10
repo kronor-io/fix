@@ -13,6 +13,8 @@ where
 import Conduit
 import Control.Concurrent.STM.TBMQueue
 import Data.ByteString (ByteString)
+import qualified Data.ByteString.Builder as BB
+import qualified Data.ByteString.Lazy as LB
 import qualified Data.Conduit.Combinators as C
 import Data.Conduit.Network
 import Data.Conduit.TQueue
@@ -84,7 +86,10 @@ runFIXApp sock headerPrototype userAppFunc = do
               .| sinkSocket sock
         traceM "Sender done."
       sendMessageOut :: Envelope AnyMessage -> m ()
-      sendMessageOut = atomically . writeTBMQueue sendingQueue
+      sendMessageOut eam = do
+        traceM "Enqueueing message to send out."
+        atomically $ writeTBMQueue sendingQueue eam
+        traceM "Enqueued message to send out."
 
   -- We use race_ because the receiver will not stop if the socket stays open.
   -- The sender can also stop early in case the socket is closed early, but in
@@ -135,7 +140,7 @@ runFIXApp sock headerPrototype userAppFunc = do
       STM (Maybe AnyMessage) ->
       (Envelope AnyMessage -> m ()) ->
       m ()
-    systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 0)
+    systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1)
       where
         -- Pass in the "next" message sequence number to use when sending a
         -- message or to expect when receiving a message.
@@ -149,6 +154,7 @@ runFIXApp sock headerPrototype userAppFunc = do
             Right Nothing -> do
               traceM "App finished early, without receiving a logout message."
             Right (Just msgOut) -> do
+              traceM "Got a message from the user app to send out."
               let msgType = anyMessageType msgOut
               let header =
                     headerPrototype
@@ -174,13 +180,17 @@ runFIXApp sock headerPrototype userAppFunc = do
               case mMsgIn of
                 Nothing -> error "Connection was broken early."
                 Just msgIn -> do
+                  traceM "Got a message from the connection to send to the app."
                   -- TODO check msgSeqNum here
                   let contents = envelopeContents msgIn
+                  let pass = passMessageToApp contents
                   -- TODO handle system messages here
                   case contents of
-                    SomeLogout _ -> pure () -- Done
+                    SomeLogout _ -> do
+                      pass
+                      pure () -- Done
                     _ -> do
-                      passMessageToApp contents
+                      pass
                       go (incrementMsgSeqNum nextSeqNum)
 
 anyMessageSource ::
@@ -227,4 +237,7 @@ anyMessageSource = go initialState
           go afterState
 
 anyMessageSink :: (PrimMonad m) => ConduitT (Envelope AnyMessage) ByteString m ()
-anyMessageSink = C.map anyMessageB .| builderToByteString
+anyMessageSink =
+  C.map anyMessageB
+    .| C.map BB.toLazyByteString
+    .| C.map LB.toStrict
