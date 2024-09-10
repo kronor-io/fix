@@ -5,100 +5,618 @@
 module FIX.FieldsSpec where
 
 import FIX.Core.TestUtils
+import FIX.Fields.Account
+import FIX.Fields.AccountType
+import FIX.Fields.AcctIDSource
+import FIX.Fields.AgreementCurrency
+import FIX.Fields.AgreementDate
+import FIX.Fields.AgreementDesc
+import FIX.Fields.AgreementID
 import FIX.Fields.BeginString
+import FIX.Fields.BenchmarkCurveCurrency
+import FIX.Fields.BenchmarkCurveName
+import FIX.Fields.BenchmarkCurvePoint
+import FIX.Fields.BenchmarkPrice
+import FIX.Fields.BenchmarkPriceType
+import FIX.Fields.BenchmarkSecurityID
+import FIX.Fields.BenchmarkSecurityIDSource
+import FIX.Fields.BidForwardPoints
+import FIX.Fields.BidForwardPoints2
+import FIX.Fields.BidPx
+import FIX.Fields.BidSize
+import FIX.Fields.BidSpotRate
+import FIX.Fields.BidYield
 import FIX.Fields.BodyLength
+import FIX.Fields.CFICode
+import FIX.Fields.CPProgram
+import FIX.Fields.CPRegType
+import FIX.Fields.CashOrderQty
 import FIX.Fields.CheckSum
+import FIX.Fields.ClOrdID
+import FIX.Fields.CommType
+import FIX.Fields.Commission
+import FIX.Fields.ContractMultiplier
+import FIX.Fields.ContractSettlMonth
+import FIX.Fields.CountryOfIssue
+import FIX.Fields.CouponPaymentDate
+import FIX.Fields.CouponRate
+import FIX.Fields.CreditRating
+import FIX.Fields.Currency
+import FIX.Fields.CustOrderCapacity
+import FIX.Fields.DatedDate
 import FIX.Fields.DeliverToCompID
 import FIX.Fields.DeliverToLocationID
 import FIX.Fields.DeliverToSubID
+import FIX.Fields.DeliveryType
+import FIX.Fields.EncodedIssuer
+import FIX.Fields.EncodedLegIssuer
+import FIX.Fields.EncodedLegSecurityDesc
+import FIX.Fields.EncodedSecurityDesc
 import FIX.Fields.EncodedText
+import FIX.Fields.EncodedUnderlyingIssuer
+import FIX.Fields.EncodedUnderlyingSecurityDesc
 import FIX.Fields.EncryptMethod
+import FIX.Fields.EndDate
+import FIX.Fields.EventDate
+import FIX.Fields.EventPx
+import FIX.Fields.EventText
+import FIX.Fields.EventType
+import FIX.Fields.ExDestination
+import FIX.Fields.ExpireTime
+import FIX.Fields.Factor
 import FIX.Fields.Gen ()
 import FIX.Fields.HeartBtInt
 import FIX.Fields.HopCompID
 import FIX.Fields.HopRefID
 import FIX.Fields.HopSendingTime
+import FIX.Fields.InstrRegistry
+import FIX.Fields.InterestAccrualDate
+import FIX.Fields.IssueDate
+import FIX.Fields.Issuer
 import FIX.Fields.LastMsgSeqNumProcessed
+import FIX.Fields.LegBenchmarkCurveCurrency
+import FIX.Fields.LegBenchmarkCurveName
+import FIX.Fields.LegBenchmarkCurvePoint
+import FIX.Fields.LegBenchmarkPrice
+import FIX.Fields.LegBenchmarkPriceType
+import FIX.Fields.LegBidPx
+import FIX.Fields.LegCFICode
+import FIX.Fields.LegContractMultiplier
+import FIX.Fields.LegContractSettlMonth
+import FIX.Fields.LegCountryOfIssue
+import FIX.Fields.LegCouponPaymentDate
+import FIX.Fields.LegCouponRate
+import FIX.Fields.LegCreditRating
+import FIX.Fields.LegCurrency
+import FIX.Fields.LegDatedDate
+import FIX.Fields.LegFactor
+import FIX.Fields.LegInstrRegistry
+import FIX.Fields.LegInterestAccrualDate
+import FIX.Fields.LegIssueDate
+import FIX.Fields.LegIssuer
+import FIX.Fields.LegLocaleOfIssue
+import FIX.Fields.LegMaturityDate
+import FIX.Fields.LegMaturityMonthYear
+import FIX.Fields.LegOfferPx
+import FIX.Fields.LegOptAttribute
+import FIX.Fields.LegPool
+import FIX.Fields.LegPriceType
+import FIX.Fields.LegProduct
+import FIX.Fields.LegQty
+import FIX.Fields.LegRatioQty
+import FIX.Fields.LegRedemptionDate
+import FIX.Fields.LegRepoCollateralSecurityType
+import FIX.Fields.LegRepurchaseRate
+import FIX.Fields.LegRepurchaseTerm
+import FIX.Fields.LegSecurityAltID
+import FIX.Fields.LegSecurityAltIDSource
+import FIX.Fields.LegSecurityDesc
+import FIX.Fields.LegSecurityExchange
+import FIX.Fields.LegSecurityID
+import FIX.Fields.LegSecurityIDSource
+import FIX.Fields.LegSecuritySubType
+import FIX.Fields.LegSecurityType
+import FIX.Fields.LegSettlDate
+import FIX.Fields.LegSettlType
+import FIX.Fields.LegSide
+import FIX.Fields.LegStateOrProvinceOfIssue
+import FIX.Fields.LegStipulationType
+import FIX.Fields.LegStipulationValue
+import FIX.Fields.LegStrikeCurrency
+import FIX.Fields.LegStrikePrice
+import FIX.Fields.LegSwapType
+import FIX.Fields.LegSymbol
+import FIX.Fields.LegSymbolSfx
+import FIX.Fields.LocaleOfIssue
+import FIX.Fields.MarginRatio
+import FIX.Fields.MaturityDate
+import FIX.Fields.MaturityMonthYear
 import FIX.Fields.MaxMessageSize
 import FIX.Fields.MessageEncoding
+import FIX.Fields.MidPx
+import FIX.Fields.MidYield
+import FIX.Fields.MinBidSize
+import FIX.Fields.MinOfferSize
+import FIX.Fields.MktBidPx
+import FIX.Fields.MktOfferPx
 import FIX.Fields.MsgDirection
 import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
+import FIX.Fields.NestedPartyID
+import FIX.Fields.NestedPartyIDSource
+import FIX.Fields.NestedPartyRole
+import FIX.Fields.NestedPartySubID
+import FIX.Fields.NestedPartySubIDType
 import FIX.Fields.NextExpectedMsgSeqNum
+import FIX.Fields.NoEvents
 import FIX.Fields.NoHops
+import FIX.Fields.NoLegSecurityAltID
+import FIX.Fields.NoLegStipulations
+import FIX.Fields.NoLegs
 import FIX.Fields.NoMsgTypes
+import FIX.Fields.NoNestedPartyIDs
+import FIX.Fields.NoNestedPartySubIDs
+import FIX.Fields.NoPartyIDs
+import FIX.Fields.NoPartySubIDs
+import FIX.Fields.NoQuoteQualifiers
+import FIX.Fields.NoRelatedSym
+import FIX.Fields.NoSecurityAltID
+import FIX.Fields.NoStipulations
+import FIX.Fields.NoUnderlyingSecurityAltID
+import FIX.Fields.NoUnderlyingStips
+import FIX.Fields.NoUnderlyings
+import FIX.Fields.OfferForwardPoints
+import FIX.Fields.OfferForwardPoints2
+import FIX.Fields.OfferPx
+import FIX.Fields.OfferSize
+import FIX.Fields.OfferSpotRate
+import FIX.Fields.OfferYield
 import FIX.Fields.OnBehalfOfCompID
 import FIX.Fields.OnBehalfOfLocationID
 import FIX.Fields.OnBehalfOfSubID
+import FIX.Fields.OptAttribute
+import FIX.Fields.OrdType
+import FIX.Fields.OrderCapacity
+import FIX.Fields.OrderPercent
+import FIX.Fields.OrderQty
+import FIX.Fields.OrderQty2
 import FIX.Fields.OrigSendingTime
+import FIX.Fields.PartyID
+import FIX.Fields.PartyIDSource
+import FIX.Fields.PartyRole
+import FIX.Fields.PartySubID
+import FIX.Fields.PartySubIDType
 import FIX.Fields.Password
+import FIX.Fields.Pool
 import FIX.Fields.PossDupFlag
 import FIX.Fields.PossResend
+import FIX.Fields.PrevClosePx
+import FIX.Fields.Price
+import FIX.Fields.Price2
+import FIX.Fields.PriceType
+import FIX.Fields.Product
+import FIX.Fields.PutOrCall
+import FIX.Fields.QtyType
+import FIX.Fields.QuoteID
+import FIX.Fields.QuotePriceType
+import FIX.Fields.QuoteQualifier
+import FIX.Fields.QuoteReqID
+import FIX.Fields.QuoteRequestType
+import FIX.Fields.QuoteRespID
+import FIX.Fields.QuoteResponseLevel
+import FIX.Fields.QuoteType
+import FIX.Fields.RFQReqID
 import FIX.Fields.RawData
+import FIX.Fields.RedemptionDate
 import FIX.Fields.RefMsgType
+import FIX.Fields.RepoCollateralSecurityType
+import FIX.Fields.RepurchaseRate
+import FIX.Fields.RepurchaseTerm
 import FIX.Fields.ResetSeqNumFlag
+import FIX.Fields.RoundingDirection
+import FIX.Fields.RoundingModulus
 import FIX.Fields.SecureData
+import FIX.Fields.SecurityAltID
+import FIX.Fields.SecurityAltIDSource
+import FIX.Fields.SecurityDesc
+import FIX.Fields.SecurityExchange
+import FIX.Fields.SecurityID
+import FIX.Fields.SecurityIDSource
+import FIX.Fields.SecuritySubType
+import FIX.Fields.SecurityType
 import FIX.Fields.SenderCompID
 import FIX.Fields.SenderLocationID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
+import FIX.Fields.SettlCurrBidFxRate
+import FIX.Fields.SettlCurrFxRateCalc
+import FIX.Fields.SettlCurrOfferFxRate
+import FIX.Fields.SettlDate
+import FIX.Fields.SettlDate2
+import FIX.Fields.SettlType
+import FIX.Fields.Side
 import FIX.Fields.Signature
 import FIX.Fields.SignatureLength
+import FIX.Fields.Spread
+import FIX.Fields.StartDate
+import FIX.Fields.StateOrProvinceOfIssue
+import FIX.Fields.StipulationType
+import FIX.Fields.StipulationValue
+import FIX.Fields.StrikeCurrency
+import FIX.Fields.StrikePrice
+import FIX.Fields.Symbol
+import FIX.Fields.SymbolSfx
 import FIX.Fields.TargetCompID
 import FIX.Fields.TargetLocationID
 import FIX.Fields.TargetSubID
+import FIX.Fields.TerminationType
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
+import FIX.Fields.TradeOriginationDate
+import FIX.Fields.TradingSessionID
+import FIX.Fields.TradingSessionSubID
+import FIX.Fields.TransactTime
+import FIX.Fields.UnderlyingCFICode
+import FIX.Fields.UnderlyingCPProgram
+import FIX.Fields.UnderlyingCPRegType
+import FIX.Fields.UnderlyingContractMultiplier
+import FIX.Fields.UnderlyingCountryOfIssue
+import FIX.Fields.UnderlyingCouponPaymentDate
+import FIX.Fields.UnderlyingCouponRate
+import FIX.Fields.UnderlyingCreditRating
+import FIX.Fields.UnderlyingCurrency
+import FIX.Fields.UnderlyingCurrentValue
+import FIX.Fields.UnderlyingDirtyPrice
+import FIX.Fields.UnderlyingEndPrice
+import FIX.Fields.UnderlyingEndValue
+import FIX.Fields.UnderlyingFactor
+import FIX.Fields.UnderlyingInstrRegistry
+import FIX.Fields.UnderlyingIssueDate
+import FIX.Fields.UnderlyingIssuer
+import FIX.Fields.UnderlyingLocaleOfIssue
+import FIX.Fields.UnderlyingMaturityDate
+import FIX.Fields.UnderlyingMaturityMonthYear
+import FIX.Fields.UnderlyingOptAttribute
+import FIX.Fields.UnderlyingProduct
+import FIX.Fields.UnderlyingPutOrCall
+import FIX.Fields.UnderlyingPx
+import FIX.Fields.UnderlyingQty
+import FIX.Fields.UnderlyingRedemptionDate
+import FIX.Fields.UnderlyingRepoCollateralSecurityType
+import FIX.Fields.UnderlyingRepurchaseRate
+import FIX.Fields.UnderlyingRepurchaseTerm
+import FIX.Fields.UnderlyingSecurityAltID
+import FIX.Fields.UnderlyingSecurityAltIDSource
+import FIX.Fields.UnderlyingSecurityDesc
+import FIX.Fields.UnderlyingSecurityExchange
+import FIX.Fields.UnderlyingSecurityID
+import FIX.Fields.UnderlyingSecurityIDSource
+import FIX.Fields.UnderlyingSecuritySubType
+import FIX.Fields.UnderlyingSecurityType
+import FIX.Fields.UnderlyingStartValue
+import FIX.Fields.UnderlyingStateOrProvinceOfIssue
+import FIX.Fields.UnderlyingStipType
+import FIX.Fields.UnderlyingStipValue
+import FIX.Fields.UnderlyingStrikeCurrency
+import FIX.Fields.UnderlyingStrikePrice
+import FIX.Fields.UnderlyingSymbol
+import FIX.Fields.UnderlyingSymbolSfx
 import FIX.Fields.Username
+import FIX.Fields.ValidUntilTime
 import FIX.Fields.XmlData
+import FIX.Fields.Yield
+import FIX.Fields.YieldCalcDate
+import FIX.Fields.YieldRedemptionDate
+import FIX.Fields.YieldRedemptionPrice
+import FIX.Fields.YieldRedemptionPriceType
+import FIX.Fields.YieldType
 import Test.Syd
 
 spec :: Spec
 spec = do
+  fieldSpec @Account
   fieldSpec @BeginString
   fieldSpec @BodyLength
   fieldSpec @CheckSum
+  fieldSpec @ClOrdID
+  fieldSpec @Commission
+  fieldSpec @CommType
+  fieldSpec @Currency
+  fieldSpec @SecurityIDSource
   fieldSpec @MsgSeqNum
   fieldSpec @MsgType
+  fieldSpec @OrderQty
+  fieldSpec @OrdType
   fieldSpec @PossDupFlag
+  fieldSpec @Price
+  fieldSpec @SecurityID
   fieldSpec @SenderCompID
   fieldSpec @SenderSubID
   fieldSpec @SendingTime
+  fieldSpec @Side
+  fieldSpec @Symbol
   fieldSpec @TargetCompID
   fieldSpec @TargetSubID
   fieldSpec @Text
+  fieldSpec @TransactTime
+  fieldSpec @ValidUntilTime
+  fieldSpec @SettlType
+  fieldSpec @SettlDate
+  fieldSpec @SymbolSfx
   fieldSpec @Signature
   fieldSpec @SecureData
   fieldSpec @SignatureLength
   fieldSpec @RawData
   fieldSpec @PossResend
   fieldSpec @EncryptMethod
+  fieldSpec @ExDestination
+  fieldSpec @Issuer
+  fieldSpec @SecurityDesc
   fieldSpec @HeartBtInt
   fieldSpec @TestReqID
   fieldSpec @OnBehalfOfCompID
   fieldSpec @OnBehalfOfSubID
+  fieldSpec @QuoteID
   fieldSpec @OrigSendingTime
+  fieldSpec @ExpireTime
   fieldSpec @DeliverToCompID
   fieldSpec @DeliverToSubID
+  fieldSpec @QuoteReqID
+  fieldSpec @BidPx
+  fieldSpec @OfferPx
+  fieldSpec @BidSize
+  fieldSpec @OfferSize
+  fieldSpec @PrevClosePx
   fieldSpec @ResetSeqNumFlag
   fieldSpec @SenderLocationID
   fieldSpec @TargetLocationID
   fieldSpec @OnBehalfOfLocationID
   fieldSpec @DeliverToLocationID
+  fieldSpec @NoRelatedSym
+  fieldSpec @CashOrderQty
+  fieldSpec @SettlCurrFxRateCalc
+  fieldSpec @SecurityType
+  fieldSpec @BidSpotRate
+  fieldSpec @BidForwardPoints
+  fieldSpec @OfferSpotRate
+  fieldSpec @OfferForwardPoints
+  fieldSpec @OrderQty2
+  fieldSpec @SettlDate2
+  fieldSpec @MaturityMonthYear
+  fieldSpec @PutOrCall
+  fieldSpec @StrikePrice
+  fieldSpec @OptAttribute
+  fieldSpec @SecurityExchange
   fieldSpec @XmlData
+  fieldSpec @Spread
+  fieldSpec @BenchmarkCurveCurrency
+  fieldSpec @BenchmarkCurveName
+  fieldSpec @BenchmarkCurvePoint
+  fieldSpec @CouponRate
+  fieldSpec @CouponPaymentDate
+  fieldSpec @IssueDate
+  fieldSpec @RepurchaseTerm
+  fieldSpec @RepurchaseRate
+  fieldSpec @Factor
+  fieldSpec @TradeOriginationDate
+  fieldSpec @ContractMultiplier
+  fieldSpec @NoStipulations
+  fieldSpec @StipulationType
+  fieldSpec @StipulationValue
+  fieldSpec @YieldType
+  fieldSpec @Yield
+  fieldSpec @RepoCollateralSecurityType
+  fieldSpec @RedemptionDate
+  fieldSpec @UnderlyingCouponPaymentDate
+  fieldSpec @UnderlyingIssueDate
+  fieldSpec @UnderlyingRepoCollateralSecurityType
+  fieldSpec @UnderlyingRepurchaseTerm
+  fieldSpec @UnderlyingRepurchaseRate
+  fieldSpec @UnderlyingFactor
+  fieldSpec @UnderlyingRedemptionDate
+  fieldSpec @LegCouponPaymentDate
+  fieldSpec @LegIssueDate
+  fieldSpec @LegRepoCollateralSecurityType
+  fieldSpec @LegRepurchaseTerm
+  fieldSpec @LegRepurchaseRate
+  fieldSpec @LegFactor
+  fieldSpec @LegRedemptionDate
+  fieldSpec @CreditRating
+  fieldSpec @UnderlyingCreditRating
+  fieldSpec @LegCreditRating
+  fieldSpec @QuoteResponseLevel
+  fieldSpec @QuoteRequestType
+  fieldSpec @UnderlyingSecurityIDSource
+  fieldSpec @UnderlyingIssuer
+  fieldSpec @UnderlyingSecurityDesc
+  fieldSpec @UnderlyingSecurityExchange
+  fieldSpec @UnderlyingSecurityID
+  fieldSpec @UnderlyingSecurityType
+  fieldSpec @UnderlyingSymbol
+  fieldSpec @UnderlyingSymbolSfx
+  fieldSpec @UnderlyingMaturityMonthYear
+  fieldSpec @UnderlyingPutOrCall
+  fieldSpec @UnderlyingStrikePrice
+  fieldSpec @UnderlyingOptAttribute
+  fieldSpec @UnderlyingCurrency
+  fieldSpec @TradingSessionID
   fieldSpec @MessageEncoding
+  fieldSpec @EncodedIssuer
+  fieldSpec @EncodedSecurityDesc
   fieldSpec @EncodedText
+  fieldSpec @EncodedUnderlyingIssuer
+  fieldSpec @EncodedUnderlyingSecurityDesc
   fieldSpec @LastMsgSeqNumProcessed
   fieldSpec @RefMsgType
   fieldSpec @MaxMessageSize
   fieldSpec @NoMsgTypes
   fieldSpec @MsgDirection
+  fieldSpec @PriceType
+  fieldSpec @UnderlyingCouponRate
+  fieldSpec @UnderlyingContractMultiplier
+  fieldSpec @PartyIDSource
+  fieldSpec @PartyID
+  fieldSpec @PartyRole
+  fieldSpec @NoPartyIDs
+  fieldSpec @NoSecurityAltID
+  fieldSpec @SecurityAltID
+  fieldSpec @SecurityAltIDSource
+  fieldSpec @NoUnderlyingSecurityAltID
+  fieldSpec @UnderlyingSecurityAltID
+  fieldSpec @UnderlyingSecurityAltIDSource
+  fieldSpec @Product
+  fieldSpec @CFICode
+  fieldSpec @UnderlyingProduct
+  fieldSpec @UnderlyingCFICode
   fieldSpec @TestMessageIndicator
+  fieldSpec @RoundingDirection
+  fieldSpec @RoundingModulus
+  fieldSpec @CountryOfIssue
+  fieldSpec @StateOrProvinceOfIssue
+  fieldSpec @LocaleOfIssue
+  fieldSpec @OrderPercent
+  fieldSpec @PartySubID
+  fieldSpec @NestedPartyID
+  fieldSpec @NestedPartyIDSource
+  fieldSpec @OrderCapacity
+  fieldSpec @QuoteType
+  fieldSpec @NestedPartyRole
+  fieldSpec @NoNestedPartyIDs
+  fieldSpec @MaturityDate
+  fieldSpec @UnderlyingMaturityDate
+  fieldSpec @InstrRegistry
+  fieldSpec @NestedPartySubID
   fieldSpec @Username
   fieldSpec @Password
+  fieldSpec @NoLegs
+  fieldSpec @LegCurrency
+  fieldSpec @AccountType
+  fieldSpec @CustOrderCapacity
+  fieldSpec @LegSettlType
+  fieldSpec @LegSettlDate
+  fieldSpec @UnderlyingCountryOfIssue
+  fieldSpec @UnderlyingStateOrProvinceOfIssue
+  fieldSpec @UnderlyingLocaleOfIssue
+  fieldSpec @UnderlyingInstrRegistry
+  fieldSpec @LegCountryOfIssue
+  fieldSpec @LegStateOrProvinceOfIssue
+  fieldSpec @LegLocaleOfIssue
+  fieldSpec @LegInstrRegistry
+  fieldSpec @LegSymbol
+  fieldSpec @LegSymbolSfx
+  fieldSpec @LegSecurityID
+  fieldSpec @LegSecurityIDSource
+  fieldSpec @NoLegSecurityAltID
+  fieldSpec @LegSecurityAltID
+  fieldSpec @LegSecurityAltIDSource
+  fieldSpec @LegProduct
+  fieldSpec @LegCFICode
+  fieldSpec @LegSecurityType
+  fieldSpec @LegMaturityMonthYear
+  fieldSpec @LegMaturityDate
+  fieldSpec @LegStrikePrice
+  fieldSpec @LegOptAttribute
+  fieldSpec @LegContractMultiplier
+  fieldSpec @LegCouponRate
+  fieldSpec @LegSecurityExchange
+  fieldSpec @LegIssuer
+  fieldSpec @EncodedLegIssuer
+  fieldSpec @LegSecurityDesc
+  fieldSpec @EncodedLegSecurityDesc
+  fieldSpec @LegRatioQty
+  fieldSpec @LegSide
+  fieldSpec @TradingSessionSubID
   fieldSpec @NoHops
   fieldSpec @HopCompID
   fieldSpec @HopSendingTime
   fieldSpec @HopRefID
+  fieldSpec @MidPx
+  fieldSpec @BidYield
+  fieldSpec @MidYield
+  fieldSpec @OfferYield
+  fieldSpec @Price2
+  fieldSpec @BidForwardPoints2
+  fieldSpec @OfferForwardPoints2
+  fieldSpec @RFQReqID
+  fieldSpec @MktBidPx
+  fieldSpec @MktOfferPx
+  fieldSpec @MinBidSize
+  fieldSpec @MinOfferSize
+  fieldSpec @SettlCurrBidFxRate
+  fieldSpec @SettlCurrOfferFxRate
+  fieldSpec @AcctIDSource
+  fieldSpec @BenchmarkPrice
+  fieldSpec @BenchmarkPriceType
+  fieldSpec @ContractSettlMonth
+  fieldSpec @LegBenchmarkCurveCurrency
+  fieldSpec @LegBenchmarkCurveName
+  fieldSpec @LegBenchmarkCurvePoint
+  fieldSpec @LegBenchmarkPrice
+  fieldSpec @LegBenchmarkPriceType
+  fieldSpec @LegBidPx
+  fieldSpec @NoLegStipulations
+  fieldSpec @LegOfferPx
+  fieldSpec @LegPriceType
+  fieldSpec @LegQty
+  fieldSpec @LegStipulationType
+  fieldSpec @LegStipulationValue
+  fieldSpec @LegSwapType
+  fieldSpec @Pool
+  fieldSpec @QuotePriceType
+  fieldSpec @QuoteRespID
+  fieldSpec @QuoteQualifier
+  fieldSpec @YieldRedemptionDate
+  fieldSpec @YieldRedemptionPrice
+  fieldSpec @YieldRedemptionPriceType
+  fieldSpec @BenchmarkSecurityID
+  fieldSpec @YieldCalcDate
+  fieldSpec @NoUnderlyings
+  fieldSpec @NoQuoteQualifiers
+  fieldSpec @LegDatedDate
+  fieldSpec @LegPool
+  fieldSpec @BenchmarkSecurityIDSource
+  fieldSpec @SecuritySubType
+  fieldSpec @UnderlyingSecuritySubType
+  fieldSpec @LegSecuritySubType
+  fieldSpec @TerminationType
   fieldSpec @NextExpectedMsgSeqNum
+  fieldSpec @NoPartySubIDs
+  fieldSpec @PartySubIDType
+  fieldSpec @NoNestedPartySubIDs
+  fieldSpec @NestedPartySubIDType
+  fieldSpec @UnderlyingPx
+  fieldSpec @QtyType
+  fieldSpec @NoEvents
+  fieldSpec @EventType
+  fieldSpec @EventDate
+  fieldSpec @EventPx
+  fieldSpec @EventText
+  fieldSpec @DatedDate
+  fieldSpec @InterestAccrualDate
+  fieldSpec @CPProgram
+  fieldSpec @CPRegType
+  fieldSpec @UnderlyingCPProgram
+  fieldSpec @UnderlyingCPRegType
+  fieldSpec @UnderlyingQty
+  fieldSpec @UnderlyingDirtyPrice
+  fieldSpec @UnderlyingEndPrice
+  fieldSpec @UnderlyingStartValue
+  fieldSpec @UnderlyingCurrentValue
+  fieldSpec @UnderlyingEndValue
+  fieldSpec @NoUnderlyingStips
+  fieldSpec @UnderlyingStipType
+  fieldSpec @UnderlyingStipValue
+  fieldSpec @MarginRatio
+  fieldSpec @AgreementDesc
+  fieldSpec @AgreementID
+  fieldSpec @AgreementDate
+  fieldSpec @StartDate
+  fieldSpec @EndDate
+  fieldSpec @AgreementCurrency
+  fieldSpec @DeliveryType
+  fieldSpec @UnderlyingStrikeCurrency
+  fieldSpec @LegStrikeCurrency
+  fieldSpec @StrikeCurrency
+  fieldSpec @LegContractSettlMonth
+  fieldSpec @LegInterestAccrualDate

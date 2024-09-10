@@ -10,6 +10,8 @@ import FIX.Messages.Gen ()
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 import FIX.Messages.Logout
+import FIX.Messages.Quote
+import FIX.Messages.QuoteRequest
 import FIX.Messages.TestUtils
 import Test.Syd
 import Test.Syd.Validity
@@ -36,4 +38,18 @@ spec = do
         genValidSpec @Logon
         componentSpec @Logon
         messageSpec @Logon "Logon"
+    )
+  describe
+    "QuoteRequest"
+    ( do
+        genValidSpec @QuoteRequest
+        componentSpec @QuoteRequest
+        messageSpec @QuoteRequest "QuoteRequest"
+    )
+  describe
+    "Quote"
+    ( do
+        genValidSpec @Quote
+        componentSpec @Quote
+        messageSpec @Quote "Quote"
     )

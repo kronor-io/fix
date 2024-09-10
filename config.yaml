@@ -9,9 +9,9 @@ messages:
   - Logout
   # # Business messages
   # - News
-  # - QuoteRequest
+  - QuoteRequest
   # - QuoteRequestReject
-  # - Quote
+  - Quote
   # - BusinessMessageReject
   # - QuoteCancel
   # - NewOrderSingle

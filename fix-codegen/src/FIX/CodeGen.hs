@@ -215,7 +215,7 @@ simplifyGroupComponents spec =
     { specFields = specFields spec,
       specHeader = goPieces (specHeader spec),
       specTrailer = goPieces (specTrailer spec),
-      specComponents = map goComponent (specComponents spec),
+      specComponents = removeNowObsoleteComponents $ map goComponent (specComponents spec),
       specMessages = map goMessage (specMessages spec)
     }
   where
@@ -232,8 +232,12 @@ simplifyGroupComponents spec =
           )
           (specComponents spec)
 
+    removeNowObsoleteComponents :: [ComponentSpec] -> [ComponentSpec]
+    removeNowObsoleteComponents = filter $ \cs -> componentName cs `M.notMember` groupComponentMap
+
     goMessage ms = ms {messagePieces = goPieces (messagePieces ms)}
     goComponent cs = cs {componentPieces = goPieces (componentPieces cs)}
+    goGroup gs = gs {groupPieces = goPieces (groupPieces gs)}
 
     goPieces :: [MessagePiece] -> [MessagePiece]
     goPieces = map goPiece
@@ -244,7 +248,7 @@ simplifyGroupComponents spec =
       mp@MessagePieceGroup {} -> mp
       mp@(MessagePieceComponent c r) -> case M.lookup c groupComponentMap of
         Nothing -> mp
-        Just gs -> MessagePieceGroup gs r
+        Just gs -> MessagePieceGroup (goGroup gs) r
 
 -- @
 -- If the repeating group is used, the first field of the repeating group

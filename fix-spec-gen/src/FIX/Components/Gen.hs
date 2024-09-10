@@ -6,14 +6,134 @@ module FIX.Components.Gen where
 
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
+import FIX.Components.FinancingDetails
+import FIX.Components.Instrument
+import FIX.Components.InstrumentLeg
+import FIX.Components.LegBenchmarkCurveData
+import FIX.Components.OrderQtyData
+import FIX.Components.SpreadOrBenchmarkCurveData
+import FIX.Components.UnderlyingInstrument
+import FIX.Components.YieldData
 import FIX.Fields.Gen ()
+import FIX.Groups.EvntGrpGroupElem
 import FIX.Groups.HopsGroupElem
+import FIX.Groups.LegQuotGrpGroupElem
+import FIX.Groups.LegSecAltIDGrpGroupElem
+import FIX.Groups.LegStipulationsGroupElem
 import FIX.Groups.MsgTypesGroupElem
+import FIX.Groups.NestedPartiesGroupElem
+import FIX.Groups.NstdPtysSubGrpGroupElem
+import FIX.Groups.PartiesGroupElem
+import FIX.Groups.PtysSubGrpGroupElem
+import FIX.Groups.QuotQualGrpGroupElem
+import FIX.Groups.QuotReqGrpGroupElem
+import FIX.Groups.QuotReqLegsGrpGroupElem
+import FIX.Groups.SecAltIDGrpGroupElem
+import FIX.Groups.StipulationsGroupElem
+import FIX.Groups.UndInstrmtGrpGroupElem
+import FIX.Groups.UndSecAltIDGrpGroupElem
+import FIX.Groups.UnderlyingStipulationsGroupElem
+
+instance GenValid EvntGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid LegQuotGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid LegSecAltIDGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid LegStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NestedPartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid HopsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid MsgTypesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NstdPtysSubGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid PartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid PtysSubGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuotQualGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuotReqGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuotReqLegsGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid SecAltIDGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid StipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid UndInstrmtGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid UndSecAltIDGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid UnderlyingStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid FinancingDetails where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid Instrument where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid InstrumentLeg where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid LegBenchmarkCurveData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid OrderQtyData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid SpreadOrBenchmarkCurveData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid UnderlyingInstrument where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid YieldData where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
