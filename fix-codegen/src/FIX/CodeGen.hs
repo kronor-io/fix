@@ -8,6 +8,7 @@ module FIX.CodeGen (runFixCodeGen) where
 
 import Control.Monad
 import Data.List (find)
+import qualified Data.Map as M
 import Data.Maybe
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -31,7 +32,12 @@ runFixCodeGen = do
   case parseSpec doc of
     Nothing -> die "Failed to parse specfication."
     Just spec' -> do
-      let spec = fixupNestedOptionals $ makeFirstGroupElementsRequired $ foldDataFields $ filterSpec settingMessages spec'
+      let spec =
+            fixupNestedOptionals $
+              makeFirstGroupElementsRequired $
+                simplifyGroupComponents $
+                  foldDataFields $
+                    filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
 
       testResourcesFiles <- genTestResources
@@ -185,6 +191,61 @@ foldDataFields spec =
     goMessage :: MessageSpec -> MessageSpec
     goMessage ms = ms {messagePieces = goMessagePieces (messagePieces ms)}
 
+-- Often a component only contains a group.
+--
+-- For example
+-- @
+-- <component name='InstrmtLegGrp'>
+--  <group name='NoLegs' required='N'>
+--   [...]
+--  </group>
+-- </component>
+-- @
+--
+-- In this case we first simplify:
+-- 1. Replace the group name by the component
+-- 1. Remove the component
+-- 2. Replacing all occurrences of the component by the group.
+--
+-- This helps us avoid naming conflicts, but may not always be enough.
+-- TODO make sure we have a strategy for when it's not enough.
+simplifyGroupComponents :: Spec -> Spec
+simplifyGroupComponents spec =
+  Spec
+    { specFields = specFields spec,
+      specHeader = goPieces (specHeader spec),
+      specTrailer = goPieces (specTrailer spec),
+      specComponents = map goComponent (specComponents spec),
+      specMessages = map goMessage (specMessages spec)
+    }
+  where
+    groupComponentMap =
+      M.fromList $
+        mapMaybe
+          ( \ComponentSpec {..} -> case componentPieces of
+              [MessagePieceGroup gs _] ->
+                Just
+                  ( componentName,
+                    gs {groupName = componentName}
+                  )
+              _ -> Nothing
+          )
+          (specComponents spec)
+
+    goMessage ms = ms {messagePieces = goPieces (messagePieces ms)}
+    goComponent cs = cs {componentPieces = goPieces (componentPieces cs)}
+
+    goPieces :: [MessagePiece] -> [MessagePiece]
+    goPieces = map goPiece
+
+    goPiece :: MessagePiece -> MessagePiece
+    goPiece = \case
+      mp@MessagePieceField {} -> mp
+      mp@MessagePieceGroup {} -> mp
+      mp@(MessagePieceComponent c r) -> case M.lookup c groupComponentMap of
+        Nothing -> mp
+        Just gs -> MessagePieceGroup gs r
+
 -- @
 -- If the repeating group is used, the first field of the repeating group
 -- entry is required. In other words, it is conditionally required if the
@@ -212,6 +273,7 @@ makeFirstGroupElementsRequired spec =
     go gs =
       GroupSpec
         { groupName = groupName gs,
+          groupNumberField = groupNumberField gs,
           groupPieces = goFirst (goPieces (groupPieces gs))
         }
 
@@ -1010,6 +1072,7 @@ trailerDataFile pieces =
 
 gatherGroupSpecs :: Spec -> [GroupSpec]
 gatherGroupSpecs Spec {..} =
+  -- TODO results will be wrong if the same group name is generated twice.
   S.toList $
     mconcat
       [ foldMap pieceGroupSpecs specHeader,
@@ -1043,19 +1106,19 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                       [ TySynD
                           (mkName "GroupNumField")
                           [PlainTV (mkName (T.unpack constructorName)) ()]
-                          (ConT (mkName (T.unpack groupName))),
+                          (ConT (mkName (T.unpack groupNumberField))),
                         FunD
                           (mkName "mkGroupNum")
                           [ Clause
                               [VarP (mkName "Proxy")]
-                              (NormalB (ConE (mkName (T.unpack groupName))))
+                              (NormalB (ConE (mkName (T.unpack groupNumberField))))
                               []
                           ],
                         FunD
                           (mkName "countGroupNum")
                           [ Clause
                               [VarP (mkName "Proxy")]
-                              (NormalB (ConE (mkName ("un" <> T.unpack groupName))))
+                              (NormalB (ConE (mkName ("un" <> T.unpack groupNumberField))))
                               []
                           ]
                       ]
@@ -1079,7 +1142,7 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                     "import GHC.Generics (Generic)",
                     "import Data.Proxy",
                     "",
-                    "import FIX.Fields." <> T.unpack groupName,
+                    "import FIX.Fields." <> T.unpack groupNumberField,
                     ""
                   ],
                   messagePiecesImports groupPieces,

@@ -8,12 +8,11 @@ messages:
   # - SequenceReset
   - Logout
   # # Business messages
-  # - QuoteRequest
   # - News
   # - QuoteRequest
   # - QuoteRequestReject
-  # - BusinessMessageReject
   # - Quote
+  # - BusinessMessageReject
   # - QuoteCancel
   # - NewOrderSingle
   # - ExecutionReport

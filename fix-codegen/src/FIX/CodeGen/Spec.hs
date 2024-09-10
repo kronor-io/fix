@@ -106,7 +106,12 @@ parseMessagePiece e@Element {..} =
       required <- M.lookup "required" elementAttributes >>= parseRequired
       pure $ MessagePieceComponent name required
     "group" -> do
+      -- The name is what's used in the XML but it's not really a name, it's
+      -- the "number of elements" field.
+      -- We want to replace the group name later, so we set both  of these to
+      -- the same now and replace the name later.
       groupName <- M.lookup "name" elementAttributes
+      let groupNumberField = groupName
       required <- M.lookup "required" elementAttributes >>= parseRequired
       groupPieces <- mapM parseMessagePiece $ subElements e
       pure $ MessagePieceGroup GroupSpec {..} required
@@ -120,6 +125,7 @@ parseRequired = \case
 
 data GroupSpec = GroupSpec
   { groupName :: !Text,
+    groupNumberField :: !Text,
     groupPieces :: ![MessagePiece]
   }
   deriving (Show, Eq, Ord)

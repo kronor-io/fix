@@ -22,6 +22,7 @@ import GHC.Generics (Generic)
 
 -- | GroupSpec
 --   { groupName = "NoHops"
+--   , groupNumberField = "NoHops"
 --   , groupPieces =
 --       [ MessagePieceField "HopCompID" True
 --       , MessagePieceField "HopSendingTime" False

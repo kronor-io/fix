@@ -21,6 +21,7 @@ import GHC.Generics (Generic)
 
 -- | GroupSpec
 --   { groupName = "NoMsgTypes"
+--   , groupNumberField = "NoMsgTypes"
 --   , groupPieces =
 --       [ MessagePieceField "RefMsgType" True
 --       , MessagePieceField "MsgDirection" False
