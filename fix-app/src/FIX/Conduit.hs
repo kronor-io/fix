@@ -168,11 +168,7 @@ runFIXApp sock headerPrototype userAppFunc = do
                         envelopeTrailer =
                           -- Empty trailer
                           -- checksum will be fixed my by messageB
-                          Trailer
-                            { trailerSignatureLength = Nothing,
-                              trailerSignature = Nothing,
-                              trailerCheckSum = renderCheckSum 0
-                            }
+                          makeTrailer $ renderCheckSum 0
                       }
               sendMessageOut envelopeOut
               go (incrementMsgSeqNum nextSeqNum)
