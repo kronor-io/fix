@@ -44,10 +44,17 @@ anyMessageType = \case
   SomeLogon _ -> MsgTypeLogon
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
-anyMessageB ((Envelope {..})) = case envelopeContents of
-  SomeHeartbeat f -> messageB envelopeHeader envelopeTrailer f
-  SomeLogout f -> messageB envelopeHeader envelopeTrailer f
-  SomeLogon f -> messageB envelopeHeader envelopeTrailer f
+anyMessageB ((Envelope {..})) =
+  let mb ::
+        forall a.
+        (IsMessage a) =>
+        a ->
+        ByteString.Builder
+      mb = messageB envelopeHeader envelopeTrailer
+   in case envelopeContents of
+        SomeHeartbeat f -> mb f
+        SomeLogout f -> mb f
+        SomeLogon f -> mb f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do

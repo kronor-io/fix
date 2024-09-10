@@ -1486,29 +1486,54 @@ topLevelMessagesFile messageSpecs =
                       [ Clause
                           [ConP (mkName "Envelope{..}") [] []]
                           ( NormalB
-                              ( CaseE
-                                  (VarE (mkName "envelopeContents"))
-                                  ( map
-                                      ( \fs ->
-                                          let varName = mkName "f"
-                                           in Match
-                                                (ConP (anyMessageSpecConstructorName fs) [] [VarP varName])
-                                                ( NormalB
-                                                    ( AppE
+                              ( let helperName = mkName "mb"
+                                    varName = mkName "f"
+                                 in LetE
+                                      [ SigD
+                                          helperName
+                                          ( let tyVarName = mkName "a"
+                                             in ForallT
+                                                  [PlainTV tyVarName SpecifiedSpec]
+                                                  [AppT (ConT (mkName "IsMessage")) (VarT tyVarName)]
+                                                  ( InfixT
+                                                      (VarT tyVarName)
+                                                      (mkName "->")
+                                                      (ConT (mkName "ByteString.Builder"))
+                                                  )
+                                          ),
+                                        FunD
+                                          helperName
+                                          [ Clause
+                                              []
+                                              ( NormalB
+                                                  ( AppE
+                                                      ( AppE
+                                                          (VarE (mkName "messageB"))
+                                                          (VarE (mkName "envelopeHeader"))
+                                                      )
+                                                      (VarE (mkName "envelopeTrailer"))
+                                                  )
+                                              )
+                                              []
+                                          ]
+                                      ]
+                                      ( CaseE
+                                          (VarE (mkName "envelopeContents"))
+                                          ( map
+                                              ( \fs ->
+                                                  Match
+                                                    (ConP (anyMessageSpecConstructorName fs) [] [VarP varName])
+                                                    ( NormalB
                                                         ( AppE
-                                                            ( AppE
-                                                                (VarE (mkName "messageB"))
-                                                                (VarE (mkName "envelopeHeader"))
-                                                            )
-                                                            (VarE (mkName "envelopeTrailer"))
+                                                            (VarE helperName)
+                                                            (VarE varName)
                                                         )
-                                                        (VarE varName)
                                                     )
-                                                )
-                                                []
+                                                    []
+                                              )
+                                              messageSpecs
+                                          )
                                       )
-                                      messageSpecs
-                                  )
                               )
                           )
                           []
