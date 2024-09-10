@@ -125,8 +125,6 @@ runFIXApp sock headerPrototype userAppFunc = do
                 `orElse` (Right <$> readMessageFromApp)
           case inOrOut of
             Right msgOut -> do
-              let anyMessageType :: AnyMessage -> MsgType
-                  anyMessageType = undefined -- TODO: Generate this function
               let msgType = anyMessageType msgOut
               let header =
                     headerPrototype

@@ -8,8 +8,9 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Messages
   ( AnyMessage (..),
-    anyMessageP,
+    anyMessageType,
     anyMessageB,
+    anyMessageP,
     IsAnyMessage (..),
     module X,
   )
@@ -35,6 +36,12 @@ data AnyMessage
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyMessage
+
+anyMessageType :: AnyMessage -> MsgType
+anyMessageType = \case
+  SomeHeartbeat _ -> MsgTypeHeartbeat
+  SomeLogout _ -> MsgTypeLogout
+  SomeLogon _ -> MsgTypeLogon
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
 anyMessageB ((Envelope {..})) = case envelopeContents of

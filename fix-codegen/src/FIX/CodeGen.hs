@@ -85,8 +85,7 @@ runFixCodeGen = do
                     genHaskellDataFile "fix-spec-gen/test/FIX/AnyMessageSpec.hs"
                   ],
             genHaskellDataFile "fix-spec-gen/test/Spec.hs",
-            testResourcesFiles,
-            genHaskellDataFile "fix-spec/src/FIX/Conduit.hs"
+            testResourcesFiles
           ]
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
@@ -1409,8 +1408,9 @@ topLevelMessagesFile messageSpecs =
                 "{-# LANGUAGE ScopedTypeVariables #-}",
                 "module FIX.Messages (",
                 "  AnyMessage(..),",
-                "  anyMessageP,",
+                "  anyMessageType,",
                 "  anyMessageB,",
+                "  anyMessageP,",
                 "  IsAnyMessage(..),",
                 "  module X",
                 ") where",
@@ -1452,6 +1452,32 @@ topLevelMessagesFile messageSpecs =
                           ]
                       ],
                     validityInstance (mkName "AnyMessage")
+                  ],
+                "anyMessageType :: AnyMessage -> MsgType",
+                TH.pprint
+                  [ FunD
+                      (mkName "anyMessageType")
+                      [ Clause
+                          []
+                          ( NormalB
+                              ( LamCaseE
+                                  ( map
+                                      ( \ms ->
+                                          Match
+                                            ( ConP
+                                                (anyMessageSpecConstructorName ms)
+                                                []
+                                                [WildP]
+                                            )
+                                            (NormalB (ConE (messageTypeConstructorName ms)))
+                                            []
+                                      )
+                                      messageSpecs
+                                  )
+                              )
+                          )
+                          []
+                      ]
                   ],
                 "anyMessageB :: Envelope AnyMessage -> ByteString.Builder",
                 TH.pprint

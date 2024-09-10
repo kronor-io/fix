@@ -11,7 +11,6 @@ build-type:     Simple
 library
   exposed-modules:
       FIX.Components.Class
-      FIX.Conduit
       FIX.Fields
       FIX.Fields.BeginString
       FIX.Fields.BodyLength
