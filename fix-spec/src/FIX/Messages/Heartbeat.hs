@@ -37,3 +37,8 @@ instance IsComponent Heartbeat where
 
 instance IsMessage Heartbeat where
   messageType Proxy = MsgTypeHeartbeat
+
+makeHeartbeat :: Heartbeat
+makeHeartbeat =
+  let heartbeatTestReqID = Nothing
+   in (Heartbeat {..})

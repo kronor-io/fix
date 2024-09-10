@@ -258,3 +258,48 @@ instance IsComponent Instrument where
     instrumentDatedDate <- optionalFieldP
     instrumentInterestAccrualDate <- optionalFieldP
     pure (Instrument {..})
+
+makeInstrument :: Instrument
+makeInstrument =
+  let instrumentSymbol = Nothing
+      instrumentSymbolSfx = Nothing
+      instrumentSecurityID = Nothing
+      instrumentSecurityIDSource = Nothing
+      instrumentSecAltIDGrpGroup = []
+      instrumentProduct = Nothing
+      instrumentCFICode = Nothing
+      instrumentSecurityType = Nothing
+      instrumentSecuritySubType = Nothing
+      instrumentMaturityMonthYear = Nothing
+      instrumentMaturityDate = Nothing
+      instrumentPutOrCall = Nothing
+      instrumentCouponPaymentDate = Nothing
+      instrumentIssueDate = Nothing
+      instrumentRepoCollateralSecurityType = Nothing
+      instrumentRepurchaseTerm = Nothing
+      instrumentRepurchaseRate = Nothing
+      instrumentFactor = Nothing
+      instrumentCreditRating = Nothing
+      instrumentInstrRegistry = Nothing
+      instrumentCountryOfIssue = Nothing
+      instrumentStateOrProvinceOfIssue = Nothing
+      instrumentLocaleOfIssue = Nothing
+      instrumentRedemptionDate = Nothing
+      instrumentStrikePrice = Nothing
+      instrumentStrikeCurrency = Nothing
+      instrumentOptAttribute = Nothing
+      instrumentContractMultiplier = Nothing
+      instrumentCouponRate = Nothing
+      instrumentSecurityExchange = Nothing
+      instrumentIssuer = Nothing
+      instrumentEncodedIssuer = Nothing
+      instrumentSecurityDesc = Nothing
+      instrumentEncodedSecurityDesc = Nothing
+      instrumentPool = Nothing
+      instrumentContractSettlMonth = Nothing
+      instrumentCPProgram = Nothing
+      instrumentCPRegType = Nothing
+      instrumentEvntGrpGroup = []
+      instrumentDatedDate = Nothing
+      instrumentInterestAccrualDate = Nothing
+   in (Instrument {..})

@@ -69,3 +69,10 @@ instance IsGroupElement PartiesGroupElem where
   type GroupNumField PartiesGroupElem = NoPartyIDs
   mkGroupNum Proxy = NoPartyIDs
   countGroupNum Proxy = unNoPartyIDs
+
+makePartiesGroupElem :: PartyID -> PartiesGroupElem
+makePartiesGroupElem partiesGroupElemPartyID =
+  let partiesGroupElemPartyIDSource = Nothing
+      partiesGroupElemPartyRole = Nothing
+      partiesGroupElemPtysSubGrpGroup = []
+   in (PartiesGroupElem {..})

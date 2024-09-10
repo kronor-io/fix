@@ -7,7 +7,7 @@
 module FIX.CodeGen (runFixCodeGen) where
 
 import Control.Monad
-import Data.List (find)
+import Data.Foldable
 import qualified Data.Map as M
 import Data.Maybe
 import Data.Set (Set)
@@ -1025,6 +1025,84 @@ messagePiecesIsComponentInstance name pieces =
       messagePiecesFromFieldsFunction name (mkName "fromComponentFields") pieces
     ]
 
+messagePiecesMakeFunction :: Text -> [MessagePiece] -> [Dec]
+messagePiecesMakeFunction name pieces =
+  let funName = mkName ("make" <> T.unpack name)
+   in [ SigD
+          funName
+          ( foldl'
+              ( \t p ->
+                  let prefix t' =
+                        InfixT
+                          t'
+                          (mkName "->")
+                          t
+                   in case p of
+                        MessagePieceField fn required -> if required then prefix (ConT (mkName (T.unpack fn))) else t
+                        MessagePieceComponent cn required -> if required then prefix (ConT (mkName (T.unpack cn))) else t
+                        MessagePieceGroup gs required -> if required then prefix (AppT (ConT (mkName "NonEmpty")) (ConT (mkName (T.unpack (groupSpecConstructorName gs))))) else t
+              )
+              (ConT (mkName (T.unpack name)))
+              (reverse pieces)
+          ),
+        FunD
+          funName
+          [ Clause
+              ( mapMaybe
+                  ( \case
+                      MessagePieceField fn required -> do
+                        -- Only required fields need to be passed in.
+                        guard required
+                        pure $ VarP $ mkFieldName name fn
+                      MessagePieceComponent cn required -> do
+                        -- Only required fields need to be passed in.
+                        guard required
+                        pure $ VarP $ mkFieldName name cn
+                      MessagePieceGroup gs required -> do
+                        -- Only required fields need to be passed in.
+                        guard required
+                        pure $ VarP $ groupSpecGroupFieldName name gs
+                  )
+                  pieces
+              )
+              ( NormalB
+                  ( LetE
+                      ( mapMaybe
+                          ( \case
+                              MessagePieceField fn required -> do
+                                -- Required fields need to be passde in
+                                guard $ not required
+                                pure
+                                  ( FunD
+                                      (mkFieldName name fn)
+                                      [Clause [] (NormalB (ConE (mkName "Nothing"))) []]
+                                  )
+                              MessagePieceComponent cn required -> do
+                                -- Required fields need to be passde in
+                                guard $ not required
+                                pure
+                                  ( FunD
+                                      (mkFieldName name cn)
+                                      [Clause [] (NormalB (ConE (mkName "Nothing"))) []]
+                                  )
+                              MessagePieceGroup gs required -> do
+                                -- Required fields need to be passde in
+                                guard $ not required
+                                pure
+                                  ( FunD
+                                      (groupSpecGroupFieldName name gs)
+                                      [Clause [] (NormalB (ListE [])) []]
+                                  )
+                          )
+                          pieces
+                      )
+                      (ConE (mkName (T.unpack name <> "{..}")))
+                  )
+              )
+              []
+          ]
+      ]
+
 headerDataFile :: [MessagePiece] -> CodeGen
 headerDataFile pieces =
   genHaskellFile "fix-spec/src/FIX/Messages/Header.hs" $
@@ -1046,7 +1124,8 @@ headerDataFile pieces =
               imports,
               [ TH.pprint $ messagePiecesDataDeclaration "Header" pieces,
                 TH.pprint $ validityInstance (mkName "Header"),
-                TH.pprint $ messagePiecesIsComponentInstance "Header" pieces
+                TH.pprint $ messagePiecesIsComponentInstance "Header" pieces,
+                TH.pprint $ messagePiecesMakeFunction "Header" pieces
               ]
             ]
 
@@ -1070,7 +1149,8 @@ trailerDataFile pieces =
               imports,
               [ TH.pprint $ messagePiecesDataDeclaration "Trailer" pieces,
                 TH.pprint $ validityInstance (mkName "Trailer"),
-                TH.pprint $ messagePiecesIsComponentInstance "Trailer" pieces
+                TH.pprint $ messagePiecesIsComponentInstance "Trailer" pieces,
+                TH.pprint $ messagePiecesMakeFunction "Trailer" pieces
               ]
             ]
 
@@ -1126,7 +1206,8 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                               []
                           ]
                       ]
-                  ]
+                  ],
+                TH.pprint (messagePiecesMakeFunction constructorName groupPieces)
               ]
          in unlines $
               concat
@@ -1168,7 +1249,8 @@ componentsDataFiles = foldMap $ \f@ComponentSpec {..} ->
               [ messagePiecesDataDeclaration componentName componentPieces,
                 validityInstance constructorName,
                 messagePiecesIsComponentInstance componentName componentPieces
-              ]
+              ],
+            TH.pprint (messagePiecesMakeFunction componentName componentPieces)
           ]
      in unlines $
           concat
@@ -1347,7 +1429,8 @@ messagesDataFiles = foldMap $ \f@MessageSpec {..} ->
                           []
                       ]
                   ]
-              ]
+              ],
+            TH.pprint (messagePiecesMakeFunction messageName messagePieces)
           ]
      in unlines $
           concat

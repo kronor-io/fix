@@ -50,3 +50,8 @@ instance IsGroupElement StipulationsGroupElem where
   type GroupNumField StipulationsGroupElem = NoStipulations
   mkGroupNum Proxy = NoStipulations
   countGroupNum Proxy = unNoStipulations
+
+makeStipulationsGroupElem :: StipulationType -> StipulationsGroupElem
+makeStipulationsGroupElem stipulationsGroupElemStipulationType =
+  let stipulationsGroupElemStipulationValue = Nothing
+   in (StipulationsGroupElem {..})

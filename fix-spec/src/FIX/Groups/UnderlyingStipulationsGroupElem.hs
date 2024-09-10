@@ -50,3 +50,8 @@ instance IsGroupElement UnderlyingStipulationsGroupElem where
   type GroupNumField UnderlyingStipulationsGroupElem = NoUnderlyingStips
   mkGroupNum Proxy = NoUnderlyingStips
   countGroupNum Proxy = unNoUnderlyingStips
+
+makeUnderlyingStipulationsGroupElem :: UnderlyingStipType -> UnderlyingStipulationsGroupElem
+makeUnderlyingStipulationsGroupElem underlyingStipulationsGroupElemUnderlyingStipType =
+  let underlyingStipulationsGroupElemUnderlyingStipValue = Nothing
+   in (UnderlyingStipulationsGroupElem {..})

@@ -50,3 +50,8 @@ instance IsGroupElement NstdPtysSubGrpGroupElem where
   type GroupNumField NstdPtysSubGrpGroupElem = NoNestedPartySubIDs
   mkGroupNum Proxy = NoNestedPartySubIDs
   countGroupNum Proxy = unNoNestedPartySubIDs
+
+makeNstdPtysSubGrpGroupElem :: NestedPartySubID -> NstdPtysSubGrpGroupElem
+makeNstdPtysSubGrpGroupElem nstdPtysSubGrpGroupElemNestedPartySubID =
+  let nstdPtysSubGrpGroupElemNestedPartySubIDType = Nothing
+   in (NstdPtysSubGrpGroupElem {..})

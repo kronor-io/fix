@@ -242,3 +242,47 @@ instance IsComponent InstrumentLeg where
     instrumentLegLegContractSettlMonth <- optionalFieldP
     instrumentLegLegInterestAccrualDate <- optionalFieldP
     pure (InstrumentLeg {..})
+
+makeInstrumentLeg :: InstrumentLeg
+makeInstrumentLeg =
+  let instrumentLegLegSymbol = Nothing
+      instrumentLegLegSymbolSfx = Nothing
+      instrumentLegLegSecurityID = Nothing
+      instrumentLegLegSecurityIDSource = Nothing
+      instrumentLegLegSecAltIDGrpGroup = []
+      instrumentLegLegProduct = Nothing
+      instrumentLegLegCFICode = Nothing
+      instrumentLegLegSecurityType = Nothing
+      instrumentLegLegSecuritySubType = Nothing
+      instrumentLegLegMaturityMonthYear = Nothing
+      instrumentLegLegMaturityDate = Nothing
+      instrumentLegLegCouponPaymentDate = Nothing
+      instrumentLegLegIssueDate = Nothing
+      instrumentLegLegRepoCollateralSecurityType = Nothing
+      instrumentLegLegRepurchaseTerm = Nothing
+      instrumentLegLegRepurchaseRate = Nothing
+      instrumentLegLegFactor = Nothing
+      instrumentLegLegCreditRating = Nothing
+      instrumentLegLegInstrRegistry = Nothing
+      instrumentLegLegCountryOfIssue = Nothing
+      instrumentLegLegStateOrProvinceOfIssue = Nothing
+      instrumentLegLegLocaleOfIssue = Nothing
+      instrumentLegLegRedemptionDate = Nothing
+      instrumentLegLegStrikePrice = Nothing
+      instrumentLegLegStrikeCurrency = Nothing
+      instrumentLegLegOptAttribute = Nothing
+      instrumentLegLegContractMultiplier = Nothing
+      instrumentLegLegCouponRate = Nothing
+      instrumentLegLegSecurityExchange = Nothing
+      instrumentLegLegIssuer = Nothing
+      instrumentLegEncodedLegIssuer = Nothing
+      instrumentLegLegSecurityDesc = Nothing
+      instrumentLegEncodedLegSecurityDesc = Nothing
+      instrumentLegLegRatioQty = Nothing
+      instrumentLegLegSide = Nothing
+      instrumentLegLegCurrency = Nothing
+      instrumentLegLegPool = Nothing
+      instrumentLegLegDatedDate = Nothing
+      instrumentLegLegContractSettlMonth = Nothing
+      instrumentLegLegInterestAccrualDate = Nothing
+   in (InstrumentLeg {..})

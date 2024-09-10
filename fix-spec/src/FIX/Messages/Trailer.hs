@@ -34,3 +34,9 @@ instance IsComponent Trailer where
     trailerSignature <- optionalFieldP
     trailerCheckSum <- requiredFieldP
     pure (Trailer {..})
+
+makeTrailer :: CheckSum -> Trailer
+makeTrailer trailerCheckSum =
+  let trailerSignatureLength = Nothing
+      trailerSignature = Nothing
+   in (Trailer {..})

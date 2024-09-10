@@ -49,3 +49,9 @@ instance IsComponent Logout where
 
 instance IsMessage Logout where
   messageType Proxy = MsgTypeLogout
+
+makeLogout :: Logout
+makeLogout =
+  let logoutText = Nothing
+      logoutEncodedText = Nothing
+   in (Logout {..})

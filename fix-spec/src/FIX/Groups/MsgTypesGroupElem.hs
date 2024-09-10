@@ -50,3 +50,8 @@ instance IsGroupElement MsgTypesGroupElem where
   type GroupNumField MsgTypesGroupElem = NoMsgTypes
   mkGroupNum Proxy = NoMsgTypes
   countGroupNum Proxy = unNoMsgTypes
+
+makeMsgTypesGroupElem :: RefMsgType -> MsgTypesGroupElem
+makeMsgTypesGroupElem msgTypesGroupElemRefMsgType =
+  let msgTypesGroupElemMsgDirection = Nothing
+   in (MsgTypesGroupElem {..})

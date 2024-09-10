@@ -276,3 +276,52 @@ instance IsComponent UnderlyingInstrument where
     underlyingInstrumentUnderlyingEndValue <- optionalFieldP
     underlyingInstrumentUnderlyingStipulationsGroup <- optionalGroupP
     pure (UnderlyingInstrument {..})
+
+makeUnderlyingInstrument :: UnderlyingInstrument
+makeUnderlyingInstrument =
+  let underlyingInstrumentUnderlyingSymbol = Nothing
+      underlyingInstrumentUnderlyingSymbolSfx = Nothing
+      underlyingInstrumentUnderlyingSecurityID = Nothing
+      underlyingInstrumentUnderlyingSecurityIDSource = Nothing
+      underlyingInstrumentUndSecAltIDGrpGroup = []
+      underlyingInstrumentUnderlyingProduct = Nothing
+      underlyingInstrumentUnderlyingCFICode = Nothing
+      underlyingInstrumentUnderlyingSecurityType = Nothing
+      underlyingInstrumentUnderlyingSecuritySubType = Nothing
+      underlyingInstrumentUnderlyingMaturityMonthYear = Nothing
+      underlyingInstrumentUnderlyingMaturityDate = Nothing
+      underlyingInstrumentUnderlyingPutOrCall = Nothing
+      underlyingInstrumentUnderlyingCouponPaymentDate = Nothing
+      underlyingInstrumentUnderlyingIssueDate = Nothing
+      underlyingInstrumentUnderlyingRepoCollateralSecurityType = Nothing
+      underlyingInstrumentUnderlyingRepurchaseTerm = Nothing
+      underlyingInstrumentUnderlyingRepurchaseRate = Nothing
+      underlyingInstrumentUnderlyingFactor = Nothing
+      underlyingInstrumentUnderlyingCreditRating = Nothing
+      underlyingInstrumentUnderlyingInstrRegistry = Nothing
+      underlyingInstrumentUnderlyingCountryOfIssue = Nothing
+      underlyingInstrumentUnderlyingStateOrProvinceOfIssue = Nothing
+      underlyingInstrumentUnderlyingLocaleOfIssue = Nothing
+      underlyingInstrumentUnderlyingRedemptionDate = Nothing
+      underlyingInstrumentUnderlyingStrikePrice = Nothing
+      underlyingInstrumentUnderlyingStrikeCurrency = Nothing
+      underlyingInstrumentUnderlyingOptAttribute = Nothing
+      underlyingInstrumentUnderlyingContractMultiplier = Nothing
+      underlyingInstrumentUnderlyingCouponRate = Nothing
+      underlyingInstrumentUnderlyingSecurityExchange = Nothing
+      underlyingInstrumentUnderlyingIssuer = Nothing
+      underlyingInstrumentEncodedUnderlyingIssuer = Nothing
+      underlyingInstrumentUnderlyingSecurityDesc = Nothing
+      underlyingInstrumentEncodedUnderlyingSecurityDesc = Nothing
+      underlyingInstrumentUnderlyingCPProgram = Nothing
+      underlyingInstrumentUnderlyingCPRegType = Nothing
+      underlyingInstrumentUnderlyingCurrency = Nothing
+      underlyingInstrumentUnderlyingQty = Nothing
+      underlyingInstrumentUnderlyingPx = Nothing
+      underlyingInstrumentUnderlyingDirtyPrice = Nothing
+      underlyingInstrumentUnderlyingEndPrice = Nothing
+      underlyingInstrumentUnderlyingStartValue = Nothing
+      underlyingInstrumentUnderlyingCurrentValue = Nothing
+      underlyingInstrumentUnderlyingEndValue = Nothing
+      underlyingInstrumentUnderlyingStipulationsGroup = []
+   in (UnderlyingInstrument {..})

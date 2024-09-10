@@ -50,3 +50,8 @@ instance IsGroupElement SecAltIDGrpGroupElem where
   type GroupNumField SecAltIDGrpGroupElem = NoSecurityAltID
   mkGroupNum Proxy = NoSecurityAltID
   countGroupNum Proxy = unNoSecurityAltID
+
+makeSecAltIDGrpGroupElem :: SecurityAltID -> SecAltIDGrpGroupElem
+makeSecAltIDGrpGroupElem secAltIDGrpGroupElemSecurityAltID =
+  let secAltIDGrpGroupElemSecurityAltIDSource = Nothing
+   in (SecAltIDGrpGroupElem {..})

@@ -296,3 +296,36 @@ instance IsGroupElement QuotReqGrpGroupElem where
   type GroupNumField QuotReqGrpGroupElem = NoRelatedSym
   mkGroupNum Proxy = NoRelatedSym
   countGroupNum Proxy = unNoRelatedSym
+
+makeQuotReqGrpGroupElem :: Instrument -> (FinancingDetails -> (OrderQtyData -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuotReqGrpGroupElem))))
+makeQuotReqGrpGroupElem quotReqGrpGroupElemInstrument quotReqGrpGroupElemFinancingDetails quotReqGrpGroupElemOrderQtyData quotReqGrpGroupElemSpreadOrBenchmarkCurveData quotReqGrpGroupElemYieldData =
+  let quotReqGrpGroupElemUndInstrmtGrpGroup = []
+      quotReqGrpGroupElemPrevClosePx = Nothing
+      quotReqGrpGroupElemQuoteRequestType = Nothing
+      quotReqGrpGroupElemQuoteType = Nothing
+      quotReqGrpGroupElemTradingSessionID = Nothing
+      quotReqGrpGroupElemTradingSessionSubID = Nothing
+      quotReqGrpGroupElemTradeOriginationDate = Nothing
+      quotReqGrpGroupElemSide = Nothing
+      quotReqGrpGroupElemQtyType = Nothing
+      quotReqGrpGroupElemSettlType = Nothing
+      quotReqGrpGroupElemSettlDate = Nothing
+      quotReqGrpGroupElemSettlDate2 = Nothing
+      quotReqGrpGroupElemOrderQty2 = Nothing
+      quotReqGrpGroupElemCurrency = Nothing
+      quotReqGrpGroupElemStipulationsGroup = []
+      quotReqGrpGroupElemAccount = Nothing
+      quotReqGrpGroupElemAcctIDSource = Nothing
+      quotReqGrpGroupElemAccountType = Nothing
+      quotReqGrpGroupElemQuotReqLegsGrpGroup = []
+      quotReqGrpGroupElemQuotQualGrpGroup = []
+      quotReqGrpGroupElemQuotePriceType = Nothing
+      quotReqGrpGroupElemOrdType = Nothing
+      quotReqGrpGroupElemValidUntilTime = Nothing
+      quotReqGrpGroupElemExpireTime = Nothing
+      quotReqGrpGroupElemTransactTime = Nothing
+      quotReqGrpGroupElemPriceType = Nothing
+      quotReqGrpGroupElemPrice = Nothing
+      quotReqGrpGroupElemPrice2 = Nothing
+      quotReqGrpGroupElemPartiesGroup = []
+   in (QuotReqGrpGroupElem {..})

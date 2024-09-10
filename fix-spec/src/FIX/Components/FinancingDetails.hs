@@ -78,3 +78,16 @@ instance IsComponent FinancingDetails where
     financingDetailsDeliveryType <- optionalFieldP
     financingDetailsMarginRatio <- optionalFieldP
     pure (FinancingDetails {..})
+
+makeFinancingDetails :: FinancingDetails
+makeFinancingDetails =
+  let financingDetailsAgreementDesc = Nothing
+      financingDetailsAgreementID = Nothing
+      financingDetailsAgreementDate = Nothing
+      financingDetailsAgreementCurrency = Nothing
+      financingDetailsTerminationType = Nothing
+      financingDetailsStartDate = Nothing
+      financingDetailsEndDate = Nothing
+      financingDetailsDeliveryType = Nothing
+      financingDetailsMarginRatio = Nothing
+   in (FinancingDetails {..})

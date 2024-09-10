@@ -60,3 +60,10 @@ instance IsGroupElement EvntGrpGroupElem where
   type GroupNumField EvntGrpGroupElem = NoEvents
   mkGroupNum Proxy = NoEvents
   countGroupNum Proxy = unNoEvents
+
+makeEvntGrpGroupElem :: EventType -> EvntGrpGroupElem
+makeEvntGrpGroupElem evntGrpGroupElemEventType =
+  let evntGrpGroupElemEventDate = Nothing
+      evntGrpGroupElemEventPx = Nothing
+      evntGrpGroupElemEventText = Nothing
+   in (EvntGrpGroupElem {..})

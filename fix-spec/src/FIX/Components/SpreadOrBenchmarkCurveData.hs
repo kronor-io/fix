@@ -73,3 +73,15 @@ instance IsComponent SpreadOrBenchmarkCurveData where
     spreadOrBenchmarkCurveDataBenchmarkSecurityID <- optionalFieldP
     spreadOrBenchmarkCurveDataBenchmarkSecurityIDSource <- optionalFieldP
     pure (SpreadOrBenchmarkCurveData {..})
+
+makeSpreadOrBenchmarkCurveData :: SpreadOrBenchmarkCurveData
+makeSpreadOrBenchmarkCurveData =
+  let spreadOrBenchmarkCurveDataSpread = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkCurveCurrency = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkCurveName = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkCurvePoint = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkPrice = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkPriceType = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkSecurityID = Nothing
+      spreadOrBenchmarkCurveDataBenchmarkSecurityIDSource = Nothing
+   in (SpreadOrBenchmarkCurveData {..})

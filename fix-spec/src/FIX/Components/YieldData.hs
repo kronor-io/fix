@@ -63,3 +63,13 @@ instance IsComponent YieldData where
     yieldDataYieldRedemptionPrice <- optionalFieldP
     yieldDataYieldRedemptionPriceType <- optionalFieldP
     pure (YieldData {..})
+
+makeYieldData :: YieldData
+makeYieldData =
+  let yieldDataYieldType = Nothing
+      yieldDataYield = Nothing
+      yieldDataYieldCalcDate = Nothing
+      yieldDataYieldRedemptionDate = Nothing
+      yieldDataYieldRedemptionPrice = Nothing
+      yieldDataYieldRedemptionPriceType = Nothing
+   in (YieldData {..})

@@ -98,3 +98,15 @@ instance IsComponent Logon where
 
 instance IsMessage Logon where
   messageType Proxy = MsgTypeLogon
+
+makeLogon :: EncryptMethod -> (HeartBtInt -> Logon)
+makeLogon logonEncryptMethod logonHeartBtInt =
+  let logonRawData = Nothing
+      logonResetSeqNumFlag = Nothing
+      logonNextExpectedMsgSeqNum = Nothing
+      logonMaxMessageSize = Nothing
+      logonMsgTypesGroup = []
+      logonTestMessageIndicator = Nothing
+      logonUsername = Nothing
+      logonPassword = Nothing
+   in (Logon {..})

@@ -418,3 +418,59 @@ instance IsComponent Quote where
 
 instance IsMessage Quote where
   messageType Proxy = MsgTypeQuote
+
+makeQuote :: QuoteID -> (Instrument -> (FinancingDetails -> (OrderQtyData -> (SpreadOrBenchmarkCurveData -> (YieldData -> Quote)))))
+makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData quoteSpreadOrBenchmarkCurveData quoteYieldData =
+  let quoteQuoteReqID = Nothing
+      quoteQuoteRespID = Nothing
+      quoteQuoteType = Nothing
+      quoteQuotQualGrpGroup = []
+      quoteQuoteResponseLevel = Nothing
+      quotePartiesGroup = []
+      quoteTradingSessionID = Nothing
+      quoteTradingSessionSubID = Nothing
+      quoteUndInstrmtGrpGroup = []
+      quoteSide = Nothing
+      quoteSettlType = Nothing
+      quoteSettlDate = Nothing
+      quoteSettlDate2 = Nothing
+      quoteOrderQty2 = Nothing
+      quoteCurrency = Nothing
+      quoteStipulationsGroup = []
+      quoteAccount = Nothing
+      quoteAcctIDSource = Nothing
+      quoteAccountType = Nothing
+      quoteLegQuotGrpGroup = []
+      quoteBidPx = Nothing
+      quoteOfferPx = Nothing
+      quoteMktBidPx = Nothing
+      quoteMktOfferPx = Nothing
+      quoteMinBidSize = Nothing
+      quoteBidSize = Nothing
+      quoteMinOfferSize = Nothing
+      quoteOfferSize = Nothing
+      quoteValidUntilTime = Nothing
+      quoteBidSpotRate = Nothing
+      quoteOfferSpotRate = Nothing
+      quoteBidForwardPoints = Nothing
+      quoteOfferForwardPoints = Nothing
+      quoteMidPx = Nothing
+      quoteBidYield = Nothing
+      quoteMidYield = Nothing
+      quoteOfferYield = Nothing
+      quoteTransactTime = Nothing
+      quoteOrdType = Nothing
+      quoteBidForwardPoints2 = Nothing
+      quoteOfferForwardPoints2 = Nothing
+      quoteSettlCurrBidFxRate = Nothing
+      quoteSettlCurrOfferFxRate = Nothing
+      quoteSettlCurrFxRateCalc = Nothing
+      quoteCommType = Nothing
+      quoteCommission = Nothing
+      quoteCustOrderCapacity = Nothing
+      quoteExDestination = Nothing
+      quoteOrderCapacity = Nothing
+      quotePriceType = Nothing
+      quoteText = Nothing
+      quoteEncodedText = Nothing
+   in (Quote {..})

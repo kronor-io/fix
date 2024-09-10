@@ -58,3 +58,12 @@ instance IsComponent LegBenchmarkCurveData where
     legBenchmarkCurveDataLegBenchmarkPrice <- optionalFieldP
     legBenchmarkCurveDataLegBenchmarkPriceType <- optionalFieldP
     pure (LegBenchmarkCurveData {..})
+
+makeLegBenchmarkCurveData :: LegBenchmarkCurveData
+makeLegBenchmarkCurveData =
+  let legBenchmarkCurveDataLegBenchmarkCurveCurrency = Nothing
+      legBenchmarkCurveDataLegBenchmarkCurveName = Nothing
+      legBenchmarkCurveDataLegBenchmarkCurvePoint = Nothing
+      legBenchmarkCurveDataLegBenchmarkPrice = Nothing
+      legBenchmarkCurveDataLegBenchmarkPriceType = Nothing
+   in (LegBenchmarkCurveData {..})

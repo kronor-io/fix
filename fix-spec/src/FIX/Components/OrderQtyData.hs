@@ -58,3 +58,12 @@ instance IsComponent OrderQtyData where
     orderQtyDataRoundingDirection <- optionalFieldP
     orderQtyDataRoundingModulus <- optionalFieldP
     pure (OrderQtyData {..})
+
+makeOrderQtyData :: OrderQtyData
+makeOrderQtyData =
+  let orderQtyDataOrderQty = Nothing
+      orderQtyDataCashOrderQty = Nothing
+      orderQtyDataOrderPercent = Nothing
+      orderQtyDataRoundingDirection = Nothing
+      orderQtyDataRoundingModulus = Nothing
+   in (OrderQtyData {..})

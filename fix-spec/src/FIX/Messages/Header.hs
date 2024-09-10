@@ -123,3 +123,25 @@ instance IsComponent Header where
     headerLastMsgSeqNumProcessed <- optionalFieldP
     headerHopsGroup <- optionalGroupP
     pure (Header {..})
+
+makeHeader :: BeginString -> (BodyLength -> (MsgType -> (SenderCompID -> (TargetCompID -> (MsgSeqNum -> (SendingTime -> Header))))))
+makeHeader headerBeginString headerBodyLength headerMsgType headerSenderCompID headerTargetCompID headerMsgSeqNum headerSendingTime =
+  let headerOnBehalfOfCompID = Nothing
+      headerDeliverToCompID = Nothing
+      headerSecureData = Nothing
+      headerSenderSubID = Nothing
+      headerSenderLocationID = Nothing
+      headerTargetSubID = Nothing
+      headerTargetLocationID = Nothing
+      headerOnBehalfOfSubID = Nothing
+      headerOnBehalfOfLocationID = Nothing
+      headerDeliverToSubID = Nothing
+      headerDeliverToLocationID = Nothing
+      headerPossDupFlag = Nothing
+      headerPossResend = Nothing
+      headerOrigSendingTime = Nothing
+      headerXmlData = Nothing
+      headerMessageEncoding = Nothing
+      headerLastMsgSeqNumProcessed = Nothing
+      headerHopsGroup = []
+   in (Header {..})

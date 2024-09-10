@@ -201,3 +201,12 @@ instance IsComponent QuoteRequest where
 
 instance IsMessage QuoteRequest where
   messageType Proxy = MsgTypeQuoteRequest
+
+makeQuoteRequest :: QuoteReqID -> (NonEmpty QuotReqGrpGroupElem -> QuoteRequest)
+makeQuoteRequest quoteRequestQuoteReqID quoteRequestQuotReqGrpGroup =
+  let quoteRequestRFQReqID = Nothing
+      quoteRequestClOrdID = Nothing
+      quoteRequestOrderCapacity = Nothing
+      quoteRequestText = Nothing
+      quoteRequestEncodedText = Nothing
+   in (QuoteRequest {..})

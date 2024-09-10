@@ -55,3 +55,9 @@ instance IsGroupElement HopsGroupElem where
   type GroupNumField HopsGroupElem = NoHops
   mkGroupNum Proxy = NoHops
   countGroupNum Proxy = unNoHops
+
+makeHopsGroupElem :: HopCompID -> HopsGroupElem
+makeHopsGroupElem hopsGroupElemHopCompID =
+  let hopsGroupElemHopSendingTime = Nothing
+      hopsGroupElemHopRefID = Nothing
+   in (HopsGroupElem {..})

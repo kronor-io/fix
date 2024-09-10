@@ -39,3 +39,8 @@ instance IsGroupElement UndInstrmtGrpGroupElem where
   type GroupNumField UndInstrmtGrpGroupElem = NoUnderlyings
   mkGroupNum Proxy = NoUnderlyings
   countGroupNum Proxy = unNoUnderlyings
+
+makeUndInstrmtGrpGroupElem :: UnderlyingInstrument -> UndInstrmtGrpGroupElem
+makeUndInstrmtGrpGroupElem undInstrmtGrpGroupElemUnderlyingInstrument =
+  let
+   in (UndInstrmtGrpGroupElem {..})

@@ -38,3 +38,8 @@ instance IsGroupElement QuotQualGrpGroupElem where
   type GroupNumField QuotQualGrpGroupElem = NoQuoteQualifiers
   mkGroupNum Proxy = NoQuoteQualifiers
   countGroupNum Proxy = unNoQuoteQualifiers
+
+makeQuotQualGrpGroupElem :: QuoteQualifier -> QuotQualGrpGroupElem
+makeQuotQualGrpGroupElem quotQualGrpGroupElemQuoteQualifier =
+  let
+   in (QuotQualGrpGroupElem {..})

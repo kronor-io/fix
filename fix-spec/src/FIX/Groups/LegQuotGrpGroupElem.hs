@@ -124,3 +124,16 @@ instance IsGroupElement LegQuotGrpGroupElem where
   type GroupNumField LegQuotGrpGroupElem = NoLegs
   mkGroupNum Proxy = NoLegs
   countGroupNum Proxy = unNoLegs
+
+makeLegQuotGrpGroupElem :: InstrumentLeg -> (LegBenchmarkCurveData -> LegQuotGrpGroupElem)
+makeLegQuotGrpGroupElem legQuotGrpGroupElemInstrumentLeg legQuotGrpGroupElemLegBenchmarkCurveData =
+  let legQuotGrpGroupElemLegQty = Nothing
+      legQuotGrpGroupElemLegSwapType = Nothing
+      legQuotGrpGroupElemLegSettlType = Nothing
+      legQuotGrpGroupElemLegSettlDate = Nothing
+      legQuotGrpGroupElemLegStipulationsGroup = []
+      legQuotGrpGroupElemNestedPartiesGroup = []
+      legQuotGrpGroupElemLegPriceType = Nothing
+      legQuotGrpGroupElemLegBidPx = Nothing
+      legQuotGrpGroupElemLegOfferPx = Nothing
+   in (LegQuotGrpGroupElem {..})
