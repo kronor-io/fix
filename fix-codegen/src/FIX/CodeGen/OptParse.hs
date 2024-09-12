@@ -27,11 +27,10 @@ data Settings = Settings
 instance HasParser Settings where
   settingsParser = withLocalYamlConfig $ do
     settingSpecFile <-
-      mapIO (`resolveFile` "FIX44.xml") $
-        directoryPathSetting
-          [ help "path to directory with specificaton files",
-            env "FIX_SPEC_DIR"
-          ]
+      filePathSetting
+        [ help "Path to a FIX specificaton file",
+          env "FIX_SPEC_FILE"
+        ]
     settingOutputDir <-
       directoryPathSetting
         [ help "Path to the top-level directory of this monorepo output dir",

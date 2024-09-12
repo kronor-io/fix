@@ -39,6 +39,12 @@ import UnliftIO
 -- Idea: We might need to wrap the inner conduit in channels for this to
 -- work nicely.
 
+data FixSettings m = FixSettings
+  { socket :: Network.Socket,
+    headerPrototype :: Header,
+    logMessage :: LogLevel -> Text -> m ()
+  }
+
 data FixHandle m = FixHandle
   { awaitMessage :: m AnyMessage,
     sendMessage :: AnyMessage -> m ()
@@ -47,8 +53,7 @@ data FixHandle m = FixHandle
 runFIXApp ::
   forall m.
   (MonadUnliftIO m) =>
-  Network.Socket ->
-  Header ->
+  FixSettings m ->
   (FixHandle m -> m ()) ->
   m ()
 runFIXApp sock headerPrototype userAppFunc = do
