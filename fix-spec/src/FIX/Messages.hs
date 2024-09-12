@@ -26,28 +26,28 @@ import FIX.Messages.Envelope
 import FIX.Messages.Heartbeat as X
 import FIX.Messages.Logon as X
 import FIX.Messages.Logout as X
-import FIX.Messages.Quote as X
-import FIX.Messages.QuoteRequest as X
+import FIX.Messages.News as X
+import FIX.Messages.Reject as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 
 data AnyMessage
-  = SomeHeartbeat !Heartbeat
+  = SomeLogon !Logon
+  | SomeHeartbeat !Heartbeat
+  | SomeReject !Reject
   | SomeLogout !Logout
-  | SomeLogon !Logon
-  | SomeQuoteRequest !QuoteRequest
-  | SomeQuote !Quote
+  | SomeNews !News
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyMessage
 
 anyMessageType :: AnyMessage -> MsgType
 anyMessageType = \case
-  SomeHeartbeat _ -> MsgTypeHeartbeat
-  SomeLogout _ -> MsgTypeLogout
   SomeLogon _ -> MsgTypeLogon
-  SomeQuoteRequest _ -> MsgTypeQuoteRequest
-  SomeQuote _ -> MsgTypeQuote
+  SomeHeartbeat _ -> MsgTypeHeartbeat
+  SomeReject _ -> MsgTypeReject
+  SomeLogout _ -> MsgTypeLogout
+  SomeNews _ -> MsgTypeNews
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
 anyMessageB ((Envelope {..})) =
@@ -58,11 +58,11 @@ anyMessageB ((Envelope {..})) =
         ByteString.Builder
       mb = messageB envelopeHeader envelopeTrailer
    in case envelopeContents of
-        SomeHeartbeat f -> mb f
-        SomeLogout f -> mb f
         SomeLogon f -> mb f
-        SomeQuoteRequest f -> mb f
-        SomeQuote f -> mb f
+        SomeHeartbeat f -> mb f
+        SomeReject f -> mb f
+        SomeLogout f -> mb f
+        SomeNews f -> mb f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do
@@ -75,21 +75,33 @@ anyMessageP = do
         Parsec Void ByteString (Envelope f)
       mp = messageP bs bl typ
   case typ of
-    MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp
-    MsgTypeLogout -> fmap SomeLogout <$> mp
     MsgTypeLogon -> fmap SomeLogon <$> mp
-    MsgTypeQuoteRequest -> fmap SomeQuoteRequest <$> mp
-    MsgTypeQuote -> fmap SomeQuote <$> mp
+    MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp
+    MsgTypeReject -> fmap SomeReject <$> mp
+    MsgTypeLogout -> fmap SomeLogout <$> mp
+    MsgTypeNews -> fmap SomeNews <$> mp
     _ -> fail ("Unknown message tag: " <> show typ)
 
 class (IsMessage a) => IsAnyMessage a where
   unpackAnyMessage :: AnyMessage -> Maybe a
   packAnyMessage :: a -> AnyMessage
 
+instance IsAnyMessage Logon where
+  packAnyMessage = SomeLogon
+  unpackAnyMessage = \case
+    SomeLogon f -> Just f
+    _ -> Nothing
+
 instance IsAnyMessage Heartbeat where
   packAnyMessage = SomeHeartbeat
   unpackAnyMessage = \case
     SomeHeartbeat f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage Reject where
+  packAnyMessage = SomeReject
+  unpackAnyMessage = \case
+    SomeReject f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage Logout where
@@ -98,20 +110,8 @@ instance IsAnyMessage Logout where
     SomeLogout f -> Just f
     _ -> Nothing
 
-instance IsAnyMessage Logon where
-  packAnyMessage = SomeLogon
+instance IsAnyMessage News where
+  packAnyMessage = SomeNews
   unpackAnyMessage = \case
-    SomeLogon f -> Just f
-    _ -> Nothing
-
-instance IsAnyMessage QuoteRequest where
-  packAnyMessage = SomeQuoteRequest
-  unpackAnyMessage = \case
-    SomeQuoteRequest f -> Just f
-    _ -> Nothing
-
-instance IsAnyMessage Quote where
-  packAnyMessage = SomeQuote
-  unpackAnyMessage = \case
-    SomeQuote f -> Just f
+    SomeNews f -> Just f
     _ -> Nothing

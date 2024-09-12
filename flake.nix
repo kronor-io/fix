@@ -103,7 +103,7 @@
           zlib
         ] ++ self.checks.${system}.pre-commit.enabledPackages;
         # FIX_SPEC_DIR = "${quickfix}/spec";
-        FIX_SPEC_FILE = "${./360.xml}";
+        FIX_SPEC_FILE = "./360t.xml";
         shellHook = self.checks.${system}.pre-commit.shellHook;
       };
     };

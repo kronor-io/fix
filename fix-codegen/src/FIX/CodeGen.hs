@@ -22,7 +22,7 @@ import Path
 import Path.IO
 import Paths_fix_codegen (getDataDir)
 import System.Exit
-import Text.Show.Pretty (ppShow)
+import Text.Show.Pretty (pPrint, ppShow)
 import qualified Text.XML as XML
 
 runFixCodeGen :: IO ()
@@ -39,6 +39,8 @@ runFixCodeGen = do
                   foldDataFields $
                     filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
+      putStrLn "Generating code according to this spec:"
+      pPrint spec
 
       testResourcesFiles <- genTestResources
 
@@ -1112,6 +1114,7 @@ headerDataFile pieces =
             [ [ "{-# LANGUAGE DerivingStrategies #-}",
                 "{-# LANGUAGE DeriveGeneric #-}",
                 "{-# LANGUAGE RecordWildCards #-}",
+                "{-# OPTIONS_GHC -Wno-unused-imports #-}",
                 "",
                 "module FIX.Messages.Header where",
                 "",

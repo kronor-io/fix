@@ -34,6 +34,7 @@ data Spec = Spec
     specComponents :: ![ComponentSpec],
     specMessages :: ![MessageSpec]
   }
+  deriving (Show)
 
 parseSpec :: Document -> Maybe Spec
 parseSpec doc = do

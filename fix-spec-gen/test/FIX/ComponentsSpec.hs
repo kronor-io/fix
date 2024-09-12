@@ -5,211 +5,27 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.ComponentsSpec where
 
-import FIX.Components.FinancingDetails
 import FIX.Components.Gen ()
-import FIX.Components.Instrument
-import FIX.Components.InstrumentLeg
-import FIX.Components.LegBenchmarkCurveData
-import FIX.Components.OrderQtyData
-import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.TestUtils
-import FIX.Components.UnderlyingInstrument
-import FIX.Components.YieldData
-import FIX.Groups.EvntGrpGroupElem
-import FIX.Groups.HopsGroupElem
-import FIX.Groups.LegQuotGrpGroupElem
-import FIX.Groups.LegSecAltIDGrpGroupElem
-import FIX.Groups.LegStipulationsGroupElem
-import FIX.Groups.MsgTypesGroupElem
-import FIX.Groups.NestedPartiesGroupElem
-import FIX.Groups.NstdPtysSubGrpGroupElem
-import FIX.Groups.PartiesGroupElem
-import FIX.Groups.PtysSubGrpGroupElem
-import FIX.Groups.QuotQualGrpGroupElem
-import FIX.Groups.QuotReqGrpGroupElem
-import FIX.Groups.QuotReqLegsGrpGroupElem
-import FIX.Groups.SecAltIDGrpGroupElem
-import FIX.Groups.StipulationsGroupElem
+import FIX.Groups.LinesOfTextGroupElem
+import FIX.Groups.RoutingIDsGroupElem
 import FIX.Groups.TestUtils
-import FIX.Groups.UndInstrmtGrpGroupElem
-import FIX.Groups.UndSecAltIDGrpGroupElem
-import FIX.Groups.UnderlyingStipulationsGroupElem
 import Test.Syd
 import Test.Syd.Validity
 
 spec :: Spec
 spec = do
   describe
-    "EvntGrp"
+    "NoLinesOfText"
     ( do
-        genValidSpec @EvntGrpGroupElem
-        componentSpec @EvntGrpGroupElem
-        groupSpec @EvntGrpGroupElem
+        genValidSpec @LinesOfTextGroupElem
+        componentSpec @LinesOfTextGroupElem
+        groupSpec @LinesOfTextGroupElem
     )
   describe
-    "LegQuotGrp"
+    "NoRoutingIDs"
     ( do
-        genValidSpec @LegQuotGrpGroupElem
-        componentSpec @LegQuotGrpGroupElem
-        groupSpec @LegQuotGrpGroupElem
-    )
-  describe
-    "LegSecAltIDGrp"
-    ( do
-        genValidSpec @LegSecAltIDGrpGroupElem
-        componentSpec @LegSecAltIDGrpGroupElem
-        groupSpec @LegSecAltIDGrpGroupElem
-    )
-  describe
-    "LegStipulations"
-    ( do
-        genValidSpec @LegStipulationsGroupElem
-        componentSpec @LegStipulationsGroupElem
-        groupSpec @LegStipulationsGroupElem
-    )
-  describe
-    "NestedParties"
-    ( do
-        genValidSpec @NestedPartiesGroupElem
-        componentSpec @NestedPartiesGroupElem
-        groupSpec @NestedPartiesGroupElem
-    )
-  describe
-    "NoHops"
-    ( do
-        genValidSpec @HopsGroupElem
-        componentSpec @HopsGroupElem
-        groupSpec @HopsGroupElem
-    )
-  describe
-    "NoMsgTypes"
-    ( do
-        genValidSpec @MsgTypesGroupElem
-        componentSpec @MsgTypesGroupElem
-        groupSpec @MsgTypesGroupElem
-    )
-  describe
-    "NstdPtysSubGrp"
-    ( do
-        genValidSpec @NstdPtysSubGrpGroupElem
-        componentSpec @NstdPtysSubGrpGroupElem
-        groupSpec @NstdPtysSubGrpGroupElem
-    )
-  describe
-    "Parties"
-    ( do
-        genValidSpec @PartiesGroupElem
-        componentSpec @PartiesGroupElem
-        groupSpec @PartiesGroupElem
-    )
-  describe
-    "PtysSubGrp"
-    ( do
-        genValidSpec @PtysSubGrpGroupElem
-        componentSpec @PtysSubGrpGroupElem
-        groupSpec @PtysSubGrpGroupElem
-    )
-  describe
-    "QuotQualGrp"
-    ( do
-        genValidSpec @QuotQualGrpGroupElem
-        componentSpec @QuotQualGrpGroupElem
-        groupSpec @QuotQualGrpGroupElem
-    )
-  describe
-    "QuotReqGrp"
-    ( do
-        genValidSpec @QuotReqGrpGroupElem
-        componentSpec @QuotReqGrpGroupElem
-        groupSpec @QuotReqGrpGroupElem
-    )
-  describe
-    "QuotReqLegsGrp"
-    ( do
-        genValidSpec @QuotReqLegsGrpGroupElem
-        componentSpec @QuotReqLegsGrpGroupElem
-        groupSpec @QuotReqLegsGrpGroupElem
-    )
-  describe
-    "SecAltIDGrp"
-    ( do
-        genValidSpec @SecAltIDGrpGroupElem
-        componentSpec @SecAltIDGrpGroupElem
-        groupSpec @SecAltIDGrpGroupElem
-    )
-  describe
-    "Stipulations"
-    ( do
-        genValidSpec @StipulationsGroupElem
-        componentSpec @StipulationsGroupElem
-        groupSpec @StipulationsGroupElem
-    )
-  describe
-    "UndInstrmtGrp"
-    ( do
-        genValidSpec @UndInstrmtGrpGroupElem
-        componentSpec @UndInstrmtGrpGroupElem
-        groupSpec @UndInstrmtGrpGroupElem
-    )
-  describe
-    "UndSecAltIDGrp"
-    ( do
-        genValidSpec @UndSecAltIDGrpGroupElem
-        componentSpec @UndSecAltIDGrpGroupElem
-        groupSpec @UndSecAltIDGrpGroupElem
-    )
-  describe
-    "UnderlyingStipulations"
-    ( do
-        genValidSpec @UnderlyingStipulationsGroupElem
-        componentSpec @UnderlyingStipulationsGroupElem
-        groupSpec @UnderlyingStipulationsGroupElem
-    )
-  describe
-    "FinancingDetails"
-    ( do
-        genValidSpec @FinancingDetails
-        componentSpec @FinancingDetails
-    )
-  describe
-    "Instrument"
-    ( do
-        genValidSpec @Instrument
-        componentSpec @Instrument
-    )
-  describe
-    "InstrumentLeg"
-    ( do
-        genValidSpec @InstrumentLeg
-        componentSpec @InstrumentLeg
-    )
-  describe
-    "LegBenchmarkCurveData"
-    ( do
-        genValidSpec @LegBenchmarkCurveData
-        componentSpec @LegBenchmarkCurveData
-    )
-  describe
-    "OrderQtyData"
-    ( do
-        genValidSpec @OrderQtyData
-        componentSpec @OrderQtyData
-    )
-  describe
-    "SpreadOrBenchmarkCurveData"
-    ( do
-        genValidSpec @SpreadOrBenchmarkCurveData
-        componentSpec @SpreadOrBenchmarkCurveData
-    )
-  describe
-    "UnderlyingInstrument"
-    ( do
-        genValidSpec @UnderlyingInstrument
-        componentSpec @UnderlyingInstrument
-    )
-  describe
-    "YieldData"
-    ( do
-        genValidSpec @YieldData
-        componentSpec @YieldData
+        genValidSpec @RoutingIDsGroupElem
+        componentSpec @RoutingIDsGroupElem
+        groupSpec @RoutingIDsGroupElem
     )

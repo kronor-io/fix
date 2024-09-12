@@ -10,8 +10,8 @@ import FIX.Messages.Gen ()
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 import FIX.Messages.Logout
-import FIX.Messages.Quote
-import FIX.Messages.QuoteRequest
+import FIX.Messages.News
+import FIX.Messages.Reject
 import FIX.Messages.TestUtils
 import Test.Syd
 import Test.Syd.Validity
@@ -19,11 +19,25 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
+    "Logon"
+    ( do
+        genValidSpec @Logon
+        componentSpec @Logon
+        messageSpec @Logon "Logon"
+    )
+  describe
     "Heartbeat"
     ( do
         genValidSpec @Heartbeat
         componentSpec @Heartbeat
         messageSpec @Heartbeat "Heartbeat"
+    )
+  describe
+    "Reject"
+    ( do
+        genValidSpec @Reject
+        componentSpec @Reject
+        messageSpec @Reject "Reject"
     )
   describe
     "Logout"
@@ -33,23 +47,9 @@ spec = do
         messageSpec @Logout "Logout"
     )
   describe
-    "Logon"
+    "News"
     ( do
-        genValidSpec @Logon
-        componentSpec @Logon
-        messageSpec @Logon "Logon"
-    )
-  describe
-    "QuoteRequest"
-    ( do
-        genValidSpec @QuoteRequest
-        componentSpec @QuoteRequest
-        messageSpec @QuoteRequest "QuoteRequest"
-    )
-  describe
-    "Quote"
-    ( do
-        genValidSpec @Quote
-        componentSpec @Quote
-        messageSpec @Quote "Quote"
+        genValidSpec @News
+        componentSpec @News
+        messageSpec @News "News"
     )

@@ -9,34 +9,20 @@ module FIX.Messages.Trailer where
 import Data.Validity
 import FIX.Components.Class
 import FIX.Fields.CheckSum
-import FIX.Fields.Signature
-import FIX.Fields.SignatureLength
 import GHC.Generics (Generic)
 
-data Trailer = Trailer
-  { trailerSignatureLength :: !(Maybe SignatureLength),
-    trailerSignature :: !(Maybe Signature),
-    trailerCheckSum :: !CheckSum
-  }
+data Trailer = Trailer {trailerCheckSum :: !CheckSum}
   deriving stock (Show, Eq, Generic)
 
 instance Validity Trailer
 
 instance IsComponent Trailer where
-  toComponentFields ((Trailer {..})) =
-    mconcat
-      [ optionalFieldB trailerSignatureLength,
-        optionalFieldB trailerSignature,
-        requiredFieldB trailerCheckSum
-      ]
+  toComponentFields ((Trailer {..})) = mconcat [requiredFieldB trailerCheckSum]
   fromComponentFields = do
-    trailerSignatureLength <- optionalFieldP
-    trailerSignature <- optionalFieldP
     trailerCheckSum <- requiredFieldP
     pure (Trailer {..})
 
 makeTrailer :: CheckSum -> Trailer
 makeTrailer trailerCheckSum =
-  let trailerSignatureLength = Nothing
-      trailerSignature = Nothing
+  let
    in (Trailer {..})
