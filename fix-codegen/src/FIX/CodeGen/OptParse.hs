@@ -12,7 +12,6 @@ import Data.Set (Set)
 import Data.Text (Text)
 import OptEnvConf
 import Path
-import Path.IO
 import Paths_fix_codegen (version)
 
 getSettings :: IO Settings

@@ -45,23 +45,23 @@ instance IsFieldType ByteString where
   toValue = id
   fromValue = Right
 
--- | Bytes of data fields
--- These are nonempty.
-newtype DataBytes = DataBytes {unDataBytes :: ByteString}
-  deriving (Show, Eq, Generic)
-
-instance Validity DataBytes where
-  validate sb@(DataBytes value) =
-    mconcat
-      [ genericValidate sb,
-        declare "The value is nonempty" $
-          not $
-            SB.null value
-      ]
-
-instance IsFieldType DataBytes where
-  toValue = unDataBytes
-  fromValue = prettyValidate . DataBytes
+-- -- | Bytes of data fields
+-- -- These are nonempty.
+-- newtype DataBytes = DataBytes {unDataBytes :: ByteString}
+--   deriving (Show, Eq, Generic)
+--
+-- instance Validity DataBytes where
+--   validate sb@(DataBytes value) =
+--     mconcat
+--       [ genericValidate sb,
+--         declare "The value is nonempty" $
+--           not $
+--             SB.null value
+--       ]
+--
+-- instance IsFieldType DataBytes where
+--   toValue = unDataBytes
+--   fromValue = prettyValidate . DataBytes
 
 -- | Bytes of non-data fields
 -- These are nonempty and not '\SOH'.
