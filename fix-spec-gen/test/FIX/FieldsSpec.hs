@@ -9,6 +9,12 @@ import FIX.Fields.Account
 import FIX.Fields.AllocAccount
 import FIX.Fields.AllocQty
 import FIX.Fields.BeginString
+import FIX.Fields.BidExAnteCost
+import FIX.Fields.BidExAnteCostPercentage
+import FIX.Fields.BidInterestAtMaturity
+import FIX.Fields.BidPx
+import FIX.Fields.BidPx2
+import FIX.Fields.BidSpotRate
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
 import FIX.Fields.CstmApplVerID
@@ -23,10 +29,23 @@ import FIX.Fields.Gen ()
 import FIX.Fields.Headline
 import FIX.Fields.HeartBtInt
 import FIX.Fields.Issuer
+import FIX.Fields.LegBidExAnteCost
+import FIX.Fields.LegBidExAnteCostPercentage
+import FIX.Fields.LegBidPx
+import FIX.Fields.LegMaturityDate
+import FIX.Fields.LegMidPx
+import FIX.Fields.LegOfferExAnteCost
+import FIX.Fields.LegOfferExAnteCostPercentage
+import FIX.Fields.LegOfferPx
+import FIX.Fields.LegQty
 import FIX.Fields.LegRefID
 import FIX.Fields.LegSettlDate
+import FIX.Fields.LegSymbol
 import FIX.Fields.MaturityDate
 import FIX.Fields.MaturityDate2
+import FIX.Fields.MidPx
+import FIX.Fields.MidPx2
+import FIX.Fields.MidSpotRate
 import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
 import FIX.Fields.NestedPartyID
@@ -35,6 +54,7 @@ import FIX.Fields.NestedPartyRole
 import FIX.Fields.NestedPartyRoleQualifier
 import FIX.Fields.NoAllocs
 import FIX.Fields.NoCustomFields
+import FIX.Fields.NoLegs
 import FIX.Fields.NoLinesOfText
 import FIX.Fields.NoNestedPartyIDs
 import FIX.Fields.NoOrderAttribute
@@ -42,7 +62,14 @@ import FIX.Fields.NoPartyIDs
 import FIX.Fields.NoRegulatoryTradeID
 import FIX.Fields.NoRelatedSym
 import FIX.Fields.NoRoutingIDs
+import FIX.Fields.OfferExAnteCost
+import FIX.Fields.OfferExAnteCostPercentage
+import FIX.Fields.OfferInterestAtMaturity
+import FIX.Fields.OfferPx
+import FIX.Fields.OfferPx2
+import FIX.Fields.OfferSpotRate
 import FIX.Fields.OptionDate
+import FIX.Fields.OptionPeriod
 import FIX.Fields.OrderAttributeType
 import FIX.Fields.OrderAttributeValue
 import FIX.Fields.OrderQty
@@ -53,6 +80,7 @@ import FIX.Fields.PartyRole
 import FIX.Fields.PartyRoleQualifier
 import FIX.Fields.Password
 import FIX.Fields.ProductType
+import FIX.Fields.QuoteID
 import FIX.Fields.QuoteReqID
 import FIX.Fields.QuoteRequestRejectReason
 import FIX.Fields.QuoteType
@@ -76,6 +104,7 @@ import FIX.Fields.Symbol
 import FIX.Fields.TargetCompID
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
+import FIX.Fields.ValidUntilTime
 import Test.Syd
 
 spec :: Spec
@@ -98,6 +127,22 @@ spec = do
   fieldSpec @NoOrderAttribute
   fieldSpec @OrderAttributeType
   fieldSpec @OrderAttributeValue
+  fieldSpec @LegMidPx
+  fieldSpec @BidPx2
+  fieldSpec @OfferPx2
+  fieldSpec @LegBidExAnteCost
+  fieldSpec @LegOfferExAnteCost
+  fieldSpec @LegBidExAnteCostPercentage
+  fieldSpec @LegOfferExAnteCostPercentage
+  fieldSpec @MidSpotRate
+  fieldSpec @MidPx2
+  fieldSpec @BidInterestAtMaturity
+  fieldSpec @OfferInterestAtMaturity
+  fieldSpec @OptionPeriod
+  fieldSpec @BidExAnteCost
+  fieldSpec @OfferExAnteCost
+  fieldSpec @BidExAnteCostPercentage
+  fieldSpec @OfferExAnteCostPercentage
   fieldSpec @Account
   fieldSpec @BeginString
   fieldSpec @BodyLength
@@ -115,6 +160,7 @@ spec = do
   fieldSpec @Symbol
   fieldSpec @TargetCompID
   fieldSpec @Text
+  fieldSpec @ValidUntilTime
   fieldSpec @SettlDate
   fieldSpec @NoAllocs
   fieldSpec @AllocAccount
@@ -123,11 +169,16 @@ spec = do
   fieldSpec @Issuer
   fieldSpec @HeartBtInt
   fieldSpec @TestReqID
+  fieldSpec @QuoteID
   fieldSpec @ExpireTime
   fieldSpec @QuoteReqID
+  fieldSpec @BidPx
+  fieldSpec @OfferPx
   fieldSpec @ResetSeqNumFlag
   fieldSpec @NoRelatedSym
   fieldSpec @Headline
+  fieldSpec @BidSpotRate
+  fieldSpec @OfferSpotRate
   fieldSpec @OrderQty2
   fieldSpec @SettlDate2
   fieldSpec @NoRoutingIDs
@@ -147,6 +198,13 @@ spec = do
   fieldSpec @NoNestedPartyIDs
   fieldSpec @MaturityDate
   fieldSpec @Password
+  fieldSpec @NoLegs
   fieldSpec @LegSettlDate
+  fieldSpec @LegSymbol
+  fieldSpec @LegMaturityDate
+  fieldSpec @MidPx
   fieldSpec @LegRefID
   fieldSpec @QuoteRequestRejectReason
+  fieldSpec @LegBidPx
+  fieldSpec @LegOfferPx
+  fieldSpec @LegQty

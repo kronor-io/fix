@@ -16,6 +16,12 @@ library
       FIX.Fields.AllocAccount
       FIX.Fields.AllocQty
       FIX.Fields.BeginString
+      FIX.Fields.BidExAnteCost
+      FIX.Fields.BidExAnteCostPercentage
+      FIX.Fields.BidInterestAtMaturity
+      FIX.Fields.BidPx
+      FIX.Fields.BidPx2
+      FIX.Fields.BidSpotRate
       FIX.Fields.BodyLength
       FIX.Fields.CheckSum
       FIX.Fields.CstmApplVerID
@@ -29,10 +35,23 @@ library
       FIX.Fields.Headline
       FIX.Fields.HeartBtInt
       FIX.Fields.Issuer
+      FIX.Fields.LegBidExAnteCost
+      FIX.Fields.LegBidExAnteCostPercentage
+      FIX.Fields.LegBidPx
+      FIX.Fields.LegMaturityDate
+      FIX.Fields.LegMidPx
+      FIX.Fields.LegOfferExAnteCost
+      FIX.Fields.LegOfferExAnteCostPercentage
+      FIX.Fields.LegOfferPx
+      FIX.Fields.LegQty
       FIX.Fields.LegRefID
       FIX.Fields.LegSettlDate
+      FIX.Fields.LegSymbol
       FIX.Fields.MaturityDate
       FIX.Fields.MaturityDate2
+      FIX.Fields.MidPx
+      FIX.Fields.MidPx2
+      FIX.Fields.MidSpotRate
       FIX.Fields.MsgSeqNum
       FIX.Fields.MsgType
       FIX.Fields.NestedPartyID
@@ -41,6 +60,7 @@ library
       FIX.Fields.NestedPartyRoleQualifier
       FIX.Fields.NoAllocs
       FIX.Fields.NoCustomFields
+      FIX.Fields.NoLegs
       FIX.Fields.NoLinesOfText
       FIX.Fields.NoNestedPartyIDs
       FIX.Fields.NoOrderAttribute
@@ -48,7 +68,14 @@ library
       FIX.Fields.NoRegulatoryTradeID
       FIX.Fields.NoRelatedSym
       FIX.Fields.NoRoutingIDs
+      FIX.Fields.OfferExAnteCost
+      FIX.Fields.OfferExAnteCostPercentage
+      FIX.Fields.OfferInterestAtMaturity
+      FIX.Fields.OfferPx
+      FIX.Fields.OfferPx2
+      FIX.Fields.OfferSpotRate
       FIX.Fields.OptionDate
+      FIX.Fields.OptionPeriod
       FIX.Fields.OrderAttributeType
       FIX.Fields.OrderAttributeValue
       FIX.Fields.OrderQty
@@ -59,6 +86,7 @@ library
       FIX.Fields.PartyRoleQualifier
       FIX.Fields.Password
       FIX.Fields.ProductType
+      FIX.Fields.QuoteID
       FIX.Fields.QuoteReqID
       FIX.Fields.QuoteRequestRejectReason
       FIX.Fields.QuoteType
@@ -82,9 +110,11 @@ library
       FIX.Fields.TargetCompID
       FIX.Fields.TestReqID
       FIX.Fields.Text
+      FIX.Fields.ValidUntilTime
       FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
       FIX.Groups.CustomFieldsGroupElem
+      FIX.Groups.LegsGroupElem
       FIX.Groups.LinesOfTextGroupElem
       FIX.Groups.NestedPartyIDsGroupElem
       FIX.Groups.OrderAttributeGroupElem
@@ -102,6 +132,7 @@ library
       FIX.Messages.Logon
       FIX.Messages.Logout
       FIX.Messages.News
+      FIX.Messages.Quote
       FIX.Messages.QuoteRequest
       FIX.Messages.QuoteRequestReject
       FIX.Messages.Reject

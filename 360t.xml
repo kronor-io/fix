@@ -89,6 +89,51 @@
    <field name='BusinessRejectReason' required='Y' />
    <field name='Text' required='N' />
   </message>
+  <message name='Quote' msgtype='S' msgcat='app'>
+   <field name='Account' required='N' />
+   <field name='Currency' required='N' />
+   <field name='OrderQty' required='Y' />
+   <field name='Symbol' required='Y' />
+   <field name='ValidUntilTime' required='N' />
+   <field name='Issuer' required='Y' />
+   <field name='QuoteType' required='N' />
+   <field name='QuoteID' required='Y' />
+   <field name='QuoteReqID' required='Y' />
+   <field name='BidPx' required='N' />
+   <field name='OfferPx' required='N' />
+   <field name='BidSpotRate' required='N' />
+   <field name='OfferSpotRate' required='N' />
+   <field name='OrderQty2' required='N' />
+   <group name='NoLegs' required='N'>
+    <field name='LegSymbol' required='Y' />
+    <field name='LegMaturityDate' required='N' />
+    <field name='LegQty' required='Y' />
+    <field name='LegSettlDate' required='N' />
+    <field name='LegBidPx' required='N' />
+    <field name='LegOfferPx' required='N' />
+    <field name='LegRefID' required='Y' />
+    <field name='LegMidPx' required='N' />
+    <field name='BidPx2' required='N' />
+    <field name='OfferPx2' required='N' />
+    <field name='LegBidExAnteCost' required='N' />
+    <field name='LegOfferExAnteCost' required='N' />
+    <field name='LegBidExAnteCostPercentage' required='N' />
+    <field name='LegOfferExAnteCostPercentage' required='N' />
+   </group>
+   <field name='RefSpotDate' required='N' />
+   <field name='ProductType' required='N' />
+   <field name='MidPx' required='N' />
+   <field name='MidSpotRate' required='N' />
+   <field name='MidPx2' required='N' />
+   <field name='BidInterestAtMaturity' required='N' />
+   <field name='OfferInterestAtMaturity' required='N' />
+   <field name='OptionPeriod' required='N' />
+   <field name='OptionDate' required='N' />
+   <field name='BidExAnteCost' required='N' />
+   <field name='OfferExAnteCost' required='N' />
+   <field name='BidExAnteCostPercentage' required='N' />
+   <field name='OfferExAnteCostPercentage' required='N' />
+  </message>
  </messages>
  <trailer>
   <field name='CheckSum' required='Y' />
@@ -184,6 +229,22 @@
    <value enum='Y' description='Risk Decreasing' />
    <value enum='N' description='Risk Increasing' />
   </field>
+  <field number='7652' name='LegMidPx' type='STRING' />
+  <field number='6050' name='BidPx2' type='PRICE' />
+  <field number='6051' name='OfferPx2' type='PRICE' />
+  <field number='9804' name='LegBidExAnteCost' type='PRICE' />
+  <field number='9805' name='LegOfferExAnteCost' type='PRICE' />
+  <field number='9806' name='LegBidExAnteCostPercentage' type='PERCENTAGE' />
+  <field number='9807' name='LegOfferExAnteCostPercentage' type='PERCENTAGE' />
+  <field number='7650' name='MidSpotRate' type='PRICE' />
+  <field number='7651' name='MidPx2' type='PRICE' />
+  <field number='7084' name='BidInterestAtMaturity' type='PRICE' />
+  <field number='7085' name='OfferInterestAtMaturity' type='PRICE' />
+  <field number='9514' name='OptionPeriod' type='STRING' />
+  <field number='9800' name='BidExAnteCost' type='PRICE' />
+  <field number='9801' name='OfferExAnteCost' type='PRICE' />
+  <field number='9802' name='BidExAnteCostPercentage' type='PERCENTAGE' />
+  <field number='9803' name='OfferExAnteCostPercentage' type='PERCENTAGE' />
   <!-- TODO Put the above at the end later --> 
   <!-- TODO remove unused fields -->
   <field number='1' name='Account' type='STRING' />

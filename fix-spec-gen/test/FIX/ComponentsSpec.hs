@@ -9,6 +9,7 @@ import FIX.Components.Gen ()
 import FIX.Components.TestUtils
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.CustomFieldsGroupElem
+import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
@@ -36,6 +37,13 @@ spec = do
         genValidSpec @CustomFieldsGroupElem
         componentSpec @CustomFieldsGroupElem
         groupSpec @CustomFieldsGroupElem
+    )
+  describe
+    "NoLegs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
     )
   describe
     "NoLinesOfText"

@@ -9,6 +9,7 @@ import Data.GenValidity.ByteString ()
 import FIX.Fields.Gen ()
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.CustomFieldsGroupElem
+import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
@@ -23,6 +24,10 @@ instance GenValid AllocsGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid CustomFieldsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid LegsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

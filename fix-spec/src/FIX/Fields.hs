@@ -23,6 +23,12 @@ import FIX.Fields.Account as X
 import FIX.Fields.AllocAccount as X
 import FIX.Fields.AllocQty as X
 import FIX.Fields.BeginString as X
+import FIX.Fields.BidExAnteCost as X
+import FIX.Fields.BidExAnteCostPercentage as X
+import FIX.Fields.BidInterestAtMaturity as X
+import FIX.Fields.BidPx as X
+import FIX.Fields.BidPx2 as X
+import FIX.Fields.BidSpotRate as X
 import FIX.Fields.BodyLength as X
 import FIX.Fields.CheckSum as X
 import FIX.Fields.CstmApplVerID as X
@@ -36,10 +42,23 @@ import FIX.Fields.ExpireTime as X
 import FIX.Fields.Headline as X
 import FIX.Fields.HeartBtInt as X
 import FIX.Fields.Issuer as X
+import FIX.Fields.LegBidExAnteCost as X
+import FIX.Fields.LegBidExAnteCostPercentage as X
+import FIX.Fields.LegBidPx as X
+import FIX.Fields.LegMaturityDate as X
+import FIX.Fields.LegMidPx as X
+import FIX.Fields.LegOfferExAnteCost as X
+import FIX.Fields.LegOfferExAnteCostPercentage as X
+import FIX.Fields.LegOfferPx as X
+import FIX.Fields.LegQty as X
 import FIX.Fields.LegRefID as X
 import FIX.Fields.LegSettlDate as X
+import FIX.Fields.LegSymbol as X
 import FIX.Fields.MaturityDate as X
 import FIX.Fields.MaturityDate2 as X
+import FIX.Fields.MidPx as X
+import FIX.Fields.MidPx2 as X
+import FIX.Fields.MidSpotRate as X
 import FIX.Fields.MsgSeqNum as X
 import FIX.Fields.MsgType as X
 import FIX.Fields.NestedPartyID as X
@@ -48,6 +67,7 @@ import FIX.Fields.NestedPartyRole as X
 import FIX.Fields.NestedPartyRoleQualifier as X
 import FIX.Fields.NoAllocs as X
 import FIX.Fields.NoCustomFields as X
+import FIX.Fields.NoLegs as X
 import FIX.Fields.NoLinesOfText as X
 import FIX.Fields.NoNestedPartyIDs as X
 import FIX.Fields.NoOrderAttribute as X
@@ -55,7 +75,14 @@ import FIX.Fields.NoPartyIDs as X
 import FIX.Fields.NoRegulatoryTradeID as X
 import FIX.Fields.NoRelatedSym as X
 import FIX.Fields.NoRoutingIDs as X
+import FIX.Fields.OfferExAnteCost as X
+import FIX.Fields.OfferExAnteCostPercentage as X
+import FIX.Fields.OfferInterestAtMaturity as X
+import FIX.Fields.OfferPx as X
+import FIX.Fields.OfferPx2 as X
+import FIX.Fields.OfferSpotRate as X
 import FIX.Fields.OptionDate as X
+import FIX.Fields.OptionPeriod as X
 import FIX.Fields.OrderAttributeType as X
 import FIX.Fields.OrderAttributeValue as X
 import FIX.Fields.OrderQty as X
@@ -66,6 +93,7 @@ import FIX.Fields.PartyRole as X
 import FIX.Fields.PartyRoleQualifier as X
 import FIX.Fields.Password as X
 import FIX.Fields.ProductType as X
+import FIX.Fields.QuoteID as X
 import FIX.Fields.QuoteReqID as X
 import FIX.Fields.QuoteRequestRejectReason as X
 import FIX.Fields.QuoteType as X
@@ -89,6 +117,7 @@ import FIX.Fields.Symbol as X
 import FIX.Fields.TargetCompID as X
 import FIX.Fields.TestReqID as X
 import FIX.Fields.Text as X
+import FIX.Fields.ValidUntilTime as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte.Lexer
@@ -112,6 +141,22 @@ data AnyField
   | SomeNoOrderAttribute !NoOrderAttribute
   | SomeOrderAttributeType !OrderAttributeType
   | SomeOrderAttributeValue !OrderAttributeValue
+  | SomeLegMidPx !LegMidPx
+  | SomeBidPx2 !BidPx2
+  | SomeOfferPx2 !OfferPx2
+  | SomeLegBidExAnteCost !LegBidExAnteCost
+  | SomeLegOfferExAnteCost !LegOfferExAnteCost
+  | SomeLegBidExAnteCostPercentage !LegBidExAnteCostPercentage
+  | SomeLegOfferExAnteCostPercentage !LegOfferExAnteCostPercentage
+  | SomeMidSpotRate !MidSpotRate
+  | SomeMidPx2 !MidPx2
+  | SomeBidInterestAtMaturity !BidInterestAtMaturity
+  | SomeOfferInterestAtMaturity !OfferInterestAtMaturity
+  | SomeOptionPeriod !OptionPeriod
+  | SomeBidExAnteCost !BidExAnteCost
+  | SomeOfferExAnteCost !OfferExAnteCost
+  | SomeBidExAnteCostPercentage !BidExAnteCostPercentage
+  | SomeOfferExAnteCostPercentage !OfferExAnteCostPercentage
   | SomeAccount !Account
   | SomeBeginString !BeginString
   | SomeBodyLength !BodyLength
@@ -129,6 +174,7 @@ data AnyField
   | SomeSymbol !Symbol
   | SomeTargetCompID !TargetCompID
   | SomeText !Text
+  | SomeValidUntilTime !ValidUntilTime
   | SomeSettlDate !SettlDate
   | SomeNoAllocs !NoAllocs
   | SomeAllocAccount !AllocAccount
@@ -137,11 +183,16 @@ data AnyField
   | SomeIssuer !Issuer
   | SomeHeartBtInt !HeartBtInt
   | SomeTestReqID !TestReqID
+  | SomeQuoteID !QuoteID
   | SomeExpireTime !ExpireTime
   | SomeQuoteReqID !QuoteReqID
+  | SomeBidPx !BidPx
+  | SomeOfferPx !OfferPx
   | SomeResetSeqNumFlag !ResetSeqNumFlag
   | SomeNoRelatedSym !NoRelatedSym
   | SomeHeadline !Headline
+  | SomeBidSpotRate !BidSpotRate
+  | SomeOfferSpotRate !OfferSpotRate
   | SomeOrderQty2 !OrderQty2
   | SomeSettlDate2 !SettlDate2
   | SomeNoRoutingIDs !NoRoutingIDs
@@ -161,9 +212,16 @@ data AnyField
   | SomeNoNestedPartyIDs !NoNestedPartyIDs
   | SomeMaturityDate !MaturityDate
   | SomePassword !Password
+  | SomeNoLegs !NoLegs
   | SomeLegSettlDate !LegSettlDate
+  | SomeLegSymbol !LegSymbol
+  | SomeLegMaturityDate !LegMaturityDate
+  | SomeMidPx !MidPx
   | SomeLegRefID !LegRefID
   | SomeQuoteRequestRejectReason !QuoteRequestRejectReason
+  | SomeLegBidPx !LegBidPx
+  | SomeLegOfferPx !LegOfferPx
+  | SomeLegQty !LegQty
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyField
@@ -188,6 +246,22 @@ anyFieldB = \case
   SomeNoOrderAttribute f -> fieldB f
   SomeOrderAttributeType f -> fieldB f
   SomeOrderAttributeValue f -> fieldB f
+  SomeLegMidPx f -> fieldB f
+  SomeBidPx2 f -> fieldB f
+  SomeOfferPx2 f -> fieldB f
+  SomeLegBidExAnteCost f -> fieldB f
+  SomeLegOfferExAnteCost f -> fieldB f
+  SomeLegBidExAnteCostPercentage f -> fieldB f
+  SomeLegOfferExAnteCostPercentage f -> fieldB f
+  SomeMidSpotRate f -> fieldB f
+  SomeMidPx2 f -> fieldB f
+  SomeBidInterestAtMaturity f -> fieldB f
+  SomeOfferInterestAtMaturity f -> fieldB f
+  SomeOptionPeriod f -> fieldB f
+  SomeBidExAnteCost f -> fieldB f
+  SomeOfferExAnteCost f -> fieldB f
+  SomeBidExAnteCostPercentage f -> fieldB f
+  SomeOfferExAnteCostPercentage f -> fieldB f
   SomeAccount f -> fieldB f
   SomeBeginString f -> fieldB f
   SomeBodyLength f -> fieldB f
@@ -205,6 +279,7 @@ anyFieldB = \case
   SomeSymbol f -> fieldB f
   SomeTargetCompID f -> fieldB f
   SomeText f -> fieldB f
+  SomeValidUntilTime f -> fieldB f
   SomeSettlDate f -> fieldB f
   SomeNoAllocs f -> fieldB f
   SomeAllocAccount f -> fieldB f
@@ -213,11 +288,16 @@ anyFieldB = \case
   SomeIssuer f -> fieldB f
   SomeHeartBtInt f -> fieldB f
   SomeTestReqID f -> fieldB f
+  SomeQuoteID f -> fieldB f
   SomeExpireTime f -> fieldB f
   SomeQuoteReqID f -> fieldB f
+  SomeBidPx f -> fieldB f
+  SomeOfferPx f -> fieldB f
   SomeResetSeqNumFlag f -> fieldB f
   SomeNoRelatedSym f -> fieldB f
   SomeHeadline f -> fieldB f
+  SomeBidSpotRate f -> fieldB f
+  SomeOfferSpotRate f -> fieldB f
   SomeOrderQty2 f -> fieldB f
   SomeSettlDate2 f -> fieldB f
   SomeNoRoutingIDs f -> fieldB f
@@ -237,9 +317,16 @@ anyFieldB = \case
   SomeNoNestedPartyIDs f -> fieldB f
   SomeMaturityDate f -> fieldB f
   SomePassword f -> fieldB f
+  SomeNoLegs f -> fieldB f
   SomeLegSettlDate f -> fieldB f
+  SomeLegSymbol f -> fieldB f
+  SomeLegMaturityDate f -> fieldB f
+  SomeMidPx f -> fieldB f
   SomeLegRefID f -> fieldB f
   SomeQuoteRequestRejectReason f -> fieldB f
+  SomeLegBidPx f -> fieldB f
+  SomeLegOfferPx f -> fieldB f
+  SomeLegQty f -> fieldB f
 
 anyFieldP :: Parsec Void ByteString AnyField
 anyFieldP = do
@@ -265,6 +352,22 @@ anyFieldP = do
     2593 -> SomeNoOrderAttribute <$> fp
     2594 -> SomeOrderAttributeType <$> fp
     2595 -> SomeOrderAttributeValue <$> fp
+    7652 -> SomeLegMidPx <$> fp
+    6050 -> SomeBidPx2 <$> fp
+    6051 -> SomeOfferPx2 <$> fp
+    9804 -> SomeLegBidExAnteCost <$> fp
+    9805 -> SomeLegOfferExAnteCost <$> fp
+    9806 -> SomeLegBidExAnteCostPercentage <$> fp
+    9807 -> SomeLegOfferExAnteCostPercentage <$> fp
+    7650 -> SomeMidSpotRate <$> fp
+    7651 -> SomeMidPx2 <$> fp
+    7084 -> SomeBidInterestAtMaturity <$> fp
+    7085 -> SomeOfferInterestAtMaturity <$> fp
+    9514 -> SomeOptionPeriod <$> fp
+    9800 -> SomeBidExAnteCost <$> fp
+    9801 -> SomeOfferExAnteCost <$> fp
+    9802 -> SomeBidExAnteCostPercentage <$> fp
+    9803 -> SomeOfferExAnteCostPercentage <$> fp
     1 -> SomeAccount <$> fp
     8 -> SomeBeginString <$> fp
     9 -> SomeBodyLength <$> fp
@@ -282,6 +385,7 @@ anyFieldP = do
     55 -> SomeSymbol <$> fp
     56 -> SomeTargetCompID <$> fp
     58 -> SomeText <$> fp
+    62 -> SomeValidUntilTime <$> fp
     64 -> SomeSettlDate <$> fp
     78 -> SomeNoAllocs <$> fp
     79 -> SomeAllocAccount <$> fp
@@ -290,11 +394,16 @@ anyFieldP = do
     106 -> SomeIssuer <$> fp
     108 -> SomeHeartBtInt <$> fp
     112 -> SomeTestReqID <$> fp
+    117 -> SomeQuoteID <$> fp
     126 -> SomeExpireTime <$> fp
     131 -> SomeQuoteReqID <$> fp
+    132 -> SomeBidPx <$> fp
+    133 -> SomeOfferPx <$> fp
     141 -> SomeResetSeqNumFlag <$> fp
     146 -> SomeNoRelatedSym <$> fp
     148 -> SomeHeadline <$> fp
+    188 -> SomeBidSpotRate <$> fp
+    190 -> SomeOfferSpotRate <$> fp
     192 -> SomeOrderQty2 <$> fp
     193 -> SomeSettlDate2 <$> fp
     215 -> SomeNoRoutingIDs <$> fp
@@ -314,9 +423,16 @@ anyFieldP = do
     539 -> SomeNoNestedPartyIDs <$> fp
     541 -> SomeMaturityDate <$> fp
     554 -> SomePassword <$> fp
+    555 -> SomeNoLegs <$> fp
     588 -> SomeLegSettlDate <$> fp
+    600 -> SomeLegSymbol <$> fp
+    611 -> SomeLegMaturityDate <$> fp
+    631 -> SomeMidPx <$> fp
     654 -> SomeLegRefID <$> fp
     658 -> SomeQuoteRequestRejectReason <$> fp
+    681 -> SomeLegBidPx <$> fp
+    684 -> SomeLegOfferPx <$> fp
+    687 -> SomeLegQty <$> fp
     _ -> fail ("Unknown field tag: " <> show tag)
 
 class (IsField a) => IsAnyField a where
@@ -431,6 +547,102 @@ instance IsAnyField OrderAttributeValue where
     SomeOrderAttributeValue f -> Just f
     _ -> Nothing
 
+instance IsAnyField LegMidPx where
+  packAnyField = SomeLegMidPx
+  unpackAnyField = \case
+    SomeLegMidPx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BidPx2 where
+  packAnyField = SomeBidPx2
+  unpackAnyField = \case
+    SomeBidPx2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OfferPx2 where
+  packAnyField = SomeOfferPx2
+  unpackAnyField = \case
+    SomeOfferPx2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBidExAnteCost where
+  packAnyField = SomeLegBidExAnteCost
+  unpackAnyField = \case
+    SomeLegBidExAnteCost f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegOfferExAnteCost where
+  packAnyField = SomeLegOfferExAnteCost
+  unpackAnyField = \case
+    SomeLegOfferExAnteCost f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBidExAnteCostPercentage where
+  packAnyField = SomeLegBidExAnteCostPercentage
+  unpackAnyField = \case
+    SomeLegBidExAnteCostPercentage f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegOfferExAnteCostPercentage where
+  packAnyField = SomeLegOfferExAnteCostPercentage
+  unpackAnyField = \case
+    SomeLegOfferExAnteCostPercentage f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MidSpotRate where
+  packAnyField = SomeMidSpotRate
+  unpackAnyField = \case
+    SomeMidSpotRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MidPx2 where
+  packAnyField = SomeMidPx2
+  unpackAnyField = \case
+    SomeMidPx2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BidInterestAtMaturity where
+  packAnyField = SomeBidInterestAtMaturity
+  unpackAnyField = \case
+    SomeBidInterestAtMaturity f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OfferInterestAtMaturity where
+  packAnyField = SomeOfferInterestAtMaturity
+  unpackAnyField = \case
+    SomeOfferInterestAtMaturity f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OptionPeriod where
+  packAnyField = SomeOptionPeriod
+  unpackAnyField = \case
+    SomeOptionPeriod f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BidExAnteCost where
+  packAnyField = SomeBidExAnteCost
+  unpackAnyField = \case
+    SomeBidExAnteCost f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OfferExAnteCost where
+  packAnyField = SomeOfferExAnteCost
+  unpackAnyField = \case
+    SomeOfferExAnteCost f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BidExAnteCostPercentage where
+  packAnyField = SomeBidExAnteCostPercentage
+  unpackAnyField = \case
+    SomeBidExAnteCostPercentage f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OfferExAnteCostPercentage where
+  packAnyField = SomeOfferExAnteCostPercentage
+  unpackAnyField = \case
+    SomeOfferExAnteCostPercentage f -> Just f
+    _ -> Nothing
+
 instance IsAnyField Account where
   packAnyField = SomeAccount
   unpackAnyField = \case
@@ -533,6 +745,12 @@ instance IsAnyField Text where
     SomeText f -> Just f
     _ -> Nothing
 
+instance IsAnyField ValidUntilTime where
+  packAnyField = SomeValidUntilTime
+  unpackAnyField = \case
+    SomeValidUntilTime f -> Just f
+    _ -> Nothing
+
 instance IsAnyField SettlDate where
   packAnyField = SomeSettlDate
   unpackAnyField = \case
@@ -581,6 +799,12 @@ instance IsAnyField TestReqID where
     SomeTestReqID f -> Just f
     _ -> Nothing
 
+instance IsAnyField QuoteID where
+  packAnyField = SomeQuoteID
+  unpackAnyField = \case
+    SomeQuoteID f -> Just f
+    _ -> Nothing
+
 instance IsAnyField ExpireTime where
   packAnyField = SomeExpireTime
   unpackAnyField = \case
@@ -591,6 +815,18 @@ instance IsAnyField QuoteReqID where
   packAnyField = SomeQuoteReqID
   unpackAnyField = \case
     SomeQuoteReqID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BidPx where
+  packAnyField = SomeBidPx
+  unpackAnyField = \case
+    SomeBidPx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OfferPx where
+  packAnyField = SomeOfferPx
+  unpackAnyField = \case
+    SomeOfferPx f -> Just f
     _ -> Nothing
 
 instance IsAnyField ResetSeqNumFlag where
@@ -609,6 +845,18 @@ instance IsAnyField Headline where
   packAnyField = SomeHeadline
   unpackAnyField = \case
     SomeHeadline f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BidSpotRate where
+  packAnyField = SomeBidSpotRate
+  unpackAnyField = \case
+    SomeBidSpotRate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OfferSpotRate where
+  packAnyField = SomeOfferSpotRate
+  unpackAnyField = \case
+    SomeOfferSpotRate f -> Just f
     _ -> Nothing
 
 instance IsAnyField OrderQty2 where
@@ -725,10 +973,34 @@ instance IsAnyField Password where
     SomePassword f -> Just f
     _ -> Nothing
 
+instance IsAnyField NoLegs where
+  packAnyField = SomeNoLegs
+  unpackAnyField = \case
+    SomeNoLegs f -> Just f
+    _ -> Nothing
+
 instance IsAnyField LegSettlDate where
   packAnyField = SomeLegSettlDate
   unpackAnyField = \case
     SomeLegSettlDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSymbol where
+  packAnyField = SomeLegSymbol
+  unpackAnyField = \case
+    SomeLegSymbol f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegMaturityDate where
+  packAnyField = SomeLegMaturityDate
+  unpackAnyField = \case
+    SomeLegMaturityDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MidPx where
+  packAnyField = SomeMidPx
+  unpackAnyField = \case
+    SomeMidPx f -> Just f
     _ -> Nothing
 
 instance IsAnyField LegRefID where
@@ -741,4 +1013,22 @@ instance IsAnyField QuoteRequestRejectReason where
   packAnyField = SomeQuoteRequestRejectReason
   unpackAnyField = \case
     SomeQuoteRequestRejectReason f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegBidPx where
+  packAnyField = SomeLegBidPx
+  unpackAnyField = \case
+    SomeLegBidPx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegOfferPx where
+  packAnyField = SomeLegOfferPx
+  unpackAnyField = \case
+    SomeLegOfferPx f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegQty where
+  packAnyField = SomeLegQty
+  unpackAnyField = \case
+    SomeLegQty f -> Just f
     _ -> Nothing
