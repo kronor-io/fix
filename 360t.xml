@@ -50,6 +50,16 @@
     <field name='RoutingID' required='N' />
    </group>
   </message>
+  <message name='QuoteRequest' msgtype='R' msgcat='app'>
+   <field name='QuoteReqID' required='Y' />
+   <field name='RefSpotDate' required='N' />
+   <field name='ProductType' required='Y' />
+   <field name='ExecutionVenueType' required='N' />
+   <group name='NoCustomFields' required='N'>
+    <field name='CustomFieldName' required='Y' />
+    <field name='CustomFieldValue' required='Y' />
+   </group>
+  </message>
  </messages>
  <trailer>
   <field name='CheckSum' required='Y' />
