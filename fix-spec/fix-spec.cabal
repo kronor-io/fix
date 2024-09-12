@@ -89,6 +89,7 @@ library
       FIX.Groups.NestedPartyIDsGroupElem
       FIX.Groups.OrderAttributeGroupElem
       FIX.Groups.PartyIDsGroupElem
+      FIX.Groups.QuotReqGrpGroupElem
       FIX.Groups.QuotReqRjctGrpGroupElem
       FIX.Groups.RegulatoryTradeIDGroupElem
       FIX.Groups.RelatedSymGroupElem

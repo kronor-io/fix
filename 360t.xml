@@ -82,6 +82,13 @@
    <component name='QuotReqRjctGrp' required='Y' />
    <field name='Text' required='Y' />
   </message>
+  <message name='BusinessMessageReject' msgtype='j' msgcat='app'>
+   <field name='RefSeqNum' required='N' />
+   <field name='RefMsgType' required='Y' />
+   <field name='BusinessRejectRefID' required='N' />
+   <field name='BusinessRejectReason' required='Y' />
+   <field name='Text' required='N' />
+  </message>
  </messages>
  <trailer>
   <field name='CheckSum' required='Y' />

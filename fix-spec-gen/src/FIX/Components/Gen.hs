@@ -13,9 +13,9 @@ import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
 import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.QuotReqGrpGroupElem
 import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
-import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
 
 instance GenValid AllocsGroupElem where
@@ -46,11 +46,11 @@ instance GenValid RegulatoryTradeIDGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid RelatedSymGroupElem where
+instance GenValid RoutingIDsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid RoutingIDsGroupElem where
+instance GenValid QuotReqGrpGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

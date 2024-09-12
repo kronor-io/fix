@@ -13,9 +13,9 @@ import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
 import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.QuotReqGrpGroupElem
 import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
-import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
 import FIX.Groups.TestUtils
 import Test.Syd
@@ -73,18 +73,18 @@ spec = do
         groupSpec @RegulatoryTradeIDGroupElem
     )
   describe
-    "NoRelatedSym"
-    ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
-    )
-  describe
     "NoRoutingIDs"
     ( do
         genValidSpec @RoutingIDsGroupElem
         componentSpec @RoutingIDsGroupElem
         groupSpec @RoutingIDsGroupElem
+    )
+  describe
+    "QuotReqGrp"
+    ( do
+        genValidSpec @QuotReqGrpGroupElem
+        componentSpec @QuotReqGrpGroupElem
+        groupSpec @QuotReqGrpGroupElem
     )
   describe
     "QuotReqRjctGrp"
