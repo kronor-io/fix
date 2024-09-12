@@ -26,8 +26,10 @@ import FIX.Messages.Envelope
 import FIX.Messages.Heartbeat as X
 import FIX.Messages.Logon as X
 import FIX.Messages.Logout as X
+import FIX.Messages.NewOrderSingle as X
 import FIX.Messages.News as X
 import FIX.Messages.Quote as X
+import FIX.Messages.QuoteCancel as X
 import FIX.Messages.QuoteRequest as X
 import FIX.Messages.QuoteRequestReject as X
 import FIX.Messages.Reject as X
@@ -43,6 +45,8 @@ data AnyMessage
   | SomeQuoteRequest !QuoteRequest
   | SomeQuoteRequestReject !QuoteRequestReject
   | SomeQuote !Quote
+  | SomeQuoteCancel !QuoteCancel
+  | SomeNewOrderSingle !NewOrderSingle
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyMessage
@@ -57,6 +61,8 @@ anyMessageType = \case
   SomeQuoteRequest _ -> MsgTypeQuoteRequest
   SomeQuoteRequestReject _ -> MsgTypeQuoteRequestReject
   SomeQuote _ -> MsgTypeQuote
+  SomeQuoteCancel _ -> MsgTypeQuoteCancel
+  SomeNewOrderSingle _ -> MsgTypeNewOrderSingle
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
 anyMessageB ((Envelope {..})) =
@@ -75,6 +81,8 @@ anyMessageB ((Envelope {..})) =
         SomeQuoteRequest f -> mb f
         SomeQuoteRequestReject f -> mb f
         SomeQuote f -> mb f
+        SomeQuoteCancel f -> mb f
+        SomeNewOrderSingle f -> mb f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do
@@ -95,6 +103,8 @@ anyMessageP = do
     MsgTypeQuoteRequest -> fmap SomeQuoteRequest <$> mp
     MsgTypeQuoteRequestReject -> fmap SomeQuoteRequestReject <$> mp
     MsgTypeQuote -> fmap SomeQuote <$> mp
+    MsgTypeQuoteCancel -> fmap SomeQuoteCancel <$> mp
+    MsgTypeNewOrderSingle -> fmap SomeNewOrderSingle <$> mp
     _ -> fail ("Unknown message tag: " <> show typ)
 
 class (IsMessage a) => IsAnyMessage a where
@@ -147,4 +157,16 @@ instance IsAnyMessage Quote where
   packAnyMessage = SomeQuote
   unpackAnyMessage = \case
     SomeQuote f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage QuoteCancel where
+  packAnyMessage = SomeQuoteCancel
+  unpackAnyMessage = \case
+    SomeQuoteCancel f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage NewOrderSingle where
+  packAnyMessage = SomeNewOrderSingle
+  unpackAnyMessage = \case
+    SomeNewOrderSingle f -> Just f
     _ -> Nothing

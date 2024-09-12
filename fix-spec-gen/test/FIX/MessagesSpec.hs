@@ -10,8 +10,10 @@ import FIX.Messages.Gen ()
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 import FIX.Messages.Logout
+import FIX.Messages.NewOrderSingle
 import FIX.Messages.News
 import FIX.Messages.Quote
+import FIX.Messages.QuoteCancel
 import FIX.Messages.QuoteRequest
 import FIX.Messages.QuoteRequestReject
 import FIX.Messages.Reject
@@ -76,4 +78,18 @@ spec = do
         genValidSpec @Quote
         componentSpec @Quote
         messageSpec @Quote "Quote"
+    )
+  describe
+    "QuoteCancel"
+    ( do
+        genValidSpec @QuoteCancel
+        componentSpec @QuoteCancel
+        messageSpec @QuoteCancel "QuoteCancel"
+    )
+  describe
+    "NewOrderSingle"
+    ( do
+        genValidSpec @NewOrderSingle
+        componentSpec @NewOrderSingle
+        messageSpec @NewOrderSingle "NewOrderSingle"
     )

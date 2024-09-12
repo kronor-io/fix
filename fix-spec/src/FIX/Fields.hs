@@ -31,6 +31,7 @@ import FIX.Fields.BidPx2 as X
 import FIX.Fields.BidSpotRate as X
 import FIX.Fields.BodyLength as X
 import FIX.Fields.CheckSum as X
+import FIX.Fields.ClOrdID as X
 import FIX.Fields.CstmApplVerID as X
 import FIX.Fields.Currency as X
 import FIX.Fields.CustomFieldName as X
@@ -83,6 +84,7 @@ import FIX.Fields.OfferPx2 as X
 import FIX.Fields.OfferSpotRate as X
 import FIX.Fields.OptionDate as X
 import FIX.Fields.OptionPeriod as X
+import FIX.Fields.OrdType as X
 import FIX.Fields.OrderAttributeType as X
 import FIX.Fields.OrderAttributeValue as X
 import FIX.Fields.OrderQty as X
@@ -92,7 +94,9 @@ import FIX.Fields.PartyIDSource as X
 import FIX.Fields.PartyRole as X
 import FIX.Fields.PartyRoleQualifier as X
 import FIX.Fields.Password as X
+import FIX.Fields.Price as X
 import FIX.Fields.ProductType as X
+import FIX.Fields.QuoteCancelType as X
 import FIX.Fields.QuoteID as X
 import FIX.Fields.QuoteReqID as X
 import FIX.Fields.QuoteRequestRejectReason as X
@@ -117,6 +121,7 @@ import FIX.Fields.Symbol as X
 import FIX.Fields.TargetCompID as X
 import FIX.Fields.TestReqID as X
 import FIX.Fields.Text as X
+import FIX.Fields.TransactTime as X
 import FIX.Fields.ValidUntilTime as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
@@ -161,11 +166,14 @@ data AnyField
   | SomeBeginString !BeginString
   | SomeBodyLength !BodyLength
   | SomeCheckSum !CheckSum
+  | SomeClOrdID !ClOrdID
   | SomeCurrency !Currency
   | SomeNoLinesOfText !NoLinesOfText
   | SomeMsgSeqNum !MsgSeqNum
   | SomeMsgType !MsgType
   | SomeOrderQty !OrderQty
+  | SomeOrdType !OrdType
+  | SomePrice !Price
   | SomeRefSeqNum !RefSeqNum
   | SomeSenderCompID !SenderCompID
   | SomeSenderSubID !SenderSubID
@@ -174,6 +182,7 @@ data AnyField
   | SomeSymbol !Symbol
   | SomeTargetCompID !TargetCompID
   | SomeText !Text
+  | SomeTransactTime !TransactTime
   | SomeValidUntilTime !ValidUntilTime
   | SomeSettlDate !SettlDate
   | SomeNoAllocs !NoAllocs
@@ -198,6 +207,7 @@ data AnyField
   | SomeNoRoutingIDs !NoRoutingIDs
   | SomeRoutingType !RoutingType
   | SomeRoutingID !RoutingID
+  | SomeQuoteCancelType !QuoteCancelType
   | SomeRefTagID !RefTagID
   | SomeRefMsgType !RefMsgType
   | SomeSessionRejectReason !SessionRejectReason
@@ -266,11 +276,14 @@ anyFieldB = \case
   SomeBeginString f -> fieldB f
   SomeBodyLength f -> fieldB f
   SomeCheckSum f -> fieldB f
+  SomeClOrdID f -> fieldB f
   SomeCurrency f -> fieldB f
   SomeNoLinesOfText f -> fieldB f
   SomeMsgSeqNum f -> fieldB f
   SomeMsgType f -> fieldB f
   SomeOrderQty f -> fieldB f
+  SomeOrdType f -> fieldB f
+  SomePrice f -> fieldB f
   SomeRefSeqNum f -> fieldB f
   SomeSenderCompID f -> fieldB f
   SomeSenderSubID f -> fieldB f
@@ -279,6 +292,7 @@ anyFieldB = \case
   SomeSymbol f -> fieldB f
   SomeTargetCompID f -> fieldB f
   SomeText f -> fieldB f
+  SomeTransactTime f -> fieldB f
   SomeValidUntilTime f -> fieldB f
   SomeSettlDate f -> fieldB f
   SomeNoAllocs f -> fieldB f
@@ -303,6 +317,7 @@ anyFieldB = \case
   SomeNoRoutingIDs f -> fieldB f
   SomeRoutingType f -> fieldB f
   SomeRoutingID f -> fieldB f
+  SomeQuoteCancelType f -> fieldB f
   SomeRefTagID f -> fieldB f
   SomeRefMsgType f -> fieldB f
   SomeSessionRejectReason f -> fieldB f
@@ -372,11 +387,14 @@ anyFieldP = do
     8 -> SomeBeginString <$> fp
     9 -> SomeBodyLength <$> fp
     10 -> SomeCheckSum <$> fp
+    11 -> SomeClOrdID <$> fp
     15 -> SomeCurrency <$> fp
     33 -> SomeNoLinesOfText <$> fp
     34 -> SomeMsgSeqNum <$> fp
     35 -> SomeMsgType <$> fp
     38 -> SomeOrderQty <$> fp
+    40 -> SomeOrdType <$> fp
+    44 -> SomePrice <$> fp
     45 -> SomeRefSeqNum <$> fp
     49 -> SomeSenderCompID <$> fp
     50 -> SomeSenderSubID <$> fp
@@ -385,6 +403,7 @@ anyFieldP = do
     55 -> SomeSymbol <$> fp
     56 -> SomeTargetCompID <$> fp
     58 -> SomeText <$> fp
+    60 -> SomeTransactTime <$> fp
     62 -> SomeValidUntilTime <$> fp
     64 -> SomeSettlDate <$> fp
     78 -> SomeNoAllocs <$> fp
@@ -409,6 +428,7 @@ anyFieldP = do
     215 -> SomeNoRoutingIDs <$> fp
     216 -> SomeRoutingType <$> fp
     217 -> SomeRoutingID <$> fp
+    298 -> SomeQuoteCancelType <$> fp
     371 -> SomeRefTagID <$> fp
     372 -> SomeRefMsgType <$> fp
     373 -> SomeSessionRejectReason <$> fp
@@ -667,6 +687,12 @@ instance IsAnyField CheckSum where
     SomeCheckSum f -> Just f
     _ -> Nothing
 
+instance IsAnyField ClOrdID where
+  packAnyField = SomeClOrdID
+  unpackAnyField = \case
+    SomeClOrdID f -> Just f
+    _ -> Nothing
+
 instance IsAnyField Currency where
   packAnyField = SomeCurrency
   unpackAnyField = \case
@@ -695,6 +721,18 @@ instance IsAnyField OrderQty where
   packAnyField = SomeOrderQty
   unpackAnyField = \case
     SomeOrderQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrdType where
+  packAnyField = SomeOrdType
+  unpackAnyField = \case
+    SomeOrdType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Price where
+  packAnyField = SomePrice
+  unpackAnyField = \case
+    SomePrice f -> Just f
     _ -> Nothing
 
 instance IsAnyField RefSeqNum where
@@ -743,6 +781,12 @@ instance IsAnyField Text where
   packAnyField = SomeText
   unpackAnyField = \case
     SomeText f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TransactTime where
+  packAnyField = SomeTransactTime
+  unpackAnyField = \case
+    SomeTransactTime f -> Just f
     _ -> Nothing
 
 instance IsAnyField ValidUntilTime where
@@ -887,6 +931,12 @@ instance IsAnyField RoutingID where
   packAnyField = SomeRoutingID
   unpackAnyField = \case
     SomeRoutingID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteCancelType where
+  packAnyField = SomeQuoteCancelType
+  unpackAnyField = \case
+    SomeQuoteCancelType f -> Just f
     _ -> Nothing
 
 instance IsAnyField RefTagID where

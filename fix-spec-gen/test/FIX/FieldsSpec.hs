@@ -17,6 +17,7 @@ import FIX.Fields.BidPx2
 import FIX.Fields.BidSpotRate
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
+import FIX.Fields.ClOrdID
 import FIX.Fields.CstmApplVerID
 import FIX.Fields.Currency
 import FIX.Fields.CustomFieldName
@@ -70,6 +71,7 @@ import FIX.Fields.OfferPx2
 import FIX.Fields.OfferSpotRate
 import FIX.Fields.OptionDate
 import FIX.Fields.OptionPeriod
+import FIX.Fields.OrdType
 import FIX.Fields.OrderAttributeType
 import FIX.Fields.OrderAttributeValue
 import FIX.Fields.OrderQty
@@ -79,7 +81,9 @@ import FIX.Fields.PartyIDSource
 import FIX.Fields.PartyRole
 import FIX.Fields.PartyRoleQualifier
 import FIX.Fields.Password
+import FIX.Fields.Price
 import FIX.Fields.ProductType
+import FIX.Fields.QuoteCancelType
 import FIX.Fields.QuoteID
 import FIX.Fields.QuoteReqID
 import FIX.Fields.QuoteRequestRejectReason
@@ -104,6 +108,7 @@ import FIX.Fields.Symbol
 import FIX.Fields.TargetCompID
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
+import FIX.Fields.TransactTime
 import FIX.Fields.ValidUntilTime
 import Test.Syd
 
@@ -147,11 +152,14 @@ spec = do
   fieldSpec @BeginString
   fieldSpec @BodyLength
   fieldSpec @CheckSum
+  fieldSpec @ClOrdID
   fieldSpec @Currency
   fieldSpec @NoLinesOfText
   fieldSpec @MsgSeqNum
   fieldSpec @MsgType
   fieldSpec @OrderQty
+  fieldSpec @OrdType
+  fieldSpec @Price
   fieldSpec @RefSeqNum
   fieldSpec @SenderCompID
   fieldSpec @SenderSubID
@@ -160,6 +168,7 @@ spec = do
   fieldSpec @Symbol
   fieldSpec @TargetCompID
   fieldSpec @Text
+  fieldSpec @TransactTime
   fieldSpec @ValidUntilTime
   fieldSpec @SettlDate
   fieldSpec @NoAllocs
@@ -184,6 +193,7 @@ spec = do
   fieldSpec @NoRoutingIDs
   fieldSpec @RoutingType
   fieldSpec @RoutingID
+  fieldSpec @QuoteCancelType
   fieldSpec @RefTagID
   fieldSpec @RefMsgType
   fieldSpec @SessionRejectReason

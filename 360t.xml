@@ -134,6 +134,55 @@
    <field name='BidExAnteCostPercentage' required='N' />
    <field name='OfferExAnteCostPercentage' required='N' />
   </message>
+  <message name='QuoteCancel' msgtype='Z' msgcat='app'>
+   <field name='QuoteID' required='Y' />
+   <field name='QuoteReqID' required='Y' />
+   <field name='QuoteCancelType' required='Y' />
+   <field name='ProductType' required='Y' />
+  </message>
+  <message name='NewOrderSingle' msgtype='D' msgcat='app'>
+   <field name='Account' required='Y' />
+   <field name='ClOrdID' required='Y' />
+   <field name='ProductType' required='N' />
+   <field name='Currency' required='Y' />
+   <field name='OrderQty' required='Y' />
+   <field name='OrdType' required='Y' />
+   <field name='Side' required='Y' />
+   <field name='DayCount' required='N' />
+   <field name='Symbol' required='Y' />
+   <field name='MaturityDate' required='N' />
+   <field name='MaturityDate2' required='N' />
+   <field name='TransactTime' required='Y' />
+   <field name='SettlDate' required='Y' />
+   <field name='Issuer' required='N' />
+   <field name='QuoteID' required='Y' />
+   <field name='Price' required='N' />
+   <field name='OrderQty2' required='N' />
+   <field name='SettlDate2' required='N' />
+   <field name='OptionDate' required='N' />
+  </message>
+  <message name='NewOrderMultileg' msgtype='AB' msgcat='app'>
+   <field name='Account' required='Y' />
+   <field name='ClOrdID' required='Y' />
+   <field name='Currency' required='Y' />
+   <field name='OrderQty' required='Y' />
+   <field name='OrdType' required='Y' />
+   <field name='Side' required='Y' />
+   <field name='Symbol' required='Y' />
+   <field name='TransactTime' required='Y' />
+   <field name='Issuer' required='N' />
+   <field name='QuoteID' required='Y' />
+   <field name='ProductType' required='Y' />
+   <group name='NoLegs' required='N'>
+    <field name='LegSymbol' required='Y' />
+    <field name='LegMaturityDate' required='N' />
+    <field name='LegSide' required='N' />
+    <field name='LegQty' required='Y' />
+    <field name='LegSettlDate' required='N' />
+    <field name='LegPrice' required='N' />
+    <field name='LegRefID' required='Y' />
+   </group>
+  </message>
  </messages>
  <trailer>
   <field name='CheckSum' required='Y' />

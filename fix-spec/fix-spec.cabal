@@ -24,6 +24,7 @@ library
       FIX.Fields.BidSpotRate
       FIX.Fields.BodyLength
       FIX.Fields.CheckSum
+      FIX.Fields.ClOrdID
       FIX.Fields.CstmApplVerID
       FIX.Fields.Currency
       FIX.Fields.CustomFieldName
@@ -80,12 +81,15 @@ library
       FIX.Fields.OrderAttributeValue
       FIX.Fields.OrderQty
       FIX.Fields.OrderQty2
+      FIX.Fields.OrdType
       FIX.Fields.PartyID
       FIX.Fields.PartyIDSource
       FIX.Fields.PartyRole
       FIX.Fields.PartyRoleQualifier
       FIX.Fields.Password
+      FIX.Fields.Price
       FIX.Fields.ProductType
+      FIX.Fields.QuoteCancelType
       FIX.Fields.QuoteID
       FIX.Fields.QuoteReqID
       FIX.Fields.QuoteRequestRejectReason
@@ -110,6 +114,7 @@ library
       FIX.Fields.TargetCompID
       FIX.Fields.TestReqID
       FIX.Fields.Text
+      FIX.Fields.TransactTime
       FIX.Fields.ValidUntilTime
       FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
@@ -131,8 +136,10 @@ library
       FIX.Messages.Heartbeat
       FIX.Messages.Logon
       FIX.Messages.Logout
+      FIX.Messages.NewOrderSingle
       FIX.Messages.News
       FIX.Messages.Quote
+      FIX.Messages.QuoteCancel
       FIX.Messages.QuoteRequest
       FIX.Messages.QuoteRequestReject
       FIX.Messages.Reject
