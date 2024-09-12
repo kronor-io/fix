@@ -67,6 +67,7 @@ import FIX.Fields.PartyRoleQualifier as X
 import FIX.Fields.Password as X
 import FIX.Fields.ProductType as X
 import FIX.Fields.QuoteReqID as X
+import FIX.Fields.QuoteRequestRejectReason as X
 import FIX.Fields.QuoteType as X
 import FIX.Fields.RefMsgType as X
 import FIX.Fields.RefSeqNum as X
@@ -162,6 +163,7 @@ data AnyField
   | SomePassword !Password
   | SomeLegSettlDate !LegSettlDate
   | SomeLegRefID !LegRefID
+  | SomeQuoteRequestRejectReason !QuoteRequestRejectReason
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyField
@@ -237,6 +239,7 @@ anyFieldB = \case
   SomePassword f -> fieldB f
   SomeLegSettlDate f -> fieldB f
   SomeLegRefID f -> fieldB f
+  SomeQuoteRequestRejectReason f -> fieldB f
 
 anyFieldP :: Parsec Void ByteString AnyField
 anyFieldP = do
@@ -313,6 +316,7 @@ anyFieldP = do
     554 -> SomePassword <$> fp
     588 -> SomeLegSettlDate <$> fp
     654 -> SomeLegRefID <$> fp
+    658 -> SomeQuoteRequestRejectReason <$> fp
     _ -> fail ("Unknown field tag: " <> show tag)
 
 class (IsField a) => IsAnyField a where
@@ -731,4 +735,10 @@ instance IsAnyField LegRefID where
   packAnyField = SomeLegRefID
   unpackAnyField = \case
     SomeLegRefID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteRequestRejectReason where
+  packAnyField = SomeQuoteRequestRejectReason
+  unpackAnyField = \case
+    SomeQuoteRequestRejectReason f -> Just f
     _ -> Nothing

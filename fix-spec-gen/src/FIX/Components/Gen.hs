@@ -13,6 +13,7 @@ import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
 import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
 import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
@@ -50,5 +51,9 @@ instance GenValid RelatedSymGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid RoutingIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuotReqRjctGrpGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

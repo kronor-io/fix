@@ -28,6 +28,7 @@ import FIX.Messages.Logon as X
 import FIX.Messages.Logout as X
 import FIX.Messages.News as X
 import FIX.Messages.QuoteRequest as X
+import FIX.Messages.QuoteRequestReject as X
 import FIX.Messages.Reject as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
@@ -39,6 +40,7 @@ data AnyMessage
   | SomeLogout !Logout
   | SomeNews !News
   | SomeQuoteRequest !QuoteRequest
+  | SomeQuoteRequestReject !QuoteRequestReject
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyMessage
@@ -51,6 +53,7 @@ anyMessageType = \case
   SomeLogout _ -> MsgTypeLogout
   SomeNews _ -> MsgTypeNews
   SomeQuoteRequest _ -> MsgTypeQuoteRequest
+  SomeQuoteRequestReject _ -> MsgTypeQuoteRequestReject
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
 anyMessageB ((Envelope {..})) =
@@ -67,6 +70,7 @@ anyMessageB ((Envelope {..})) =
         SomeLogout f -> mb f
         SomeNews f -> mb f
         SomeQuoteRequest f -> mb f
+        SomeQuoteRequestReject f -> mb f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do
@@ -85,6 +89,7 @@ anyMessageP = do
     MsgTypeLogout -> fmap SomeLogout <$> mp
     MsgTypeNews -> fmap SomeNews <$> mp
     MsgTypeQuoteRequest -> fmap SomeQuoteRequest <$> mp
+    MsgTypeQuoteRequestReject -> fmap SomeQuoteRequestReject <$> mp
     _ -> fail ("Unknown message tag: " <> show typ)
 
 class (IsMessage a) => IsAnyMessage a where
@@ -125,4 +130,10 @@ instance IsAnyMessage QuoteRequest where
   packAnyMessage = SomeQuoteRequest
   unpackAnyMessage = \case
     SomeQuoteRequest f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage QuoteRequestReject where
+  packAnyMessage = SomeQuoteRequestReject
+  unpackAnyMessage = \case
+    SomeQuoteRequestReject f -> Just f
     _ -> Nothing

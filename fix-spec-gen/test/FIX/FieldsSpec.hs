@@ -54,6 +54,7 @@ import FIX.Fields.PartyRoleQualifier
 import FIX.Fields.Password
 import FIX.Fields.ProductType
 import FIX.Fields.QuoteReqID
+import FIX.Fields.QuoteRequestRejectReason
 import FIX.Fields.QuoteType
 import FIX.Fields.RefMsgType
 import FIX.Fields.RefSeqNum
@@ -148,3 +149,4 @@ spec = do
   fieldSpec @Password
   fieldSpec @LegSettlDate
   fieldSpec @LegRefID
+  fieldSpec @QuoteRequestRejectReason

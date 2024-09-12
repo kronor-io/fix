@@ -286,3 +286,7 @@ instance GenValid LegSettlDate where
 instance GenValid LegRefID where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuoteRequestRejectReason where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering

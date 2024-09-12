@@ -12,6 +12,7 @@ import FIX.Messages.Logon
 import FIX.Messages.Logout
 import FIX.Messages.News
 import FIX.Messages.QuoteRequest
+import FIX.Messages.QuoteRequestReject
 import FIX.Messages.Reject
 import FIX.Messages.TestUtils
 import Test.Syd
@@ -60,4 +61,11 @@ spec = do
         genValidSpec @QuoteRequest
         componentSpec @QuoteRequest
         messageSpec @QuoteRequest "QuoteRequest"
+    )
+  describe
+    "QuoteRequestReject"
+    ( do
+        genValidSpec @QuoteRequestReject
+        componentSpec @QuoteRequestReject
+        messageSpec @QuoteRequestReject "QuoteRequestReject"
     )

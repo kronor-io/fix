@@ -59,6 +59,35 @@
     <field name='CustomFieldName' required='Y' />
     <field name='CustomFieldValue' required='Y' />
    </group>
+   <component name='QuotReqGrp' required='Y' />
+   <group name='NoPartyIDs' required='N'>
+    <field name='PartyID' required='N' />
+    <field name='PartyIDSource' required='N' />
+    <field name='PartyRole' required='N' />
+    <field name='PartyRoleQualifier' required='N' />
+   </group>
+   <group name='NoRegulatoryTradeID' required='N'>
+    <field name='RegulatoryTradeID' required='N' />
+    <field name='RegulatoryTradeIDType' required='N' />
+   </group>
+   <field name='OptionDate' required='N' />
+   <group name='NoOrderAttribute' required='N'>
+    <field name='OrderAttributeType' required='N' />
+    <field name='OrderAttributeValue' required='N' />
+   </group>
+  </message>
+  <message name='QuoteRequestReject' msgtype='AG' msgcat='app'>
+   <field name='QuoteReqID' required='Y' />
+   <field name='QuoteRequestRejectReason' required='Y' />
+   <component name='QuotReqRjctGrp' required='Y' />
+   <field name='Text' required='Y' />
+  </message>
+ </messages>
+ <trailer>
+  <field name='CheckSum' required='Y' />
+ </trailer>
+ <components>
+  <component name='QuotReqGrp'>
    <group name='NoRelatedSym' required='Y'>
     <field name='DayCount' required='N' />
     <field name='Symbol' required='Y' />
@@ -87,27 +116,14 @@
     <field name='LegRefID' required='Y' />
     <field name='LegSettlDate' required='Y' />
    </group>
-   <group name='NoPartyIDs' required='N'>
-    <field name='PartyID' required='N' />
-    <field name='PartyIDSource' required='N' />
-    <field name='PartyRole' required='N' />
-    <field name='PartyRoleQualifier' required='N' />
+  </component>
+  <component name='QuotReqRjctGrp'>
+   <group name='NoRelatedSym' required='Y'>
+    <field name='Symbol' required='Y' />
+    <field name='QuoteType' required='Y' />
+    <field name='Currency' required='N' />
    </group>
-   <group name='NoRegulatoryTradeID' required='N'>
-    <field name='RegulatoryTradeID' required='N' />
-    <field name='RegulatoryTradeIDType' required='N' />
-   </group>
-   <field name='OptionDate' required='N' />
-   <group name='NoOrderAttribute' required='N'>
-    <field name='OrderAttributeType' required='N' />
-    <field name='OrderAttributeValue' required='N' />
-   </group>
-  </message>
- </messages>
- <trailer>
-  <field name='CheckSum' required='Y' />
- </trailer>
- <components>
+  </component>
  </components>
  <fields>
   <!-- Custom fields --> 

@@ -60,6 +60,7 @@ library
       FIX.Fields.Password
       FIX.Fields.ProductType
       FIX.Fields.QuoteReqID
+      FIX.Fields.QuoteRequestRejectReason
       FIX.Fields.QuoteType
       FIX.Fields.RefMsgType
       FIX.Fields.RefSeqNum
@@ -88,6 +89,7 @@ library
       FIX.Groups.NestedPartyIDsGroupElem
       FIX.Groups.OrderAttributeGroupElem
       FIX.Groups.PartyIDsGroupElem
+      FIX.Groups.QuotReqRjctGrpGroupElem
       FIX.Groups.RegulatoryTradeIDGroupElem
       FIX.Groups.RelatedSymGroupElem
       FIX.Groups.RoutingIDsGroupElem
@@ -100,6 +102,7 @@ library
       FIX.Messages.Logout
       FIX.Messages.News
       FIX.Messages.QuoteRequest
+      FIX.Messages.QuoteRequestReject
       FIX.Messages.Reject
       FIX.Messages.Trailer
   other-modules:

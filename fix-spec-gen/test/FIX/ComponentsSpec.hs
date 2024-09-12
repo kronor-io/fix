@@ -13,6 +13,7 @@ import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
 import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
 import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
@@ -84,4 +85,11 @@ spec = do
         genValidSpec @RoutingIDsGroupElem
         componentSpec @RoutingIDsGroupElem
         groupSpec @RoutingIDsGroupElem
+    )
+  describe
+    "QuotReqRjctGrp"
+    ( do
+        genValidSpec @QuotReqRjctGrpGroupElem
+        componentSpec @QuotReqRjctGrpGroupElem
+        groupSpec @QuotReqRjctGrpGroupElem
     )
