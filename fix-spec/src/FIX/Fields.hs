@@ -76,6 +76,7 @@ import FIX.Fields.NoPartyIDs as X
 import FIX.Fields.NoRegulatoryTradeID as X
 import FIX.Fields.NoRelatedSym as X
 import FIX.Fields.NoRoutingIDs as X
+import FIX.Fields.NoUnderlyings as X
 import FIX.Fields.OfferExAnteCost as X
 import FIX.Fields.OfferExAnteCostPercentage as X
 import FIX.Fields.OfferInterestAtMaturity as X
@@ -110,6 +111,10 @@ import FIX.Fields.RegulatoryTradeIDType as X
 import FIX.Fields.ResetSeqNumFlag as X
 import FIX.Fields.RoutingID as X
 import FIX.Fields.RoutingType as X
+import FIX.Fields.SecurityReqID as X
+import FIX.Fields.SecurityRequestType as X
+import FIX.Fields.SecurityResponseID as X
+import FIX.Fields.SecurityResponseType as X
 import FIX.Fields.SenderCompID as X
 import FIX.Fields.SenderSubID as X
 import FIX.Fields.SendingTime as X
@@ -122,6 +127,10 @@ import FIX.Fields.TargetCompID as X
 import FIX.Fields.TestReqID as X
 import FIX.Fields.Text as X
 import FIX.Fields.TransactTime as X
+import FIX.Fields.UnderlyingMaturityDate as X
+import FIX.Fields.UnderlyingSecurityDesc as X
+import FIX.Fields.UnderlyingSecurityID as X
+import FIX.Fields.UnderlyingSymbol as X
 import FIX.Fields.ValidUntilTime as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
@@ -208,6 +217,13 @@ data AnyField
   | SomeRoutingType !RoutingType
   | SomeRoutingID !RoutingID
   | SomeQuoteCancelType !QuoteCancelType
+  | SomeUnderlyingSecurityDesc !UnderlyingSecurityDesc
+  | SomeUnderlyingSecurityID !UnderlyingSecurityID
+  | SomeUnderlyingSymbol !UnderlyingSymbol
+  | SomeSecurityReqID !SecurityReqID
+  | SomeSecurityRequestType !SecurityRequestType
+  | SomeSecurityResponseID !SecurityResponseID
+  | SomeSecurityResponseType !SecurityResponseType
   | SomeRefTagID !RefTagID
   | SomeRefMsgType !RefMsgType
   | SomeSessionRejectReason !SessionRejectReason
@@ -221,6 +237,7 @@ data AnyField
   | SomeNestedPartyRole !NestedPartyRole
   | SomeNoNestedPartyIDs !NoNestedPartyIDs
   | SomeMaturityDate !MaturityDate
+  | SomeUnderlyingMaturityDate !UnderlyingMaturityDate
   | SomePassword !Password
   | SomeNoLegs !NoLegs
   | SomeLegSettlDate !LegSettlDate
@@ -232,6 +249,7 @@ data AnyField
   | SomeLegBidPx !LegBidPx
   | SomeLegOfferPx !LegOfferPx
   | SomeLegQty !LegQty
+  | SomeNoUnderlyings !NoUnderlyings
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyField
@@ -318,6 +336,13 @@ anyFieldB = \case
   SomeRoutingType f -> fieldB f
   SomeRoutingID f -> fieldB f
   SomeQuoteCancelType f -> fieldB f
+  SomeUnderlyingSecurityDesc f -> fieldB f
+  SomeUnderlyingSecurityID f -> fieldB f
+  SomeUnderlyingSymbol f -> fieldB f
+  SomeSecurityReqID f -> fieldB f
+  SomeSecurityRequestType f -> fieldB f
+  SomeSecurityResponseID f -> fieldB f
+  SomeSecurityResponseType f -> fieldB f
   SomeRefTagID f -> fieldB f
   SomeRefMsgType f -> fieldB f
   SomeSessionRejectReason f -> fieldB f
@@ -331,6 +356,7 @@ anyFieldB = \case
   SomeNestedPartyRole f -> fieldB f
   SomeNoNestedPartyIDs f -> fieldB f
   SomeMaturityDate f -> fieldB f
+  SomeUnderlyingMaturityDate f -> fieldB f
   SomePassword f -> fieldB f
   SomeNoLegs f -> fieldB f
   SomeLegSettlDate f -> fieldB f
@@ -342,6 +368,7 @@ anyFieldB = \case
   SomeLegBidPx f -> fieldB f
   SomeLegOfferPx f -> fieldB f
   SomeLegQty f -> fieldB f
+  SomeNoUnderlyings f -> fieldB f
 
 anyFieldP :: Parsec Void ByteString AnyField
 anyFieldP = do
@@ -429,6 +456,13 @@ anyFieldP = do
     216 -> SomeRoutingType <$> fp
     217 -> SomeRoutingID <$> fp
     298 -> SomeQuoteCancelType <$> fp
+    307 -> SomeUnderlyingSecurityDesc <$> fp
+    309 -> SomeUnderlyingSecurityID <$> fp
+    311 -> SomeUnderlyingSymbol <$> fp
+    320 -> SomeSecurityReqID <$> fp
+    321 -> SomeSecurityRequestType <$> fp
+    322 -> SomeSecurityResponseID <$> fp
+    323 -> SomeSecurityResponseType <$> fp
     371 -> SomeRefTagID <$> fp
     372 -> SomeRefMsgType <$> fp
     373 -> SomeSessionRejectReason <$> fp
@@ -442,6 +476,7 @@ anyFieldP = do
     538 -> SomeNestedPartyRole <$> fp
     539 -> SomeNoNestedPartyIDs <$> fp
     541 -> SomeMaturityDate <$> fp
+    542 -> SomeUnderlyingMaturityDate <$> fp
     554 -> SomePassword <$> fp
     555 -> SomeNoLegs <$> fp
     588 -> SomeLegSettlDate <$> fp
@@ -453,6 +488,7 @@ anyFieldP = do
     681 -> SomeLegBidPx <$> fp
     684 -> SomeLegOfferPx <$> fp
     687 -> SomeLegQty <$> fp
+    711 -> SomeNoUnderlyings <$> fp
     _ -> fail ("Unknown field tag: " <> show tag)
 
 class (IsField a) => IsAnyField a where
@@ -939,6 +975,48 @@ instance IsAnyField QuoteCancelType where
     SomeQuoteCancelType f -> Just f
     _ -> Nothing
 
+instance IsAnyField UnderlyingSecurityDesc where
+  packAnyField = SomeUnderlyingSecurityDesc
+  unpackAnyField = \case
+    SomeUnderlyingSecurityDesc f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSecurityID where
+  packAnyField = SomeUnderlyingSecurityID
+  unpackAnyField = \case
+    SomeUnderlyingSecurityID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField UnderlyingSymbol where
+  packAnyField = SomeUnderlyingSymbol
+  unpackAnyField = \case
+    SomeUnderlyingSymbol f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityReqID where
+  packAnyField = SomeSecurityReqID
+  unpackAnyField = \case
+    SomeSecurityReqID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityRequestType where
+  packAnyField = SomeSecurityRequestType
+  unpackAnyField = \case
+    SomeSecurityRequestType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityResponseID where
+  packAnyField = SomeSecurityResponseID
+  unpackAnyField = \case
+    SomeSecurityResponseID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SecurityResponseType where
+  packAnyField = SomeSecurityResponseType
+  unpackAnyField = \case
+    SomeSecurityResponseType f -> Just f
+    _ -> Nothing
+
 instance IsAnyField RefTagID where
   packAnyField = SomeRefTagID
   unpackAnyField = \case
@@ -1017,6 +1095,12 @@ instance IsAnyField MaturityDate where
     SomeMaturityDate f -> Just f
     _ -> Nothing
 
+instance IsAnyField UnderlyingMaturityDate where
+  packAnyField = SomeUnderlyingMaturityDate
+  unpackAnyField = \case
+    SomeUnderlyingMaturityDate f -> Just f
+    _ -> Nothing
+
 instance IsAnyField Password where
   packAnyField = SomePassword
   unpackAnyField = \case
@@ -1081,4 +1165,10 @@ instance IsAnyField LegQty where
   packAnyField = SomeLegQty
   unpackAnyField = \case
     SomeLegQty f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoUnderlyings where
+  packAnyField = SomeNoUnderlyings
+  unpackAnyField = \case
+    SomeNoUnderlyings f -> Just f
     _ -> Nothing

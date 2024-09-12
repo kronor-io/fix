@@ -183,6 +183,128 @@
     <field name='LegRefID' required='Y' />
    </group>
   </message>
+  <message name='ExecutionReport' msgtype='8' msgcat='app'>
+   <field name='Account' required='Y' />
+   <field name='AvgPx' required='Y' />
+   <field name='ClOrdID' required='Y' />
+   <field name='ProductType' required='N' />
+   <field name='CumQty' required='Y' />
+   <field name='Currency' required='Y' />
+   <field name='ExecID' required='Y' />
+   <field name='LastPx' required='Y' />
+   <field name='LastQty' required='Y' />
+   <field name='OrderID' required='Y' />
+   <field name='OrderQty' required='Y' />
+   <field name='OrdStatus' required='Y' />
+   <field name='OrdType' required='Y' />
+   <field name='Price' required='Y' />
+   <field name='Side' required='Y' />
+   <field name='Symbol' required='Y' />
+   <field name='SecurityID' required='N' />
+   <field name='SecurityIDSource' required='N' />
+   <group name='NoSecurityAltID' required='N'>
+    <field name='SecurityAltID' required='N' />
+    <field name='SecurityAltIDSource' required='N' />
+   </group>
+   <field name='CFICode' required='N' />
+   <field name='UPICode' required='N' />
+   <field name='UPICode2' required='N' />
+   <field name='MaturityDate' required='N' />
+   <field name='MaturityDate2' required='N' />
+   <field name='Text' required='N' />
+   <field name='TransactTime' required='N' />
+   <field name='SettlDate' required='N' />
+   <group name='NoAllocs' required='N'>
+    <field name='AllocAccount' required='N' />
+    <field name='AllocQty' required='N' />
+    <field name='UTI' required='N' />
+    <field name='UTI2' required='N' />
+    <group name='NoNestedPartyIDs' required='N'>
+     <field name='NestedPartyID' required='N' />
+     <field name='NestedPartyIDSource' required='N' />
+     <field name='NestedPartyRole' required='N' />
+    </group>
+   </group>
+   <group name='NoCustomFields' required='N'>
+    <field name='CustomFieldName' required='Y' />
+    <field name='CustomFieldValue' required='Y' />
+   </group>
+   <group name='NoLegs' required='N'>
+    <field name='LegSymbol' required='Y' />
+    <field name='LegMaturityDate' required='N' />
+    <field name='LegSecurityID' required='N' />
+    <field name='LegSecurityIDSource' required='N' />
+    <field name='LegCFICode' required='N' />
+    <field name='LegUPICode' required='N' />
+    <field name='LegSettlDate' required='Y' />
+    <field name='LegPrice' required='Y' />
+    <field name='LegRefID' required='Y' />
+    <field name='LegMidPx' required='N' />
+    <field name='LegBidExAnteCost' required='N' />
+    <field name='LegOfferExAnteCost' required='N' />
+    <field name='LegBidExAnteCostPercentage' required='N' />
+    <field name='LegOfferExAnteCostPercentage' required='N' />
+    <group name='NoLegAllocs' required='Y'>
+     <field name='AllocAccount' required='Y' />
+     <field name='AllocQty' required='Y' />
+     <group name='NoNestedPartyIDs' required='N'>
+      <field name='NestedPartyID' required='N' />
+      <field name='NestedPartyIDSource' required='N' />
+      <field name='NestedPartyRole' required='N' />
+     </group>
+    </group>
+   </group>
+   <field name='ExecType' required='Y' />
+   <field name='LastSpotRate' required='Y' />
+   <field name='MidPx' required='N' />
+   <field name='MidSpotRate' required='N' />
+   <field name='UTI' required='N' />
+   <field name='UTI2' required='N' />
+   <field name='SwapDataReposityory' required='N' />
+   <field name='ProviderPersonStatus' required='N' />
+   <field name='LeavesQty' required='N' />
+   <field name='OrderQty2' required='N' />
+   <field name='SettlDate2' required='N' />
+   <group name='NoPartyIDs' required='N'>
+    <field name='PartyID' required='N' />
+    <field name='PartyIDSource' required='N' />
+    <field name='PartyRole' required='N' />
+   </group>
+   <field name='Price2' required='N' />
+   <field name='LastPx2' required='N' />
+   <field name='OptionPeriod' required='N' />
+   <field name='OptionDate' required='N' />
+   <field name='BidExAnteCost' required='N' />
+   <field name='OfferExAnteCost' required='N' />
+   <field name='BidExAnteCostPercentage' required='N' />
+   <field name='OfferExAnteCostPercentage' required='N' />
+   <group name='NoRegulatoryTradeIDs' required='N'>
+    <field name='RegulatoryTradeID' required='N' />
+    <field name='RegulatoryTradeIDType' required='N' />
+    <field name='RegulatoryLegRefID' required='N' />
+   </group>
+   <group name='NoTrdRegPublications' required='N'>
+    <field name='TrdRegPublicationType' required='N' />
+    <field name='TrdRegPublicationReason' required='N' />
+    <field name='TrdType' required='N' />
+   </group>
+  </message>
+  <message name='SecurityDefinitionRequest' msgtype='c' msgcat='app'>
+   <field name='SecurityReqID' required='Y' />
+   <field name='SecurityRequestType' required='Y' />
+   <field name='Symbol' required='Y' />
+  </message>
+  <message name='SecurityDefinition' msgtype='d' msgcat='app'>
+   <field name='SecurityReqID' required='Y' />
+   <field name='SecurityResponseID' required='Y' />
+   <field name='SecurityResponseType' required='Y' />
+   <group name='NoUnderlyings' required='N'>
+    <field name='UnderlyingSymbol' required='Y' />
+    <field name='UnderlyingSecurityID' required='Y' />
+    <field name='UnderlyingMaturityDate' required='Y' />
+    <field name='UnderlyingSecurityDesc' required='Y' />
+   </group>
+  </message>
  </messages>
  <trailer>
   <field name='CheckSum' required='Y' />

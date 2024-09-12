@@ -18,6 +18,7 @@ import FIX.Groups.QuotReqGrpGroupElem
 import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
 import FIX.Groups.RoutingIDsGroupElem
+import FIX.Groups.UnderlyingsGroupElem
 
 instance GenValid AllocsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
@@ -52,6 +53,10 @@ instance GenValid RegulatoryTradeIDGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid RoutingIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid UnderlyingsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

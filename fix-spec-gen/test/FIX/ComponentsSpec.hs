@@ -19,6 +19,7 @@ import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
 import FIX.Groups.RoutingIDsGroupElem
 import FIX.Groups.TestUtils
+import FIX.Groups.UnderlyingsGroupElem
 import Test.Syd
 import Test.Syd.Validity
 
@@ -86,6 +87,13 @@ spec = do
         genValidSpec @RoutingIDsGroupElem
         componentSpec @RoutingIDsGroupElem
         groupSpec @RoutingIDsGroupElem
+    )
+  describe
+    "NoUnderlyings"
+    ( do
+        genValidSpec @UnderlyingsGroupElem
+        componentSpec @UnderlyingsGroupElem
+        groupSpec @UnderlyingsGroupElem
     )
   describe
     "QuotReqGrp"

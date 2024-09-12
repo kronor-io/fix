@@ -63,6 +63,7 @@ import FIX.Fields.NoPartyIDs
 import FIX.Fields.NoRegulatoryTradeID
 import FIX.Fields.NoRelatedSym
 import FIX.Fields.NoRoutingIDs
+import FIX.Fields.NoUnderlyings
 import FIX.Fields.OfferExAnteCost
 import FIX.Fields.OfferExAnteCostPercentage
 import FIX.Fields.OfferInterestAtMaturity
@@ -97,6 +98,10 @@ import FIX.Fields.RegulatoryTradeIDType
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.RoutingID
 import FIX.Fields.RoutingType
+import FIX.Fields.SecurityReqID
+import FIX.Fields.SecurityRequestType
+import FIX.Fields.SecurityResponseID
+import FIX.Fields.SecurityResponseType
 import FIX.Fields.SenderCompID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
@@ -109,6 +114,10 @@ import FIX.Fields.TargetCompID
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
 import FIX.Fields.TransactTime
+import FIX.Fields.UnderlyingMaturityDate
+import FIX.Fields.UnderlyingSecurityDesc
+import FIX.Fields.UnderlyingSecurityID
+import FIX.Fields.UnderlyingSymbol
 import FIX.Fields.ValidUntilTime
 import Test.Syd
 
@@ -194,6 +203,13 @@ spec = do
   fieldSpec @RoutingType
   fieldSpec @RoutingID
   fieldSpec @QuoteCancelType
+  fieldSpec @UnderlyingSecurityDesc
+  fieldSpec @UnderlyingSecurityID
+  fieldSpec @UnderlyingSymbol
+  fieldSpec @SecurityReqID
+  fieldSpec @SecurityRequestType
+  fieldSpec @SecurityResponseID
+  fieldSpec @SecurityResponseType
   fieldSpec @RefTagID
   fieldSpec @RefMsgType
   fieldSpec @SessionRejectReason
@@ -207,6 +223,7 @@ spec = do
   fieldSpec @NestedPartyRole
   fieldSpec @NoNestedPartyIDs
   fieldSpec @MaturityDate
+  fieldSpec @UnderlyingMaturityDate
   fieldSpec @Password
   fieldSpec @NoLegs
   fieldSpec @LegSettlDate
@@ -218,3 +235,4 @@ spec = do
   fieldSpec @LegBidPx
   fieldSpec @LegOfferPx
   fieldSpec @LegQty
+  fieldSpec @NoUnderlyings

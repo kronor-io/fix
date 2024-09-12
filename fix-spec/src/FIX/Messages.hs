@@ -33,6 +33,8 @@ import FIX.Messages.QuoteCancel as X
 import FIX.Messages.QuoteRequest as X
 import FIX.Messages.QuoteRequestReject as X
 import FIX.Messages.Reject as X
+import FIX.Messages.SecurityDefinition as X
+import FIX.Messages.SecurityDefinitionRequest as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 
@@ -47,6 +49,8 @@ data AnyMessage
   | SomeQuote !Quote
   | SomeQuoteCancel !QuoteCancel
   | SomeNewOrderSingle !NewOrderSingle
+  | SomeSecurityDefinitionRequest !SecurityDefinitionRequest
+  | SomeSecurityDefinition !SecurityDefinition
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyMessage
@@ -63,6 +67,8 @@ anyMessageType = \case
   SomeQuote _ -> MsgTypeQuote
   SomeQuoteCancel _ -> MsgTypeQuoteCancel
   SomeNewOrderSingle _ -> MsgTypeNewOrderSingle
+  SomeSecurityDefinitionRequest _ -> MsgTypeSecurityDefinitionRequest
+  SomeSecurityDefinition _ -> MsgTypeSecurityDefinition
 
 anyMessageB :: Envelope AnyMessage -> ByteString.Builder
 anyMessageB ((Envelope {..})) =
@@ -83,6 +89,8 @@ anyMessageB ((Envelope {..})) =
         SomeQuote f -> mb f
         SomeQuoteCancel f -> mb f
         SomeNewOrderSingle f -> mb f
+        SomeSecurityDefinitionRequest f -> mb f
+        SomeSecurityDefinition f -> mb f
 
 anyMessageP :: Parsec Void ByteString (Envelope AnyMessage)
 anyMessageP = do
@@ -105,6 +113,8 @@ anyMessageP = do
     MsgTypeQuote -> fmap SomeQuote <$> mp
     MsgTypeQuoteCancel -> fmap SomeQuoteCancel <$> mp
     MsgTypeNewOrderSingle -> fmap SomeNewOrderSingle <$> mp
+    MsgTypeSecurityDefinitionRequest -> fmap SomeSecurityDefinitionRequest <$> mp
+    MsgTypeSecurityDefinition -> fmap SomeSecurityDefinition <$> mp
     _ -> fail ("Unknown message tag: " <> show typ)
 
 class (IsMessage a) => IsAnyMessage a where
@@ -169,4 +179,16 @@ instance IsAnyMessage NewOrderSingle where
   packAnyMessage = SomeNewOrderSingle
   unpackAnyMessage = \case
     SomeNewOrderSingle f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage SecurityDefinitionRequest where
+  packAnyMessage = SomeSecurityDefinitionRequest
+  unpackAnyMessage = \case
+    SomeSecurityDefinitionRequest f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage SecurityDefinition where
+  packAnyMessage = SomeSecurityDefinition
+  unpackAnyMessage = \case
+    SomeSecurityDefinition f -> Just f
     _ -> Nothing

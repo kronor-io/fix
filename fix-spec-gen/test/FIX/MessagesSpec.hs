@@ -17,6 +17,8 @@ import FIX.Messages.QuoteCancel
 import FIX.Messages.QuoteRequest
 import FIX.Messages.QuoteRequestReject
 import FIX.Messages.Reject
+import FIX.Messages.SecurityDefinition
+import FIX.Messages.SecurityDefinitionRequest
 import FIX.Messages.TestUtils
 import Test.Syd
 import Test.Syd.Validity
@@ -92,4 +94,18 @@ spec = do
         genValidSpec @NewOrderSingle
         componentSpec @NewOrderSingle
         messageSpec @NewOrderSingle "NewOrderSingle"
+    )
+  describe
+    "SecurityDefinitionRequest"
+    ( do
+        genValidSpec @SecurityDefinitionRequest
+        componentSpec @SecurityDefinitionRequest
+        messageSpec @SecurityDefinitionRequest "SecurityDefinitionRequest"
+    )
+  describe
+    "SecurityDefinition"
+    ( do
+        genValidSpec @SecurityDefinition
+        componentSpec @SecurityDefinition
+        messageSpec @SecurityDefinition "SecurityDefinition"
     )

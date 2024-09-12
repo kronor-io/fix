@@ -69,6 +69,7 @@ library
       FIX.Fields.NoRegulatoryTradeID
       FIX.Fields.NoRelatedSym
       FIX.Fields.NoRoutingIDs
+      FIX.Fields.NoUnderlyings
       FIX.Fields.OfferExAnteCost
       FIX.Fields.OfferExAnteCostPercentage
       FIX.Fields.OfferInterestAtMaturity
@@ -103,6 +104,10 @@ library
       FIX.Fields.ResetSeqNumFlag
       FIX.Fields.RoutingID
       FIX.Fields.RoutingType
+      FIX.Fields.SecurityReqID
+      FIX.Fields.SecurityRequestType
+      FIX.Fields.SecurityResponseID
+      FIX.Fields.SecurityResponseType
       FIX.Fields.SenderCompID
       FIX.Fields.SenderSubID
       FIX.Fields.SendingTime
@@ -115,6 +120,10 @@ library
       FIX.Fields.TestReqID
       FIX.Fields.Text
       FIX.Fields.TransactTime
+      FIX.Fields.UnderlyingMaturityDate
+      FIX.Fields.UnderlyingSecurityDesc
+      FIX.Fields.UnderlyingSecurityID
+      FIX.Fields.UnderlyingSymbol
       FIX.Fields.ValidUntilTime
       FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
@@ -127,8 +136,8 @@ library
       FIX.Groups.QuotReqGrpGroupElem
       FIX.Groups.QuotReqRjctGrpGroupElem
       FIX.Groups.RegulatoryTradeIDGroupElem
-      FIX.Groups.RelatedSymGroupElem
       FIX.Groups.RoutingIDsGroupElem
+      FIX.Groups.UnderlyingsGroupElem
       FIX.Messages
       FIX.Messages.Class
       FIX.Messages.Envelope
@@ -143,6 +152,8 @@ library
       FIX.Messages.QuoteRequest
       FIX.Messages.QuoteRequestReject
       FIX.Messages.Reject
+      FIX.Messages.SecurityDefinition
+      FIX.Messages.SecurityDefinitionRequest
       FIX.Messages.Trailer
   other-modules:
       Paths_fix_spec
