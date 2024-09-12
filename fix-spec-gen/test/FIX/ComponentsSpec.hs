@@ -7,7 +7,14 @@ module FIX.ComponentsSpec where
 
 import FIX.Components.Gen ()
 import FIX.Components.TestUtils
+import FIX.Groups.AllocsGroupElem
+import FIX.Groups.CustomFieldsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
+import FIX.Groups.NestedPartyIDsGroupElem
+import FIX.Groups.OrderAttributeGroupElem
+import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.RegulatoryTradeIDGroupElem
+import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
 import FIX.Groups.TestUtils
 import Test.Syd
@@ -16,11 +23,60 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
+    "NoAllocs"
+    ( do
+        genValidSpec @AllocsGroupElem
+        componentSpec @AllocsGroupElem
+        groupSpec @AllocsGroupElem
+    )
+  describe
+    "NoCustomFields"
+    ( do
+        genValidSpec @CustomFieldsGroupElem
+        componentSpec @CustomFieldsGroupElem
+        groupSpec @CustomFieldsGroupElem
+    )
+  describe
     "NoLinesOfText"
     ( do
         genValidSpec @LinesOfTextGroupElem
         componentSpec @LinesOfTextGroupElem
         groupSpec @LinesOfTextGroupElem
+    )
+  describe
+    "NoNestedPartyIDs"
+    ( do
+        genValidSpec @NestedPartyIDsGroupElem
+        componentSpec @NestedPartyIDsGroupElem
+        groupSpec @NestedPartyIDsGroupElem
+    )
+  describe
+    "NoOrderAttribute"
+    ( do
+        genValidSpec @OrderAttributeGroupElem
+        componentSpec @OrderAttributeGroupElem
+        groupSpec @OrderAttributeGroupElem
+    )
+  describe
+    "NoPartyIDs"
+    ( do
+        genValidSpec @PartyIDsGroupElem
+        componentSpec @PartyIDsGroupElem
+        groupSpec @PartyIDsGroupElem
+    )
+  describe
+    "NoRegulatoryTradeID"
+    ( do
+        genValidSpec @RegulatoryTradeIDGroupElem
+        componentSpec @RegulatoryTradeIDGroupElem
+        groupSpec @RegulatoryTradeIDGroupElem
+    )
+  describe
+    "NoRelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
     )
   describe
     "NoRoutingIDs"

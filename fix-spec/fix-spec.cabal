@@ -12,21 +12,61 @@ library
   exposed-modules:
       FIX.Components.Class
       FIX.Fields
+      FIX.Fields.Account
+      FIX.Fields.AllocAccount
+      FIX.Fields.AllocQty
       FIX.Fields.BeginString
       FIX.Fields.BodyLength
       FIX.Fields.CheckSum
       FIX.Fields.CstmApplVerID
+      FIX.Fields.Currency
+      FIX.Fields.CustomFieldName
+      FIX.Fields.CustomFieldValue
+      FIX.Fields.DayCount
       FIX.Fields.EncryptMethod
+      FIX.Fields.ExecutionVenueType
+      FIX.Fields.ExpireTime
       FIX.Fields.Headline
       FIX.Fields.HeartBtInt
+      FIX.Fields.Issuer
+      FIX.Fields.LegRefID
+      FIX.Fields.LegSettlDate
+      FIX.Fields.MaturityDate
+      FIX.Fields.MaturityDate2
       FIX.Fields.MsgSeqNum
       FIX.Fields.MsgType
+      FIX.Fields.NestedPartyID
+      FIX.Fields.NestedPartyIDSource
+      FIX.Fields.NestedPartyRole
+      FIX.Fields.NestedPartyRoleQualifier
+      FIX.Fields.NoAllocs
+      FIX.Fields.NoCustomFields
       FIX.Fields.NoLinesOfText
+      FIX.Fields.NoNestedPartyIDs
+      FIX.Fields.NoOrderAttribute
+      FIX.Fields.NoPartyIDs
+      FIX.Fields.NoRegulatoryTradeID
+      FIX.Fields.NoRelatedSym
       FIX.Fields.NoRoutingIDs
+      FIX.Fields.OptionDate
+      FIX.Fields.OrderAttributeType
+      FIX.Fields.OrderAttributeValue
+      FIX.Fields.OrderQty
+      FIX.Fields.OrderQty2
+      FIX.Fields.PartyID
+      FIX.Fields.PartyIDSource
+      FIX.Fields.PartyRole
+      FIX.Fields.PartyRoleQualifier
       FIX.Fields.Password
+      FIX.Fields.ProductType
+      FIX.Fields.QuoteReqID
+      FIX.Fields.QuoteType
       FIX.Fields.RefMsgType
       FIX.Fields.RefSeqNum
+      FIX.Fields.RefSpotDate
       FIX.Fields.RefTagID
+      FIX.Fields.RegulatoryTradeID
+      FIX.Fields.RegulatoryTradeIDType
       FIX.Fields.ResetSeqNumFlag
       FIX.Fields.RoutingID
       FIX.Fields.RoutingType
@@ -34,11 +74,22 @@ library
       FIX.Fields.SenderSubID
       FIX.Fields.SendingTime
       FIX.Fields.SessionRejectReason
+      FIX.Fields.SettlDate
+      FIX.Fields.SettlDate2
+      FIX.Fields.Side
+      FIX.Fields.Symbol
       FIX.Fields.TargetCompID
       FIX.Fields.TestReqID
       FIX.Fields.Text
+      FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
+      FIX.Groups.CustomFieldsGroupElem
       FIX.Groups.LinesOfTextGroupElem
+      FIX.Groups.NestedPartyIDsGroupElem
+      FIX.Groups.OrderAttributeGroupElem
+      FIX.Groups.PartyIDsGroupElem
+      FIX.Groups.RegulatoryTradeIDGroupElem
+      FIX.Groups.RelatedSymGroupElem
       FIX.Groups.RoutingIDsGroupElem
       FIX.Messages
       FIX.Messages.Class
@@ -48,6 +99,7 @@ library
       FIX.Messages.Logon
       FIX.Messages.Logout
       FIX.Messages.News
+      FIX.Messages.QuoteRequest
       FIX.Messages.Reject
       FIX.Messages.Trailer
   other-modules:

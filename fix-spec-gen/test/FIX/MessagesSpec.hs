@@ -11,6 +11,7 @@ import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 import FIX.Messages.Logout
 import FIX.Messages.News
+import FIX.Messages.QuoteRequest
 import FIX.Messages.Reject
 import FIX.Messages.TestUtils
 import Test.Syd
@@ -52,4 +53,11 @@ spec = do
         genValidSpec @News
         componentSpec @News
         messageSpec @News "News"
+    )
+  describe
+    "QuoteRequest"
+    ( do
+        genValidSpec @QuoteRequest
+        componentSpec @QuoteRequest
+        messageSpec @QuoteRequest "QuoteRequest"
     )

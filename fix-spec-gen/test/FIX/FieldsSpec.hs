@@ -5,22 +5,62 @@
 module FIX.FieldsSpec where
 
 import FIX.Core.TestUtils
+import FIX.Fields.Account
+import FIX.Fields.AllocAccount
+import FIX.Fields.AllocQty
 import FIX.Fields.BeginString
 import FIX.Fields.BodyLength
 import FIX.Fields.CheckSum
 import FIX.Fields.CstmApplVerID
+import FIX.Fields.Currency
+import FIX.Fields.CustomFieldName
+import FIX.Fields.CustomFieldValue
+import FIX.Fields.DayCount
 import FIX.Fields.EncryptMethod
+import FIX.Fields.ExecutionVenueType
+import FIX.Fields.ExpireTime
 import FIX.Fields.Gen ()
 import FIX.Fields.Headline
 import FIX.Fields.HeartBtInt
+import FIX.Fields.Issuer
+import FIX.Fields.LegRefID
+import FIX.Fields.LegSettlDate
+import FIX.Fields.MaturityDate
+import FIX.Fields.MaturityDate2
 import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
+import FIX.Fields.NestedPartyID
+import FIX.Fields.NestedPartyIDSource
+import FIX.Fields.NestedPartyRole
+import FIX.Fields.NestedPartyRoleQualifier
+import FIX.Fields.NoAllocs
+import FIX.Fields.NoCustomFields
 import FIX.Fields.NoLinesOfText
+import FIX.Fields.NoNestedPartyIDs
+import FIX.Fields.NoOrderAttribute
+import FIX.Fields.NoPartyIDs
+import FIX.Fields.NoRegulatoryTradeID
+import FIX.Fields.NoRelatedSym
 import FIX.Fields.NoRoutingIDs
+import FIX.Fields.OptionDate
+import FIX.Fields.OrderAttributeType
+import FIX.Fields.OrderAttributeValue
+import FIX.Fields.OrderQty
+import FIX.Fields.OrderQty2
+import FIX.Fields.PartyID
+import FIX.Fields.PartyIDSource
+import FIX.Fields.PartyRole
+import FIX.Fields.PartyRoleQualifier
 import FIX.Fields.Password
+import FIX.Fields.ProductType
+import FIX.Fields.QuoteReqID
+import FIX.Fields.QuoteType
 import FIX.Fields.RefMsgType
 import FIX.Fields.RefSeqNum
+import FIX.Fields.RefSpotDate
 import FIX.Fields.RefTagID
+import FIX.Fields.RegulatoryTradeID
+import FIX.Fields.RegulatoryTradeIDType
 import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.RoutingID
 import FIX.Fields.RoutingType
@@ -28,6 +68,10 @@ import FIX.Fields.SenderCompID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
 import FIX.Fields.SessionRejectReason
+import FIX.Fields.SettlDate
+import FIX.Fields.SettlDate2
+import FIX.Fields.Side
+import FIX.Fields.Symbol
 import FIX.Fields.TargetCompID
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
@@ -36,27 +80,71 @@ import Test.Syd
 spec :: Spec
 spec = do
   fieldSpec @CstmApplVerID
+  fieldSpec @RefSpotDate
+  fieldSpec @ProductType
+  fieldSpec @ExecutionVenueType
+  fieldSpec @NoCustomFields
+  fieldSpec @CustomFieldName
+  fieldSpec @CustomFieldValue
+  fieldSpec @DayCount
+  fieldSpec @MaturityDate2
+  fieldSpec @NestedPartyRoleQualifier
+  fieldSpec @PartyRoleQualifier
+  fieldSpec @NoRegulatoryTradeID
+  fieldSpec @RegulatoryTradeID
+  fieldSpec @RegulatoryTradeIDType
+  fieldSpec @OptionDate
+  fieldSpec @NoOrderAttribute
+  fieldSpec @OrderAttributeType
+  fieldSpec @OrderAttributeValue
+  fieldSpec @Account
   fieldSpec @BeginString
   fieldSpec @BodyLength
   fieldSpec @CheckSum
+  fieldSpec @Currency
   fieldSpec @NoLinesOfText
   fieldSpec @MsgSeqNum
   fieldSpec @MsgType
+  fieldSpec @OrderQty
   fieldSpec @RefSeqNum
   fieldSpec @SenderCompID
   fieldSpec @SenderSubID
   fieldSpec @SendingTime
+  fieldSpec @Side
+  fieldSpec @Symbol
   fieldSpec @TargetCompID
   fieldSpec @Text
+  fieldSpec @SettlDate
+  fieldSpec @NoAllocs
+  fieldSpec @AllocAccount
+  fieldSpec @AllocQty
   fieldSpec @EncryptMethod
+  fieldSpec @Issuer
   fieldSpec @HeartBtInt
   fieldSpec @TestReqID
+  fieldSpec @ExpireTime
+  fieldSpec @QuoteReqID
   fieldSpec @ResetSeqNumFlag
+  fieldSpec @NoRelatedSym
   fieldSpec @Headline
+  fieldSpec @OrderQty2
+  fieldSpec @SettlDate2
   fieldSpec @NoRoutingIDs
   fieldSpec @RoutingType
   fieldSpec @RoutingID
   fieldSpec @RefTagID
   fieldSpec @RefMsgType
   fieldSpec @SessionRejectReason
+  fieldSpec @PartyIDSource
+  fieldSpec @PartyID
+  fieldSpec @PartyRole
+  fieldSpec @NoPartyIDs
+  fieldSpec @NestedPartyID
+  fieldSpec @NestedPartyIDSource
+  fieldSpec @QuoteType
+  fieldSpec @NestedPartyRole
+  fieldSpec @NoNestedPartyIDs
+  fieldSpec @MaturityDate
   fieldSpec @Password
+  fieldSpec @LegSettlDate
+  fieldSpec @LegRefID

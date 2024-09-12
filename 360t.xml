@@ -59,6 +59,49 @@
     <field name='CustomFieldName' required='Y' />
     <field name='CustomFieldValue' required='Y' />
    </group>
+   <group name='NoRelatedSym' required='Y'>
+    <field name='DayCount' required='N' />
+    <field name='Symbol' required='Y' />
+    <field name='MaturityDate' required='N' />
+    <field name='MaturityDate2' required='N' />
+    <field name='Issuer' required='N' />
+    <field name='QuoteType' required='Y' />
+    <field name='Side' required='N' />
+    <field name='OrderQty' required='Y' />
+    <field name='SettlDate' required='Y' />
+    <field name='SettlDate2' required='N' />
+    <field name='OrderQty2' required='N' />
+    <field name='Currency' required='N' />
+    <field name='Account' required='Y' />
+    <field name='ExpireTime' required='N' />
+    <group name='NoAllocs' required='N'>
+     <field name='AllocAccount' required='Y' />
+     <field name='AllocQty' required='Y' />
+     <group name='NoNestedPartyIDs' required='N'>
+      <field name='NestedPartyID' required='N' />
+      <field name='NestedPartyIDSource' required='N' />
+      <field name='NestedPartyRole' required='N' />
+      <field name='NestedPartyRoleQualifier' required='N' />
+     </group>
+    </group>
+    <field name='LegRefID' required='Y' />
+    <field name='LegSettlDate' required='Y' />
+   </group>
+   <group name='NoPartyIDs' required='N'>
+    <field name='PartyID' required='N' />
+    <field name='PartyIDSource' required='N' />
+    <field name='PartyRole' required='N' />
+    <field name='PartyRoleQualifier' required='N' />
+   </group>
+   <group name='NoRegulatoryTradeID' required='N'>
+    <field name='RegulatoryTradeID' required='N' />
+    <field name='RegulatoryTradeIDType' required='N' />
+   </group>
+   <field name='OptionDate' required='N' />
+   <group name='NoOrderAttribute' required='N'>
+    <field name='OrderAttributeType' required='N' />
+    <field name='OrderAttributeValue' required='N' />
+   </group>
   </message>
  </messages>
  <trailer>
@@ -69,6 +112,55 @@
  <fields>
   <!-- Custom fields --> 
   <field number='1129' name='CstmApplVerID' type='STRING' />
+  <field number='7070' name='RefSpotDate' type='LOCALMKTDATE' />
+  <field number='7071' name='ProductType' type='STRING'>
+   <value enum='FX-STD' description='Spot, Forward, Swap, NDF and NDS' />
+   <value enum='FX-BT' description='Block trade' />
+   <value enum='Metals Outright' description='Metals Outright' />
+   <value enum='Metals Spread' description='Metals Spread' />
+   <value enum='Metals Quarterly Strip' description='Metals Quarterly Strip' />
+   <value enum='MM' description='Loan/Deposit' />
+  </field>
+  <field number='7611' name='ExecutionVenueType' type='STRING'>
+   <value enum='2' description='OFF facility / OTC' />
+   <value enum='5' description='EU MTF' />
+   <value enum='6' description='UK MTF' />
+  </field>
+  <field number='7546' name='NoCustomFields' type='NUMINGROUP' />
+  <field number='7547' name='CustomFieldName' type='STRING' />
+  <field number='7548' name='CustomFieldValue' type='STRING' />
+  <field number='7072' name='DayCount' type='STRING'>
+   <value enum='1/1' description='1/1' />
+   <value enum='ACT/365F' description='ACT/365F' />
+   <value enum='ACT/360' description='ACT/360' />
+   <value enum='ACT/ACT' description='ACT/ACT' />
+   <value enum='30/360' description='30/360' />
+   <value enum='30E/360' description='30E/360' />
+   <value enum='BUS/252' description='BUS/252' />
+  </field>
+  <field number='7541' name='MaturityDate2' type='LOCALMKTDATE' />
+  <field number='2384' name='NestedPartyRoleQualifier' type='INT'>
+   <value enum='22' description='Algorithm' />
+   <value enum='24' description='Natural Person' />
+  </field>
+  <field number='2376' name='PartyRoleQualifier' type='INT'>
+   <value enum='22' description='Algorithm' />
+   <value enum='24' description='Natural Person' />
+  </field>
+  <field number='1907' name='NoRegulatoryTradeID' type='NUMINGROUP' />
+  <field number='1903' name='RegulatoryTradeID' type='STRING' />
+  <field number='1906' name='RegulatoryTradeIDType' type='INT'>
+   <value enum='3' description='Related' />
+  </field>
+  <field number='9515' name='OptionDate' type='LOCALMKTDATE' />
+  <field number='2593' name='NoOrderAttribute' type='NUMINGROUP' />
+  <field number='2594' name='OrderAttributeType' type='INT'>
+   <value enum='3' description='Risk reduction order' />
+  </field>
+  <field number='2595' name='OrderAttributeValue' type='STRING'>
+   <value enum='Y' description='Risk Decreasing' />
+   <value enum='N' description='Risk Increasing' />
+  </field>
   <!-- TODO Put the above at the end later --> 
   <!-- TODO remove unused fields -->
   <field number='1' name='Account' type='STRING' />

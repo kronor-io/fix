@@ -19,21 +19,61 @@ import qualified Data.ByteString.Builder as ByteString
 import Data.Validity
 import Data.Void (Void)
 import FIX.Core
+import FIX.Fields.Account as X
+import FIX.Fields.AllocAccount as X
+import FIX.Fields.AllocQty as X
 import FIX.Fields.BeginString as X
 import FIX.Fields.BodyLength as X
 import FIX.Fields.CheckSum as X
 import FIX.Fields.CstmApplVerID as X
+import FIX.Fields.Currency as X
+import FIX.Fields.CustomFieldName as X
+import FIX.Fields.CustomFieldValue as X
+import FIX.Fields.DayCount as X
 import FIX.Fields.EncryptMethod as X
+import FIX.Fields.ExecutionVenueType as X
+import FIX.Fields.ExpireTime as X
 import FIX.Fields.Headline as X
 import FIX.Fields.HeartBtInt as X
+import FIX.Fields.Issuer as X
+import FIX.Fields.LegRefID as X
+import FIX.Fields.LegSettlDate as X
+import FIX.Fields.MaturityDate as X
+import FIX.Fields.MaturityDate2 as X
 import FIX.Fields.MsgSeqNum as X
 import FIX.Fields.MsgType as X
+import FIX.Fields.NestedPartyID as X
+import FIX.Fields.NestedPartyIDSource as X
+import FIX.Fields.NestedPartyRole as X
+import FIX.Fields.NestedPartyRoleQualifier as X
+import FIX.Fields.NoAllocs as X
+import FIX.Fields.NoCustomFields as X
 import FIX.Fields.NoLinesOfText as X
+import FIX.Fields.NoNestedPartyIDs as X
+import FIX.Fields.NoOrderAttribute as X
+import FIX.Fields.NoPartyIDs as X
+import FIX.Fields.NoRegulatoryTradeID as X
+import FIX.Fields.NoRelatedSym as X
 import FIX.Fields.NoRoutingIDs as X
+import FIX.Fields.OptionDate as X
+import FIX.Fields.OrderAttributeType as X
+import FIX.Fields.OrderAttributeValue as X
+import FIX.Fields.OrderQty as X
+import FIX.Fields.OrderQty2 as X
+import FIX.Fields.PartyID as X
+import FIX.Fields.PartyIDSource as X
+import FIX.Fields.PartyRole as X
+import FIX.Fields.PartyRoleQualifier as X
 import FIX.Fields.Password as X
+import FIX.Fields.ProductType as X
+import FIX.Fields.QuoteReqID as X
+import FIX.Fields.QuoteType as X
 import FIX.Fields.RefMsgType as X
 import FIX.Fields.RefSeqNum as X
+import FIX.Fields.RefSpotDate as X
 import FIX.Fields.RefTagID as X
+import FIX.Fields.RegulatoryTradeID as X
+import FIX.Fields.RegulatoryTradeIDType as X
 import FIX.Fields.ResetSeqNumFlag as X
 import FIX.Fields.RoutingID as X
 import FIX.Fields.RoutingType as X
@@ -41,6 +81,10 @@ import FIX.Fields.SenderCompID as X
 import FIX.Fields.SenderSubID as X
 import FIX.Fields.SendingTime as X
 import FIX.Fields.SessionRejectReason as X
+import FIX.Fields.SettlDate as X
+import FIX.Fields.SettlDate2 as X
+import FIX.Fields.Side as X
+import FIX.Fields.Symbol as X
 import FIX.Fields.TargetCompID as X
 import FIX.Fields.TestReqID as X
 import FIX.Fields.Text as X
@@ -50,30 +94,74 @@ import Text.Megaparsec.Byte.Lexer
 
 data AnyField
   = SomeCstmApplVerID !CstmApplVerID
+  | SomeRefSpotDate !RefSpotDate
+  | SomeProductType !ProductType
+  | SomeExecutionVenueType !ExecutionVenueType
+  | SomeNoCustomFields !NoCustomFields
+  | SomeCustomFieldName !CustomFieldName
+  | SomeCustomFieldValue !CustomFieldValue
+  | SomeDayCount !DayCount
+  | SomeMaturityDate2 !MaturityDate2
+  | SomeNestedPartyRoleQualifier !NestedPartyRoleQualifier
+  | SomePartyRoleQualifier !PartyRoleQualifier
+  | SomeNoRegulatoryTradeID !NoRegulatoryTradeID
+  | SomeRegulatoryTradeID !RegulatoryTradeID
+  | SomeRegulatoryTradeIDType !RegulatoryTradeIDType
+  | SomeOptionDate !OptionDate
+  | SomeNoOrderAttribute !NoOrderAttribute
+  | SomeOrderAttributeType !OrderAttributeType
+  | SomeOrderAttributeValue !OrderAttributeValue
+  | SomeAccount !Account
   | SomeBeginString !BeginString
   | SomeBodyLength !BodyLength
   | SomeCheckSum !CheckSum
+  | SomeCurrency !Currency
   | SomeNoLinesOfText !NoLinesOfText
   | SomeMsgSeqNum !MsgSeqNum
   | SomeMsgType !MsgType
+  | SomeOrderQty !OrderQty
   | SomeRefSeqNum !RefSeqNum
   | SomeSenderCompID !SenderCompID
   | SomeSenderSubID !SenderSubID
   | SomeSendingTime !SendingTime
+  | SomeSide !Side
+  | SomeSymbol !Symbol
   | SomeTargetCompID !TargetCompID
   | SomeText !Text
+  | SomeSettlDate !SettlDate
+  | SomeNoAllocs !NoAllocs
+  | SomeAllocAccount !AllocAccount
+  | SomeAllocQty !AllocQty
   | SomeEncryptMethod !EncryptMethod
+  | SomeIssuer !Issuer
   | SomeHeartBtInt !HeartBtInt
   | SomeTestReqID !TestReqID
+  | SomeExpireTime !ExpireTime
+  | SomeQuoteReqID !QuoteReqID
   | SomeResetSeqNumFlag !ResetSeqNumFlag
+  | SomeNoRelatedSym !NoRelatedSym
   | SomeHeadline !Headline
+  | SomeOrderQty2 !OrderQty2
+  | SomeSettlDate2 !SettlDate2
   | SomeNoRoutingIDs !NoRoutingIDs
   | SomeRoutingType !RoutingType
   | SomeRoutingID !RoutingID
   | SomeRefTagID !RefTagID
   | SomeRefMsgType !RefMsgType
   | SomeSessionRejectReason !SessionRejectReason
+  | SomePartyIDSource !PartyIDSource
+  | SomePartyID !PartyID
+  | SomePartyRole !PartyRole
+  | SomeNoPartyIDs !NoPartyIDs
+  | SomeNestedPartyID !NestedPartyID
+  | SomeNestedPartyIDSource !NestedPartyIDSource
+  | SomeQuoteType !QuoteType
+  | SomeNestedPartyRole !NestedPartyRole
+  | SomeNoNestedPartyIDs !NoNestedPartyIDs
+  | SomeMaturityDate !MaturityDate
   | SomePassword !Password
+  | SomeLegSettlDate !LegSettlDate
+  | SomeLegRefID !LegRefID
   deriving stock (Show, Eq, Generic)
 
 instance Validity AnyField
@@ -81,30 +169,74 @@ instance Validity AnyField
 anyFieldB :: AnyField -> ByteString.Builder
 anyFieldB = \case
   SomeCstmApplVerID f -> fieldB f
+  SomeRefSpotDate f -> fieldB f
+  SomeProductType f -> fieldB f
+  SomeExecutionVenueType f -> fieldB f
+  SomeNoCustomFields f -> fieldB f
+  SomeCustomFieldName f -> fieldB f
+  SomeCustomFieldValue f -> fieldB f
+  SomeDayCount f -> fieldB f
+  SomeMaturityDate2 f -> fieldB f
+  SomeNestedPartyRoleQualifier f -> fieldB f
+  SomePartyRoleQualifier f -> fieldB f
+  SomeNoRegulatoryTradeID f -> fieldB f
+  SomeRegulatoryTradeID f -> fieldB f
+  SomeRegulatoryTradeIDType f -> fieldB f
+  SomeOptionDate f -> fieldB f
+  SomeNoOrderAttribute f -> fieldB f
+  SomeOrderAttributeType f -> fieldB f
+  SomeOrderAttributeValue f -> fieldB f
+  SomeAccount f -> fieldB f
   SomeBeginString f -> fieldB f
   SomeBodyLength f -> fieldB f
   SomeCheckSum f -> fieldB f
+  SomeCurrency f -> fieldB f
   SomeNoLinesOfText f -> fieldB f
   SomeMsgSeqNum f -> fieldB f
   SomeMsgType f -> fieldB f
+  SomeOrderQty f -> fieldB f
   SomeRefSeqNum f -> fieldB f
   SomeSenderCompID f -> fieldB f
   SomeSenderSubID f -> fieldB f
   SomeSendingTime f -> fieldB f
+  SomeSide f -> fieldB f
+  SomeSymbol f -> fieldB f
   SomeTargetCompID f -> fieldB f
   SomeText f -> fieldB f
+  SomeSettlDate f -> fieldB f
+  SomeNoAllocs f -> fieldB f
+  SomeAllocAccount f -> fieldB f
+  SomeAllocQty f -> fieldB f
   SomeEncryptMethod f -> fieldB f
+  SomeIssuer f -> fieldB f
   SomeHeartBtInt f -> fieldB f
   SomeTestReqID f -> fieldB f
+  SomeExpireTime f -> fieldB f
+  SomeQuoteReqID f -> fieldB f
   SomeResetSeqNumFlag f -> fieldB f
+  SomeNoRelatedSym f -> fieldB f
   SomeHeadline f -> fieldB f
+  SomeOrderQty2 f -> fieldB f
+  SomeSettlDate2 f -> fieldB f
   SomeNoRoutingIDs f -> fieldB f
   SomeRoutingType f -> fieldB f
   SomeRoutingID f -> fieldB f
   SomeRefTagID f -> fieldB f
   SomeRefMsgType f -> fieldB f
   SomeSessionRejectReason f -> fieldB f
+  SomePartyIDSource f -> fieldB f
+  SomePartyID f -> fieldB f
+  SomePartyRole f -> fieldB f
+  SomeNoPartyIDs f -> fieldB f
+  SomeNestedPartyID f -> fieldB f
+  SomeNestedPartyIDSource f -> fieldB f
+  SomeQuoteType f -> fieldB f
+  SomeNestedPartyRole f -> fieldB f
+  SomeNoNestedPartyIDs f -> fieldB f
+  SomeMaturityDate f -> fieldB f
   SomePassword f -> fieldB f
+  SomeLegSettlDate f -> fieldB f
+  SomeLegRefID f -> fieldB f
 
 anyFieldP :: Parsec Void ByteString AnyField
 anyFieldP = do
@@ -113,30 +245,74 @@ anyFieldP = do
       fp = fieldP tag
   case tag of
     1129 -> SomeCstmApplVerID <$> fp
+    7070 -> SomeRefSpotDate <$> fp
+    7071 -> SomeProductType <$> fp
+    7611 -> SomeExecutionVenueType <$> fp
+    7546 -> SomeNoCustomFields <$> fp
+    7547 -> SomeCustomFieldName <$> fp
+    7548 -> SomeCustomFieldValue <$> fp
+    7072 -> SomeDayCount <$> fp
+    7541 -> SomeMaturityDate2 <$> fp
+    2384 -> SomeNestedPartyRoleQualifier <$> fp
+    2376 -> SomePartyRoleQualifier <$> fp
+    1907 -> SomeNoRegulatoryTradeID <$> fp
+    1903 -> SomeRegulatoryTradeID <$> fp
+    1906 -> SomeRegulatoryTradeIDType <$> fp
+    9515 -> SomeOptionDate <$> fp
+    2593 -> SomeNoOrderAttribute <$> fp
+    2594 -> SomeOrderAttributeType <$> fp
+    2595 -> SomeOrderAttributeValue <$> fp
+    1 -> SomeAccount <$> fp
     8 -> SomeBeginString <$> fp
     9 -> SomeBodyLength <$> fp
     10 -> SomeCheckSum <$> fp
+    15 -> SomeCurrency <$> fp
     33 -> SomeNoLinesOfText <$> fp
     34 -> SomeMsgSeqNum <$> fp
     35 -> SomeMsgType <$> fp
+    38 -> SomeOrderQty <$> fp
     45 -> SomeRefSeqNum <$> fp
     49 -> SomeSenderCompID <$> fp
     50 -> SomeSenderSubID <$> fp
     52 -> SomeSendingTime <$> fp
+    54 -> SomeSide <$> fp
+    55 -> SomeSymbol <$> fp
     56 -> SomeTargetCompID <$> fp
     58 -> SomeText <$> fp
+    64 -> SomeSettlDate <$> fp
+    78 -> SomeNoAllocs <$> fp
+    79 -> SomeAllocAccount <$> fp
+    80 -> SomeAllocQty <$> fp
     98 -> SomeEncryptMethod <$> fp
+    106 -> SomeIssuer <$> fp
     108 -> SomeHeartBtInt <$> fp
     112 -> SomeTestReqID <$> fp
+    126 -> SomeExpireTime <$> fp
+    131 -> SomeQuoteReqID <$> fp
     141 -> SomeResetSeqNumFlag <$> fp
+    146 -> SomeNoRelatedSym <$> fp
     148 -> SomeHeadline <$> fp
+    192 -> SomeOrderQty2 <$> fp
+    193 -> SomeSettlDate2 <$> fp
     215 -> SomeNoRoutingIDs <$> fp
     216 -> SomeRoutingType <$> fp
     217 -> SomeRoutingID <$> fp
     371 -> SomeRefTagID <$> fp
     372 -> SomeRefMsgType <$> fp
     373 -> SomeSessionRejectReason <$> fp
+    447 -> SomePartyIDSource <$> fp
+    448 -> SomePartyID <$> fp
+    452 -> SomePartyRole <$> fp
+    453 -> SomeNoPartyIDs <$> fp
+    524 -> SomeNestedPartyID <$> fp
+    525 -> SomeNestedPartyIDSource <$> fp
+    537 -> SomeQuoteType <$> fp
+    538 -> SomeNestedPartyRole <$> fp
+    539 -> SomeNoNestedPartyIDs <$> fp
+    541 -> SomeMaturityDate <$> fp
     554 -> SomePassword <$> fp
+    588 -> SomeLegSettlDate <$> fp
+    654 -> SomeLegRefID <$> fp
     _ -> fail ("Unknown field tag: " <> show tag)
 
 class (IsField a) => IsAnyField a where
@@ -147,6 +323,114 @@ instance IsAnyField CstmApplVerID where
   packAnyField = SomeCstmApplVerID
   unpackAnyField = \case
     SomeCstmApplVerID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RefSpotDate where
+  packAnyField = SomeRefSpotDate
+  unpackAnyField = \case
+    SomeRefSpotDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField ProductType where
+  packAnyField = SomeProductType
+  unpackAnyField = \case
+    SomeProductType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField ExecutionVenueType where
+  packAnyField = SomeExecutionVenueType
+  unpackAnyField = \case
+    SomeExecutionVenueType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoCustomFields where
+  packAnyField = SomeNoCustomFields
+  unpackAnyField = \case
+    SomeNoCustomFields f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CustomFieldName where
+  packAnyField = SomeCustomFieldName
+  unpackAnyField = \case
+    SomeCustomFieldName f -> Just f
+    _ -> Nothing
+
+instance IsAnyField CustomFieldValue where
+  packAnyField = SomeCustomFieldValue
+  unpackAnyField = \case
+    SomeCustomFieldValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField DayCount where
+  packAnyField = SomeDayCount
+  unpackAnyField = \case
+    SomeDayCount f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MaturityDate2 where
+  packAnyField = SomeMaturityDate2
+  unpackAnyField = \case
+    SomeMaturityDate2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyRoleQualifier where
+  packAnyField = SomeNestedPartyRoleQualifier
+  unpackAnyField = \case
+    SomeNestedPartyRoleQualifier f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartyRoleQualifier where
+  packAnyField = SomePartyRoleQualifier
+  unpackAnyField = \case
+    SomePartyRoleQualifier f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoRegulatoryTradeID where
+  packAnyField = SomeNoRegulatoryTradeID
+  unpackAnyField = \case
+    SomeNoRegulatoryTradeID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RegulatoryTradeID where
+  packAnyField = SomeRegulatoryTradeID
+  unpackAnyField = \case
+    SomeRegulatoryTradeID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField RegulatoryTradeIDType where
+  packAnyField = SomeRegulatoryTradeIDType
+  unpackAnyField = \case
+    SomeRegulatoryTradeIDType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OptionDate where
+  packAnyField = SomeOptionDate
+  unpackAnyField = \case
+    SomeOptionDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoOrderAttribute where
+  packAnyField = SomeNoOrderAttribute
+  unpackAnyField = \case
+    SomeNoOrderAttribute f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderAttributeType where
+  packAnyField = SomeOrderAttributeType
+  unpackAnyField = \case
+    SomeOrderAttributeType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderAttributeValue where
+  packAnyField = SomeOrderAttributeValue
+  unpackAnyField = \case
+    SomeOrderAttributeValue f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Account where
+  packAnyField = SomeAccount
+  unpackAnyField = \case
+    SomeAccount f -> Just f
     _ -> Nothing
 
 instance IsAnyField BeginString where
@@ -167,6 +451,12 @@ instance IsAnyField CheckSum where
     SomeCheckSum f -> Just f
     _ -> Nothing
 
+instance IsAnyField Currency where
+  packAnyField = SomeCurrency
+  unpackAnyField = \case
+    SomeCurrency f -> Just f
+    _ -> Nothing
+
 instance IsAnyField NoLinesOfText where
   packAnyField = SomeNoLinesOfText
   unpackAnyField = \case
@@ -183,6 +473,12 @@ instance IsAnyField MsgType where
   packAnyField = SomeMsgType
   unpackAnyField = \case
     SomeMsgType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderQty where
+  packAnyField = SomeOrderQty
+  unpackAnyField = \case
+    SomeOrderQty f -> Just f
     _ -> Nothing
 
 instance IsAnyField RefSeqNum where
@@ -209,6 +505,18 @@ instance IsAnyField SendingTime where
     SomeSendingTime f -> Just f
     _ -> Nothing
 
+instance IsAnyField Side where
+  packAnyField = SomeSide
+  unpackAnyField = \case
+    SomeSide f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Symbol where
+  packAnyField = SomeSymbol
+  unpackAnyField = \case
+    SomeSymbol f -> Just f
+    _ -> Nothing
+
 instance IsAnyField TargetCompID where
   packAnyField = SomeTargetCompID
   unpackAnyField = \case
@@ -221,10 +529,40 @@ instance IsAnyField Text where
     SomeText f -> Just f
     _ -> Nothing
 
+instance IsAnyField SettlDate where
+  packAnyField = SomeSettlDate
+  unpackAnyField = \case
+    SomeSettlDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoAllocs where
+  packAnyField = SomeNoAllocs
+  unpackAnyField = \case
+    SomeNoAllocs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AllocAccount where
+  packAnyField = SomeAllocAccount
+  unpackAnyField = \case
+    SomeAllocAccount f -> Just f
+    _ -> Nothing
+
+instance IsAnyField AllocQty where
+  packAnyField = SomeAllocQty
+  unpackAnyField = \case
+    SomeAllocQty f -> Just f
+    _ -> Nothing
+
 instance IsAnyField EncryptMethod where
   packAnyField = SomeEncryptMethod
   unpackAnyField = \case
     SomeEncryptMethod f -> Just f
+    _ -> Nothing
+
+instance IsAnyField Issuer where
+  packAnyField = SomeIssuer
+  unpackAnyField = \case
+    SomeIssuer f -> Just f
     _ -> Nothing
 
 instance IsAnyField HeartBtInt where
@@ -239,16 +577,46 @@ instance IsAnyField TestReqID where
     SomeTestReqID f -> Just f
     _ -> Nothing
 
+instance IsAnyField ExpireTime where
+  packAnyField = SomeExpireTime
+  unpackAnyField = \case
+    SomeExpireTime f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteReqID where
+  packAnyField = SomeQuoteReqID
+  unpackAnyField = \case
+    SomeQuoteReqID f -> Just f
+    _ -> Nothing
+
 instance IsAnyField ResetSeqNumFlag where
   packAnyField = SomeResetSeqNumFlag
   unpackAnyField = \case
     SomeResetSeqNumFlag f -> Just f
     _ -> Nothing
 
+instance IsAnyField NoRelatedSym where
+  packAnyField = SomeNoRelatedSym
+  unpackAnyField = \case
+    SomeNoRelatedSym f -> Just f
+    _ -> Nothing
+
 instance IsAnyField Headline where
   packAnyField = SomeHeadline
   unpackAnyField = \case
     SomeHeadline f -> Just f
+    _ -> Nothing
+
+instance IsAnyField OrderQty2 where
+  packAnyField = SomeOrderQty2
+  unpackAnyField = \case
+    SomeOrderQty2 f -> Just f
+    _ -> Nothing
+
+instance IsAnyField SettlDate2 where
+  packAnyField = SomeSettlDate2
+  unpackAnyField = \case
+    SomeSettlDate2 f -> Just f
     _ -> Nothing
 
 instance IsAnyField NoRoutingIDs where
@@ -287,8 +655,80 @@ instance IsAnyField SessionRejectReason where
     SomeSessionRejectReason f -> Just f
     _ -> Nothing
 
+instance IsAnyField PartyIDSource where
+  packAnyField = SomePartyIDSource
+  unpackAnyField = \case
+    SomePartyIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartyID where
+  packAnyField = SomePartyID
+  unpackAnyField = \case
+    SomePartyID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField PartyRole where
+  packAnyField = SomePartyRole
+  unpackAnyField = \case
+    SomePartyRole f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoPartyIDs where
+  packAnyField = SomeNoPartyIDs
+  unpackAnyField = \case
+    SomeNoPartyIDs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyID where
+  packAnyField = SomeNestedPartyID
+  unpackAnyField = \case
+    SomeNestedPartyID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyIDSource where
+  packAnyField = SomeNestedPartyIDSource
+  unpackAnyField = \case
+    SomeNestedPartyIDSource f -> Just f
+    _ -> Nothing
+
+instance IsAnyField QuoteType where
+  packAnyField = SomeQuoteType
+  unpackAnyField = \case
+    SomeQuoteType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NestedPartyRole where
+  packAnyField = SomeNestedPartyRole
+  unpackAnyField = \case
+    SomeNestedPartyRole f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoNestedPartyIDs where
+  packAnyField = SomeNoNestedPartyIDs
+  unpackAnyField = \case
+    SomeNoNestedPartyIDs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField MaturityDate where
+  packAnyField = SomeMaturityDate
+  unpackAnyField = \case
+    SomeMaturityDate f -> Just f
+    _ -> Nothing
+
 instance IsAnyField Password where
   packAnyField = SomePassword
   unpackAnyField = \case
     SomePassword f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegSettlDate where
+  packAnyField = SomeLegSettlDate
+  unpackAnyField = \case
+    SomeLegSettlDate f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegRefID where
+  packAnyField = SomeLegRefID
+  unpackAnyField = \case
+    SomeLegRefID f -> Just f
     _ -> Nothing

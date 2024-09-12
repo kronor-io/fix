@@ -343,7 +343,7 @@ fieldValueSpecConstructorName FieldSpec {..} FieldValueSpec {..} =
   mkName $
     concat
       [ upperHead (T.unpack fieldName),
-        toPascalCase (T.unpack fieldValueDescription)
+        toPascalCase (T.unpack (T.replace "," "" (T.replace ")" "" (T.replace "(" "" (T.replace "/" "_" fieldValueDescription)))))
       ]
 
 fieldsDataFiles :: [FieldSpec] -> CodeGen
