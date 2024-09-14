@@ -14,7 +14,6 @@ import Data.Validity
 import FIX.Components.Class
 import FIX.Fields.Account
 import FIX.Fields.Currency
-import FIX.Fields.DayCount
 import FIX.Fields.ExpireTime
 import FIX.Fields.Issuer
 import FIX.Fields.LegRefID
@@ -38,8 +37,7 @@ import GHC.Generics (Generic)
 --   { groupName = "QuotReqGrp"
 --   , groupNumberField = "NoRelatedSym"
 --   , groupPieces =
---       [ MessagePieceField "DayCount" True
---       , MessagePieceField "Symbol" True
+--       [ MessagePieceField "Symbol" True
 --       , MessagePieceField "MaturityDate" False
 --       , MessagePieceField "MaturityDate2" False
 --       , MessagePieceField "Issuer" False
@@ -79,8 +77,7 @@ import GHC.Generics (Generic)
 --       ]
 --   }
 data QuotReqGrpGroupElem = QuotReqGrpGroupElem
-  { quotReqGrpGroupElemDayCount :: !DayCount,
-    quotReqGrpGroupElemSymbol :: !Symbol,
+  { quotReqGrpGroupElemSymbol :: !Symbol,
     quotReqGrpGroupElemMaturityDate :: !(Maybe MaturityDate),
     quotReqGrpGroupElemMaturityDate2 :: !(Maybe MaturityDate2),
     quotReqGrpGroupElemIssuer :: !(Maybe Issuer),
@@ -104,8 +101,7 @@ instance Validity QuotReqGrpGroupElem
 instance IsComponent QuotReqGrpGroupElem where
   toComponentFields ((QuotReqGrpGroupElem {..})) =
     mconcat
-      [ requiredFieldB quotReqGrpGroupElemDayCount,
-        requiredFieldB quotReqGrpGroupElemSymbol,
+      [ requiredFieldB quotReqGrpGroupElemSymbol,
         optionalFieldB quotReqGrpGroupElemMaturityDate,
         optionalFieldB quotReqGrpGroupElemMaturityDate2,
         optionalFieldB quotReqGrpGroupElemIssuer,
@@ -123,7 +119,6 @@ instance IsComponent QuotReqGrpGroupElem where
         requiredFieldB quotReqGrpGroupElemLegSettlDate
       ]
   fromComponentFields = do
-    quotReqGrpGroupElemDayCount <- requiredFieldP
     quotReqGrpGroupElemSymbol <- requiredFieldP
     quotReqGrpGroupElemMaturityDate <- optionalFieldP
     quotReqGrpGroupElemMaturityDate2 <- optionalFieldP
@@ -147,8 +142,8 @@ instance IsGroupElement QuotReqGrpGroupElem where
   mkGroupNum Proxy = NoRelatedSym
   countGroupNum Proxy = unNoRelatedSym
 
-makeQuotReqGrpGroupElem :: DayCount -> (Symbol -> (QuoteType -> (OrderQty -> (SettlDate -> (Account -> (LegRefID -> (LegSettlDate -> QuotReqGrpGroupElem)))))))
-makeQuotReqGrpGroupElem quotReqGrpGroupElemDayCount quotReqGrpGroupElemSymbol quotReqGrpGroupElemQuoteType quotReqGrpGroupElemOrderQty quotReqGrpGroupElemSettlDate quotReqGrpGroupElemAccount quotReqGrpGroupElemLegRefID quotReqGrpGroupElemLegSettlDate =
+makeQuotReqGrpGroupElem :: Symbol -> (QuoteType -> (OrderQty -> (SettlDate -> (Account -> (LegRefID -> (LegSettlDate -> QuotReqGrpGroupElem))))))
+makeQuotReqGrpGroupElem quotReqGrpGroupElemSymbol quotReqGrpGroupElemQuoteType quotReqGrpGroupElemOrderQty quotReqGrpGroupElemSettlDate quotReqGrpGroupElemAccount quotReqGrpGroupElemLegRefID quotReqGrpGroupElemLegSettlDate =
   let quotReqGrpGroupElemMaturityDate = Nothing
       quotReqGrpGroupElemMaturityDate2 = Nothing
       quotReqGrpGroupElemIssuer = Nothing

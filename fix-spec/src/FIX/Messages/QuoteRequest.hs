@@ -12,6 +12,7 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Fields.DayCount
 import FIX.Fields.ExecutionVenueType
 import FIX.Fields.MsgType
 import FIX.Fields.OptionDate
@@ -46,13 +47,13 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           False
+--       , MessagePieceField "DayCount" False
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "QuotReqGrp"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces =
---                 [ MessagePieceField "DayCount" True
---                 , MessagePieceField "Symbol" True
+--                 [ MessagePieceField "Symbol" True
 --                 , MessagePieceField "MaturityDate" False
 --                 , MessagePieceField "MaturityDate2" False
 --                 , MessagePieceField "Issuer" False
@@ -133,6 +134,7 @@ data QuoteRequest = QuoteRequest
     quoteRequestProductType :: !ProductType,
     quoteRequestExecutionVenueType :: !(Maybe ExecutionVenueType),
     quoteRequestCustomFieldsGroup :: ![CustomFieldsGroupElem],
+    quoteRequestDayCount :: !(Maybe DayCount),
     quoteRequestQuotReqGrpGroup :: !(NonEmpty QuotReqGrpGroupElem),
     quoteRequestPartyIDsGroup :: ![PartyIDsGroupElem],
     quoteRequestRegulatoryTradeIDGroup :: ![RegulatoryTradeIDGroupElem],
@@ -151,6 +153,7 @@ instance IsComponent QuoteRequest where
         requiredFieldB quoteRequestProductType,
         optionalFieldB quoteRequestExecutionVenueType,
         optionalGroupB quoteRequestCustomFieldsGroup,
+        optionalFieldB quoteRequestDayCount,
         requiredGroupB quoteRequestQuotReqGrpGroup,
         optionalGroupB quoteRequestPartyIDsGroup,
         optionalGroupB quoteRequestRegulatoryTradeIDGroup,
@@ -163,6 +166,7 @@ instance IsComponent QuoteRequest where
     quoteRequestProductType <- requiredFieldP
     quoteRequestExecutionVenueType <- optionalFieldP
     quoteRequestCustomFieldsGroup <- optionalGroupP
+    quoteRequestDayCount <- optionalFieldP
     quoteRequestQuotReqGrpGroup <- requiredGroupP
     quoteRequestPartyIDsGroup <- optionalGroupP
     quoteRequestRegulatoryTradeIDGroup <- optionalGroupP
@@ -178,6 +182,7 @@ makeQuoteRequest quoteRequestQuoteReqID quoteRequestProductType quoteRequestQuot
   let quoteRequestRefSpotDate = Nothing
       quoteRequestExecutionVenueType = Nothing
       quoteRequestCustomFieldsGroup = []
+      quoteRequestDayCount = Nothing
       quoteRequestPartyIDsGroup = []
       quoteRequestRegulatoryTradeIDGroup = []
       quoteRequestOptionDate = Nothing

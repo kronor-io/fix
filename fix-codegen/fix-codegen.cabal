@@ -18,10 +18,13 @@ data-files:
     data/fix-spec-gen/test/FIX/AnyMessageSpec.hs
     data/fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs
     data/fix-spec-gen/test/Spec.hs
-    data/fix-spec-gen/test_resources/messages/Heartbeat/example.tagvalue
-    data/fix-spec-gen/test_resources/messages/Logon/example.tagvalue
-    data/fix-spec-gen/test_resources/messages/Logout/example.tagvalue
-    data/fix-spec-gen/test_resources/messages/QuoteRequest/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Heartbeat/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logon/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logout/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/News/contents/example-8-1.tagvalue
+    data/fix-spec-gen/test_resources/messages/News/contents/example-8-2.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-3.tagvalue
+    data/fix-spec-gen/test_resources/messages/QuoteRequest/envelope/example.tagvalue
     data/fix-spec/default.nix
     data/fix-spec/fix-spec.cabal
     data/fix-spec/package.yaml

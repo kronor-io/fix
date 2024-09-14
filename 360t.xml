@@ -59,6 +59,7 @@
     <field name='CustomFieldName' required='Y' />
     <field name='CustomFieldValue' required='Y' />
    </group>
+   <field name='DayCount' required='N' />
    <component name='QuotReqGrp' required='Y' />
    <group name='NoPartyIDs' required='N'>
     <field name='PartyID' required='N' />
@@ -312,7 +313,6 @@
  <components>
   <component name='QuotReqGrp'>
    <group name='NoRelatedSym' required='Y'>
-    <field name='DayCount' required='N' />
     <field name='Symbol' required='Y' />
     <field name='MaturityDate' required='N' />
     <field name='MaturityDate2' required='N' />
