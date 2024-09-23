@@ -336,6 +336,25 @@
       <field name='NestedPartyRoleQualifier' required='N' />
      </group>
     </group>
+    <component name='QuotReqLegsGrp' required='N' />
+   </group>
+  </component>
+  <component name='QuotReqLegsGrp'>
+   <group name='NoLegs' required='N'>
+    <field name='LegSymbol' required='Y' />
+    <field name='LegMaturityDate' required='Y' />
+    <field name='LegSide' required='Y' />
+    <field name='LegQty' required='Y' />
+    <group name='NoLegAllocs' required='Y'>
+     <field name='LegAllocAccount' required='Y' />
+     <field name='LegAllocQty' required='Y' />
+     <group name='NoNestedPartyIDs' required='N'>
+      <field name='NestedPartyID' required='N' />
+      <field name='NestedPartyIDSource' required='N' />
+      <field name='NestedPartyRole' required='N' />
+      <field name='NestedPartyRoleQualifier' required='N' />
+     </group>
+    </group>
     <field name='LegRefID' required='Y' />
     <field name='LegSettlDate' required='Y' />
    </group>

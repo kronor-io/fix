@@ -9,6 +9,7 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Groups.QuotReqRjctGrpGroupElem where
 
+import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class

@@ -88,8 +88,42 @@ import GHC.Generics (Generic)
 --                           ]
 --                       }
 --                     False
---                 , MessagePieceField "LegRefID" True
---                 , MessagePieceField "LegSettlDate" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "QuotReqLegsGrp"
+--                       , groupNumberField = "NoLegs"
+--                       , groupPieces =
+--                           [ MessagePieceField "LegSymbol" True
+--                           , MessagePieceField "LegMaturityDate" True
+--                           , MessagePieceField "LegSide" True
+--                           , MessagePieceField "LegQty" True
+--                           , MessagePieceGroup
+--                               GroupSpec
+--                                 { groupName = "NoLegAllocs"
+--                                 , groupNumberField = "NoLegAllocs"
+--                                 , groupPieces =
+--                                     [ MessagePieceField "LegAllocAccount" True
+--                                     , MessagePieceField "LegAllocQty" True
+--                                     , MessagePieceGroup
+--                                         GroupSpec
+--                                           { groupName = "NoNestedPartyIDs"
+--                                           , groupNumberField = "NoNestedPartyIDs"
+--                                           , groupPieces =
+--                                               [ MessagePieceField "NestedPartyID" True
+--                                               , MessagePieceField "NestedPartyIDSource" False
+--                                               , MessagePieceField "NestedPartyRole" False
+--                                               , MessagePieceField "NestedPartyRoleQualifier" False
+--                                               ]
+--                                           }
+--                                         False
+--                                     ]
+--                                 }
+--                               True
+--                           , MessagePieceField "LegRefID" True
+--                           , MessagePieceField "LegSettlDate" True
+--                           ]
+--                       }
+--                     False
 --                 ]
 --             }
 --           True

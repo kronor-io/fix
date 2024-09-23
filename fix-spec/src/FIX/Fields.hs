@@ -43,6 +43,8 @@ import FIX.Fields.ExpireTime as X
 import FIX.Fields.Headline as X
 import FIX.Fields.HeartBtInt as X
 import FIX.Fields.Issuer as X
+import FIX.Fields.LegAllocAccount as X
+import FIX.Fields.LegAllocQty as X
 import FIX.Fields.LegBidExAnteCost as X
 import FIX.Fields.LegBidExAnteCostPercentage as X
 import FIX.Fields.LegBidPx as X
@@ -54,6 +56,7 @@ import FIX.Fields.LegOfferPx as X
 import FIX.Fields.LegQty as X
 import FIX.Fields.LegRefID as X
 import FIX.Fields.LegSettlDate as X
+import FIX.Fields.LegSide as X
 import FIX.Fields.LegSymbol as X
 import FIX.Fields.MaturityDate as X
 import FIX.Fields.MaturityDate2 as X
@@ -68,6 +71,7 @@ import FIX.Fields.NestedPartyRole as X
 import FIX.Fields.NestedPartyRoleQualifier as X
 import FIX.Fields.NoAllocs as X
 import FIX.Fields.NoCustomFields as X
+import FIX.Fields.NoLegAllocs as X
 import FIX.Fields.NoLegs as X
 import FIX.Fields.NoLinesOfText as X
 import FIX.Fields.NoNestedPartyIDs as X
@@ -243,9 +247,13 @@ data AnyField
   | SomeLegSettlDate !LegSettlDate
   | SomeLegSymbol !LegSymbol
   | SomeLegMaturityDate !LegMaturityDate
+  | SomeLegSide !LegSide
   | SomeMidPx !MidPx
   | SomeLegRefID !LegRefID
   | SomeQuoteRequestRejectReason !QuoteRequestRejectReason
+  | SomeNoLegAllocs !NoLegAllocs
+  | SomeLegAllocAccount !LegAllocAccount
+  | SomeLegAllocQty !LegAllocQty
   | SomeLegBidPx !LegBidPx
   | SomeLegOfferPx !LegOfferPx
   | SomeLegQty !LegQty
@@ -362,9 +370,13 @@ anyFieldB = \case
   SomeLegSettlDate f -> fieldB f
   SomeLegSymbol f -> fieldB f
   SomeLegMaturityDate f -> fieldB f
+  SomeLegSide f -> fieldB f
   SomeMidPx f -> fieldB f
   SomeLegRefID f -> fieldB f
   SomeQuoteRequestRejectReason f -> fieldB f
+  SomeNoLegAllocs f -> fieldB f
+  SomeLegAllocAccount f -> fieldB f
+  SomeLegAllocQty f -> fieldB f
   SomeLegBidPx f -> fieldB f
   SomeLegOfferPx f -> fieldB f
   SomeLegQty f -> fieldB f
@@ -482,9 +494,13 @@ anyFieldP = do
     588 -> SomeLegSettlDate <$> fp
     600 -> SomeLegSymbol <$> fp
     611 -> SomeLegMaturityDate <$> fp
+    624 -> SomeLegSide <$> fp
     631 -> SomeMidPx <$> fp
     654 -> SomeLegRefID <$> fp
     658 -> SomeQuoteRequestRejectReason <$> fp
+    670 -> SomeNoLegAllocs <$> fp
+    671 -> SomeLegAllocAccount <$> fp
+    673 -> SomeLegAllocQty <$> fp
     681 -> SomeLegBidPx <$> fp
     684 -> SomeLegOfferPx <$> fp
     687 -> SomeLegQty <$> fp
@@ -1131,6 +1147,12 @@ instance IsAnyField LegMaturityDate where
     SomeLegMaturityDate f -> Just f
     _ -> Nothing
 
+instance IsAnyField LegSide where
+  packAnyField = SomeLegSide
+  unpackAnyField = \case
+    SomeLegSide f -> Just f
+    _ -> Nothing
+
 instance IsAnyField MidPx where
   packAnyField = SomeMidPx
   unpackAnyField = \case
@@ -1147,6 +1169,24 @@ instance IsAnyField QuoteRequestRejectReason where
   packAnyField = SomeQuoteRequestRejectReason
   unpackAnyField = \case
     SomeQuoteRequestRejectReason f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NoLegAllocs where
+  packAnyField = SomeNoLegAllocs
+  unpackAnyField = \case
+    SomeNoLegAllocs f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegAllocAccount where
+  packAnyField = SomeLegAllocAccount
+  unpackAnyField = \case
+    SomeLegAllocAccount f -> Just f
+    _ -> Nothing
+
+instance IsAnyField LegAllocQty where
+  packAnyField = SomeLegAllocQty
+  unpackAnyField = \case
+    SomeLegAllocQty f -> Just f
     _ -> Nothing
 
 instance IsAnyField LegBidPx where

@@ -9,6 +9,7 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.Groups.QuotReqGrpGroupElem where
 
+import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
@@ -16,8 +17,6 @@ import FIX.Fields.Account
 import FIX.Fields.Currency
 import FIX.Fields.ExpireTime
 import FIX.Fields.Issuer
-import FIX.Fields.LegRefID
-import FIX.Fields.LegSettlDate
 import FIX.Fields.MaturityDate
 import FIX.Fields.MaturityDate2
 import FIX.Fields.MsgType
@@ -31,6 +30,7 @@ import FIX.Fields.Side
 import FIX.Fields.Symbol
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.Class
+import FIX.Groups.QuotReqLegsGrpGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -72,8 +72,42 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           False
---       , MessagePieceField "LegRefID" True
---       , MessagePieceField "LegSettlDate" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "QuotReqLegsGrp"
+--             , groupNumberField = "NoLegs"
+--             , groupPieces =
+--                 [ MessagePieceField "LegSymbol" True
+--                 , MessagePieceField "LegMaturityDate" True
+--                 , MessagePieceField "LegSide" True
+--                 , MessagePieceField "LegQty" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoLegAllocs"
+--                       , groupNumberField = "NoLegAllocs"
+--                       , groupPieces =
+--                           [ MessagePieceField "LegAllocAccount" True
+--                           , MessagePieceField "LegAllocQty" True
+--                           , MessagePieceGroup
+--                               GroupSpec
+--                                 { groupName = "NoNestedPartyIDs"
+--                                 , groupNumberField = "NoNestedPartyIDs"
+--                                 , groupPieces =
+--                                     [ MessagePieceField "NestedPartyID" True
+--                                     , MessagePieceField "NestedPartyIDSource" False
+--                                     , MessagePieceField "NestedPartyRole" False
+--                                     , MessagePieceField "NestedPartyRoleQualifier" False
+--                                     ]
+--                                 }
+--                               False
+--                           ]
+--                       }
+--                     True
+--                 , MessagePieceField "LegRefID" True
+--                 , MessagePieceField "LegSettlDate" True
+--                 ]
+--             }
+--           False
 --       ]
 --   }
 data QuotReqGrpGroupElem = QuotReqGrpGroupElem
@@ -91,8 +125,7 @@ data QuotReqGrpGroupElem = QuotReqGrpGroupElem
     quotReqGrpGroupElemAccount :: !Account,
     quotReqGrpGroupElemExpireTime :: !(Maybe ExpireTime),
     quotReqGrpGroupElemAllocsGroup :: ![AllocsGroupElem],
-    quotReqGrpGroupElemLegRefID :: !LegRefID,
-    quotReqGrpGroupElemLegSettlDate :: !LegSettlDate
+    quotReqGrpGroupElemQuotReqLegsGrpGroup :: ![QuotReqLegsGrpGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -115,8 +148,7 @@ instance IsComponent QuotReqGrpGroupElem where
         requiredFieldB quotReqGrpGroupElemAccount,
         optionalFieldB quotReqGrpGroupElemExpireTime,
         optionalGroupB quotReqGrpGroupElemAllocsGroup,
-        requiredFieldB quotReqGrpGroupElemLegRefID,
-        requiredFieldB quotReqGrpGroupElemLegSettlDate
+        optionalGroupB quotReqGrpGroupElemQuotReqLegsGrpGroup
       ]
   fromComponentFields = do
     quotReqGrpGroupElemSymbol <- requiredFieldP
@@ -133,8 +165,7 @@ instance IsComponent QuotReqGrpGroupElem where
     quotReqGrpGroupElemAccount <- requiredFieldP
     quotReqGrpGroupElemExpireTime <- optionalFieldP
     quotReqGrpGroupElemAllocsGroup <- optionalGroupP
-    quotReqGrpGroupElemLegRefID <- requiredFieldP
-    quotReqGrpGroupElemLegSettlDate <- requiredFieldP
+    quotReqGrpGroupElemQuotReqLegsGrpGroup <- optionalGroupP
     pure (QuotReqGrpGroupElem {..})
 
 instance IsGroupElement QuotReqGrpGroupElem where
@@ -142,8 +173,8 @@ instance IsGroupElement QuotReqGrpGroupElem where
   mkGroupNum Proxy = NoRelatedSym
   countGroupNum Proxy = unNoRelatedSym
 
-makeQuotReqGrpGroupElem :: Symbol -> (QuoteType -> (OrderQty -> (SettlDate -> (Account -> (LegRefID -> (LegSettlDate -> QuotReqGrpGroupElem))))))
-makeQuotReqGrpGroupElem quotReqGrpGroupElemSymbol quotReqGrpGroupElemQuoteType quotReqGrpGroupElemOrderQty quotReqGrpGroupElemSettlDate quotReqGrpGroupElemAccount quotReqGrpGroupElemLegRefID quotReqGrpGroupElemLegSettlDate =
+makeQuotReqGrpGroupElem :: Symbol -> (QuoteType -> (OrderQty -> (SettlDate -> (Account -> QuotReqGrpGroupElem))))
+makeQuotReqGrpGroupElem quotReqGrpGroupElemSymbol quotReqGrpGroupElemQuoteType quotReqGrpGroupElemOrderQty quotReqGrpGroupElemSettlDate quotReqGrpGroupElemAccount =
   let quotReqGrpGroupElemMaturityDate = Nothing
       quotReqGrpGroupElemMaturityDate2 = Nothing
       quotReqGrpGroupElemIssuer = Nothing
@@ -153,4 +184,5 @@ makeQuotReqGrpGroupElem quotReqGrpGroupElemSymbol quotReqGrpGroupElemQuoteType q
       quotReqGrpGroupElemCurrency = Nothing
       quotReqGrpGroupElemExpireTime = Nothing
       quotReqGrpGroupElemAllocsGroup = []
+      quotReqGrpGroupElemQuotReqLegsGrpGroup = []
    in (QuotReqGrpGroupElem {..})

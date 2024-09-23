@@ -30,6 +30,8 @@ import FIX.Fields.Gen ()
 import FIX.Fields.Headline
 import FIX.Fields.HeartBtInt
 import FIX.Fields.Issuer
+import FIX.Fields.LegAllocAccount
+import FIX.Fields.LegAllocQty
 import FIX.Fields.LegBidExAnteCost
 import FIX.Fields.LegBidExAnteCostPercentage
 import FIX.Fields.LegBidPx
@@ -41,6 +43,7 @@ import FIX.Fields.LegOfferPx
 import FIX.Fields.LegQty
 import FIX.Fields.LegRefID
 import FIX.Fields.LegSettlDate
+import FIX.Fields.LegSide
 import FIX.Fields.LegSymbol
 import FIX.Fields.MaturityDate
 import FIX.Fields.MaturityDate2
@@ -55,6 +58,7 @@ import FIX.Fields.NestedPartyRole
 import FIX.Fields.NestedPartyRoleQualifier
 import FIX.Fields.NoAllocs
 import FIX.Fields.NoCustomFields
+import FIX.Fields.NoLegAllocs
 import FIX.Fields.NoLegs
 import FIX.Fields.NoLinesOfText
 import FIX.Fields.NoNestedPartyIDs
@@ -229,9 +233,13 @@ spec = do
   fieldSpec @LegSettlDate
   fieldSpec @LegSymbol
   fieldSpec @LegMaturityDate
+  fieldSpec @LegSide
   fieldSpec @MidPx
   fieldSpec @LegRefID
   fieldSpec @QuoteRequestRejectReason
+  fieldSpec @NoLegAllocs
+  fieldSpec @LegAllocAccount
+  fieldSpec @LegAllocQty
   fieldSpec @LegBidPx
   fieldSpec @LegOfferPx
   fieldSpec @LegQty

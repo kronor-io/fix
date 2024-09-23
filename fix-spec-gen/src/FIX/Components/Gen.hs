@@ -9,12 +9,14 @@ import Data.GenValidity.ByteString ()
 import FIX.Fields.Gen ()
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.CustomFieldsGroupElem
+import FIX.Groups.LegAllocsGroupElem
 import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
 import FIX.Groups.PartyIDsGroupElem
 import FIX.Groups.QuotReqGrpGroupElem
+import FIX.Groups.QuotReqLegsGrpGroupElem
 import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
 import FIX.Groups.RoutingIDsGroupElem
@@ -25,6 +27,10 @@ instance GenValid AllocsGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid CustomFieldsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid LegAllocsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -61,6 +67,10 @@ instance GenValid UnderlyingsGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid QuotReqGrpGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid QuotReqLegsGrpGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

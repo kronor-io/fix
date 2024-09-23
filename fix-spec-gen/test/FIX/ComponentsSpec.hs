@@ -9,12 +9,14 @@ import FIX.Components.Gen ()
 import FIX.Components.TestUtils
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.CustomFieldsGroupElem
+import FIX.Groups.LegAllocsGroupElem
 import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
 import FIX.Groups.OrderAttributeGroupElem
 import FIX.Groups.PartyIDsGroupElem
 import FIX.Groups.QuotReqGrpGroupElem
+import FIX.Groups.QuotReqLegsGrpGroupElem
 import FIX.Groups.QuotReqRjctGrpGroupElem
 import FIX.Groups.RegulatoryTradeIDGroupElem
 import FIX.Groups.RoutingIDsGroupElem
@@ -38,6 +40,13 @@ spec = do
         genValidSpec @CustomFieldsGroupElem
         componentSpec @CustomFieldsGroupElem
         groupSpec @CustomFieldsGroupElem
+    )
+  describe
+    "NoLegAllocs"
+    ( do
+        genValidSpec @LegAllocsGroupElem
+        componentSpec @LegAllocsGroupElem
+        groupSpec @LegAllocsGroupElem
     )
   describe
     "NoLegs"
@@ -101,6 +110,13 @@ spec = do
         genValidSpec @QuotReqGrpGroupElem
         componentSpec @QuotReqGrpGroupElem
         groupSpec @QuotReqGrpGroupElem
+    )
+  describe
+    "QuotReqLegsGrp"
+    ( do
+        genValidSpec @QuotReqLegsGrpGroupElem
+        componentSpec @QuotReqLegsGrpGroupElem
+        groupSpec @QuotReqLegsGrpGroupElem
     )
   describe
     "QuotReqRjctGrp"

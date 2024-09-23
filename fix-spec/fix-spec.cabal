@@ -36,6 +36,8 @@ library
       FIX.Fields.Headline
       FIX.Fields.HeartBtInt
       FIX.Fields.Issuer
+      FIX.Fields.LegAllocAccount
+      FIX.Fields.LegAllocQty
       FIX.Fields.LegBidExAnteCost
       FIX.Fields.LegBidExAnteCostPercentage
       FIX.Fields.LegBidPx
@@ -47,6 +49,7 @@ library
       FIX.Fields.LegQty
       FIX.Fields.LegRefID
       FIX.Fields.LegSettlDate
+      FIX.Fields.LegSide
       FIX.Fields.LegSymbol
       FIX.Fields.MaturityDate
       FIX.Fields.MaturityDate2
@@ -61,6 +64,7 @@ library
       FIX.Fields.NestedPartyRoleQualifier
       FIX.Fields.NoAllocs
       FIX.Fields.NoCustomFields
+      FIX.Fields.NoLegAllocs
       FIX.Fields.NoLegs
       FIX.Fields.NoLinesOfText
       FIX.Fields.NoNestedPartyIDs
@@ -128,12 +132,14 @@ library
       FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
       FIX.Groups.CustomFieldsGroupElem
+      FIX.Groups.LegAllocsGroupElem
       FIX.Groups.LegsGroupElem
       FIX.Groups.LinesOfTextGroupElem
       FIX.Groups.NestedPartyIDsGroupElem
       FIX.Groups.OrderAttributeGroupElem
       FIX.Groups.PartyIDsGroupElem
       FIX.Groups.QuotReqGrpGroupElem
+      FIX.Groups.QuotReqLegsGrpGroupElem
       FIX.Groups.QuotReqRjctGrpGroupElem
       FIX.Groups.RegulatoryTradeIDGroupElem
       FIX.Groups.RoutingIDsGroupElem

@@ -1227,6 +1227,7 @@ groupsDataFiles = foldMap $ \f@GroupSpec {..} ->
                     "import FIX.Groups.Class",
                     "import FIX.Components.Class",
                     "import FIX.Fields.MsgType",
+                    "import Data.List.NonEmpty (NonEmpty)",
                     "import GHC.Generics (Generic)",
                     "import Data.Proxy",
                     "",
