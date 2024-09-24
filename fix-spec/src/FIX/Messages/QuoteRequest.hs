@@ -94,7 +94,7 @@ import GHC.Generics (Generic)
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces =
 --                           [ MessagePieceField "LegSymbol" True
---                           , MessagePieceField "LegMaturityDate" True
+--                           , MessagePieceField "LegMaturityDate" False
 --                           , MessagePieceField "LegSide" True
 --                           , MessagePieceField "LegQty" True
 --                           , MessagePieceGroup

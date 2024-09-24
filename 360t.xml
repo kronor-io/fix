@@ -342,7 +342,7 @@
   <component name='QuotReqLegsGrp'>
    <group name='NoLegs' required='N'>
     <field name='LegSymbol' required='Y' />
-    <field name='LegMaturityDate' required='Y' />
+    <field name='LegMaturityDate' required='N' />
     <field name='LegSide' required='Y' />
     <field name='LegQty' required='Y' />
     <group name='NoLegAllocs' required='Y'>

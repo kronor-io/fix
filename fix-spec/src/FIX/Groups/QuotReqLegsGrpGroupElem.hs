@@ -30,7 +30,7 @@ import GHC.Generics (Generic)
 --   , groupNumberField = "NoLegs"
 --   , groupPieces =
 --       [ MessagePieceField "LegSymbol" True
---       , MessagePieceField "LegMaturityDate" True
+--       , MessagePieceField "LegMaturityDate" False
 --       , MessagePieceField "LegSide" True
 --       , MessagePieceField "LegQty" True
 --       , MessagePieceGroup
@@ -61,7 +61,7 @@ import GHC.Generics (Generic)
 --   }
 data QuotReqLegsGrpGroupElem = QuotReqLegsGrpGroupElem
   { quotReqLegsGrpGroupElemLegSymbol :: !LegSymbol,
-    quotReqLegsGrpGroupElemLegMaturityDate :: !LegMaturityDate,
+    quotReqLegsGrpGroupElemLegMaturityDate :: !(Maybe LegMaturityDate),
     quotReqLegsGrpGroupElemLegSide :: !LegSide,
     quotReqLegsGrpGroupElemLegQty :: !LegQty,
     quotReqLegsGrpGroupElemLegAllocsGroup :: !(NonEmpty LegAllocsGroupElem),
@@ -76,7 +76,7 @@ instance IsComponent QuotReqLegsGrpGroupElem where
   toComponentFields ((QuotReqLegsGrpGroupElem {..})) =
     mconcat
       [ requiredFieldB quotReqLegsGrpGroupElemLegSymbol,
-        requiredFieldB quotReqLegsGrpGroupElemLegMaturityDate,
+        optionalFieldB quotReqLegsGrpGroupElemLegMaturityDate,
         requiredFieldB quotReqLegsGrpGroupElemLegSide,
         requiredFieldB quotReqLegsGrpGroupElemLegQty,
         requiredGroupB quotReqLegsGrpGroupElemLegAllocsGroup,
@@ -85,7 +85,7 @@ instance IsComponent QuotReqLegsGrpGroupElem where
       ]
   fromComponentFields = do
     quotReqLegsGrpGroupElemLegSymbol <- requiredFieldP
-    quotReqLegsGrpGroupElemLegMaturityDate <- requiredFieldP
+    quotReqLegsGrpGroupElemLegMaturityDate <- optionalFieldP
     quotReqLegsGrpGroupElemLegSide <- requiredFieldP
     quotReqLegsGrpGroupElemLegQty <- requiredFieldP
     quotReqLegsGrpGroupElemLegAllocsGroup <- requiredGroupP
@@ -98,7 +98,7 @@ instance IsGroupElement QuotReqLegsGrpGroupElem where
   mkGroupNum Proxy = NoLegs
   countGroupNum Proxy = unNoLegs
 
-makeQuotReqLegsGrpGroupElem :: LegSymbol -> (LegMaturityDate -> (LegSide -> (LegQty -> (NonEmpty LegAllocsGroupElem -> (LegRefID -> (LegSettlDate -> QuotReqLegsGrpGroupElem))))))
-makeQuotReqLegsGrpGroupElem quotReqLegsGrpGroupElemLegSymbol quotReqLegsGrpGroupElemLegMaturityDate quotReqLegsGrpGroupElemLegSide quotReqLegsGrpGroupElemLegQty quotReqLegsGrpGroupElemLegAllocsGroup quotReqLegsGrpGroupElemLegRefID quotReqLegsGrpGroupElemLegSettlDate =
-  let
+makeQuotReqLegsGrpGroupElem :: LegSymbol -> (LegSide -> (LegQty -> (NonEmpty LegAllocsGroupElem -> (LegRefID -> (LegSettlDate -> QuotReqLegsGrpGroupElem)))))
+makeQuotReqLegsGrpGroupElem quotReqLegsGrpGroupElemLegSymbol quotReqLegsGrpGroupElemLegSide quotReqLegsGrpGroupElemLegQty quotReqLegsGrpGroupElemLegAllocsGroup quotReqLegsGrpGroupElemLegRefID quotReqLegsGrpGroupElemLegSettlDate =
+  let quotReqLegsGrpGroupElemLegMaturityDate = Nothing
    in (QuotReqLegsGrpGroupElem {..})
