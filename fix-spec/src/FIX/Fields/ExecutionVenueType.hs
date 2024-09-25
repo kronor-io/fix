@@ -23,19 +23,29 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeString
 --   , fieldValues =
 --       [ FieldValueSpec
---           { fieldValueEnum = "2"
---           , fieldValueDescription = "OFF facility / OTC"
---           }
+--           { fieldValueEnum = "1" , fieldValueDescription = "SEF" }
 --       , FieldValueSpec
---           { fieldValueEnum = "5" , fieldValueDescription = "EU MTF" }
+--           { fieldValueEnum = "2" , fieldValueDescription = "OFF_FACILITY" }
 --       , FieldValueSpec
---           { fieldValueEnum = "6" , fieldValueDescription = "UK MTF" }
+--           { fieldValueEnum = "3" , fieldValueDescription = "MTF" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "4" , fieldValueDescription = "SI" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "5" , fieldValueDescription = "EU_MTF" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "6" , fieldValueDescription = "UK_MTF" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "7" , fieldValueDescription = "SG_RMO" }
 --       ]
 --   }
 data ExecutionVenueType
-  = ExecutionVenueTypeOffFacility_Otc
+  = ExecutionVenueTypeSef
+  | ExecutionVenueTypeOffFacility
+  | ExecutionVenueTypeMtf
+  | ExecutionVenueTypeSi
   | ExecutionVenueTypeEuMtf
   | ExecutionVenueTypeUkMtf
+  | ExecutionVenueTypeSgRmo
   deriving stock (Show, Eq, Generic)
 
 instance Validity ExecutionVenueType
@@ -44,11 +54,19 @@ instance IsField ExecutionVenueType where
   fieldTag Proxy = 7611
   fieldIsData Proxy = False
   fieldToValue = \case
-    ExecutionVenueTypeOffFacility_Otc -> "2"
+    ExecutionVenueTypeSef -> "1"
+    ExecutionVenueTypeOffFacility -> "2"
+    ExecutionVenueTypeMtf -> "3"
+    ExecutionVenueTypeSi -> "4"
     ExecutionVenueTypeEuMtf -> "5"
     ExecutionVenueTypeUkMtf -> "6"
+    ExecutionVenueTypeSgRmo -> "7"
   fieldFromValue = \case
-    "2" -> Right ExecutionVenueTypeOffFacility_Otc
+    "1" -> Right ExecutionVenueTypeSef
+    "2" -> Right ExecutionVenueTypeOffFacility
+    "3" -> Right ExecutionVenueTypeMtf
+    "4" -> Right ExecutionVenueTypeSi
     "5" -> Right ExecutionVenueTypeEuMtf
     "6" -> Right ExecutionVenueTypeUkMtf
+    "7" -> Right ExecutionVenueTypeSgRmo
     v -> Left ("Unknown ExecutionVenueType: " <> show v)

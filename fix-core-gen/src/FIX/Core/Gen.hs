@@ -21,11 +21,11 @@ genSimpleValue = genStrictByteStringBy genNonSOHWord8 `suchThat` (not . SB.null)
 instance GenValid SimpleBytes where
   genValid = SimpleBytes <$> genSimpleValue
 
--- genDataValue :: Gen ByteString
--- genDataValue = genValid `suchThat` (not . SB.null)
---
--- instance GenValid DataBytes where
---   genValid = DataBytes <$> genDataValue
+genDataValue :: Gen ByteString
+genDataValue = genValid `suchThat` (not . SB.null)
+
+instance GenValid DataBytes where
+  genValid = DataBytes <$> genDataValue
 
 instance GenValid UTCTimestamp where
   genValid = mkUTCTimestamp <$> genValid

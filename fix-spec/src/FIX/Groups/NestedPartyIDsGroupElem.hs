@@ -20,6 +20,7 @@ import FIX.Fields.NestedPartyRole
 import FIX.Fields.NestedPartyRoleQualifier
 import FIX.Fields.NoNestedPartyIDs
 import FIX.Groups.Class
+import FIX.Groups.NestedPartySubIDsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -30,13 +31,24 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "NestedPartyIDSource" False
 --       , MessagePieceField "NestedPartyRole" False
 --       , MessagePieceField "NestedPartyRoleQualifier" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoNestedPartySubIDs"
+--             , groupNumberField = "NoNestedPartySubIDs"
+--             , groupPieces =
+--                 [ MessagePieceField "NestedPartySubID" True
+--                 , MessagePieceField "NestedPartySubIDType" False
+--                 ]
+--             }
+--           False
 --       ]
 --   }
 data NestedPartyIDsGroupElem = NestedPartyIDsGroupElem
   { nestedPartyIDsGroupElemNestedPartyID :: !NestedPartyID,
     nestedPartyIDsGroupElemNestedPartyIDSource :: !(Maybe NestedPartyIDSource),
     nestedPartyIDsGroupElemNestedPartyRole :: !(Maybe NestedPartyRole),
-    nestedPartyIDsGroupElemNestedPartyRoleQualifier :: !(Maybe NestedPartyRoleQualifier)
+    nestedPartyIDsGroupElemNestedPartyRoleQualifier :: !(Maybe NestedPartyRoleQualifier),
+    nestedPartyIDsGroupElemNestedPartySubIDsGroup :: ![NestedPartySubIDsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -48,13 +60,15 @@ instance IsComponent NestedPartyIDsGroupElem where
       [ requiredFieldB nestedPartyIDsGroupElemNestedPartyID,
         optionalFieldB nestedPartyIDsGroupElemNestedPartyIDSource,
         optionalFieldB nestedPartyIDsGroupElemNestedPartyRole,
-        optionalFieldB nestedPartyIDsGroupElemNestedPartyRoleQualifier
+        optionalFieldB nestedPartyIDsGroupElemNestedPartyRoleQualifier,
+        optionalGroupB nestedPartyIDsGroupElemNestedPartySubIDsGroup
       ]
   fromComponentFields = do
     nestedPartyIDsGroupElemNestedPartyID <- requiredFieldP
     nestedPartyIDsGroupElemNestedPartyIDSource <- optionalFieldP
     nestedPartyIDsGroupElemNestedPartyRole <- optionalFieldP
     nestedPartyIDsGroupElemNestedPartyRoleQualifier <- optionalFieldP
+    nestedPartyIDsGroupElemNestedPartySubIDsGroup <- optionalGroupP
     pure (NestedPartyIDsGroupElem {..})
 
 instance IsGroupElement NestedPartyIDsGroupElem where
@@ -67,4 +81,5 @@ makeNestedPartyIDsGroupElem nestedPartyIDsGroupElemNestedPartyID =
   let nestedPartyIDsGroupElemNestedPartyIDSource = Nothing
       nestedPartyIDsGroupElemNestedPartyRole = Nothing
       nestedPartyIDsGroupElemNestedPartyRoleQualifier = Nothing
+      nestedPartyIDsGroupElemNestedPartySubIDsGroup = []
    in (NestedPartyIDsGroupElem {..})

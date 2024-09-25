@@ -18,7 +18,6 @@ import FIX.Fields.AllocQty
 import FIX.Fields.MsgType
 import FIX.Fields.NoAllocs
 import FIX.Groups.Class
-import FIX.Groups.NestedPartyIDsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -27,24 +26,11 @@ import GHC.Generics (Generic)
 --   , groupPieces =
 --       [ MessagePieceField "AllocAccount" True
 --       , MessagePieceField "AllocQty" True
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NoNestedPartyIDs"
---             , groupNumberField = "NoNestedPartyIDs"
---             , groupPieces =
---                 [ MessagePieceField "NestedPartyID" True
---                 , MessagePieceField "NestedPartyIDSource" False
---                 , MessagePieceField "NestedPartyRole" False
---                 , MessagePieceField "NestedPartyRoleQualifier" False
---                 ]
---             }
---           False
 --       ]
 --   }
 data AllocsGroupElem = AllocsGroupElem
   { allocsGroupElemAllocAccount :: !AllocAccount,
-    allocsGroupElemAllocQty :: !AllocQty,
-    allocsGroupElemNestedPartyIDsGroup :: ![NestedPartyIDsGroupElem]
+    allocsGroupElemAllocQty :: !AllocQty
   }
   deriving stock (Show, Eq, Generic)
 
@@ -54,13 +40,11 @@ instance IsComponent AllocsGroupElem where
   toComponentFields ((AllocsGroupElem {..})) =
     mconcat
       [ requiredFieldB allocsGroupElemAllocAccount,
-        requiredFieldB allocsGroupElemAllocQty,
-        optionalGroupB allocsGroupElemNestedPartyIDsGroup
+        requiredFieldB allocsGroupElemAllocQty
       ]
   fromComponentFields = do
     allocsGroupElemAllocAccount <- requiredFieldP
     allocsGroupElemAllocQty <- requiredFieldP
-    allocsGroupElemNestedPartyIDsGroup <- optionalGroupP
     pure (AllocsGroupElem {..})
 
 instance IsGroupElement AllocsGroupElem where
@@ -70,5 +54,5 @@ instance IsGroupElement AllocsGroupElem where
 
 makeAllocsGroupElem :: AllocAccount -> (AllocQty -> AllocsGroupElem)
 makeAllocsGroupElem allocsGroupElemAllocAccount allocsGroupElemAllocQty =
-  let allocsGroupElemNestedPartyIDsGroup = []
+  let
    in (AllocsGroupElem {..})

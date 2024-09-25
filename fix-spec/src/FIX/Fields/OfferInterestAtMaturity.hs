@@ -20,7 +20,7 @@ import GHC.Generics (Generic)
 -- | FieldSpec
 --   { fieldNumber = 7085
 --   , fieldName = "OfferInterestAtMaturity"
---   , fieldType = FieldTypePrice
+--   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
 newtype OfferInterestAtMaturity = OfferInterestAtMaturity {unOfferInterestAtMaturity :: SimpleBytes}

@@ -12,12 +12,25 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Components.Parties
+import FIX.Components.SpreadOrBenchmarkCurveData
+import FIX.Components.YieldData
+import FIX.Fields.EncodedText
+import FIX.Fields.ExpireTime
 import FIX.Fields.MsgType
+import FIX.Fields.OrdType
+import FIX.Fields.Price
+import FIX.Fields.Price2
+import FIX.Fields.PriceType
+import FIX.Fields.QuotePriceType
 import FIX.Fields.QuoteReqID
 import FIX.Fields.QuoteRequestRejectReason
+import FIX.Fields.RFQReqID
 import FIX.Fields.Text
+import FIX.Fields.TransactTime
 import FIX.Groups.Class
-import FIX.Groups.QuotReqRjctGrpGroupElem
+import FIX.Groups.QuoteQualifiersGroupElem
+import FIX.Groups.RelatedSymGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -27,26 +40,101 @@ import GHC.Generics (Generic)
 --   , messageCategory = "app"
 --   , messagePieces =
 --       [ MessagePieceField "QuoteReqID" True
+--       , MessagePieceField "RFQReqID" False
 --       , MessagePieceField "QuoteRequestRejectReason" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "QuotReqRjctGrp"
+--             { groupName = "NoRelatedSym"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces =
---                 [ MessagePieceField "Symbol" True
---                 , MessagePieceField "QuoteType" True
+--                 [ MessagePieceComponent "Instrument" True
+--                 , MessagePieceComponent "FinancingDetails" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoUnderlyings"
+--                       , groupNumberField = "NoUnderlyings"
+--                       , groupPieces =
+--                           [ MessagePieceComponent "UnderlyingInstrument" True ]
+--                       }
+--                     False
+--                 , MessagePieceField "PrevClosePx" False
+--                 , MessagePieceField "QuoteRequestType" False
+--                 , MessagePieceField "QuoteType" False
+--                 , MessagePieceField "TradingSessionID" False
+--                 , MessagePieceField "TradingSessionSubID" False
+--                 , MessagePieceField "TradeOriginationDate" False
+--                 , MessagePieceField "Side" False
+--                 , MessagePieceField "QtyType" False
+--                 , MessagePieceComponent "OrderQtyData" True
+--                 , MessagePieceField "SettlType" False
+--                 , MessagePieceField "SettlDate" False
+--                 , MessagePieceField "SplitSettlDate" False
+--                 , MessagePieceField "SettlDate2" False
+--                 , MessagePieceField "SplitSettlDate2" False
+--                 , MessagePieceField "OrderQty2" False
 --                 , MessagePieceField "Currency" False
+--                 , MessagePieceComponent "Stipulations" True
+--                 , MessagePieceField "Account" False
+--                 , MessagePieceField "AcctIDSource" False
+--                 , MessagePieceField "AccountType" False
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoLegs"
+--                       , groupNumberField = "NoLegs"
+--                       , groupPieces =
+--                           [ MessagePieceComponent "InstrumentLeg" True
+--                           , MessagePieceField "LegQty" False
+--                           , MessagePieceField "LegSwapType" False
+--                           , MessagePieceField "LegSettlType" False
+--                           , MessagePieceField "LegSettlDate" False
+--                           , MessagePieceComponent "LegStipulations" True
+--                           , MessagePieceComponent "NestedParties" True
+--                           , MessagePieceComponent "LegBenchmarkCurveData" True
+--                           ]
+--                       }
+--                     False
 --                 ]
 --             }
 --           True
---       , MessagePieceField "Text" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoQuoteQualifiers"
+--             , groupNumberField = "NoQuoteQualifiers"
+--             , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
+--             }
+--           False
+--       , MessagePieceField "QuotePriceType" False
+--       , MessagePieceField "OrdType" False
+--       , MessagePieceField "ExpireTime" False
+--       , MessagePieceField "TransactTime" False
+--       , MessagePieceComponent "SpreadOrBenchmarkCurveData" True
+--       , MessagePieceField "PriceType" False
+--       , MessagePieceField "Price" False
+--       , MessagePieceField "Price2" False
+--       , MessagePieceComponent "YieldData" True
+--       , MessagePieceComponent "Parties" True
+--       , MessagePieceField "Text" False
+--       , MessagePieceField "EncodedText" False
 --       ]
 --   }
 data QuoteRequestReject = QuoteRequestReject
   { quoteRequestRejectQuoteReqID :: !QuoteReqID,
+    quoteRequestRejectRFQReqID :: !(Maybe RFQReqID),
     quoteRequestRejectQuoteRequestRejectReason :: !QuoteRequestRejectReason,
-    quoteRequestRejectQuotReqRjctGrpGroup :: !(NonEmpty QuotReqRjctGrpGroupElem),
-    quoteRequestRejectText :: !Text
+    quoteRequestRejectRelatedSymGroup :: !(NonEmpty RelatedSymGroupElem),
+    quoteRequestRejectQuoteQualifiersGroup :: ![QuoteQualifiersGroupElem],
+    quoteRequestRejectQuotePriceType :: !(Maybe QuotePriceType),
+    quoteRequestRejectOrdType :: !(Maybe OrdType),
+    quoteRequestRejectExpireTime :: !(Maybe ExpireTime),
+    quoteRequestRejectTransactTime :: !(Maybe TransactTime),
+    quoteRequestRejectSpreadOrBenchmarkCurveData :: !SpreadOrBenchmarkCurveData,
+    quoteRequestRejectPriceType :: !(Maybe PriceType),
+    quoteRequestRejectPrice :: !(Maybe Price),
+    quoteRequestRejectPrice2 :: !(Maybe Price2),
+    quoteRequestRejectYieldData :: !YieldData,
+    quoteRequestRejectParties :: !Parties,
+    quoteRequestRejectText :: !(Maybe Text),
+    quoteRequestRejectEncodedText :: !(Maybe EncodedText)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -56,21 +144,57 @@ instance IsComponent QuoteRequestReject where
   toComponentFields ((QuoteRequestReject {..})) =
     mconcat
       [ requiredFieldB quoteRequestRejectQuoteReqID,
+        optionalFieldB quoteRequestRejectRFQReqID,
         requiredFieldB quoteRequestRejectQuoteRequestRejectReason,
-        requiredGroupB quoteRequestRejectQuotReqRjctGrpGroup,
-        requiredFieldB quoteRequestRejectText
+        requiredGroupB quoteRequestRejectRelatedSymGroup,
+        optionalGroupB quoteRequestRejectQuoteQualifiersGroup,
+        optionalFieldB quoteRequestRejectQuotePriceType,
+        optionalFieldB quoteRequestRejectOrdType,
+        optionalFieldB quoteRequestRejectExpireTime,
+        optionalFieldB quoteRequestRejectTransactTime,
+        requiredComponentB quoteRequestRejectSpreadOrBenchmarkCurveData,
+        optionalFieldB quoteRequestRejectPriceType,
+        optionalFieldB quoteRequestRejectPrice,
+        optionalFieldB quoteRequestRejectPrice2,
+        requiredComponentB quoteRequestRejectYieldData,
+        requiredComponentB quoteRequestRejectParties,
+        optionalFieldB quoteRequestRejectText,
+        optionalFieldB quoteRequestRejectEncodedText
       ]
   fromComponentFields = do
     quoteRequestRejectQuoteReqID <- requiredFieldP
+    quoteRequestRejectRFQReqID <- optionalFieldP
     quoteRequestRejectQuoteRequestRejectReason <- requiredFieldP
-    quoteRequestRejectQuotReqRjctGrpGroup <- requiredGroupP
-    quoteRequestRejectText <- requiredFieldP
+    quoteRequestRejectRelatedSymGroup <- requiredGroupP
+    quoteRequestRejectQuoteQualifiersGroup <- optionalGroupP
+    quoteRequestRejectQuotePriceType <- optionalFieldP
+    quoteRequestRejectOrdType <- optionalFieldP
+    quoteRequestRejectExpireTime <- optionalFieldP
+    quoteRequestRejectTransactTime <- optionalFieldP
+    quoteRequestRejectSpreadOrBenchmarkCurveData <- requiredComponentP
+    quoteRequestRejectPriceType <- optionalFieldP
+    quoteRequestRejectPrice <- optionalFieldP
+    quoteRequestRejectPrice2 <- optionalFieldP
+    quoteRequestRejectYieldData <- requiredComponentP
+    quoteRequestRejectParties <- requiredComponentP
+    quoteRequestRejectText <- optionalFieldP
+    quoteRequestRejectEncodedText <- optionalFieldP
     pure (QuoteRequestReject {..})
 
 instance IsMessage QuoteRequestReject where
   messageType Proxy = MsgTypeQuoteRequestReject
 
-makeQuoteRequestReject :: QuoteReqID -> (QuoteRequestRejectReason -> (NonEmpty QuotReqRjctGrpGroupElem -> (Text -> QuoteRequestReject)))
-makeQuoteRequestReject quoteRequestRejectQuoteReqID quoteRequestRejectQuoteRequestRejectReason quoteRequestRejectQuotReqRjctGrpGroup quoteRequestRejectText =
-  let
+makeQuoteRequestReject :: QuoteReqID -> (QuoteRequestRejectReason -> (NonEmpty RelatedSymGroupElem -> (SpreadOrBenchmarkCurveData -> (YieldData -> (Parties -> QuoteRequestReject)))))
+makeQuoteRequestReject quoteRequestRejectQuoteReqID quoteRequestRejectQuoteRequestRejectReason quoteRequestRejectRelatedSymGroup quoteRequestRejectSpreadOrBenchmarkCurveData quoteRequestRejectYieldData quoteRequestRejectParties =
+  let quoteRequestRejectRFQReqID = Nothing
+      quoteRequestRejectQuoteQualifiersGroup = []
+      quoteRequestRejectQuotePriceType = Nothing
+      quoteRequestRejectOrdType = Nothing
+      quoteRequestRejectExpireTime = Nothing
+      quoteRequestRejectTransactTime = Nothing
+      quoteRequestRejectPriceType = Nothing
+      quoteRequestRejectPrice = Nothing
+      quoteRequestRejectPrice2 = Nothing
+      quoteRequestRejectText = Nothing
+      quoteRequestRejectEncodedText = Nothing
    in (QuoteRequestReject {..})

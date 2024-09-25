@@ -25,7 +25,9 @@ import GHC.Generics (Generic)
 --       [ FieldValueSpec
 --           { fieldValueEnum = "1" , fieldValueDescription = "UNKNOWN_SYMBOL" }
 --       , FieldValueSpec
---           { fieldValueEnum = "2" , fieldValueDescription = "EXCHANGE" }
+--           { fieldValueEnum = "2"
+--           , fieldValueDescription = "EXCHANGE_CLOSED"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "3"
 --           , fieldValueDescription = "QUOTE_REQUEST_EXCEEDS_LIMIT"
@@ -58,7 +60,7 @@ import GHC.Generics (Generic)
 --   }
 data QuoteRequestRejectReason
   = QuoteRequestRejectReasonUnknownSymbol
-  | QuoteRequestRejectReasonExchange
+  | QuoteRequestRejectReasonExchangeClosed
   | QuoteRequestRejectReasonQuoteRequestExceedsLimit
   | QuoteRequestRejectReasonTooLateToEnter
   | QuoteRequestRejectReasonInvalidPrice
@@ -77,7 +79,7 @@ instance IsField QuoteRequestRejectReason where
   fieldIsData Proxy = False
   fieldToValue = \case
     QuoteRequestRejectReasonUnknownSymbol -> "1"
-    QuoteRequestRejectReasonExchange -> "2"
+    QuoteRequestRejectReasonExchangeClosed -> "2"
     QuoteRequestRejectReasonQuoteRequestExceedsLimit -> "3"
     QuoteRequestRejectReasonTooLateToEnter -> "4"
     QuoteRequestRejectReasonInvalidPrice -> "5"
@@ -89,7 +91,7 @@ instance IsField QuoteRequestRejectReason where
     QuoteRequestRejectReasonOther -> "99"
   fieldFromValue = \case
     "1" -> Right QuoteRequestRejectReasonUnknownSymbol
-    "2" -> Right QuoteRequestRejectReasonExchange
+    "2" -> Right QuoteRequestRejectReasonExchangeClosed
     "3" -> Right QuoteRequestRejectReasonQuoteRequestExceedsLimit
     "4" -> Right QuoteRequestRejectReasonTooLateToEnter
     "5" -> Right QuoteRequestRejectReasonInvalidPrice

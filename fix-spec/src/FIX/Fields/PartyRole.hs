@@ -41,7 +41,9 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "7" , fieldValueDescription = "ENTERING_FIRM" }
 --       , FieldValueSpec
---           { fieldValueEnum = "8" , fieldValueDescription = "LOCATE" }
+--           { fieldValueEnum = "8"
+--           , fieldValueDescription = "LOCATE_LENDING_FIRM"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "9"
 --           , fieldValueDescription = "FUND_MANAGER_CLIENT_ID"
@@ -107,7 +109,7 @@ import GHC.Generics (Generic)
 --           , fieldValueDescription = "CORRESPONDENT_BROKER"
 --           }
 --       , FieldValueSpec
---           { fieldValueEnum = "27" , fieldValueDescription = "BUYER" }
+--           { fieldValueEnum = "27" , fieldValueDescription = "BUYER_SELLER" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "28" , fieldValueDescription = "CUSTODIAN" }
 --       , FieldValueSpec
@@ -140,6 +142,30 @@ import GHC.Generics (Generic)
 --           { fieldValueEnum = "38"
 --           , fieldValueDescription = "POSITION_ACCOUNT"
 --           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "63"
+--           , fieldValueDescription = "SYSTEMIC_INTERNALISER"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "64"
+--           , fieldValueDescription = "MULTILATERAL_TRADING_FACILITY"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "73"
+--           , fieldValueDescription = "EXECUTION_VENUE"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "78"
+--           , fieldValueDescription = "ALLOCATION_ENTITY"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "116"
+--           , fieldValueDescription = "REPORTING_PARTY"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "122"
+--           , fieldValueDescription = "INVESTMENT_DECISION_MAKER"
+--           }
 --       ]
 --   }
 data PartyRole
@@ -150,7 +176,7 @@ data PartyRole
   | PartyRoleInvestorId
   | PartyRoleIntroducingFirm
   | PartyRoleEnteringFirm
-  | PartyRoleLocate
+  | PartyRoleLocateLendingFirm
   | PartyRoleFundManagerClientId
   | PartyRoleSettlementLocation
   | PartyRoleOrderOriginationTrader
@@ -168,7 +194,7 @@ data PartyRole
   | PartyRoleCustomerAccount
   | PartyRoleCorrespondentClearingOrganization
   | PartyRoleCorrespondentBroker
-  | PartyRoleBuyer
+  | PartyRoleBuyerSeller
   | PartyRoleCustodian
   | PartyRoleIntermediary
   | PartyRoleAgent
@@ -180,6 +206,12 @@ data PartyRole
   | PartyRoleEnteringTrader
   | PartyRoleContraTrader
   | PartyRolePositionAccount
+  | PartyRoleSystemicInternaliser
+  | PartyRoleMultilateralTradingFacility
+  | PartyRoleExecutionVenue
+  | PartyRoleAllocationEntity
+  | PartyRoleReportingParty
+  | PartyRoleInvestmentDecisionMaker
   deriving stock (Show, Eq, Generic)
 
 instance Validity PartyRole
@@ -195,7 +227,7 @@ instance IsField PartyRole where
     PartyRoleInvestorId -> "5"
     PartyRoleIntroducingFirm -> "6"
     PartyRoleEnteringFirm -> "7"
-    PartyRoleLocate -> "8"
+    PartyRoleLocateLendingFirm -> "8"
     PartyRoleFundManagerClientId -> "9"
     PartyRoleSettlementLocation -> "10"
     PartyRoleOrderOriginationTrader -> "11"
@@ -213,7 +245,7 @@ instance IsField PartyRole where
     PartyRoleCustomerAccount -> "24"
     PartyRoleCorrespondentClearingOrganization -> "25"
     PartyRoleCorrespondentBroker -> "26"
-    PartyRoleBuyer -> "27"
+    PartyRoleBuyerSeller -> "27"
     PartyRoleCustodian -> "28"
     PartyRoleIntermediary -> "29"
     PartyRoleAgent -> "30"
@@ -225,6 +257,12 @@ instance IsField PartyRole where
     PartyRoleEnteringTrader -> "36"
     PartyRoleContraTrader -> "37"
     PartyRolePositionAccount -> "38"
+    PartyRoleSystemicInternaliser -> "63"
+    PartyRoleMultilateralTradingFacility -> "64"
+    PartyRoleExecutionVenue -> "73"
+    PartyRoleAllocationEntity -> "78"
+    PartyRoleReportingParty -> "116"
+    PartyRoleInvestmentDecisionMaker -> "122"
   fieldFromValue = \case
     "1" -> Right PartyRoleExecutingFirm
     "2" -> Right PartyRoleBrokerOfCredit
@@ -233,7 +271,7 @@ instance IsField PartyRole where
     "5" -> Right PartyRoleInvestorId
     "6" -> Right PartyRoleIntroducingFirm
     "7" -> Right PartyRoleEnteringFirm
-    "8" -> Right PartyRoleLocate
+    "8" -> Right PartyRoleLocateLendingFirm
     "9" -> Right PartyRoleFundManagerClientId
     "10" -> Right PartyRoleSettlementLocation
     "11" -> Right PartyRoleOrderOriginationTrader
@@ -251,7 +289,7 @@ instance IsField PartyRole where
     "24" -> Right PartyRoleCustomerAccount
     "25" -> Right PartyRoleCorrespondentClearingOrganization
     "26" -> Right PartyRoleCorrespondentBroker
-    "27" -> Right PartyRoleBuyer
+    "27" -> Right PartyRoleBuyerSeller
     "28" -> Right PartyRoleCustodian
     "29" -> Right PartyRoleIntermediary
     "30" -> Right PartyRoleAgent
@@ -263,4 +301,10 @@ instance IsField PartyRole where
     "36" -> Right PartyRoleEnteringTrader
     "37" -> Right PartyRoleContraTrader
     "38" -> Right PartyRolePositionAccount
+    "63" -> Right PartyRoleSystemicInternaliser
+    "64" -> Right PartyRoleMultilateralTradingFacility
+    "73" -> Right PartyRoleExecutionVenue
+    "78" -> Right PartyRoleAllocationEntity
+    "116" -> Right PartyRoleReportingParty
+    "122" -> Right PartyRoleInvestmentDecisionMaker
     v -> Left ("Unknown PartyRole: " <> show v)

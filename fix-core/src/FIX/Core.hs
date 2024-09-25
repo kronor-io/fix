@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
--- {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
@@ -32,36 +32,36 @@ class IsFieldType a where
   toValue :: a -> ByteString
   fromValue :: ByteString -> Either String a
 
--- instance IsFieldType Bool where
---   toValue = \case
---     True -> "Y"
---     False -> "N"
---   fromValue = \case
---     "Y" -> Right True
---     "N" -> Right False
---     s -> Left $ "Could not Read Bool: " <> show s
+instance IsFieldType Bool where
+  toValue = \case
+    True -> "Y"
+    False -> "N"
+  fromValue = \case
+    "Y" -> Right True
+    "N" -> Right False
+    s -> Left $ "Could not Read Bool: " <> show s
 
 instance IsFieldType ByteString where
   toValue = id
   fromValue = Right
 
--- -- | Bytes of data fields
--- -- These are nonempty.
--- newtype DataBytes = DataBytes {unDataBytes :: ByteString}
---   deriving (Show, Eq, Generic)
---
--- instance Validity DataBytes where
---   validate sb@(DataBytes value) =
---     mconcat
---       [ genericValidate sb,
---         declare "The value is nonempty" $
---           not $
---             SB.null value
---       ]
---
--- instance IsFieldType DataBytes where
---   toValue = unDataBytes
---   fromValue = prettyValidate . DataBytes
+-- | Bytes of data fields
+-- These are nonempty.
+newtype DataBytes = DataBytes {unDataBytes :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity DataBytes where
+  validate sb@(DataBytes value) =
+    mconcat
+      [ genericValidate sb,
+        declare "The value is nonempty" $
+          not $
+            SB.null value
+      ]
+
+instance IsFieldType DataBytes where
+  toValue = unDataBytes
+  fromValue = prettyValidate . DataBytes
 
 -- | Bytes of non-data fields
 -- These are nonempty and not '\SOH'.

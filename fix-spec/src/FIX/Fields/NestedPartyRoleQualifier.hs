@@ -21,18 +21,9 @@ import GHC.Generics (Generic)
 --   { fieldNumber = 2384
 --   , fieldName = "NestedPartyRoleQualifier"
 --   , fieldType = FieldTypeInt
---   , fieldValues =
---       [ FieldValueSpec
---           { fieldValueEnum = "22" , fieldValueDescription = "Algorithm" }
---       , FieldValueSpec
---           { fieldValueEnum = "24"
---           , fieldValueDescription = "Natural Person"
---           }
---       ]
+--   , fieldValues = []
 --   }
-data NestedPartyRoleQualifier
-  = NestedPartyRoleQualifierAlgorithm
-  | NestedPartyRoleQualifierNaturalPerson
+newtype NestedPartyRoleQualifier = NestedPartyRoleQualifier {unNestedPartyRoleQualifier :: Int}
   deriving stock (Show, Eq, Generic)
 
 instance Validity NestedPartyRoleQualifier
@@ -40,10 +31,5 @@ instance Validity NestedPartyRoleQualifier
 instance IsField NestedPartyRoleQualifier where
   fieldTag Proxy = 2384
   fieldIsData Proxy = False
-  fieldToValue = \case
-    NestedPartyRoleQualifierAlgorithm -> "22"
-    NestedPartyRoleQualifierNaturalPerson -> "24"
-  fieldFromValue = \case
-    "22" -> Right NestedPartyRoleQualifierAlgorithm
-    "24" -> Right NestedPartyRoleQualifierNaturalPerson
-    v -> Left ("Unknown NestedPartyRoleQualifier: " <> show v)
+  fieldToValue = toValue . unNestedPartyRoleQualifier
+  fieldFromValue = fromValue >=> (prettyValidate . NestedPartyRoleQualifier)

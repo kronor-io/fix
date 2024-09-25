@@ -31,6 +31,10 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "4" , fieldValueDescription = "STOP_LIMIT" }
 --       , FieldValueSpec
+--           { fieldValueEnum = "5"
+--           , fieldValueDescription = "MARKET_ON_CLOSE"
+--           }
+--       , FieldValueSpec
 --           { fieldValueEnum = "6"
 --           , fieldValueDescription = "WITH_OR_WITHOUT"
 --           }
@@ -45,6 +49,12 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "9" , fieldValueDescription = "ON_BASIS" }
 --       , FieldValueSpec
+--           { fieldValueEnum = "A" , fieldValueDescription = "ON_CLOSE" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "B" , fieldValueDescription = "LIMIT_ON_CLOSE" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "C" , fieldValueDescription = "FOREX_MARKET" }
+--       , FieldValueSpec
 --           { fieldValueEnum = "D"
 --           , fieldValueDescription = "PREVIOUSLY_QUOTED"
 --           }
@@ -53,7 +63,13 @@ import GHC.Generics (Generic)
 --           , fieldValueDescription = "PREVIOUSLY_INDICATED"
 --           }
 --       , FieldValueSpec
+--           { fieldValueEnum = "F" , fieldValueDescription = "FOREX_LIMIT" }
+--       , FieldValueSpec
 --           { fieldValueEnum = "G" , fieldValueDescription = "FOREX_SWAP" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "H"
+--           , fieldValueDescription = "FOREX_PREVIOUSLY_QUOTED"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "I" , fieldValueDescription = "FUNARI" }
 --       , FieldValueSpec
@@ -62,7 +78,7 @@ import GHC.Generics (Generic)
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "K"
---           , fieldValueDescription = "MARKET_WITH_LEFT_OVER_AS_LIMIT"
+--           , fieldValueDescription = "MARKET_WITH_LEFTOVER_AS_LIMIT"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "L"
@@ -81,16 +97,22 @@ data OrdType
   | OrdTypeLimit
   | OrdTypeStop
   | OrdTypeStopLimit
+  | OrdTypeMarketOnClose
   | OrdTypeWithOrWithout
   | OrdTypeLimitOrBetter
   | OrdTypeLimitWithOrWithout
   | OrdTypeOnBasis
+  | OrdTypeOnClose
+  | OrdTypeLimitOnClose
+  | OrdTypeForexMarket
   | OrdTypePreviouslyQuoted
   | OrdTypePreviouslyIndicated
+  | OrdTypeForexLimit
   | OrdTypeForexSwap
+  | OrdTypeForexPreviouslyQuoted
   | OrdTypeFunari
   | OrdTypeMarketIfTouched
-  | OrdTypeMarketWithLeftOverAsLimit
+  | OrdTypeMarketWithLeftoverAsLimit
   | OrdTypePreviousFundValuationPoint
   | OrdTypeNextFundValuationPoint
   | OrdTypePegged
@@ -106,16 +128,22 @@ instance IsField OrdType where
     OrdTypeLimit -> "2"
     OrdTypeStop -> "3"
     OrdTypeStopLimit -> "4"
+    OrdTypeMarketOnClose -> "5"
     OrdTypeWithOrWithout -> "6"
     OrdTypeLimitOrBetter -> "7"
     OrdTypeLimitWithOrWithout -> "8"
     OrdTypeOnBasis -> "9"
+    OrdTypeOnClose -> "A"
+    OrdTypeLimitOnClose -> "B"
+    OrdTypeForexMarket -> "C"
     OrdTypePreviouslyQuoted -> "D"
     OrdTypePreviouslyIndicated -> "E"
+    OrdTypeForexLimit -> "F"
     OrdTypeForexSwap -> "G"
+    OrdTypeForexPreviouslyQuoted -> "H"
     OrdTypeFunari -> "I"
     OrdTypeMarketIfTouched -> "J"
-    OrdTypeMarketWithLeftOverAsLimit -> "K"
+    OrdTypeMarketWithLeftoverAsLimit -> "K"
     OrdTypePreviousFundValuationPoint -> "L"
     OrdTypeNextFundValuationPoint -> "M"
     OrdTypePegged -> "P"
@@ -124,16 +152,22 @@ instance IsField OrdType where
     "2" -> Right OrdTypeLimit
     "3" -> Right OrdTypeStop
     "4" -> Right OrdTypeStopLimit
+    "5" -> Right OrdTypeMarketOnClose
     "6" -> Right OrdTypeWithOrWithout
     "7" -> Right OrdTypeLimitOrBetter
     "8" -> Right OrdTypeLimitWithOrWithout
     "9" -> Right OrdTypeOnBasis
+    "A" -> Right OrdTypeOnClose
+    "B" -> Right OrdTypeLimitOnClose
+    "C" -> Right OrdTypeForexMarket
     "D" -> Right OrdTypePreviouslyQuoted
     "E" -> Right OrdTypePreviouslyIndicated
+    "F" -> Right OrdTypeForexLimit
     "G" -> Right OrdTypeForexSwap
+    "H" -> Right OrdTypeForexPreviouslyQuoted
     "I" -> Right OrdTypeFunari
     "J" -> Right OrdTypeMarketIfTouched
-    "K" -> Right OrdTypeMarketWithLeftOverAsLimit
+    "K" -> Right OrdTypeMarketWithLeftoverAsLimit
     "L" -> Right OrdTypePreviousFundValuationPoint
     "M" -> Right OrdTypeNextFundValuationPoint
     "P" -> Right OrdTypePegged

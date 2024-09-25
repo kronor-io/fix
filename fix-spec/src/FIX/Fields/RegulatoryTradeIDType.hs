@@ -23,11 +23,19 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeInt
 --   , fieldValues =
 --       [ FieldValueSpec
---           { fieldValueEnum = "3" , fieldValueDescription = "Related" }
+--           { fieldValueEnum = "0" , fieldValueDescription = "CURRENT" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "5" , fieldValueDescription = "TVTIC" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "6"
+--           , fieldValueDescription = "REPORT_TRACKING_NUMBER"
+--           }
 --       ]
 --   }
 data RegulatoryTradeIDType
-  = RegulatoryTradeIDTypeRelated
+  = RegulatoryTradeIDTypeCurrent
+  | RegulatoryTradeIDTypeTvtic
+  | RegulatoryTradeIDTypeReportTrackingNumber
   deriving stock (Show, Eq, Generic)
 
 instance Validity RegulatoryTradeIDType
@@ -36,7 +44,11 @@ instance IsField RegulatoryTradeIDType where
   fieldTag Proxy = 1906
   fieldIsData Proxy = False
   fieldToValue = \case
-    RegulatoryTradeIDTypeRelated -> "3"
+    RegulatoryTradeIDTypeCurrent -> "0"
+    RegulatoryTradeIDTypeTvtic -> "5"
+    RegulatoryTradeIDTypeReportTrackingNumber -> "6"
   fieldFromValue = \case
-    "3" -> Right RegulatoryTradeIDTypeRelated
+    "0" -> Right RegulatoryTradeIDTypeCurrent
+    "5" -> Right RegulatoryTradeIDTypeTvtic
+    "6" -> Right RegulatoryTradeIDTypeReportTrackingNumber
     v -> Left ("Unknown RegulatoryTradeIDType: " <> show v)

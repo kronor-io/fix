@@ -13,34 +13,46 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Fields.EncodedText
+import FIX.Fields.LinesOfText
 import FIX.Fields.MsgType
-import FIX.Fields.NoLinesOfText
 import FIX.Fields.Text
 import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoLinesOfText"
---   , groupNumberField = "NoLinesOfText"
---   , groupPieces = [ MessagePieceField "Text" True ]
+--   { groupName = "LinesOfText"
+--   , groupNumberField = "LinesOfText"
+--   , groupPieces =
+--       [ MessagePieceField "Text" True
+--       , MessagePieceField "EncodedText" False
+--       ]
 --   }
-data LinesOfTextGroupElem = LinesOfTextGroupElem {linesOfTextGroupElemText :: !Text}
+data LinesOfTextGroupElem = LinesOfTextGroupElem
+  { linesOfTextGroupElemText :: !Text,
+    linesOfTextGroupElemEncodedText :: !(Maybe EncodedText)
+  }
   deriving stock (Show, Eq, Generic)
 
 instance Validity LinesOfTextGroupElem
 
 instance IsComponent LinesOfTextGroupElem where
-  toComponentFields ((LinesOfTextGroupElem {..})) = mconcat [requiredFieldB linesOfTextGroupElemText]
+  toComponentFields ((LinesOfTextGroupElem {..})) =
+    mconcat
+      [ requiredFieldB linesOfTextGroupElemText,
+        optionalFieldB linesOfTextGroupElemEncodedText
+      ]
   fromComponentFields = do
     linesOfTextGroupElemText <- requiredFieldP
+    linesOfTextGroupElemEncodedText <- optionalFieldP
     pure (LinesOfTextGroupElem {..})
 
 instance IsGroupElement LinesOfTextGroupElem where
-  type GroupNumField LinesOfTextGroupElem = NoLinesOfText
-  mkGroupNum Proxy = NoLinesOfText
-  countGroupNum Proxy = unNoLinesOfText
+  type GroupNumField LinesOfTextGroupElem = LinesOfText
+  mkGroupNum Proxy = LinesOfText
+  countGroupNum Proxy = unLinesOfText
 
 makeLinesOfTextGroupElem :: Text -> LinesOfTextGroupElem
 makeLinesOfTextGroupElem linesOfTextGroupElemText =
-  let
+  let linesOfTextGroupElemEncodedText = Nothing
    in (LinesOfTextGroupElem {..})

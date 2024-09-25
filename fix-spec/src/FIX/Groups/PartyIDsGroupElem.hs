@@ -20,6 +20,7 @@ import FIX.Fields.PartyIDSource
 import FIX.Fields.PartyRole
 import FIX.Fields.PartyRoleQualifier
 import FIX.Groups.Class
+import FIX.Groups.PartySubIDsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -30,13 +31,24 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "PartyIDSource" False
 --       , MessagePieceField "PartyRole" False
 --       , MessagePieceField "PartyRoleQualifier" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoPartySubIDs"
+--             , groupNumberField = "NoPartySubIDs"
+--             , groupPieces =
+--                 [ MessagePieceField "PartySubID" True
+--                 , MessagePieceField "PartySubIDType" False
+--                 ]
+--             }
+--           False
 --       ]
 --   }
 data PartyIDsGroupElem = PartyIDsGroupElem
   { partyIDsGroupElemPartyID :: !PartyID,
     partyIDsGroupElemPartyIDSource :: !(Maybe PartyIDSource),
     partyIDsGroupElemPartyRole :: !(Maybe PartyRole),
-    partyIDsGroupElemPartyRoleQualifier :: !(Maybe PartyRoleQualifier)
+    partyIDsGroupElemPartyRoleQualifier :: !(Maybe PartyRoleQualifier),
+    partyIDsGroupElemPartySubIDsGroup :: ![PartySubIDsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -48,13 +60,15 @@ instance IsComponent PartyIDsGroupElem where
       [ requiredFieldB partyIDsGroupElemPartyID,
         optionalFieldB partyIDsGroupElemPartyIDSource,
         optionalFieldB partyIDsGroupElemPartyRole,
-        optionalFieldB partyIDsGroupElemPartyRoleQualifier
+        optionalFieldB partyIDsGroupElemPartyRoleQualifier,
+        optionalGroupB partyIDsGroupElemPartySubIDsGroup
       ]
   fromComponentFields = do
     partyIDsGroupElemPartyID <- requiredFieldP
     partyIDsGroupElemPartyIDSource <- optionalFieldP
     partyIDsGroupElemPartyRole <- optionalFieldP
     partyIDsGroupElemPartyRoleQualifier <- optionalFieldP
+    partyIDsGroupElemPartySubIDsGroup <- optionalGroupP
     pure (PartyIDsGroupElem {..})
 
 instance IsGroupElement PartyIDsGroupElem where
@@ -67,4 +81,5 @@ makePartyIDsGroupElem partyIDsGroupElemPartyID =
   let partyIDsGroupElemPartyIDSource = Nothing
       partyIDsGroupElemPartyRole = Nothing
       partyIDsGroupElemPartyRoleQualifier = Nothing
+      partyIDsGroupElemPartySubIDsGroup = []
    in (PartyIDsGroupElem {..})

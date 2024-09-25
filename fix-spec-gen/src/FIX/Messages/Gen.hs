@@ -21,11 +21,11 @@ instance (GenValid a) => GenValid (Envelope a)
 
 instance GenValid AnyMessage
 
-instance GenValid Logon where
+instance GenValid Heartbeat where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid Heartbeat where
+instance GenValid Logon where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -54,10 +54,6 @@ instance GenValid Quote where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid QuoteCancel where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid NewOrderSingle where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

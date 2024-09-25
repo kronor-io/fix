@@ -12,11 +12,22 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Components.Instrument
+import FIX.Components.InstrumentExtension
+import FIX.Fields.Currency
+import FIX.Fields.EncodedText
+import FIX.Fields.ExpirationCycle
+import FIX.Fields.MinTradeVol
 import FIX.Fields.MsgType
+import FIX.Fields.RoundLot
 import FIX.Fields.SecurityReqID
 import FIX.Fields.SecurityResponseID
 import FIX.Fields.SecurityResponseType
+import FIX.Fields.Text
+import FIX.Fields.TradingSessionID
+import FIX.Fields.TradingSessionSubID
 import FIX.Groups.Class
+import FIX.Groups.LegsGroupElem
 import FIX.Groups.UnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
@@ -29,25 +40,49 @@ import GHC.Generics (Generic)
 --       [ MessagePieceField "SecurityReqID" True
 --       , MessagePieceField "SecurityResponseID" True
 --       , MessagePieceField "SecurityResponseType" True
+--       , MessagePieceComponent "Instrument" False
+--       , MessagePieceComponent "InstrumentExtension" True
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "NoUnderlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
---                 [ MessagePieceField "UnderlyingSymbol" True
---                 , MessagePieceField "UnderlyingSecurityID" True
---                 , MessagePieceField "UnderlyingMaturityDate" True
---                 , MessagePieceField "UnderlyingSecurityDesc" True
---                 ]
+--                 [ MessagePieceComponent "UnderlyingInstrument" True ]
 --             }
 --           False
+--       , MessagePieceField "Currency" False
+--       , MessagePieceField "TradingSessionID" False
+--       , MessagePieceField "TradingSessionSubID" False
+--       , MessagePieceField "Text" False
+--       , MessagePieceField "EncodedText" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoLegs"
+--             , groupNumberField = "NoLegs"
+--             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
+--             }
+--           False
+--       , MessagePieceField "ExpirationCycle" False
+--       , MessagePieceField "RoundLot" False
+--       , MessagePieceField "MinTradeVol" False
 --       ]
 --   }
 data SecurityDefinition = SecurityDefinition
   { securityDefinitionSecurityReqID :: !SecurityReqID,
     securityDefinitionSecurityResponseID :: !SecurityResponseID,
     securityDefinitionSecurityResponseType :: !SecurityResponseType,
-    securityDefinitionUnderlyingsGroup :: ![UnderlyingsGroupElem]
+    securityDefinitionInstrument :: !(Maybe Instrument),
+    securityDefinitionInstrumentExtension :: !InstrumentExtension,
+    securityDefinitionUnderlyingsGroup :: ![UnderlyingsGroupElem],
+    securityDefinitionCurrency :: !(Maybe Currency),
+    securityDefinitionTradingSessionID :: !(Maybe TradingSessionID),
+    securityDefinitionTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    securityDefinitionText :: !(Maybe Text),
+    securityDefinitionEncodedText :: !(Maybe EncodedText),
+    securityDefinitionLegsGroup :: ![LegsGroupElem],
+    securityDefinitionExpirationCycle :: !(Maybe ExpirationCycle),
+    securityDefinitionRoundLot :: !(Maybe RoundLot),
+    securityDefinitionMinTradeVol :: !(Maybe MinTradeVol)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -59,19 +94,51 @@ instance IsComponent SecurityDefinition where
       [ requiredFieldB securityDefinitionSecurityReqID,
         requiredFieldB securityDefinitionSecurityResponseID,
         requiredFieldB securityDefinitionSecurityResponseType,
-        optionalGroupB securityDefinitionUnderlyingsGroup
+        optionalComponentB securityDefinitionInstrument,
+        requiredComponentB securityDefinitionInstrumentExtension,
+        optionalGroupB securityDefinitionUnderlyingsGroup,
+        optionalFieldB securityDefinitionCurrency,
+        optionalFieldB securityDefinitionTradingSessionID,
+        optionalFieldB securityDefinitionTradingSessionSubID,
+        optionalFieldB securityDefinitionText,
+        optionalFieldB securityDefinitionEncodedText,
+        optionalGroupB securityDefinitionLegsGroup,
+        optionalFieldB securityDefinitionExpirationCycle,
+        optionalFieldB securityDefinitionRoundLot,
+        optionalFieldB securityDefinitionMinTradeVol
       ]
   fromComponentFields = do
     securityDefinitionSecurityReqID <- requiredFieldP
     securityDefinitionSecurityResponseID <- requiredFieldP
     securityDefinitionSecurityResponseType <- requiredFieldP
+    securityDefinitionInstrument <- optionalComponentP
+    securityDefinitionInstrumentExtension <- requiredComponentP
     securityDefinitionUnderlyingsGroup <- optionalGroupP
+    securityDefinitionCurrency <- optionalFieldP
+    securityDefinitionTradingSessionID <- optionalFieldP
+    securityDefinitionTradingSessionSubID <- optionalFieldP
+    securityDefinitionText <- optionalFieldP
+    securityDefinitionEncodedText <- optionalFieldP
+    securityDefinitionLegsGroup <- optionalGroupP
+    securityDefinitionExpirationCycle <- optionalFieldP
+    securityDefinitionRoundLot <- optionalFieldP
+    securityDefinitionMinTradeVol <- optionalFieldP
     pure (SecurityDefinition {..})
 
 instance IsMessage SecurityDefinition where
   messageType Proxy = MsgTypeSecurityDefinition
 
-makeSecurityDefinition :: SecurityReqID -> (SecurityResponseID -> (SecurityResponseType -> SecurityDefinition))
-makeSecurityDefinition securityDefinitionSecurityReqID securityDefinitionSecurityResponseID securityDefinitionSecurityResponseType =
-  let securityDefinitionUnderlyingsGroup = []
+makeSecurityDefinition :: SecurityReqID -> (SecurityResponseID -> (SecurityResponseType -> (InstrumentExtension -> SecurityDefinition)))
+makeSecurityDefinition securityDefinitionSecurityReqID securityDefinitionSecurityResponseID securityDefinitionSecurityResponseType securityDefinitionInstrumentExtension =
+  let securityDefinitionInstrument = Nothing
+      securityDefinitionUnderlyingsGroup = []
+      securityDefinitionCurrency = Nothing
+      securityDefinitionTradingSessionID = Nothing
+      securityDefinitionTradingSessionSubID = Nothing
+      securityDefinitionText = Nothing
+      securityDefinitionEncodedText = Nothing
+      securityDefinitionLegsGroup = []
+      securityDefinitionExpirationCycle = Nothing
+      securityDefinitionRoundLot = Nothing
+      securityDefinitionMinTradeVol = Nothing
    in (SecurityDefinition {..})

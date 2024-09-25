@@ -13,23 +13,17 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Fields.BidPx2
-import FIX.Fields.LegBidExAnteCost
-import FIX.Fields.LegBidExAnteCostPercentage
-import FIX.Fields.LegBidPx
 import FIX.Fields.LegMaturityDate
-import FIX.Fields.LegMidPx
-import FIX.Fields.LegOfferExAnteCost
-import FIX.Fields.LegOfferExAnteCostPercentage
-import FIX.Fields.LegOfferPx
 import FIX.Fields.LegQty
 import FIX.Fields.LegRefID
 import FIX.Fields.LegSettlDate
+import FIX.Fields.LegSide
+import FIX.Fields.LegSplitSettlDate
 import FIX.Fields.LegSymbol
 import FIX.Fields.MsgType
 import FIX.Fields.NoLegs
-import FIX.Fields.OfferPx2
 import FIX.Groups.Class
+import FIX.Groups.LegAllocsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -38,35 +32,33 @@ import GHC.Generics (Generic)
 --   , groupPieces =
 --       [ MessagePieceField "LegSymbol" True
 --       , MessagePieceField "LegMaturityDate" False
+--       , MessagePieceField "LegSide" True
 --       , MessagePieceField "LegQty" True
---       , MessagePieceField "LegSettlDate" False
---       , MessagePieceField "LegBidPx" False
---       , MessagePieceField "LegOfferPx" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoLegAllocs"
+--             , groupNumberField = "NoLegAllocs"
+--             , groupPieces =
+--                 [ MessagePieceField "LegAllocAccount" True
+--                 , MessagePieceField "LegAllocQty" True
+--                 , MessagePieceComponent "NestedParties" True
+--                 ]
+--             }
+--           False
 --       , MessagePieceField "LegRefID" True
---       , MessagePieceField "LegMidPx" False
---       , MessagePieceField "BidPx2" False
---       , MessagePieceField "OfferPx2" False
---       , MessagePieceField "LegBidExAnteCost" False
---       , MessagePieceField "LegOfferExAnteCost" False
---       , MessagePieceField "LegBidExAnteCostPercentage" False
---       , MessagePieceField "LegOfferExAnteCostPercentage" False
+--       , MessagePieceField "LegSettlDate" True
+--       , MessagePieceField "LegSplitSettlDate" False
 --       ]
 --   }
 data LegsGroupElem = LegsGroupElem
   { legsGroupElemLegSymbol :: !LegSymbol,
     legsGroupElemLegMaturityDate :: !(Maybe LegMaturityDate),
+    legsGroupElemLegSide :: !LegSide,
     legsGroupElemLegQty :: !LegQty,
-    legsGroupElemLegSettlDate :: !(Maybe LegSettlDate),
-    legsGroupElemLegBidPx :: !(Maybe LegBidPx),
-    legsGroupElemLegOfferPx :: !(Maybe LegOfferPx),
+    legsGroupElemLegAllocsGroup :: ![LegAllocsGroupElem],
     legsGroupElemLegRefID :: !LegRefID,
-    legsGroupElemLegMidPx :: !(Maybe LegMidPx),
-    legsGroupElemBidPx2 :: !(Maybe BidPx2),
-    legsGroupElemOfferPx2 :: !(Maybe OfferPx2),
-    legsGroupElemLegBidExAnteCost :: !(Maybe LegBidExAnteCost),
-    legsGroupElemLegOfferExAnteCost :: !(Maybe LegOfferExAnteCost),
-    legsGroupElemLegBidExAnteCostPercentage :: !(Maybe LegBidExAnteCostPercentage),
-    legsGroupElemLegOfferExAnteCostPercentage :: !(Maybe LegOfferExAnteCostPercentage)
+    legsGroupElemLegSettlDate :: !LegSettlDate,
+    legsGroupElemLegSplitSettlDate :: !(Maybe LegSplitSettlDate)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -77,34 +69,22 @@ instance IsComponent LegsGroupElem where
     mconcat
       [ requiredFieldB legsGroupElemLegSymbol,
         optionalFieldB legsGroupElemLegMaturityDate,
+        requiredFieldB legsGroupElemLegSide,
         requiredFieldB legsGroupElemLegQty,
-        optionalFieldB legsGroupElemLegSettlDate,
-        optionalFieldB legsGroupElemLegBidPx,
-        optionalFieldB legsGroupElemLegOfferPx,
+        optionalGroupB legsGroupElemLegAllocsGroup,
         requiredFieldB legsGroupElemLegRefID,
-        optionalFieldB legsGroupElemLegMidPx,
-        optionalFieldB legsGroupElemBidPx2,
-        optionalFieldB legsGroupElemOfferPx2,
-        optionalFieldB legsGroupElemLegBidExAnteCost,
-        optionalFieldB legsGroupElemLegOfferExAnteCost,
-        optionalFieldB legsGroupElemLegBidExAnteCostPercentage,
-        optionalFieldB legsGroupElemLegOfferExAnteCostPercentage
+        requiredFieldB legsGroupElemLegSettlDate,
+        optionalFieldB legsGroupElemLegSplitSettlDate
       ]
   fromComponentFields = do
     legsGroupElemLegSymbol <- requiredFieldP
     legsGroupElemLegMaturityDate <- optionalFieldP
+    legsGroupElemLegSide <- requiredFieldP
     legsGroupElemLegQty <- requiredFieldP
-    legsGroupElemLegSettlDate <- optionalFieldP
-    legsGroupElemLegBidPx <- optionalFieldP
-    legsGroupElemLegOfferPx <- optionalFieldP
+    legsGroupElemLegAllocsGroup <- optionalGroupP
     legsGroupElemLegRefID <- requiredFieldP
-    legsGroupElemLegMidPx <- optionalFieldP
-    legsGroupElemBidPx2 <- optionalFieldP
-    legsGroupElemOfferPx2 <- optionalFieldP
-    legsGroupElemLegBidExAnteCost <- optionalFieldP
-    legsGroupElemLegOfferExAnteCost <- optionalFieldP
-    legsGroupElemLegBidExAnteCostPercentage <- optionalFieldP
-    legsGroupElemLegOfferExAnteCostPercentage <- optionalFieldP
+    legsGroupElemLegSettlDate <- requiredFieldP
+    legsGroupElemLegSplitSettlDate <- optionalFieldP
     pure (LegsGroupElem {..})
 
 instance IsGroupElement LegsGroupElem where
@@ -112,17 +92,9 @@ instance IsGroupElement LegsGroupElem where
   mkGroupNum Proxy = NoLegs
   countGroupNum Proxy = unNoLegs
 
-makeLegsGroupElem :: LegSymbol -> (LegQty -> (LegRefID -> LegsGroupElem))
-makeLegsGroupElem legsGroupElemLegSymbol legsGroupElemLegQty legsGroupElemLegRefID =
+makeLegsGroupElem :: LegSymbol -> (LegSide -> (LegQty -> (LegRefID -> (LegSettlDate -> LegsGroupElem))))
+makeLegsGroupElem legsGroupElemLegSymbol legsGroupElemLegSide legsGroupElemLegQty legsGroupElemLegRefID legsGroupElemLegSettlDate =
   let legsGroupElemLegMaturityDate = Nothing
-      legsGroupElemLegSettlDate = Nothing
-      legsGroupElemLegBidPx = Nothing
-      legsGroupElemLegOfferPx = Nothing
-      legsGroupElemLegMidPx = Nothing
-      legsGroupElemBidPx2 = Nothing
-      legsGroupElemOfferPx2 = Nothing
-      legsGroupElemLegBidExAnteCost = Nothing
-      legsGroupElemLegOfferExAnteCost = Nothing
-      legsGroupElemLegBidExAnteCostPercentage = Nothing
-      legsGroupElemLegOfferExAnteCostPercentage = Nothing
+      legsGroupElemLegAllocsGroup = []
+      legsGroupElemLegSplitSettlDate = Nothing
    in (LegsGroupElem {..})

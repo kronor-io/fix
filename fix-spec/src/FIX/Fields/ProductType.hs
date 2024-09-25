@@ -24,11 +24,55 @@ import GHC.Generics (Generic)
 --   , fieldValues =
 --       [ FieldValueSpec
 --           { fieldValueEnum = "FX-STD"
---           , fieldValueDescription = "Spot, Forward, Swap, NDF and NDS"
+--           , fieldValueDescription = "FX_STANDARD"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "FX-BT"
---           , fieldValueDescription = "Block trade"
+--           , fieldValueDescription = "BLOCK_TRADE"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-MFT" , fieldValueDescription = "FX_MFT" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "MM" , fieldValueDescription = "MONEY_MARKET" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-ORD-UPL"
+--           , fieldValueDescription = "FX_ORDER_UPLOAD"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-ORD-PLC"
+--           , fieldValueDescription = "FX_ORDER_PLACE"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-SPOT" , fieldValueDescription = "FX-SPOT" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-FWD" , fieldValueDescription = "FX-FWD" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-SWAP" , fieldValueDescription = "FX-SWAP" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-NDF" , fieldValueDescription = "FX-NDF" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-NDS" , fieldValueDescription = "FX-NDS" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-TIME-OPTION"
+--           , fieldValueDescription = "FX-TIME-OPTION"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "MM-LOAN" , fieldValueDescription = "MM-LOAN" }
+--       , FieldValueSpec
+--           { fieldValueEnum = "MM-DEPOSIT"
+--           , fieldValueDescription = "MM-DEPOSIT"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "MM-PROLONGATION"
+--           , fieldValueDescription = "MM-PRO"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-PROLONGATION"
+--           , fieldValueDescription = "FX-PRO"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "FX-OPTION"
+--           , fieldValueDescription = "FX-OPTION"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "Metals Outright"
@@ -42,17 +86,29 @@ import GHC.Generics (Generic)
 --           { fieldValueEnum = "Metals Quarterly Strip"
 --           , fieldValueDescription = "Metals Quarterly Strip"
 --           }
---       , FieldValueSpec
---           { fieldValueEnum = "MM" , fieldValueDescription = "Loan/Deposit" }
 --       ]
 --   }
 data ProductType
-  = ProductTypeSpotForwardSwapNdfAndNds
+  = ProductTypeFxStandard
   | ProductTypeBlockTrade
+  | ProductTypeFxMft
+  | ProductTypeMoneyMarket
+  | ProductTypeFxOrderUpload
+  | ProductTypeFxOrderPlace
+  | ProductTypeFxSpot
+  | ProductTypeFxFwd
+  | ProductTypeFxSwap
+  | ProductTypeFxNdf
+  | ProductTypeFxNds
+  | ProductTypeFxTimeOption
+  | ProductTypeMmLoan
+  | ProductTypeMmDeposit
+  | ProductTypeMmPro
+  | ProductTypeFxPro
+  | ProductTypeFxOption
   | ProductTypeMetalsOutright
   | ProductTypeMetalsSpread
   | ProductTypeMetalsQuarterlyStrip
-  | ProductTypeLoanDeposit
   deriving stock (Show, Eq, Generic)
 
 instance Validity ProductType
@@ -61,17 +117,45 @@ instance IsField ProductType where
   fieldTag Proxy = 7071
   fieldIsData Proxy = False
   fieldToValue = \case
-    ProductTypeSpotForwardSwapNdfAndNds -> "FX-STD"
+    ProductTypeFxStandard -> "FX-STD"
     ProductTypeBlockTrade -> "FX-BT"
+    ProductTypeFxMft -> "FX-MFT"
+    ProductTypeMoneyMarket -> "MM"
+    ProductTypeFxOrderUpload -> "FX-ORD-UPL"
+    ProductTypeFxOrderPlace -> "FX-ORD-PLC"
+    ProductTypeFxSpot -> "FX-SPOT"
+    ProductTypeFxFwd -> "FX-FWD"
+    ProductTypeFxSwap -> "FX-SWAP"
+    ProductTypeFxNdf -> "FX-NDF"
+    ProductTypeFxNds -> "FX-NDS"
+    ProductTypeFxTimeOption -> "FX-TIME-OPTION"
+    ProductTypeMmLoan -> "MM-LOAN"
+    ProductTypeMmDeposit -> "MM-DEPOSIT"
+    ProductTypeMmPro -> "MM-PROLONGATION"
+    ProductTypeFxPro -> "FX-PROLONGATION"
+    ProductTypeFxOption -> "FX-OPTION"
     ProductTypeMetalsOutright -> "Metals Outright"
     ProductTypeMetalsSpread -> "Metals Spread"
     ProductTypeMetalsQuarterlyStrip -> "Metals Quarterly Strip"
-    ProductTypeLoanDeposit -> "MM"
   fieldFromValue = \case
-    "FX-STD" -> Right ProductTypeSpotForwardSwapNdfAndNds
+    "FX-STD" -> Right ProductTypeFxStandard
     "FX-BT" -> Right ProductTypeBlockTrade
+    "FX-MFT" -> Right ProductTypeFxMft
+    "MM" -> Right ProductTypeMoneyMarket
+    "FX-ORD-UPL" -> Right ProductTypeFxOrderUpload
+    "FX-ORD-PLC" -> Right ProductTypeFxOrderPlace
+    "FX-SPOT" -> Right ProductTypeFxSpot
+    "FX-FWD" -> Right ProductTypeFxFwd
+    "FX-SWAP" -> Right ProductTypeFxSwap
+    "FX-NDF" -> Right ProductTypeFxNdf
+    "FX-NDS" -> Right ProductTypeFxNds
+    "FX-TIME-OPTION" -> Right ProductTypeFxTimeOption
+    "MM-LOAN" -> Right ProductTypeMmLoan
+    "MM-DEPOSIT" -> Right ProductTypeMmDeposit
+    "MM-PROLONGATION" -> Right ProductTypeMmPro
+    "FX-PROLONGATION" -> Right ProductTypeFxPro
+    "FX-OPTION" -> Right ProductTypeFxOption
     "Metals Outright" -> Right ProductTypeMetalsOutright
     "Metals Spread" -> Right ProductTypeMetalsSpread
     "Metals Quarterly Strip" -> Right ProductTypeMetalsQuarterlyStrip
-    "MM" -> Right ProductTypeLoanDeposit
     v -> Left ("Unknown ProductType: " <> show v)

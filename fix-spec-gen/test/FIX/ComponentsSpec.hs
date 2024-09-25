@@ -5,28 +5,63 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.ComponentsSpec where
 
+import FIX.Components.ExAnteData
+import FIX.Components.FinancingDetails
 import FIX.Components.Gen ()
+import FIX.Components.Instrument
+import FIX.Components.InstrumentExtension
+import FIX.Components.InstrumentLeg
+import FIX.Components.LegBenchmarkCurveData
+import FIX.Components.LegExAnteData
+import FIX.Components.LegStipulations
+import FIX.Components.NestedParties
+import FIX.Components.OrderQtyData
+import FIX.Components.Parties
+import FIX.Components.SpreadOrBenchmarkCurveData
+import FIX.Components.Stipulations
 import FIX.Components.TestUtils
+import FIX.Components.UnderlyingInstrument
+import FIX.Components.UnderlyingStipulations
+import FIX.Components.YieldData
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.CustomFieldsGroupElem
+import FIX.Groups.EventsGroupElem
+import FIX.Groups.HopsGroupElem
+import FIX.Groups.InstrAttribGroupElem
 import FIX.Groups.LegAllocsGroupElem
+import FIX.Groups.LegSecurityAltIDGroupElem
+import FIX.Groups.LegStipulationsGroupElem
 import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
+import FIX.Groups.MsgTypesGroupElem
 import FIX.Groups.NestedPartyIDsGroupElem
-import FIX.Groups.OrderAttributeGroupElem
+import FIX.Groups.NestedPartySubIDsGroupElem
+import FIX.Groups.OrderAttributesGroupElem
 import FIX.Groups.PartyIDsGroupElem
-import FIX.Groups.QuotReqGrpGroupElem
-import FIX.Groups.QuotReqLegsGrpGroupElem
-import FIX.Groups.QuotReqRjctGrpGroupElem
-import FIX.Groups.RegulatoryTradeIDGroupElem
+import FIX.Groups.PartySubIDsGroupElem
+import FIX.Groups.QuoteEntriesGroupElem
+import FIX.Groups.QuoteQualifiersGroupElem
+import FIX.Groups.RegulatoryTradeIDsGroupElem
+import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
+import FIX.Groups.SecurityAltIDGroupElem
+import FIX.Groups.StipulationsGroupElem
 import FIX.Groups.TestUtils
+import FIX.Groups.UnderlyingSecurityAltIDGroupElem
+import FIX.Groups.UnderlyingStipsGroupElem
 import FIX.Groups.UnderlyingsGroupElem
 import Test.Syd
 import Test.Syd.Validity
 
 spec :: Spec
 spec = do
+  describe
+    "LinesOfText"
+    ( do
+        genValidSpec @LinesOfTextGroupElem
+        componentSpec @LinesOfTextGroupElem
+        groupSpec @LinesOfTextGroupElem
+    )
   describe
     "NoAllocs"
     ( do
@@ -42,11 +77,46 @@ spec = do
         groupSpec @CustomFieldsGroupElem
     )
   describe
+    "NoEvents"
+    ( do
+        genValidSpec @EventsGroupElem
+        componentSpec @EventsGroupElem
+        groupSpec @EventsGroupElem
+    )
+  describe
+    "NoHops"
+    ( do
+        genValidSpec @HopsGroupElem
+        componentSpec @HopsGroupElem
+        groupSpec @HopsGroupElem
+    )
+  describe
+    "NoInstrAttrib"
+    ( do
+        genValidSpec @InstrAttribGroupElem
+        componentSpec @InstrAttribGroupElem
+        groupSpec @InstrAttribGroupElem
+    )
+  describe
     "NoLegAllocs"
     ( do
         genValidSpec @LegAllocsGroupElem
         componentSpec @LegAllocsGroupElem
         groupSpec @LegAllocsGroupElem
+    )
+  describe
+    "NoLegSecurityAltID"
+    ( do
+        genValidSpec @LegSecurityAltIDGroupElem
+        componentSpec @LegSecurityAltIDGroupElem
+        groupSpec @LegSecurityAltIDGroupElem
+    )
+  describe
+    "NoLegStipulations"
+    ( do
+        genValidSpec @LegStipulationsGroupElem
+        componentSpec @LegStipulationsGroupElem
+        groupSpec @LegStipulationsGroupElem
     )
   describe
     "NoLegs"
@@ -56,11 +126,32 @@ spec = do
         groupSpec @LegsGroupElem
     )
   describe
-    "NoLinesOfText"
+    "NoLegs"
     ( do
-        genValidSpec @LinesOfTextGroupElem
-        componentSpec @LinesOfTextGroupElem
-        groupSpec @LinesOfTextGroupElem
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
+    "NoLegs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
+    "NoLegs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
+    "NoMsgTypes"
+    ( do
+        genValidSpec @MsgTypesGroupElem
+        componentSpec @MsgTypesGroupElem
+        groupSpec @MsgTypesGroupElem
     )
   describe
     "NoNestedPartyIDs"
@@ -70,11 +161,18 @@ spec = do
         groupSpec @NestedPartyIDsGroupElem
     )
   describe
-    "NoOrderAttribute"
+    "NoNestedPartySubIDs"
     ( do
-        genValidSpec @OrderAttributeGroupElem
-        componentSpec @OrderAttributeGroupElem
-        groupSpec @OrderAttributeGroupElem
+        genValidSpec @NestedPartySubIDsGroupElem
+        componentSpec @NestedPartySubIDsGroupElem
+        groupSpec @NestedPartySubIDsGroupElem
+    )
+  describe
+    "NoOrderAttributes"
+    ( do
+        genValidSpec @OrderAttributesGroupElem
+        componentSpec @OrderAttributesGroupElem
+        groupSpec @OrderAttributesGroupElem
     )
   describe
     "NoPartyIDs"
@@ -84,11 +182,53 @@ spec = do
         groupSpec @PartyIDsGroupElem
     )
   describe
-    "NoRegulatoryTradeID"
+    "NoPartySubIDs"
     ( do
-        genValidSpec @RegulatoryTradeIDGroupElem
-        componentSpec @RegulatoryTradeIDGroupElem
-        groupSpec @RegulatoryTradeIDGroupElem
+        genValidSpec @PartySubIDsGroupElem
+        componentSpec @PartySubIDsGroupElem
+        groupSpec @PartySubIDsGroupElem
+    )
+  describe
+    "NoQuoteEntries"
+    ( do
+        genValidSpec @QuoteEntriesGroupElem
+        componentSpec @QuoteEntriesGroupElem
+        groupSpec @QuoteEntriesGroupElem
+    )
+  describe
+    "NoQuoteQualifiers"
+    ( do
+        genValidSpec @QuoteQualifiersGroupElem
+        componentSpec @QuoteQualifiersGroupElem
+        groupSpec @QuoteQualifiersGroupElem
+    )
+  describe
+    "NoRegulatoryTradeIDs"
+    ( do
+        genValidSpec @RegulatoryTradeIDsGroupElem
+        componentSpec @RegulatoryTradeIDsGroupElem
+        groupSpec @RegulatoryTradeIDsGroupElem
+    )
+  describe
+    "NoRelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
+    )
+  describe
+    "NoRelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
+    )
+  describe
+    "NoRelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
     )
   describe
     "NoRoutingIDs"
@@ -98,6 +238,34 @@ spec = do
         groupSpec @RoutingIDsGroupElem
     )
   describe
+    "NoSecurityAltID"
+    ( do
+        genValidSpec @SecurityAltIDGroupElem
+        componentSpec @SecurityAltIDGroupElem
+        groupSpec @SecurityAltIDGroupElem
+    )
+  describe
+    "NoStipulations"
+    ( do
+        genValidSpec @StipulationsGroupElem
+        componentSpec @StipulationsGroupElem
+        groupSpec @StipulationsGroupElem
+    )
+  describe
+    "NoUnderlyingSecurityAltID"
+    ( do
+        genValidSpec @UnderlyingSecurityAltIDGroupElem
+        componentSpec @UnderlyingSecurityAltIDGroupElem
+        groupSpec @UnderlyingSecurityAltIDGroupElem
+    )
+  describe
+    "NoUnderlyingStips"
+    ( do
+        genValidSpec @UnderlyingStipsGroupElem
+        componentSpec @UnderlyingStipsGroupElem
+        groupSpec @UnderlyingStipsGroupElem
+    )
+  describe
     "NoUnderlyings"
     ( do
         genValidSpec @UnderlyingsGroupElem
@@ -105,23 +273,98 @@ spec = do
         groupSpec @UnderlyingsGroupElem
     )
   describe
-    "QuotReqGrp"
+    "Instrument"
     ( do
-        genValidSpec @QuotReqGrpGroupElem
-        componentSpec @QuotReqGrpGroupElem
-        groupSpec @QuotReqGrpGroupElem
+        genValidSpec @Instrument
+        componentSpec @Instrument
     )
   describe
-    "QuotReqLegsGrp"
+    "UnderlyingInstrument"
     ( do
-        genValidSpec @QuotReqLegsGrpGroupElem
-        componentSpec @QuotReqLegsGrpGroupElem
-        groupSpec @QuotReqLegsGrpGroupElem
+        genValidSpec @UnderlyingInstrument
+        componentSpec @UnderlyingInstrument
     )
   describe
-    "QuotReqRjctGrp"
+    "InstrumentLeg"
     ( do
-        genValidSpec @QuotReqRjctGrpGroupElem
-        componentSpec @QuotReqRjctGrpGroupElem
-        groupSpec @QuotReqRjctGrpGroupElem
+        genValidSpec @InstrumentLeg
+        componentSpec @InstrumentLeg
+    )
+  describe
+    "InstrumentExtension"
+    ( do
+        genValidSpec @InstrumentExtension
+        componentSpec @InstrumentExtension
+    )
+  describe
+    "OrderQtyData"
+    ( do
+        genValidSpec @OrderQtyData
+        componentSpec @OrderQtyData
+    )
+  describe
+    "Parties"
+    ( do
+        genValidSpec @Parties
+        componentSpec @Parties
+    )
+  describe
+    "NestedParties"
+    ( do
+        genValidSpec @NestedParties
+        componentSpec @NestedParties
+    )
+  describe
+    "SpreadOrBenchmarkCurveData"
+    ( do
+        genValidSpec @SpreadOrBenchmarkCurveData
+        componentSpec @SpreadOrBenchmarkCurveData
+    )
+  describe
+    "LegBenchmarkCurveData"
+    ( do
+        genValidSpec @LegBenchmarkCurveData
+        componentSpec @LegBenchmarkCurveData
+    )
+  describe
+    "Stipulations"
+    ( do
+        genValidSpec @Stipulations
+        componentSpec @Stipulations
+    )
+  describe
+    "UnderlyingStipulations"
+    ( do
+        genValidSpec @UnderlyingStipulations
+        componentSpec @UnderlyingStipulations
+    )
+  describe
+    "LegStipulations"
+    ( do
+        genValidSpec @LegStipulations
+        componentSpec @LegStipulations
+    )
+  describe
+    "YieldData"
+    ( do
+        genValidSpec @YieldData
+        componentSpec @YieldData
+    )
+  describe
+    "FinancingDetails"
+    ( do
+        genValidSpec @FinancingDetails
+        componentSpec @FinancingDetails
+    )
+  describe
+    "ExAnteData"
+    ( do
+        genValidSpec @ExAnteData
+        componentSpec @ExAnteData
+    )
+  describe
+    "LegExAnteData"
+    ( do
+        genValidSpec @LegExAnteData
+        componentSpec @LegExAnteData
     )

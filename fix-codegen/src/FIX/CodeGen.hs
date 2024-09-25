@@ -35,9 +35,9 @@ runFixCodeGen = do
       let spec =
             fixupNestedOptionals $
               makeFirstGroupElementsRequired $
-                simplifyGroupComponents $
-                  foldDataFields $
-                    filterSpec settingMessages spec'
+                -- simplifyGroupComponents $
+                foldDataFields $
+                  filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
       putStrLn "Generating code according to this spec:"
       pPrint spec
@@ -104,7 +104,7 @@ filterSpec (Just messages) spec =
       pieceComponentNames = \case
         MessagePieceField _ _ -> S.empty
         MessagePieceComponent c _ -> S.singleton c
-        MessagePieceGroup ps _ -> foldMap pieceComponentNames (groupPieces ps)
+        MessagePieceGroup gs _ -> foldMap pieceComponentNames (groupPieces gs)
       componentComponents :: ComponentSpec -> Set Text
       componentComponents = foldMap pieceComponentNames . componentPieces
       messageComponents :: MessageSpec -> Set Text
@@ -115,13 +115,13 @@ filterSpec (Just messages) spec =
             newCompoments = foldMap componentComponents cs
             newRoots = S.union mentionedRoots newCompoments
          in if newRoots == mentionedRoots then newRoots else gatherComponentFixpoint newRoots
+
       mentionedComponents :: Set Text
       mentionedComponents =
         gatherComponentFixpoint $
           S.unions
             [ foldMap pieceComponentNames (specHeader spec),
               foldMap pieceComponentNames (specTrailer spec),
-              -- foldMap messageComponents filteredMessages
               foldMap messageComponents filteredMessages
             ]
       filteredCompoments = filter (\f -> S.member (componentName f) mentionedComponents) (specComponents spec)
@@ -129,7 +129,7 @@ filterSpec (Just messages) spec =
       pieceFieldNames = \case
         MessagePieceField n _ -> S.singleton n
         MessagePieceComponent _ _ -> S.empty
-        MessagePieceGroup gs _ -> S.insert (groupName gs) (foldMap pieceFieldNames (groupPieces gs))
+        MessagePieceGroup gs _ -> S.insert (groupNumberField gs) (foldMap pieceFieldNames (groupPieces gs))
       componentFields :: ComponentSpec -> Set Text
       componentFields = foldMap pieceFieldNames . componentPieces
       messageFields :: MessageSpec -> Set Text

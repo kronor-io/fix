@@ -21,16 +21,9 @@ import GHC.Generics (Generic)
 --   { fieldNumber = 141
 --   , fieldName = "ResetSeqNumFlag"
 --   , fieldType = FieldTypeBoolean
---   , fieldValues =
---       [ FieldValueSpec
---           { fieldValueEnum = "Y" , fieldValueDescription = "YES" }
---       , FieldValueSpec
---           { fieldValueEnum = "N" , fieldValueDescription = "NO" }
---       ]
+--   , fieldValues = []
 --   }
-data ResetSeqNumFlag
-  = ResetSeqNumFlagYes
-  | ResetSeqNumFlagNo
+newtype ResetSeqNumFlag = ResetSeqNumFlag {unResetSeqNumFlag :: Bool}
   deriving stock (Show, Eq, Generic)
 
 instance Validity ResetSeqNumFlag
@@ -38,10 +31,5 @@ instance Validity ResetSeqNumFlag
 instance IsField ResetSeqNumFlag where
   fieldTag Proxy = 141
   fieldIsData Proxy = False
-  fieldToValue = \case
-    ResetSeqNumFlagYes -> "Y"
-    ResetSeqNumFlagNo -> "N"
-  fieldFromValue = \case
-    "Y" -> Right ResetSeqNumFlagYes
-    "N" -> Right ResetSeqNumFlagNo
-    v -> Left ("Unknown ResetSeqNumFlag: " <> show v)
+  fieldToValue = toValue . unResetSeqNumFlag
+  fieldFromValue = fromValue >=> (prettyValidate . ResetSeqNumFlag)

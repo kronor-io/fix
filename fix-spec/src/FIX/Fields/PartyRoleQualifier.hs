@@ -21,18 +21,9 @@ import GHC.Generics (Generic)
 --   { fieldNumber = 2376
 --   , fieldName = "PartyRoleQualifier"
 --   , fieldType = FieldTypeInt
---   , fieldValues =
---       [ FieldValueSpec
---           { fieldValueEnum = "22" , fieldValueDescription = "Algorithm" }
---       , FieldValueSpec
---           { fieldValueEnum = "24"
---           , fieldValueDescription = "Natural Person"
---           }
---       ]
+--   , fieldValues = []
 --   }
-data PartyRoleQualifier
-  = PartyRoleQualifierAlgorithm
-  | PartyRoleQualifierNaturalPerson
+newtype PartyRoleQualifier = PartyRoleQualifier {unPartyRoleQualifier :: Int}
   deriving stock (Show, Eq, Generic)
 
 instance Validity PartyRoleQualifier
@@ -40,10 +31,5 @@ instance Validity PartyRoleQualifier
 instance IsField PartyRoleQualifier where
   fieldTag Proxy = 2376
   fieldIsData Proxy = False
-  fieldToValue = \case
-    PartyRoleQualifierAlgorithm -> "22"
-    PartyRoleQualifierNaturalPerson -> "24"
-  fieldFromValue = \case
-    "22" -> Right PartyRoleQualifierAlgorithm
-    "24" -> Right PartyRoleQualifierNaturalPerson
-    v -> Left ("Unknown PartyRoleQualifier: " <> show v)
+  fieldToValue = toValue . unPartyRoleQualifier
+  fieldFromValue = fromValue >=> (prettyValidate . PartyRoleQualifier)

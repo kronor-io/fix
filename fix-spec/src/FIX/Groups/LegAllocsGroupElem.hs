@@ -13,12 +13,12 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Components.NestedParties
 import FIX.Fields.LegAllocAccount
 import FIX.Fields.LegAllocQty
 import FIX.Fields.MsgType
 import FIX.Fields.NoLegAllocs
 import FIX.Groups.Class
-import FIX.Groups.NestedPartyIDsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -27,24 +27,13 @@ import GHC.Generics (Generic)
 --   , groupPieces =
 --       [ MessagePieceField "LegAllocAccount" True
 --       , MessagePieceField "LegAllocQty" True
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NoNestedPartyIDs"
---             , groupNumberField = "NoNestedPartyIDs"
---             , groupPieces =
---                 [ MessagePieceField "NestedPartyID" True
---                 , MessagePieceField "NestedPartyIDSource" False
---                 , MessagePieceField "NestedPartyRole" False
---                 , MessagePieceField "NestedPartyRoleQualifier" False
---                 ]
---             }
---           False
+--       , MessagePieceComponent "NestedParties" True
 --       ]
 --   }
 data LegAllocsGroupElem = LegAllocsGroupElem
   { legAllocsGroupElemLegAllocAccount :: !LegAllocAccount,
     legAllocsGroupElemLegAllocQty :: !LegAllocQty,
-    legAllocsGroupElemNestedPartyIDsGroup :: ![NestedPartyIDsGroupElem]
+    legAllocsGroupElemNestedParties :: !NestedParties
   }
   deriving stock (Show, Eq, Generic)
 
@@ -55,12 +44,12 @@ instance IsComponent LegAllocsGroupElem where
     mconcat
       [ requiredFieldB legAllocsGroupElemLegAllocAccount,
         requiredFieldB legAllocsGroupElemLegAllocQty,
-        optionalGroupB legAllocsGroupElemNestedPartyIDsGroup
+        requiredComponentB legAllocsGroupElemNestedParties
       ]
   fromComponentFields = do
     legAllocsGroupElemLegAllocAccount <- requiredFieldP
     legAllocsGroupElemLegAllocQty <- requiredFieldP
-    legAllocsGroupElemNestedPartyIDsGroup <- optionalGroupP
+    legAllocsGroupElemNestedParties <- requiredComponentP
     pure (LegAllocsGroupElem {..})
 
 instance IsGroupElement LegAllocsGroupElem where
@@ -68,7 +57,7 @@ instance IsGroupElement LegAllocsGroupElem where
   mkGroupNum Proxy = NoLegAllocs
   countGroupNum Proxy = unNoLegAllocs
 
-makeLegAllocsGroupElem :: LegAllocAccount -> (LegAllocQty -> LegAllocsGroupElem)
-makeLegAllocsGroupElem legAllocsGroupElemLegAllocAccount legAllocsGroupElemLegAllocQty =
-  let legAllocsGroupElemNestedPartyIDsGroup = []
+makeLegAllocsGroupElem :: LegAllocAccount -> (LegAllocQty -> (NestedParties -> LegAllocsGroupElem))
+makeLegAllocsGroupElem legAllocsGroupElemLegAllocAccount legAllocsGroupElemLegAllocQty legAllocsGroupElemNestedParties =
+  let
    in (LegAllocsGroupElem {..})

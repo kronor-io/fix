@@ -11,139 +11,438 @@ build-type:     Simple
 library
   exposed-modules:
       FIX.Components.Class
+      FIX.Components.ExAnteData
+      FIX.Components.FinancingDetails
+      FIX.Components.Instrument
+      FIX.Components.InstrumentExtension
+      FIX.Components.InstrumentLeg
+      FIX.Components.LegBenchmarkCurveData
+      FIX.Components.LegExAnteData
+      FIX.Components.LegStipulations
+      FIX.Components.NestedParties
+      FIX.Components.OrderQtyData
+      FIX.Components.Parties
+      FIX.Components.SpreadOrBenchmarkCurveData
+      FIX.Components.Stipulations
+      FIX.Components.UnderlyingInstrument
+      FIX.Components.UnderlyingStipulations
+      FIX.Components.YieldData
       FIX.Fields
       FIX.Fields.Account
+      FIX.Fields.AccountType
+      FIX.Fields.AcctIDSource
+      FIX.Fields.AgreementCurrency
+      FIX.Fields.AgreementDate
+      FIX.Fields.AgreementDesc
+      FIX.Fields.AgreementID
       FIX.Fields.AllocAccount
       FIX.Fields.AllocQty
+      FIX.Fields.AvgPxPrecision
       FIX.Fields.BeginString
+      FIX.Fields.BenchmarkCurveCurrency
+      FIX.Fields.BenchmarkCurveName
+      FIX.Fields.BenchmarkCurvePoint
+      FIX.Fields.BenchmarkPrice
+      FIX.Fields.BenchmarkPriceType
+      FIX.Fields.BenchmarkSecurityID
+      FIX.Fields.BenchmarkSecurityIDSource
       FIX.Fields.BidExAnteCost
       FIX.Fields.BidExAnteCostPercentage
+      FIX.Fields.BidForwardPoints
+      FIX.Fields.BidForwardPoints2
       FIX.Fields.BidInterestAtMaturity
       FIX.Fields.BidPx
       FIX.Fields.BidPx2
+      FIX.Fields.BidSize
       FIX.Fields.BidSpotRate
+      FIX.Fields.BidYield
       FIX.Fields.BodyLength
+      FIX.Fields.CashOrderQty
+      FIX.Fields.CFICode
       FIX.Fields.CheckSum
       FIX.Fields.ClOrdID
+      FIX.Fields.Commission
+      FIX.Fields.CommType
+      FIX.Fields.ContractMultiplier
+      FIX.Fields.ContractSettlMonth
+      FIX.Fields.CountryOfIssue
+      FIX.Fields.CouponPaymentDate
+      FIX.Fields.CouponRate
+      FIX.Fields.CPProgram
+      FIX.Fields.CPRegType
+      FIX.Fields.CreditRating
       FIX.Fields.CstmApplVerID
       FIX.Fields.Currency
-      FIX.Fields.CustomFieldName
-      FIX.Fields.CustomFieldValue
+      FIX.Fields.CustomFieldsName
+      FIX.Fields.CustomFieldsValue
+      FIX.Fields.CustOrderCapacity
+      FIX.Fields.DatedDate
       FIX.Fields.DayCount
+      FIX.Fields.DeliverToCompID
+      FIX.Fields.DeliverToLocationID
+      FIX.Fields.DeliverToSubID
+      FIX.Fields.DeliveryForm
+      FIX.Fields.DeliveryType
+      FIX.Fields.EncodedHeadline
+      FIX.Fields.EncodedIssuer
+      FIX.Fields.EncodedLegIssuer
+      FIX.Fields.EncodedLegSecurityDesc
+      FIX.Fields.EncodedSecurityDesc
+      FIX.Fields.EncodedText
+      FIX.Fields.EncodedUnderlyingIssuer
+      FIX.Fields.EncodedUnderlyingSecurityDesc
       FIX.Fields.EncryptMethod
+      FIX.Fields.EndDate
+      FIX.Fields.EventDate
+      FIX.Fields.EventPx
+      FIX.Fields.EventText
+      FIX.Fields.EventType
+      FIX.Fields.ExDestination
       FIX.Fields.ExecutionVenueType
+      FIX.Fields.ExpirationCycle
       FIX.Fields.ExpireTime
+      FIX.Fields.Factor
+      FIX.Fields.FarLegRatePrecision
+      FIX.Fields.Fiduciary
+      FIX.Fields.FixingReference
+      FIX.Fields.ForwardPointsPrecision
+      FIX.Fields.ForwardRatePrecision
       FIX.Fields.Headline
       FIX.Fields.HeartBtInt
+      FIX.Fields.HopCompID
+      FIX.Fields.HopRefID
+      FIX.Fields.HopSendingTime
+      FIX.Fields.InstrAttribType
+      FIX.Fields.InstrAttribValue
+      FIX.Fields.InstrRegistry
+      FIX.Fields.InterestAccrualDate
+      FIX.Fields.InterestRatePrecision
+      FIX.Fields.IssueDate
       FIX.Fields.Issuer
+      FIX.Fields.LastCapacity
+      FIX.Fields.LastMsgSeqNumProcessed
       FIX.Fields.LegAllocAccount
       FIX.Fields.LegAllocQty
+      FIX.Fields.LegBenchmarkCurveCurrency
+      FIX.Fields.LegBenchmarkCurveName
+      FIX.Fields.LegBenchmarkCurvePoint
+      FIX.Fields.LegBenchmarkPrice
+      FIX.Fields.LegBenchmarkPriceType
       FIX.Fields.LegBidExAnteCost
       FIX.Fields.LegBidExAnteCostPercentage
       FIX.Fields.LegBidPx
+      FIX.Fields.LegCFICode
+      FIX.Fields.LegContractMultiplier
+      FIX.Fields.LegContractSettlMonth
+      FIX.Fields.LegCountryOfIssue
+      FIX.Fields.LegCouponPaymentDate
+      FIX.Fields.LegCouponRate
+      FIX.Fields.LegCreditRating
+      FIX.Fields.LegCurrency
+      FIX.Fields.LegDatedDate
+      FIX.Fields.LegFactor
+      FIX.Fields.LegInstrRegistry
+      FIX.Fields.LegInterestAccrualDate
+      FIX.Fields.LegIssueDate
+      FIX.Fields.LegIssuer
+      FIX.Fields.LegLocaleOfIssue
       FIX.Fields.LegMaturityDate
+      FIX.Fields.LegMaturityMonthYear
       FIX.Fields.LegMidPx
       FIX.Fields.LegOfferExAnteCost
       FIX.Fields.LegOfferExAnteCostPercentage
       FIX.Fields.LegOfferPx
+      FIX.Fields.LegOptAttribute
+      FIX.Fields.LegPool
+      FIX.Fields.LegPriceType
+      FIX.Fields.LegProduct
       FIX.Fields.LegQty
+      FIX.Fields.LegRatioQty
+      FIX.Fields.LegRedemptionDate
       FIX.Fields.LegRefID
+      FIX.Fields.LegRepoCollateralSecurityType
+      FIX.Fields.LegRepurchaseRate
+      FIX.Fields.LegRepurchaseTerm
+      FIX.Fields.LegSecurityAltID
+      FIX.Fields.LegSecurityAltIDSource
+      FIX.Fields.LegSecurityDesc
+      FIX.Fields.LegSecurityExchange
+      FIX.Fields.LegSecurityID
+      FIX.Fields.LegSecurityIDSource
+      FIX.Fields.LegSecuritySubType
+      FIX.Fields.LegSecurityType
       FIX.Fields.LegSettlDate
+      FIX.Fields.LegSettlType
       FIX.Fields.LegSide
+      FIX.Fields.LegSplitSettlDate
+      FIX.Fields.LegStateOrProvinceOfIssue
+      FIX.Fields.LegStipulationType
+      FIX.Fields.LegStipulationValue
+      FIX.Fields.LegStrikeCurrency
+      FIX.Fields.LegStrikePrice
+      FIX.Fields.LegSwapType
       FIX.Fields.LegSymbol
+      FIX.Fields.LegSymbolSfx
+      FIX.Fields.LegUPICode
+      FIX.Fields.LinesOfText
+      FIX.Fields.LocaleOfIssue
+      FIX.Fields.MarginRatio
       FIX.Fields.MaturityDate
       FIX.Fields.MaturityDate2
+      FIX.Fields.MaturityMonthYear
+      FIX.Fields.MaxMessageSize
+      FIX.Fields.MessageEncoding
       FIX.Fields.MidPx
       FIX.Fields.MidPx2
       FIX.Fields.MidSpotRate
+      FIX.Fields.MidYield
+      FIX.Fields.MinBidSize
+      FIX.Fields.MinOfferSize
+      FIX.Fields.MinTradeVol
+      FIX.Fields.MktBidPx
+      FIX.Fields.MktOfferPx
+      FIX.Fields.MsgDirection
       FIX.Fields.MsgSeqNum
       FIX.Fields.MsgType
+      FIX.Fields.NearLegRatePrecision
       FIX.Fields.NestedPartyID
       FIX.Fields.NestedPartyIDSource
       FIX.Fields.NestedPartyRole
       FIX.Fields.NestedPartyRoleQualifier
+      FIX.Fields.NestedPartySubID
+      FIX.Fields.NestedPartySubIDType
+      FIX.Fields.NextExpectedMsgSeqNum
       FIX.Fields.NoAllocs
       FIX.Fields.NoCustomFields
+      FIX.Fields.NoEvents
+      FIX.Fields.NoHops
+      FIX.Fields.NoInstrAttrib
       FIX.Fields.NoLegAllocs
       FIX.Fields.NoLegs
-      FIX.Fields.NoLinesOfText
+      FIX.Fields.NoLegSecurityAltID
+      FIX.Fields.NoLegStipulations
+      FIX.Fields.NoMsgTypes
       FIX.Fields.NoNestedPartyIDs
-      FIX.Fields.NoOrderAttribute
+      FIX.Fields.NoNestedPartySubIDs
+      FIX.Fields.NoOrderAttributes
       FIX.Fields.NoPartyIDs
-      FIX.Fields.NoRegulatoryTradeID
+      FIX.Fields.NoPartySubIDs
+      FIX.Fields.NoQuoteEntries
+      FIX.Fields.NoQuoteQualifiers
+      FIX.Fields.NoRegulatoryTradeIDs
       FIX.Fields.NoRelatedSym
       FIX.Fields.NoRoutingIDs
+      FIX.Fields.NoSecurityAltID
+      FIX.Fields.NoStipulations
       FIX.Fields.NoUnderlyings
+      FIX.Fields.NoUnderlyingSecurityAltID
+      FIX.Fields.NoUnderlyingStips
       FIX.Fields.OfferExAnteCost
       FIX.Fields.OfferExAnteCostPercentage
+      FIX.Fields.OfferForwardPoints
+      FIX.Fields.OfferForwardPoints2
       FIX.Fields.OfferInterestAtMaturity
       FIX.Fields.OfferPx
       FIX.Fields.OfferPx2
+      FIX.Fields.OfferSize
       FIX.Fields.OfferSpotRate
+      FIX.Fields.OfferYield
+      FIX.Fields.OnBehalfOfCompID
+      FIX.Fields.OnBehalfOfLocationID
+      FIX.Fields.OnBehalfOfSubID
+      FIX.Fields.OptAttribute
       FIX.Fields.OptionDate
       FIX.Fields.OptionPeriod
       FIX.Fields.OrderAttributeType
       FIX.Fields.OrderAttributeValue
+      FIX.Fields.OrderCapacity
+      FIX.Fields.OrderPercent
       FIX.Fields.OrderQty
       FIX.Fields.OrderQty2
       FIX.Fields.OrdType
+      FIX.Fields.OrigSendingTime
+      FIX.Fields.OrigTime
       FIX.Fields.PartyID
       FIX.Fields.PartyIDSource
       FIX.Fields.PartyRole
       FIX.Fields.PartyRoleQualifier
+      FIX.Fields.PartySubID
+      FIX.Fields.PartySubIDType
       FIX.Fields.Password
+      FIX.Fields.PctAtRisk
+      FIX.Fields.Pool
+      FIX.Fields.PossDupFlag
+      FIX.Fields.PossResend
+      FIX.Fields.PrevClosePx
       FIX.Fields.Price
+      FIX.Fields.Price2
+      FIX.Fields.PriceType
+      FIX.Fields.Product
       FIX.Fields.ProductType
+      FIX.Fields.QtyType
       FIX.Fields.QuoteCancelType
       FIX.Fields.QuoteID
+      FIX.Fields.QuotePriceType
+      FIX.Fields.QuoteQualifier
       FIX.Fields.QuoteReqID
       FIX.Fields.QuoteRequestRejectReason
+      FIX.Fields.QuoteRequestType
+      FIX.Fields.QuoteRespID
+      FIX.Fields.QuoteResponseLevel
       FIX.Fields.QuoteType
+      FIX.Fields.RawData
+      FIX.Fields.RedemptionDate
       FIX.Fields.RefMsgType
       FIX.Fields.RefSeqNum
       FIX.Fields.RefSpotDate
       FIX.Fields.RefTagID
       FIX.Fields.RegulatoryTradeID
       FIX.Fields.RegulatoryTradeIDType
+      FIX.Fields.RepoCollateralSecurityType
+      FIX.Fields.RepurchaseRate
+      FIX.Fields.RepurchaseTerm
       FIX.Fields.ResetSeqNumFlag
+      FIX.Fields.RFQReqID
+      FIX.Fields.RoundingDirection
+      FIX.Fields.RoundingModulus
+      FIX.Fields.RoundLot
       FIX.Fields.RoutingID
       FIX.Fields.RoutingType
+      FIX.Fields.SecureData
+      FIX.Fields.SecurityAltID
+      FIX.Fields.SecurityAltIDSource
+      FIX.Fields.SecurityDesc
+      FIX.Fields.SecurityExchange
+      FIX.Fields.SecurityID
+      FIX.Fields.SecurityIDSource
       FIX.Fields.SecurityReqID
       FIX.Fields.SecurityRequestType
       FIX.Fields.SecurityResponseID
       FIX.Fields.SecurityResponseType
+      FIX.Fields.SecuritySubType
+      FIX.Fields.SecurityType
       FIX.Fields.SenderCompID
+      FIX.Fields.SenderLocationID
       FIX.Fields.SenderSubID
       FIX.Fields.SendingTime
       FIX.Fields.SessionRejectReason
+      FIX.Fields.SettlCurrBidFxRate
+      FIX.Fields.SettlCurrFxRateCalc
+      FIX.Fields.SettlCurrOfferFxRate
       FIX.Fields.SettlDate
       FIX.Fields.SettlDate2
+      FIX.Fields.SettlType
       FIX.Fields.Side
+      FIX.Fields.SplitSettlDate
+      FIX.Fields.SplitSettlDate2
+      FIX.Fields.SpotRatePrecision
+      FIX.Fields.Spread
+      FIX.Fields.StartDate
+      FIX.Fields.StateOrProvinceOfIssue
+      FIX.Fields.StipulationType
+      FIX.Fields.StipulationValue
+      FIX.Fields.StrikeCurrency
+      FIX.Fields.StrikePrice
+      FIX.Fields.SubscriptionRequestType
       FIX.Fields.Symbol
+      FIX.Fields.SymbolSfx
       FIX.Fields.TargetCompID
+      FIX.Fields.TargetLocationID
+      FIX.Fields.TargetSubID
+      FIX.Fields.TerminationType
+      FIX.Fields.TestMessageIndicator
       FIX.Fields.TestReqID
       FIX.Fields.Text
+      FIX.Fields.TradeOriginationDate
+      FIX.Fields.TradingSessionID
+      FIX.Fields.TradingSessionSubID
       FIX.Fields.TransactTime
+      FIX.Fields.UnderlyingCFICode
+      FIX.Fields.UnderlyingContractMultiplier
+      FIX.Fields.UnderlyingCountryOfIssue
+      FIX.Fields.UnderlyingCouponPaymentDate
+      FIX.Fields.UnderlyingCouponRate
+      FIX.Fields.UnderlyingCPProgram
+      FIX.Fields.UnderlyingCPRegType
+      FIX.Fields.UnderlyingCreditRating
+      FIX.Fields.UnderlyingCurrency
+      FIX.Fields.UnderlyingCurrentValue
+      FIX.Fields.UnderlyingDirtyPrice
+      FIX.Fields.UnderlyingEndPrice
+      FIX.Fields.UnderlyingEndValue
+      FIX.Fields.UnderlyingFactor
+      FIX.Fields.UnderlyingInstrRegistry
+      FIX.Fields.UnderlyingIssueDate
+      FIX.Fields.UnderlyingIssuer
+      FIX.Fields.UnderlyingLocaleOfIssue
       FIX.Fields.UnderlyingMaturityDate
+      FIX.Fields.UnderlyingMaturityMonthYear
+      FIX.Fields.UnderlyingOptAttribute
+      FIX.Fields.UnderlyingProduct
+      FIX.Fields.UnderlyingPx
+      FIX.Fields.UnderlyingQty
+      FIX.Fields.UnderlyingRedemptionDate
+      FIX.Fields.UnderlyingRepoCollateralSecurityType
+      FIX.Fields.UnderlyingRepurchaseRate
+      FIX.Fields.UnderlyingRepurchaseTerm
+      FIX.Fields.UnderlyingSecurityAltID
+      FIX.Fields.UnderlyingSecurityAltIDSource
       FIX.Fields.UnderlyingSecurityDesc
+      FIX.Fields.UnderlyingSecurityExchange
       FIX.Fields.UnderlyingSecurityID
+      FIX.Fields.UnderlyingSecurityIDSource
+      FIX.Fields.UnderlyingSecuritySubType
+      FIX.Fields.UnderlyingSecurityType
+      FIX.Fields.UnderlyingStartValue
+      FIX.Fields.UnderlyingStateOrProvinceOfIssue
+      FIX.Fields.UnderlyingStipType
+      FIX.Fields.UnderlyingStipValue
+      FIX.Fields.UnderlyingStrikeCurrency
+      FIX.Fields.UnderlyingStrikePrice
       FIX.Fields.UnderlyingSymbol
+      FIX.Fields.UnderlyingSymbolSfx
+      FIX.Fields.UPICode
+      FIX.Fields.UPICode2
+      FIX.Fields.Urgency
+      FIX.Fields.URLLink
+      FIX.Fields.Username
       FIX.Fields.ValidUntilTime
+      FIX.Fields.XmlData
+      FIX.Fields.Yield
+      FIX.Fields.YieldCalcDate
+      FIX.Fields.YieldRedemptionDate
+      FIX.Fields.YieldRedemptionPrice
+      FIX.Fields.YieldRedemptionPriceType
+      FIX.Fields.YieldType
       FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
       FIX.Groups.CustomFieldsGroupElem
+      FIX.Groups.EventsGroupElem
+      FIX.Groups.HopsGroupElem
+      FIX.Groups.InstrAttribGroupElem
       FIX.Groups.LegAllocsGroupElem
+      FIX.Groups.LegSecurityAltIDGroupElem
       FIX.Groups.LegsGroupElem
+      FIX.Groups.LegStipulationsGroupElem
       FIX.Groups.LinesOfTextGroupElem
+      FIX.Groups.MsgTypesGroupElem
       FIX.Groups.NestedPartyIDsGroupElem
-      FIX.Groups.OrderAttributeGroupElem
+      FIX.Groups.NestedPartySubIDsGroupElem
+      FIX.Groups.OrderAttributesGroupElem
+      FIX.Groups.PartiesGroupElem
       FIX.Groups.PartyIDsGroupElem
-      FIX.Groups.QuotReqGrpGroupElem
-      FIX.Groups.QuotReqLegsGrpGroupElem
-      FIX.Groups.QuotReqRjctGrpGroupElem
-      FIX.Groups.RegulatoryTradeIDGroupElem
+      FIX.Groups.PartySubIDsGroupElem
+      FIX.Groups.QuoteEntriesGroupElem
+      FIX.Groups.QuoteQualifiersGroupElem
+      FIX.Groups.RegulatoryTradeIDsGroupElem
+      FIX.Groups.RelatedSymGroupElem
       FIX.Groups.RoutingIDsGroupElem
+      FIX.Groups.SecurityAltIDGroupElem
+      FIX.Groups.StipulationsGroupElem
+      FIX.Groups.UnderlyingSecurityAltIDGroupElem
       FIX.Groups.UnderlyingsGroupElem
+      FIX.Groups.UnderlyingStipsGroupElem
+      FIX.Groups.UnderlyingStipulationsGroupElem
       FIX.Messages
       FIX.Messages.Class
       FIX.Messages.Envelope
@@ -151,7 +450,6 @@ library
       FIX.Messages.Heartbeat
       FIX.Messages.Logon
       FIX.Messages.Logout
-      FIX.Messages.NewOrderSingle
       FIX.Messages.News
       FIX.Messages.Quote
       FIX.Messages.QuoteCancel

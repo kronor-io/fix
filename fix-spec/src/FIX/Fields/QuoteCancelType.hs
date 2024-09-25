@@ -24,7 +24,7 @@ import GHC.Generics (Generic)
 --   , fieldValues =
 --       [ FieldValueSpec
 --           { fieldValueEnum = "1"
---           , fieldValueDescription = "CANCEL_FOR_ONE_OR_MORE_SECURITIES"
+--           , fieldValueDescription = "CANCEL_FOR_SYMBOL"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "2"
@@ -32,7 +32,7 @@ import GHC.Generics (Generic)
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "3"
---           , fieldValueDescription = "CANCEL_FOR_UNDERLYING_SECURITY"
+--           , fieldValueDescription = "CANCEL_FOR_UNDERLYING_SYMBOL"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "4"
@@ -41,9 +41,9 @@ import GHC.Generics (Generic)
 --       ]
 --   }
 data QuoteCancelType
-  = QuoteCancelTypeCancelForOneOrMoreSecurities
+  = QuoteCancelTypeCancelForSymbol
   | QuoteCancelTypeCancelForSecurityType
-  | QuoteCancelTypeCancelForUnderlyingSecurity
+  | QuoteCancelTypeCancelForUnderlyingSymbol
   | QuoteCancelTypeCancelAllQuotes
   deriving stock (Show, Eq, Generic)
 
@@ -53,13 +53,13 @@ instance IsField QuoteCancelType where
   fieldTag Proxy = 298
   fieldIsData Proxy = False
   fieldToValue = \case
-    QuoteCancelTypeCancelForOneOrMoreSecurities -> "1"
+    QuoteCancelTypeCancelForSymbol -> "1"
     QuoteCancelTypeCancelForSecurityType -> "2"
-    QuoteCancelTypeCancelForUnderlyingSecurity -> "3"
+    QuoteCancelTypeCancelForUnderlyingSymbol -> "3"
     QuoteCancelTypeCancelAllQuotes -> "4"
   fieldFromValue = \case
-    "1" -> Right QuoteCancelTypeCancelForOneOrMoreSecurities
+    "1" -> Right QuoteCancelTypeCancelForSymbol
     "2" -> Right QuoteCancelTypeCancelForSecurityType
-    "3" -> Right QuoteCancelTypeCancelForUnderlyingSecurity
+    "3" -> Right QuoteCancelTypeCancelForUnderlyingSymbol
     "4" -> Right QuoteCancelTypeCancelAllQuotes
     v -> Left ("Unknown QuoteCancelType: " <> show v)

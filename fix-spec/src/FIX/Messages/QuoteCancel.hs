@@ -12,12 +12,21 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Components.Parties
+import FIX.Fields.Account
+import FIX.Fields.AccountType
+import FIX.Fields.AcctIDSource
 import FIX.Fields.MsgType
 import FIX.Fields.ProductType
 import FIX.Fields.QuoteCancelType
 import FIX.Fields.QuoteID
 import FIX.Fields.QuoteReqID
+import FIX.Fields.QuoteResponseLevel
+import FIX.Fields.TradingSessionID
+import FIX.Fields.TradingSessionSubID
+import FIX.Fields.Username
 import FIX.Groups.Class
+import FIX.Groups.QuoteEntriesGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -26,17 +35,59 @@ import GHC.Generics (Generic)
 --   , messageType = "Z"
 --   , messageCategory = "app"
 --   , messagePieces =
---       [ MessagePieceField "QuoteID" True
---       , MessagePieceField "QuoteReqID" True
+--       [ MessagePieceField "QuoteReqID" False
+--       , MessagePieceField "QuoteID" True
 --       , MessagePieceField "QuoteCancelType" True
---       , MessagePieceField "ProductType" True
+--       , MessagePieceField "QuoteResponseLevel" False
+--       , MessagePieceComponent "Parties" True
+--       , MessagePieceField "Account" False
+--       , MessagePieceField "Username" False
+--       , MessagePieceField "ProductType" False
+--       , MessagePieceField "AcctIDSource" False
+--       , MessagePieceField "AccountType" False
+--       , MessagePieceField "TradingSessionID" False
+--       , MessagePieceField "TradingSessionSubID" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoQuoteEntries"
+--             , groupNumberField = "NoQuoteEntries"
+--             , groupPieces =
+--                 [ MessagePieceComponent "Instrument" True
+--                 , MessagePieceComponent "FinancingDetails" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoUnderlyings"
+--                       , groupNumberField = "NoUnderlyings"
+--                       , groupPieces =
+--                           [ MessagePieceComponent "UnderlyingInstrument" True ]
+--                       }
+--                     False
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoLegs"
+--                       , groupNumberField = "NoLegs"
+--                       , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
+--                       }
+--                     False
+--                 ]
+--             }
+--           False
 --       ]
 --   }
 data QuoteCancel = QuoteCancel
-  { quoteCancelQuoteID :: !QuoteID,
-    quoteCancelQuoteReqID :: !QuoteReqID,
+  { quoteCancelQuoteReqID :: !(Maybe QuoteReqID),
+    quoteCancelQuoteID :: !QuoteID,
     quoteCancelQuoteCancelType :: !QuoteCancelType,
-    quoteCancelProductType :: !ProductType
+    quoteCancelQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
+    quoteCancelParties :: !Parties,
+    quoteCancelAccount :: !(Maybe Account),
+    quoteCancelUsername :: !(Maybe Username),
+    quoteCancelProductType :: !(Maybe ProductType),
+    quoteCancelAcctIDSource :: !(Maybe AcctIDSource),
+    quoteCancelAccountType :: !(Maybe AccountType),
+    quoteCancelTradingSessionID :: !(Maybe TradingSessionID),
+    quoteCancelTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    quoteCancelQuoteEntriesGroup :: ![QuoteEntriesGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -45,22 +96,49 @@ instance Validity QuoteCancel
 instance IsComponent QuoteCancel where
   toComponentFields ((QuoteCancel {..})) =
     mconcat
-      [ requiredFieldB quoteCancelQuoteID,
-        requiredFieldB quoteCancelQuoteReqID,
+      [ optionalFieldB quoteCancelQuoteReqID,
+        requiredFieldB quoteCancelQuoteID,
         requiredFieldB quoteCancelQuoteCancelType,
-        requiredFieldB quoteCancelProductType
+        optionalFieldB quoteCancelQuoteResponseLevel,
+        requiredComponentB quoteCancelParties,
+        optionalFieldB quoteCancelAccount,
+        optionalFieldB quoteCancelUsername,
+        optionalFieldB quoteCancelProductType,
+        optionalFieldB quoteCancelAcctIDSource,
+        optionalFieldB quoteCancelAccountType,
+        optionalFieldB quoteCancelTradingSessionID,
+        optionalFieldB quoteCancelTradingSessionSubID,
+        optionalGroupB quoteCancelQuoteEntriesGroup
       ]
   fromComponentFields = do
+    quoteCancelQuoteReqID <- optionalFieldP
     quoteCancelQuoteID <- requiredFieldP
-    quoteCancelQuoteReqID <- requiredFieldP
     quoteCancelQuoteCancelType <- requiredFieldP
-    quoteCancelProductType <- requiredFieldP
+    quoteCancelQuoteResponseLevel <- optionalFieldP
+    quoteCancelParties <- requiredComponentP
+    quoteCancelAccount <- optionalFieldP
+    quoteCancelUsername <- optionalFieldP
+    quoteCancelProductType <- optionalFieldP
+    quoteCancelAcctIDSource <- optionalFieldP
+    quoteCancelAccountType <- optionalFieldP
+    quoteCancelTradingSessionID <- optionalFieldP
+    quoteCancelTradingSessionSubID <- optionalFieldP
+    quoteCancelQuoteEntriesGroup <- optionalGroupP
     pure (QuoteCancel {..})
 
 instance IsMessage QuoteCancel where
   messageType Proxy = MsgTypeQuoteCancel
 
-makeQuoteCancel :: QuoteID -> (QuoteReqID -> (QuoteCancelType -> (ProductType -> QuoteCancel)))
-makeQuoteCancel quoteCancelQuoteID quoteCancelQuoteReqID quoteCancelQuoteCancelType quoteCancelProductType =
-  let
+makeQuoteCancel :: QuoteID -> (QuoteCancelType -> (Parties -> QuoteCancel))
+makeQuoteCancel quoteCancelQuoteID quoteCancelQuoteCancelType quoteCancelParties =
+  let quoteCancelQuoteReqID = Nothing
+      quoteCancelQuoteResponseLevel = Nothing
+      quoteCancelAccount = Nothing
+      quoteCancelUsername = Nothing
+      quoteCancelProductType = Nothing
+      quoteCancelAcctIDSource = Nothing
+      quoteCancelAccountType = Nothing
+      quoteCancelTradingSessionID = Nothing
+      quoteCancelTradingSessionSubID = Nothing
+      quoteCancelQuoteEntriesGroup = []
    in (QuoteCancel {..})

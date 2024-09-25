@@ -30,7 +30,7 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "1"
 --           , fieldValueDescription =
---               "REQUEST_SECURITY_IDENTITY_FOR_SPECIFICATIONS"
+--               "REQUEST_SECURITY_IDENTITY_FOR_THE_SPECIFICATIONS_PROVIDED"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "2"
@@ -44,7 +44,7 @@ import GHC.Generics (Generic)
 --   }
 data SecurityRequestType
   = SecurityRequestTypeRequestSecurityIdentityAndSpecifications
-  | SecurityRequestTypeRequestSecurityIdentityForSpecifications
+  | SecurityRequestTypeRequestSecurityIdentityForTheSpecificationsProvided
   | SecurityRequestTypeRequestListSecurityTypes
   | SecurityRequestTypeRequestListSecurities
   deriving stock (Show, Eq, Generic)
@@ -56,12 +56,12 @@ instance IsField SecurityRequestType where
   fieldIsData Proxy = False
   fieldToValue = \case
     SecurityRequestTypeRequestSecurityIdentityAndSpecifications -> "0"
-    SecurityRequestTypeRequestSecurityIdentityForSpecifications -> "1"
+    SecurityRequestTypeRequestSecurityIdentityForTheSpecificationsProvided -> "1"
     SecurityRequestTypeRequestListSecurityTypes -> "2"
     SecurityRequestTypeRequestListSecurities -> "3"
   fieldFromValue = \case
     "0" -> Right SecurityRequestTypeRequestSecurityIdentityAndSpecifications
-    "1" -> Right SecurityRequestTypeRequestSecurityIdentityForSpecifications
+    "1" -> Right SecurityRequestTypeRequestSecurityIdentityForTheSpecificationsProvided
     "2" -> Right SecurityRequestTypeRequestListSecurityTypes
     "3" -> Right SecurityRequestTypeRequestListSecurities
     v -> Left ("Unknown SecurityRequestType: " <> show v)

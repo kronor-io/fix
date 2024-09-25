@@ -20,7 +20,7 @@ import GHC.Generics (Generic)
 -- | FieldSpec
 --   { fieldNumber = 7651
 --   , fieldName = "MidPx2"
---   , fieldType = FieldTypePrice
+--   , fieldType = FieldTypeString
 --   , fieldValues = []
 --   }
 newtype MidPx2 = MidPx2 {unMidPx2 :: SimpleBytes}

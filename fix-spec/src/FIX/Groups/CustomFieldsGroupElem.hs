@@ -13,8 +13,8 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Fields.CustomFieldName
-import FIX.Fields.CustomFieldValue
+import FIX.Fields.CustomFieldsName
+import FIX.Fields.CustomFieldsValue
 import FIX.Fields.MsgType
 import FIX.Fields.NoCustomFields
 import FIX.Groups.Class
@@ -24,13 +24,13 @@ import GHC.Generics (Generic)
 --   { groupName = "NoCustomFields"
 --   , groupNumberField = "NoCustomFields"
 --   , groupPieces =
---       [ MessagePieceField "CustomFieldName" True
---       , MessagePieceField "CustomFieldValue" True
+--       [ MessagePieceField "CustomFieldsName" True
+--       , MessagePieceField "CustomFieldsValue" False
 --       ]
 --   }
 data CustomFieldsGroupElem = CustomFieldsGroupElem
-  { customFieldsGroupElemCustomFieldName :: !CustomFieldName,
-    customFieldsGroupElemCustomFieldValue :: !CustomFieldValue
+  { customFieldsGroupElemCustomFieldsName :: !CustomFieldsName,
+    customFieldsGroupElemCustomFieldsValue :: !(Maybe CustomFieldsValue)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -39,12 +39,12 @@ instance Validity CustomFieldsGroupElem
 instance IsComponent CustomFieldsGroupElem where
   toComponentFields ((CustomFieldsGroupElem {..})) =
     mconcat
-      [ requiredFieldB customFieldsGroupElemCustomFieldName,
-        requiredFieldB customFieldsGroupElemCustomFieldValue
+      [ requiredFieldB customFieldsGroupElemCustomFieldsName,
+        optionalFieldB customFieldsGroupElemCustomFieldsValue
       ]
   fromComponentFields = do
-    customFieldsGroupElemCustomFieldName <- requiredFieldP
-    customFieldsGroupElemCustomFieldValue <- requiredFieldP
+    customFieldsGroupElemCustomFieldsName <- requiredFieldP
+    customFieldsGroupElemCustomFieldsValue <- optionalFieldP
     pure (CustomFieldsGroupElem {..})
 
 instance IsGroupElement CustomFieldsGroupElem where
@@ -52,7 +52,7 @@ instance IsGroupElement CustomFieldsGroupElem where
   mkGroupNum Proxy = NoCustomFields
   countGroupNum Proxy = unNoCustomFields
 
-makeCustomFieldsGroupElem :: CustomFieldName -> (CustomFieldValue -> CustomFieldsGroupElem)
-makeCustomFieldsGroupElem customFieldsGroupElemCustomFieldName customFieldsGroupElemCustomFieldValue =
-  let
+makeCustomFieldsGroupElem :: CustomFieldsName -> CustomFieldsGroupElem
+makeCustomFieldsGroupElem customFieldsGroupElemCustomFieldsName =
+  let customFieldsGroupElemCustomFieldsValue = Nothing
    in (CustomFieldsGroupElem {..})

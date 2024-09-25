@@ -12,36 +12,80 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Components.ExAnteData
+import FIX.Components.FinancingDetails
+import FIX.Components.Instrument
+import FIX.Components.OrderQtyData
+import FIX.Components.Parties
+import FIX.Components.SpreadOrBenchmarkCurveData
+import FIX.Components.Stipulations
+import FIX.Components.YieldData
 import FIX.Fields.Account
-import FIX.Fields.BidExAnteCost
-import FIX.Fields.BidExAnteCostPercentage
+import FIX.Fields.AccountType
+import FIX.Fields.AcctIDSource
+import FIX.Fields.BidForwardPoints
+import FIX.Fields.BidForwardPoints2
 import FIX.Fields.BidInterestAtMaturity
 import FIX.Fields.BidPx
+import FIX.Fields.BidPx2
+import FIX.Fields.BidSize
 import FIX.Fields.BidSpotRate
+import FIX.Fields.BidYield
+import FIX.Fields.CommType
+import FIX.Fields.Commission
 import FIX.Fields.Currency
-import FIX.Fields.Issuer
+import FIX.Fields.CustOrderCapacity
+import FIX.Fields.EncodedText
+import FIX.Fields.ExDestination
 import FIX.Fields.MidPx
 import FIX.Fields.MidPx2
 import FIX.Fields.MidSpotRate
+import FIX.Fields.MidYield
+import FIX.Fields.MinBidSize
+import FIX.Fields.MinOfferSize
+import FIX.Fields.MktBidPx
+import FIX.Fields.MktOfferPx
 import FIX.Fields.MsgType
-import FIX.Fields.OfferExAnteCost
-import FIX.Fields.OfferExAnteCostPercentage
+import FIX.Fields.OfferForwardPoints
+import FIX.Fields.OfferForwardPoints2
 import FIX.Fields.OfferInterestAtMaturity
 import FIX.Fields.OfferPx
+import FIX.Fields.OfferPx2
+import FIX.Fields.OfferSize
 import FIX.Fields.OfferSpotRate
+import FIX.Fields.OfferYield
 import FIX.Fields.OptionDate
 import FIX.Fields.OptionPeriod
-import FIX.Fields.OrderQty
+import FIX.Fields.OrdType
+import FIX.Fields.OrderCapacity
 import FIX.Fields.OrderQty2
+import FIX.Fields.PriceType
 import FIX.Fields.ProductType
 import FIX.Fields.QuoteID
 import FIX.Fields.QuoteReqID
+import FIX.Fields.QuoteRespID
+import FIX.Fields.QuoteResponseLevel
 import FIX.Fields.QuoteType
 import FIX.Fields.RefSpotDate
-import FIX.Fields.Symbol
+import FIX.Fields.SettlCurrBidFxRate
+import FIX.Fields.SettlCurrFxRateCalc
+import FIX.Fields.SettlCurrOfferFxRate
+import FIX.Fields.SettlDate
+import FIX.Fields.SettlDate2
+import FIX.Fields.SettlType
+import FIX.Fields.Side
+import FIX.Fields.SplitSettlDate
+import FIX.Fields.SplitSettlDate2
+import FIX.Fields.Text
+import FIX.Fields.TradingSessionID
+import FIX.Fields.TradingSessionSubID
+import FIX.Fields.TransactTime
+import FIX.Fields.Username
 import FIX.Fields.ValidUntilTime
 import FIX.Groups.Class
 import FIX.Groups.LegsGroupElem
+import FIX.Groups.QuoteQualifiersGroupElem
+import FIX.Groups.UnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -50,86 +94,187 @@ import GHC.Generics (Generic)
 --   , messageType = "S"
 --   , messageCategory = "app"
 --   , messagePieces =
---       [ MessagePieceField "Account" False
---       , MessagePieceField "Currency" False
---       , MessagePieceField "OrderQty" True
---       , MessagePieceField "Symbol" True
---       , MessagePieceField "ValidUntilTime" False
---       , MessagePieceField "Issuer" True
---       , MessagePieceField "QuoteType" False
+--       [ MessagePieceField "QuoteReqID" False
 --       , MessagePieceField "QuoteID" True
---       , MessagePieceField "QuoteReqID" True
---       , MessagePieceField "BidPx" False
---       , MessagePieceField "OfferPx" False
---       , MessagePieceField "BidSpotRate" False
---       , MessagePieceField "OfferSpotRate" False
+--       , MessagePieceField "QuoteRespID" False
+--       , MessagePieceField "QuoteType" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoQuoteQualifiers"
+--             , groupNumberField = "NoQuoteQualifiers"
+--             , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
+--             }
+--           False
+--       , MessagePieceField "QuoteResponseLevel" False
+--       , MessagePieceComponent "Parties" True
+--       , MessagePieceField "TradingSessionID" False
+--       , MessagePieceField "TradingSessionSubID" False
+--       , MessagePieceComponent "Instrument" True
+--       , MessagePieceComponent "FinancingDetails" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoUnderlyings"
+--             , groupNumberField = "NoUnderlyings"
+--             , groupPieces =
+--                 [ MessagePieceComponent "UnderlyingInstrument" True ]
+--             }
+--           False
+--       , MessagePieceField "Side" False
+--       , MessagePieceComponent "OrderQtyData" True
+--       , MessagePieceField "SettlType" False
+--       , MessagePieceField "SettlDate" False
+--       , MessagePieceField "SplitSettlDate" False
+--       , MessagePieceField "SettlDate2" False
+--       , MessagePieceField "SplitSettlDate2" False
 --       , MessagePieceField "OrderQty2" False
+--       , MessagePieceField "Currency" False
+--       , MessagePieceComponent "Stipulations" True
+--       , MessagePieceField "Account" False
+--       , MessagePieceField "Username" False
+--       , MessagePieceField "AcctIDSource" False
+--       , MessagePieceField "AccountType" False
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "NoLegs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces =
---                 [ MessagePieceField "LegSymbol" True
---                 , MessagePieceField "LegMaturityDate" False
---                 , MessagePieceField "LegQty" True
+--                 [ MessagePieceComponent "InstrumentLeg" True
+--                 , MessagePieceField "LegQty" False
+--                 , MessagePieceField "LegSwapType" False
+--                 , MessagePieceField "LegSettlType" False
 --                 , MessagePieceField "LegSettlDate" False
+--                 , MessagePieceComponent "LegStipulations" True
+--                 , MessagePieceComponent "NestedParties" True
+--                 , MessagePieceField "LegPriceType" False
 --                 , MessagePieceField "LegBidPx" False
 --                 , MessagePieceField "LegOfferPx" False
---                 , MessagePieceField "LegRefID" True
+--                 , MessagePieceField "LegRefID" False
 --                 , MessagePieceField "LegMidPx" False
---                 , MessagePieceField "BidPx2" False
---                 , MessagePieceField "OfferPx2" False
---                 , MessagePieceField "LegBidExAnteCost" False
---                 , MessagePieceField "LegOfferExAnteCost" False
---                 , MessagePieceField "LegBidExAnteCostPercentage" False
---                 , MessagePieceField "LegOfferExAnteCostPercentage" False
+--                 , MessagePieceComponent "LegExAnteData" True
+--                 , MessagePieceComponent "LegBenchmarkCurveData" True
 --                 ]
 --             }
 --           False
---       , MessagePieceField "RefSpotDate" False
---       , MessagePieceField "ProductType" False
+--       , MessagePieceField "BidPx" False
+--       , MessagePieceField "OfferPx" False
+--       , MessagePieceField "BidInterestAtMaturity" False
+--       , MessagePieceField "OfferInterestAtMaturity" False
+--       , MessagePieceField "MktBidPx" False
+--       , MessagePieceField "MktOfferPx" False
+--       , MessagePieceField "MinBidSize" False
+--       , MessagePieceField "BidSize" False
+--       , MessagePieceField "MinOfferSize" False
+--       , MessagePieceField "OfferSize" False
+--       , MessagePieceField "ValidUntilTime" False
+--       , MessagePieceField "BidSpotRate" False
+--       , MessagePieceField "OfferSpotRate" False
+--       , MessagePieceField "BidForwardPoints" False
+--       , MessagePieceField "OfferForwardPoints" False
 --       , MessagePieceField "MidPx" False
 --       , MessagePieceField "MidSpotRate" False
 --       , MessagePieceField "MidPx2" False
---       , MessagePieceField "BidInterestAtMaturity" False
---       , MessagePieceField "OfferInterestAtMaturity" False
+--       , MessagePieceField "BidYield" False
+--       , MessagePieceField "MidYield" False
+--       , MessagePieceField "OfferYield" False
+--       , MessagePieceField "TransactTime" False
+--       , MessagePieceField "OrdType" False
+--       , MessagePieceField "BidForwardPoints2" False
+--       , MessagePieceField "OfferForwardPoints2" False
+--       , MessagePieceField "SettlCurrBidFxRate" False
+--       , MessagePieceField "SettlCurrOfferFxRate" False
+--       , MessagePieceField "SettlCurrFxRateCalc" False
+--       , MessagePieceField "CommType" False
+--       , MessagePieceField "Commission" False
+--       , MessagePieceField "CustOrderCapacity" False
+--       , MessagePieceField "ExDestination" False
+--       , MessagePieceField "OrderCapacity" False
+--       , MessagePieceField "PriceType" False
+--       , MessagePieceComponent "SpreadOrBenchmarkCurveData" True
+--       , MessagePieceComponent "YieldData" True
+--       , MessagePieceField "Text" False
+--       , MessagePieceField "EncodedText" False
+--       , MessagePieceField "BidPx2" False
+--       , MessagePieceField "OfferPx2" False
+--       , MessagePieceField "ProductType" False
 --       , MessagePieceField "OptionPeriod" False
 --       , MessagePieceField "OptionDate" False
---       , MessagePieceField "BidExAnteCost" False
---       , MessagePieceField "OfferExAnteCost" False
---       , MessagePieceField "BidExAnteCostPercentage" False
---       , MessagePieceField "OfferExAnteCostPercentage" False
+--       , MessagePieceField "RefSpotDate" False
+--       , MessagePieceComponent "ExAnteData" True
 --       ]
 --   }
 data Quote = Quote
-  { quoteAccount :: !(Maybe Account),
-    quoteCurrency :: !(Maybe Currency),
-    quoteOrderQty :: !OrderQty,
-    quoteSymbol :: !Symbol,
-    quoteValidUntilTime :: !(Maybe ValidUntilTime),
-    quoteIssuer :: !Issuer,
-    quoteQuoteType :: !(Maybe QuoteType),
+  { quoteQuoteReqID :: !(Maybe QuoteReqID),
     quoteQuoteID :: !QuoteID,
-    quoteQuoteReqID :: !QuoteReqID,
+    quoteQuoteRespID :: !(Maybe QuoteRespID),
+    quoteQuoteType :: !(Maybe QuoteType),
+    quoteQuoteQualifiersGroup :: ![QuoteQualifiersGroupElem],
+    quoteQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
+    quoteParties :: !Parties,
+    quoteTradingSessionID :: !(Maybe TradingSessionID),
+    quoteTradingSessionSubID :: !(Maybe TradingSessionSubID),
+    quoteInstrument :: !Instrument,
+    quoteFinancingDetails :: !FinancingDetails,
+    quoteUnderlyingsGroup :: ![UnderlyingsGroupElem],
+    quoteSide :: !(Maybe Side),
+    quoteOrderQtyData :: !OrderQtyData,
+    quoteSettlType :: !(Maybe SettlType),
+    quoteSettlDate :: !(Maybe SettlDate),
+    quoteSplitSettlDate :: !(Maybe SplitSettlDate),
+    quoteSettlDate2 :: !(Maybe SettlDate2),
+    quoteSplitSettlDate2 :: !(Maybe SplitSettlDate2),
+    quoteOrderQty2 :: !(Maybe OrderQty2),
+    quoteCurrency :: !(Maybe Currency),
+    quoteStipulations :: !Stipulations,
+    quoteAccount :: !(Maybe Account),
+    quoteUsername :: !(Maybe Username),
+    quoteAcctIDSource :: !(Maybe AcctIDSource),
+    quoteAccountType :: !(Maybe AccountType),
+    quoteLegsGroup :: ![LegsGroupElem],
     quoteBidPx :: !(Maybe BidPx),
     quoteOfferPx :: !(Maybe OfferPx),
+    quoteBidInterestAtMaturity :: !(Maybe BidInterestAtMaturity),
+    quoteOfferInterestAtMaturity :: !(Maybe OfferInterestAtMaturity),
+    quoteMktBidPx :: !(Maybe MktBidPx),
+    quoteMktOfferPx :: !(Maybe MktOfferPx),
+    quoteMinBidSize :: !(Maybe MinBidSize),
+    quoteBidSize :: !(Maybe BidSize),
+    quoteMinOfferSize :: !(Maybe MinOfferSize),
+    quoteOfferSize :: !(Maybe OfferSize),
+    quoteValidUntilTime :: !(Maybe ValidUntilTime),
     quoteBidSpotRate :: !(Maybe BidSpotRate),
     quoteOfferSpotRate :: !(Maybe OfferSpotRate),
-    quoteOrderQty2 :: !(Maybe OrderQty2),
-    quoteLegsGroup :: ![LegsGroupElem],
-    quoteRefSpotDate :: !(Maybe RefSpotDate),
-    quoteProductType :: !(Maybe ProductType),
+    quoteBidForwardPoints :: !(Maybe BidForwardPoints),
+    quoteOfferForwardPoints :: !(Maybe OfferForwardPoints),
     quoteMidPx :: !(Maybe MidPx),
     quoteMidSpotRate :: !(Maybe MidSpotRate),
     quoteMidPx2 :: !(Maybe MidPx2),
-    quoteBidInterestAtMaturity :: !(Maybe BidInterestAtMaturity),
-    quoteOfferInterestAtMaturity :: !(Maybe OfferInterestAtMaturity),
+    quoteBidYield :: !(Maybe BidYield),
+    quoteMidYield :: !(Maybe MidYield),
+    quoteOfferYield :: !(Maybe OfferYield),
+    quoteTransactTime :: !(Maybe TransactTime),
+    quoteOrdType :: !(Maybe OrdType),
+    quoteBidForwardPoints2 :: !(Maybe BidForwardPoints2),
+    quoteOfferForwardPoints2 :: !(Maybe OfferForwardPoints2),
+    quoteSettlCurrBidFxRate :: !(Maybe SettlCurrBidFxRate),
+    quoteSettlCurrOfferFxRate :: !(Maybe SettlCurrOfferFxRate),
+    quoteSettlCurrFxRateCalc :: !(Maybe SettlCurrFxRateCalc),
+    quoteCommType :: !(Maybe CommType),
+    quoteCommission :: !(Maybe Commission),
+    quoteCustOrderCapacity :: !(Maybe CustOrderCapacity),
+    quoteExDestination :: !(Maybe ExDestination),
+    quoteOrderCapacity :: !(Maybe OrderCapacity),
+    quotePriceType :: !(Maybe PriceType),
+    quoteSpreadOrBenchmarkCurveData :: !SpreadOrBenchmarkCurveData,
+    quoteYieldData :: !YieldData,
+    quoteText :: !(Maybe Text),
+    quoteEncodedText :: !(Maybe EncodedText),
+    quoteBidPx2 :: !(Maybe BidPx2),
+    quoteOfferPx2 :: !(Maybe OfferPx2),
+    quoteProductType :: !(Maybe ProductType),
     quoteOptionPeriod :: !(Maybe OptionPeriod),
     quoteOptionDate :: !(Maybe OptionDate),
-    quoteBidExAnteCost :: !(Maybe BidExAnteCost),
-    quoteOfferExAnteCost :: !(Maybe OfferExAnteCost),
-    quoteBidExAnteCostPercentage :: !(Maybe BidExAnteCostPercentage),
-    quoteOfferExAnteCostPercentage :: !(Maybe OfferExAnteCostPercentage)
+    quoteRefSpotDate :: !(Maybe RefSpotDate),
+    quoteExAnteData :: !ExAnteData
   }
   deriving stock (Show, Eq, Generic)
 
@@ -138,92 +283,220 @@ instance Validity Quote
 instance IsComponent Quote where
   toComponentFields ((Quote {..})) =
     mconcat
-      [ optionalFieldB quoteAccount,
-        optionalFieldB quoteCurrency,
-        requiredFieldB quoteOrderQty,
-        requiredFieldB quoteSymbol,
-        optionalFieldB quoteValidUntilTime,
-        requiredFieldB quoteIssuer,
-        optionalFieldB quoteQuoteType,
+      [ optionalFieldB quoteQuoteReqID,
         requiredFieldB quoteQuoteID,
-        requiredFieldB quoteQuoteReqID,
+        optionalFieldB quoteQuoteRespID,
+        optionalFieldB quoteQuoteType,
+        optionalGroupB quoteQuoteQualifiersGroup,
+        optionalFieldB quoteQuoteResponseLevel,
+        requiredComponentB quoteParties,
+        optionalFieldB quoteTradingSessionID,
+        optionalFieldB quoteTradingSessionSubID,
+        requiredComponentB quoteInstrument,
+        requiredComponentB quoteFinancingDetails,
+        optionalGroupB quoteUnderlyingsGroup,
+        optionalFieldB quoteSide,
+        requiredComponentB quoteOrderQtyData,
+        optionalFieldB quoteSettlType,
+        optionalFieldB quoteSettlDate,
+        optionalFieldB quoteSplitSettlDate,
+        optionalFieldB quoteSettlDate2,
+        optionalFieldB quoteSplitSettlDate2,
+        optionalFieldB quoteOrderQty2,
+        optionalFieldB quoteCurrency,
+        requiredComponentB quoteStipulations,
+        optionalFieldB quoteAccount,
+        optionalFieldB quoteUsername,
+        optionalFieldB quoteAcctIDSource,
+        optionalFieldB quoteAccountType,
+        optionalGroupB quoteLegsGroup,
         optionalFieldB quoteBidPx,
         optionalFieldB quoteOfferPx,
+        optionalFieldB quoteBidInterestAtMaturity,
+        optionalFieldB quoteOfferInterestAtMaturity,
+        optionalFieldB quoteMktBidPx,
+        optionalFieldB quoteMktOfferPx,
+        optionalFieldB quoteMinBidSize,
+        optionalFieldB quoteBidSize,
+        optionalFieldB quoteMinOfferSize,
+        optionalFieldB quoteOfferSize,
+        optionalFieldB quoteValidUntilTime,
         optionalFieldB quoteBidSpotRate,
         optionalFieldB quoteOfferSpotRate,
-        optionalFieldB quoteOrderQty2,
-        optionalGroupB quoteLegsGroup,
-        optionalFieldB quoteRefSpotDate,
-        optionalFieldB quoteProductType,
+        optionalFieldB quoteBidForwardPoints,
+        optionalFieldB quoteOfferForwardPoints,
         optionalFieldB quoteMidPx,
         optionalFieldB quoteMidSpotRate,
         optionalFieldB quoteMidPx2,
-        optionalFieldB quoteBidInterestAtMaturity,
-        optionalFieldB quoteOfferInterestAtMaturity,
+        optionalFieldB quoteBidYield,
+        optionalFieldB quoteMidYield,
+        optionalFieldB quoteOfferYield,
+        optionalFieldB quoteTransactTime,
+        optionalFieldB quoteOrdType,
+        optionalFieldB quoteBidForwardPoints2,
+        optionalFieldB quoteOfferForwardPoints2,
+        optionalFieldB quoteSettlCurrBidFxRate,
+        optionalFieldB quoteSettlCurrOfferFxRate,
+        optionalFieldB quoteSettlCurrFxRateCalc,
+        optionalFieldB quoteCommType,
+        optionalFieldB quoteCommission,
+        optionalFieldB quoteCustOrderCapacity,
+        optionalFieldB quoteExDestination,
+        optionalFieldB quoteOrderCapacity,
+        optionalFieldB quotePriceType,
+        requiredComponentB quoteSpreadOrBenchmarkCurveData,
+        requiredComponentB quoteYieldData,
+        optionalFieldB quoteText,
+        optionalFieldB quoteEncodedText,
+        optionalFieldB quoteBidPx2,
+        optionalFieldB quoteOfferPx2,
+        optionalFieldB quoteProductType,
         optionalFieldB quoteOptionPeriod,
         optionalFieldB quoteOptionDate,
-        optionalFieldB quoteBidExAnteCost,
-        optionalFieldB quoteOfferExAnteCost,
-        optionalFieldB quoteBidExAnteCostPercentage,
-        optionalFieldB quoteOfferExAnteCostPercentage
+        optionalFieldB quoteRefSpotDate,
+        requiredComponentB quoteExAnteData
       ]
   fromComponentFields = do
-    quoteAccount <- optionalFieldP
-    quoteCurrency <- optionalFieldP
-    quoteOrderQty <- requiredFieldP
-    quoteSymbol <- requiredFieldP
-    quoteValidUntilTime <- optionalFieldP
-    quoteIssuer <- requiredFieldP
-    quoteQuoteType <- optionalFieldP
+    quoteQuoteReqID <- optionalFieldP
     quoteQuoteID <- requiredFieldP
-    quoteQuoteReqID <- requiredFieldP
+    quoteQuoteRespID <- optionalFieldP
+    quoteQuoteType <- optionalFieldP
+    quoteQuoteQualifiersGroup <- optionalGroupP
+    quoteQuoteResponseLevel <- optionalFieldP
+    quoteParties <- requiredComponentP
+    quoteTradingSessionID <- optionalFieldP
+    quoteTradingSessionSubID <- optionalFieldP
+    quoteInstrument <- requiredComponentP
+    quoteFinancingDetails <- requiredComponentP
+    quoteUnderlyingsGroup <- optionalGroupP
+    quoteSide <- optionalFieldP
+    quoteOrderQtyData <- requiredComponentP
+    quoteSettlType <- optionalFieldP
+    quoteSettlDate <- optionalFieldP
+    quoteSplitSettlDate <- optionalFieldP
+    quoteSettlDate2 <- optionalFieldP
+    quoteSplitSettlDate2 <- optionalFieldP
+    quoteOrderQty2 <- optionalFieldP
+    quoteCurrency <- optionalFieldP
+    quoteStipulations <- requiredComponentP
+    quoteAccount <- optionalFieldP
+    quoteUsername <- optionalFieldP
+    quoteAcctIDSource <- optionalFieldP
+    quoteAccountType <- optionalFieldP
+    quoteLegsGroup <- optionalGroupP
     quoteBidPx <- optionalFieldP
     quoteOfferPx <- optionalFieldP
+    quoteBidInterestAtMaturity <- optionalFieldP
+    quoteOfferInterestAtMaturity <- optionalFieldP
+    quoteMktBidPx <- optionalFieldP
+    quoteMktOfferPx <- optionalFieldP
+    quoteMinBidSize <- optionalFieldP
+    quoteBidSize <- optionalFieldP
+    quoteMinOfferSize <- optionalFieldP
+    quoteOfferSize <- optionalFieldP
+    quoteValidUntilTime <- optionalFieldP
     quoteBidSpotRate <- optionalFieldP
     quoteOfferSpotRate <- optionalFieldP
-    quoteOrderQty2 <- optionalFieldP
-    quoteLegsGroup <- optionalGroupP
-    quoteRefSpotDate <- optionalFieldP
-    quoteProductType <- optionalFieldP
+    quoteBidForwardPoints <- optionalFieldP
+    quoteOfferForwardPoints <- optionalFieldP
     quoteMidPx <- optionalFieldP
     quoteMidSpotRate <- optionalFieldP
     quoteMidPx2 <- optionalFieldP
-    quoteBidInterestAtMaturity <- optionalFieldP
-    quoteOfferInterestAtMaturity <- optionalFieldP
+    quoteBidYield <- optionalFieldP
+    quoteMidYield <- optionalFieldP
+    quoteOfferYield <- optionalFieldP
+    quoteTransactTime <- optionalFieldP
+    quoteOrdType <- optionalFieldP
+    quoteBidForwardPoints2 <- optionalFieldP
+    quoteOfferForwardPoints2 <- optionalFieldP
+    quoteSettlCurrBidFxRate <- optionalFieldP
+    quoteSettlCurrOfferFxRate <- optionalFieldP
+    quoteSettlCurrFxRateCalc <- optionalFieldP
+    quoteCommType <- optionalFieldP
+    quoteCommission <- optionalFieldP
+    quoteCustOrderCapacity <- optionalFieldP
+    quoteExDestination <- optionalFieldP
+    quoteOrderCapacity <- optionalFieldP
+    quotePriceType <- optionalFieldP
+    quoteSpreadOrBenchmarkCurveData <- requiredComponentP
+    quoteYieldData <- requiredComponentP
+    quoteText <- optionalFieldP
+    quoteEncodedText <- optionalFieldP
+    quoteBidPx2 <- optionalFieldP
+    quoteOfferPx2 <- optionalFieldP
+    quoteProductType <- optionalFieldP
     quoteOptionPeriod <- optionalFieldP
     quoteOptionDate <- optionalFieldP
-    quoteBidExAnteCost <- optionalFieldP
-    quoteOfferExAnteCost <- optionalFieldP
-    quoteBidExAnteCostPercentage <- optionalFieldP
-    quoteOfferExAnteCostPercentage <- optionalFieldP
+    quoteRefSpotDate <- optionalFieldP
+    quoteExAnteData <- requiredComponentP
     pure (Quote {..})
 
 instance IsMessage Quote where
   messageType Proxy = MsgTypeQuote
 
-makeQuote :: OrderQty -> (Symbol -> (Issuer -> (QuoteID -> (QuoteReqID -> Quote))))
-makeQuote quoteOrderQty quoteSymbol quoteIssuer quoteQuoteID quoteQuoteReqID =
-  let quoteAccount = Nothing
-      quoteCurrency = Nothing
-      quoteValidUntilTime = Nothing
+makeQuote :: QuoteID -> (Parties -> (Instrument -> (FinancingDetails -> (OrderQtyData -> (Stipulations -> (SpreadOrBenchmarkCurveData -> (YieldData -> (ExAnteData -> Quote))))))))
+makeQuote quoteQuoteID quoteParties quoteInstrument quoteFinancingDetails quoteOrderQtyData quoteStipulations quoteSpreadOrBenchmarkCurveData quoteYieldData quoteExAnteData =
+  let quoteQuoteReqID = Nothing
+      quoteQuoteRespID = Nothing
       quoteQuoteType = Nothing
+      quoteQuoteQualifiersGroup = []
+      quoteQuoteResponseLevel = Nothing
+      quoteTradingSessionID = Nothing
+      quoteTradingSessionSubID = Nothing
+      quoteUnderlyingsGroup = []
+      quoteSide = Nothing
+      quoteSettlType = Nothing
+      quoteSettlDate = Nothing
+      quoteSplitSettlDate = Nothing
+      quoteSettlDate2 = Nothing
+      quoteSplitSettlDate2 = Nothing
+      quoteOrderQty2 = Nothing
+      quoteCurrency = Nothing
+      quoteAccount = Nothing
+      quoteUsername = Nothing
+      quoteAcctIDSource = Nothing
+      quoteAccountType = Nothing
+      quoteLegsGroup = []
       quoteBidPx = Nothing
       quoteOfferPx = Nothing
+      quoteBidInterestAtMaturity = Nothing
+      quoteOfferInterestAtMaturity = Nothing
+      quoteMktBidPx = Nothing
+      quoteMktOfferPx = Nothing
+      quoteMinBidSize = Nothing
+      quoteBidSize = Nothing
+      quoteMinOfferSize = Nothing
+      quoteOfferSize = Nothing
+      quoteValidUntilTime = Nothing
       quoteBidSpotRate = Nothing
       quoteOfferSpotRate = Nothing
-      quoteOrderQty2 = Nothing
-      quoteLegsGroup = []
-      quoteRefSpotDate = Nothing
-      quoteProductType = Nothing
+      quoteBidForwardPoints = Nothing
+      quoteOfferForwardPoints = Nothing
       quoteMidPx = Nothing
       quoteMidSpotRate = Nothing
       quoteMidPx2 = Nothing
-      quoteBidInterestAtMaturity = Nothing
-      quoteOfferInterestAtMaturity = Nothing
+      quoteBidYield = Nothing
+      quoteMidYield = Nothing
+      quoteOfferYield = Nothing
+      quoteTransactTime = Nothing
+      quoteOrdType = Nothing
+      quoteBidForwardPoints2 = Nothing
+      quoteOfferForwardPoints2 = Nothing
+      quoteSettlCurrBidFxRate = Nothing
+      quoteSettlCurrOfferFxRate = Nothing
+      quoteSettlCurrFxRateCalc = Nothing
+      quoteCommType = Nothing
+      quoteCommission = Nothing
+      quoteCustOrderCapacity = Nothing
+      quoteExDestination = Nothing
+      quoteOrderCapacity = Nothing
+      quotePriceType = Nothing
+      quoteText = Nothing
+      quoteEncodedText = Nothing
+      quoteBidPx2 = Nothing
+      quoteOfferPx2 = Nothing
+      quoteProductType = Nothing
       quoteOptionPeriod = Nothing
       quoteOptionDate = Nothing
-      quoteBidExAnteCost = Nothing
-      quoteOfferExAnteCost = Nothing
-      quoteBidExAnteCostPercentage = Nothing
-      quoteOfferExAnteCostPercentage = Nothing
+      quoteRefSpotDate = Nothing
    in (Quote {..})

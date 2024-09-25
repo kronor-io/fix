@@ -57,16 +57,14 @@ import GHC.Generics (Generic)
 --           , fieldValueDescription = "SIGNATURE_PROBLEM"
 --           }
 --       , FieldValueSpec
---           { fieldValueEnum = "9"
---           , fieldValueDescription = "COMP_ID_PROBLEM"
---           }
+--           { fieldValueEnum = "9" , fieldValueDescription = "COMPID_PROBLEM" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "10"
---           , fieldValueDescription = "SENDING_TIME_ACCURACY_PROBLEM"
+--           , fieldValueDescription = "SENDINGTIME_ACCURACY_PROBLEM"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "11"
---           , fieldValueDescription = "INVALID_MSG_TYPE"
+--           , fieldValueDescription = "INVALID_MSGTYPE"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "12"
@@ -87,10 +85,12 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "16"
 --           , fieldValueDescription =
---               "INCORRECT_NUM_IN_GROUP_COUNT_FOR_REPEATING_GROUP"
+--               "INCORRECT_NUMINGROUP_COUNT_FOR_REPEATING_GROUP"
 --           }
 --       , FieldValueSpec
---           { fieldValueEnum = "17" , fieldValueDescription = "NON" }
+--           { fieldValueEnum = "17"
+--           , fieldValueDescription = "NON_DATA_VALUE_INCLUDES_FIELD_DELIMITER"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "99" , fieldValueDescription = "OTHER" }
 --       ]
@@ -105,15 +105,15 @@ data SessionRejectReason
   | SessionRejectReasonIncorrectDataFormatForValue
   | SessionRejectReasonDecryptionProblem
   | SessionRejectReasonSignatureProblem
-  | SessionRejectReasonCompIdProblem
-  | SessionRejectReasonSendingTimeAccuracyProblem
-  | SessionRejectReasonInvalidMsgType
+  | SessionRejectReasonCompidProblem
+  | SessionRejectReasonSendingtimeAccuracyProblem
+  | SessionRejectReasonInvalidMsgtype
   | SessionRejectReasonXmlValidationError
   | SessionRejectReasonTagAppearsMoreThanOnce
   | SessionRejectReasonTagSpecifiedOutOfRequiredOrder
   | SessionRejectReasonRepeatingGroupFieldsOutOfOrder
-  | SessionRejectReasonIncorrectNumInGroupCountForRepeatingGroup
-  | SessionRejectReasonNon
+  | SessionRejectReasonIncorrectNumingroupCountForRepeatingGroup
+  | SessionRejectReasonNonDataValueIncludesFieldDelimiter
   | SessionRejectReasonOther
   deriving stock (Show, Eq, Generic)
 
@@ -132,15 +132,15 @@ instance IsField SessionRejectReason where
     SessionRejectReasonIncorrectDataFormatForValue -> "6"
     SessionRejectReasonDecryptionProblem -> "7"
     SessionRejectReasonSignatureProblem -> "8"
-    SessionRejectReasonCompIdProblem -> "9"
-    SessionRejectReasonSendingTimeAccuracyProblem -> "10"
-    SessionRejectReasonInvalidMsgType -> "11"
+    SessionRejectReasonCompidProblem -> "9"
+    SessionRejectReasonSendingtimeAccuracyProblem -> "10"
+    SessionRejectReasonInvalidMsgtype -> "11"
     SessionRejectReasonXmlValidationError -> "12"
     SessionRejectReasonTagAppearsMoreThanOnce -> "13"
     SessionRejectReasonTagSpecifiedOutOfRequiredOrder -> "14"
     SessionRejectReasonRepeatingGroupFieldsOutOfOrder -> "15"
-    SessionRejectReasonIncorrectNumInGroupCountForRepeatingGroup -> "16"
-    SessionRejectReasonNon -> "17"
+    SessionRejectReasonIncorrectNumingroupCountForRepeatingGroup -> "16"
+    SessionRejectReasonNonDataValueIncludesFieldDelimiter -> "17"
     SessionRejectReasonOther -> "99"
   fieldFromValue = \case
     "0" -> Right SessionRejectReasonInvalidTagNumber
@@ -152,14 +152,14 @@ instance IsField SessionRejectReason where
     "6" -> Right SessionRejectReasonIncorrectDataFormatForValue
     "7" -> Right SessionRejectReasonDecryptionProblem
     "8" -> Right SessionRejectReasonSignatureProblem
-    "9" -> Right SessionRejectReasonCompIdProblem
-    "10" -> Right SessionRejectReasonSendingTimeAccuracyProblem
-    "11" -> Right SessionRejectReasonInvalidMsgType
+    "9" -> Right SessionRejectReasonCompidProblem
+    "10" -> Right SessionRejectReasonSendingtimeAccuracyProblem
+    "11" -> Right SessionRejectReasonInvalidMsgtype
     "12" -> Right SessionRejectReasonXmlValidationError
     "13" -> Right SessionRejectReasonTagAppearsMoreThanOnce
     "14" -> Right SessionRejectReasonTagSpecifiedOutOfRequiredOrder
     "15" -> Right SessionRejectReasonRepeatingGroupFieldsOutOfOrder
-    "16" -> Right SessionRejectReasonIncorrectNumInGroupCountForRepeatingGroup
-    "17" -> Right SessionRejectReasonNon
+    "16" -> Right SessionRejectReasonIncorrectNumingroupCountForRepeatingGroup
+    "17" -> Right SessionRejectReasonNonDataValueIncludesFieldDelimiter
     "99" -> Right SessionRejectReasonOther
     v -> Left ("Unknown SessionRejectReason: " <> show v)

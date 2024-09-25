@@ -23,10 +23,22 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeInt
 --   , fieldValues =
 --       [ FieldValueSpec
---           { fieldValueEnum = "1" , fieldValueDescription = "ACCEPT_AS_IS" }
+--           { fieldValueEnum = "1"
+--           , fieldValueDescription = "ACCEPT_SECURITY_PROPOSAL_AS_IS"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "2"
---           , fieldValueDescription = "ACCEPT_WITH_REVISIONS"
+--           , fieldValueDescription =
+--               "ACCEPT_SECURITY_PROPOSAL_WITH_REVISIONS_AS_INDICATED_IN_THE_MESSAGE"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "3"
+--           , fieldValueDescription =
+--               "LIST_OF_SECURITY_TYPES_RETURNED_PER_REQUEST"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "4"
+--           , fieldValueDescription = "LIST_OF_SECURITIES_RETURNED_PER_REQUEST"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "5"
@@ -34,15 +46,17 @@ import GHC.Generics (Generic)
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "6"
---           , fieldValueDescription = "CANNOT_MATCH_SELECTION_CRITERIA"
+--           , fieldValueDescription = "CAN_NOT_MATCH_SELECTION_CRITERIA"
 --           }
 --       ]
 --   }
 data SecurityResponseType
-  = SecurityResponseTypeAcceptAsIs
-  | SecurityResponseTypeAcceptWithRevisions
+  = SecurityResponseTypeAcceptSecurityProposalAsIs
+  | SecurityResponseTypeAcceptSecurityProposalWithRevisionsAsIndicatedInTheMessage
+  | SecurityResponseTypeListOfSecurityTypesReturnedPerRequest
+  | SecurityResponseTypeListOfSecuritiesReturnedPerRequest
   | SecurityResponseTypeRejectSecurityProposal
-  | SecurityResponseTypeCannotMatchSelectionCriteria
+  | SecurityResponseTypeCanNotMatchSelectionCriteria
   deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityResponseType
@@ -51,13 +65,17 @@ instance IsField SecurityResponseType where
   fieldTag Proxy = 323
   fieldIsData Proxy = False
   fieldToValue = \case
-    SecurityResponseTypeAcceptAsIs -> "1"
-    SecurityResponseTypeAcceptWithRevisions -> "2"
+    SecurityResponseTypeAcceptSecurityProposalAsIs -> "1"
+    SecurityResponseTypeAcceptSecurityProposalWithRevisionsAsIndicatedInTheMessage -> "2"
+    SecurityResponseTypeListOfSecurityTypesReturnedPerRequest -> "3"
+    SecurityResponseTypeListOfSecuritiesReturnedPerRequest -> "4"
     SecurityResponseTypeRejectSecurityProposal -> "5"
-    SecurityResponseTypeCannotMatchSelectionCriteria -> "6"
+    SecurityResponseTypeCanNotMatchSelectionCriteria -> "6"
   fieldFromValue = \case
-    "1" -> Right SecurityResponseTypeAcceptAsIs
-    "2" -> Right SecurityResponseTypeAcceptWithRevisions
+    "1" -> Right SecurityResponseTypeAcceptSecurityProposalAsIs
+    "2" -> Right SecurityResponseTypeAcceptSecurityProposalWithRevisionsAsIndicatedInTheMessage
+    "3" -> Right SecurityResponseTypeListOfSecurityTypesReturnedPerRequest
+    "4" -> Right SecurityResponseTypeListOfSecuritiesReturnedPerRequest
     "5" -> Right SecurityResponseTypeRejectSecurityProposal
-    "6" -> Right SecurityResponseTypeCannotMatchSelectionCriteria
+    "6" -> Right SecurityResponseTypeCanNotMatchSelectionCriteria
     v -> Left ("Unknown SecurityResponseType: " <> show v)

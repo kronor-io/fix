@@ -21,15 +21,9 @@ import GHC.Generics (Generic)
 --   { fieldNumber = 2594
 --   , fieldName = "OrderAttributeType"
 --   , fieldType = FieldTypeInt
---   , fieldValues =
---       [ FieldValueSpec
---           { fieldValueEnum = "3"
---           , fieldValueDescription = "Risk reduction order"
---           }
---       ]
+--   , fieldValues = []
 --   }
-data OrderAttributeType
-  = OrderAttributeTypeRiskReductionOrder
+newtype OrderAttributeType = OrderAttributeType {unOrderAttributeType :: Int}
   deriving stock (Show, Eq, Generic)
 
 instance Validity OrderAttributeType
@@ -37,8 +31,5 @@ instance Validity OrderAttributeType
 instance IsField OrderAttributeType where
   fieldTag Proxy = 2594
   fieldIsData Proxy = False
-  fieldToValue = \case
-    OrderAttributeTypeRiskReductionOrder -> "3"
-  fieldFromValue = \case
-    "3" -> Right OrderAttributeTypeRiskReductionOrder
-    v -> Left ("Unknown OrderAttributeType: " <> show v)
+  fieldToValue = toValue . unOrderAttributeType
+  fieldFromValue = fromValue >=> (prettyValidate . OrderAttributeType)

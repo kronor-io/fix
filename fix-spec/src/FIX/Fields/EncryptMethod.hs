@@ -23,29 +23,29 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeInt
 --   , fieldValues =
 --       [ FieldValueSpec
---           { fieldValueEnum = "0" , fieldValueDescription = "NONE" }
+--           { fieldValueEnum = "0" , fieldValueDescription = "NONE_OTHER" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "1" , fieldValueDescription = "PKCS" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "2" , fieldValueDescription = "DES" }
 --       , FieldValueSpec
---           { fieldValueEnum = "3" , fieldValueDescription = "PKCSDES" }
+--           { fieldValueEnum = "3" , fieldValueDescription = "PKCS_DES" }
 --       , FieldValueSpec
---           { fieldValueEnum = "4" , fieldValueDescription = "PGPDES" }
+--           { fieldValueEnum = "4" , fieldValueDescription = "PGP_DES" }
 --       , FieldValueSpec
---           { fieldValueEnum = "5" , fieldValueDescription = "PGPDESMD5" }
+--           { fieldValueEnum = "5" , fieldValueDescription = "PGP_DES_MD5" }
 --       , FieldValueSpec
---           { fieldValueEnum = "6" , fieldValueDescription = "PEM" }
+--           { fieldValueEnum = "6" , fieldValueDescription = "PEM_DES_MD5" }
 --       ]
 --   }
 data EncryptMethod
-  = EncryptMethodNone
+  = EncryptMethodNoneOther
   | EncryptMethodPkcs
   | EncryptMethodDes
-  | EncryptMethodPkcsdes
-  | EncryptMethodPgpdes
-  | EncryptMethodPgpdesmd5
-  | EncryptMethodPem
+  | EncryptMethodPkcsDes
+  | EncryptMethodPgpDes
+  | EncryptMethodPgpDesMd5
+  | EncryptMethodPemDesMd5
   deriving stock (Show, Eq, Generic)
 
 instance Validity EncryptMethod
@@ -54,19 +54,19 @@ instance IsField EncryptMethod where
   fieldTag Proxy = 98
   fieldIsData Proxy = False
   fieldToValue = \case
-    EncryptMethodNone -> "0"
+    EncryptMethodNoneOther -> "0"
     EncryptMethodPkcs -> "1"
     EncryptMethodDes -> "2"
-    EncryptMethodPkcsdes -> "3"
-    EncryptMethodPgpdes -> "4"
-    EncryptMethodPgpdesmd5 -> "5"
-    EncryptMethodPem -> "6"
+    EncryptMethodPkcsDes -> "3"
+    EncryptMethodPgpDes -> "4"
+    EncryptMethodPgpDesMd5 -> "5"
+    EncryptMethodPemDesMd5 -> "6"
   fieldFromValue = \case
-    "0" -> Right EncryptMethodNone
+    "0" -> Right EncryptMethodNoneOther
     "1" -> Right EncryptMethodPkcs
     "2" -> Right EncryptMethodDes
-    "3" -> Right EncryptMethodPkcsdes
-    "4" -> Right EncryptMethodPgpdes
-    "5" -> Right EncryptMethodPgpdesmd5
-    "6" -> Right EncryptMethodPem
+    "3" -> Right EncryptMethodPkcsDes
+    "4" -> Right EncryptMethodPgpDes
+    "5" -> Right EncryptMethodPgpDesMd5
+    "6" -> Right EncryptMethodPemDesMd5
     v -> Left ("Unknown EncryptMethod: " <> show v)

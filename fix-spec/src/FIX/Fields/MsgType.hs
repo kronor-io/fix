@@ -35,7 +35,9 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "5" , fieldValueDescription = "LOGOUT" }
 --       , FieldValueSpec
---           { fieldValueEnum = "6" , fieldValueDescription = "IOI" }
+--           { fieldValueEnum = "6"
+--           , fieldValueDescription = "INDICATION_OF_INTEREST"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "7" , fieldValueDescription = "ADVERTISEMENT" }
 --       , FieldValueSpec
@@ -53,11 +55,9 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "C" , fieldValueDescription = "EMAIL" }
 --       , FieldValueSpec
---           { fieldValueEnum = "D"
---           , fieldValueDescription = "NEW_ORDER_SINGLE"
---           }
+--           { fieldValueEnum = "D" , fieldValueDescription = "ORDER_SINGLE" }
 --       , FieldValueSpec
---           { fieldValueEnum = "E" , fieldValueDescription = "NEW_ORDER_LIST" }
+--           { fieldValueEnum = "E" , fieldValueDescription = "ORDER_LIST" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "F"
 --           , fieldValueDescription = "ORDER_CANCEL_REQUEST"
@@ -167,7 +167,7 @@ import GHC.Generics (Generic)
 --           , fieldValueDescription = "LIST_STRIKE_PRICE"
 --           }
 --       , FieldValueSpec
---           { fieldValueEnum = "n" , fieldValueDescription = "XML_NON_FIX" }
+--           { fieldValueEnum = "n" , fieldValueDescription = "XML_MESSAGE" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "o"
 --           , fieldValueDescription = "REGISTRATION_INSTRUCTIONS"
@@ -322,13 +322,11 @@ import GHC.Generics (Generic)
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "BC"
---           , fieldValueDescription =
---               "NETWORK_COUNTERPARTY_SYSTEM_STATUS_REQUEST"
+--           , fieldValueDescription = "NETWORK_STATUS_REQUEST"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "BD"
---           , fieldValueDescription =
---               "NETWORK_COUNTERPARTY_SYSTEM_STATUS_RESPONSE"
+--           , fieldValueDescription = "NETWORK_STATUS_RESPONSE"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "BE" , fieldValueDescription = "USER_REQUEST" }
@@ -351,15 +349,15 @@ data MsgType
   | MsgTypeReject
   | MsgTypeSequenceReset
   | MsgTypeLogout
-  | MsgTypeIoi
+  | MsgTypeIndicationOfInterest
   | MsgTypeAdvertisement
   | MsgTypeExecutionReport
   | MsgTypeOrderCancelReject
   | MsgTypeLogon
   | MsgTypeNews
   | MsgTypeEmail
-  | MsgTypeNewOrderSingle
-  | MsgTypeNewOrderList
+  | MsgTypeOrderSingle
+  | MsgTypeOrderList
   | MsgTypeOrderCancelRequest
   | MsgTypeOrderCancelReplaceRequest
   | MsgTypeOrderStatusRequest
@@ -391,7 +389,7 @@ data MsgType
   | MsgTypeBidRequest
   | MsgTypeBidResponse
   | MsgTypeListStrikePrice
-  | MsgTypeXmlNonFix
+  | MsgTypeXmlMessage
   | MsgTypeRegistrationInstructions
   | MsgTypeRegistrationInstructionsResponse
   | MsgTypeOrderMassCancelRequest
@@ -432,8 +430,8 @@ data MsgType
   | MsgTypeCollateralResponse
   | MsgTypeCollateralReport
   | MsgTypeCollateralInquiry
-  | MsgTypeNetworkCounterpartySystemStatusRequest
-  | MsgTypeNetworkCounterpartySystemStatusResponse
+  | MsgTypeNetworkStatusRequest
+  | MsgTypeNetworkStatusResponse
   | MsgTypeUserRequest
   | MsgTypeUserResponse
   | MsgTypeCollateralInquiryAck
@@ -452,15 +450,15 @@ instance IsField MsgType where
     MsgTypeReject -> "3"
     MsgTypeSequenceReset -> "4"
     MsgTypeLogout -> "5"
-    MsgTypeIoi -> "6"
+    MsgTypeIndicationOfInterest -> "6"
     MsgTypeAdvertisement -> "7"
     MsgTypeExecutionReport -> "8"
     MsgTypeOrderCancelReject -> "9"
     MsgTypeLogon -> "A"
     MsgTypeNews -> "B"
     MsgTypeEmail -> "C"
-    MsgTypeNewOrderSingle -> "D"
-    MsgTypeNewOrderList -> "E"
+    MsgTypeOrderSingle -> "D"
+    MsgTypeOrderList -> "E"
     MsgTypeOrderCancelRequest -> "F"
     MsgTypeOrderCancelReplaceRequest -> "G"
     MsgTypeOrderStatusRequest -> "H"
@@ -492,7 +490,7 @@ instance IsField MsgType where
     MsgTypeBidRequest -> "k"
     MsgTypeBidResponse -> "l"
     MsgTypeListStrikePrice -> "m"
-    MsgTypeXmlNonFix -> "n"
+    MsgTypeXmlMessage -> "n"
     MsgTypeRegistrationInstructions -> "o"
     MsgTypeRegistrationInstructionsResponse -> "p"
     MsgTypeOrderMassCancelRequest -> "q"
@@ -533,8 +531,8 @@ instance IsField MsgType where
     MsgTypeCollateralResponse -> "AZ"
     MsgTypeCollateralReport -> "BA"
     MsgTypeCollateralInquiry -> "BB"
-    MsgTypeNetworkCounterpartySystemStatusRequest -> "BC"
-    MsgTypeNetworkCounterpartySystemStatusResponse -> "BD"
+    MsgTypeNetworkStatusRequest -> "BC"
+    MsgTypeNetworkStatusResponse -> "BD"
     MsgTypeUserRequest -> "BE"
     MsgTypeUserResponse -> "BF"
     MsgTypeCollateralInquiryAck -> "BG"
@@ -546,15 +544,15 @@ instance IsField MsgType where
     "3" -> Right MsgTypeReject
     "4" -> Right MsgTypeSequenceReset
     "5" -> Right MsgTypeLogout
-    "6" -> Right MsgTypeIoi
+    "6" -> Right MsgTypeIndicationOfInterest
     "7" -> Right MsgTypeAdvertisement
     "8" -> Right MsgTypeExecutionReport
     "9" -> Right MsgTypeOrderCancelReject
     "A" -> Right MsgTypeLogon
     "B" -> Right MsgTypeNews
     "C" -> Right MsgTypeEmail
-    "D" -> Right MsgTypeNewOrderSingle
-    "E" -> Right MsgTypeNewOrderList
+    "D" -> Right MsgTypeOrderSingle
+    "E" -> Right MsgTypeOrderList
     "F" -> Right MsgTypeOrderCancelRequest
     "G" -> Right MsgTypeOrderCancelReplaceRequest
     "H" -> Right MsgTypeOrderStatusRequest
@@ -586,7 +584,7 @@ instance IsField MsgType where
     "k" -> Right MsgTypeBidRequest
     "l" -> Right MsgTypeBidResponse
     "m" -> Right MsgTypeListStrikePrice
-    "n" -> Right MsgTypeXmlNonFix
+    "n" -> Right MsgTypeXmlMessage
     "o" -> Right MsgTypeRegistrationInstructions
     "p" -> Right MsgTypeRegistrationInstructionsResponse
     "q" -> Right MsgTypeOrderMassCancelRequest
@@ -627,8 +625,8 @@ instance IsField MsgType where
     "AZ" -> Right MsgTypeCollateralResponse
     "BA" -> Right MsgTypeCollateralReport
     "BB" -> Right MsgTypeCollateralInquiry
-    "BC" -> Right MsgTypeNetworkCounterpartySystemStatusRequest
-    "BD" -> Right MsgTypeNetworkCounterpartySystemStatusResponse
+    "BC" -> Right MsgTypeNetworkStatusRequest
+    "BD" -> Right MsgTypeNetworkStatusResponse
     "BE" -> Right MsgTypeUserRequest
     "BF" -> Right MsgTypeUserResponse
     "BG" -> Right MsgTypeCollateralInquiryAck

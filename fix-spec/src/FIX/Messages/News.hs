@@ -12,11 +12,19 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Fields.EncodedHeadline
 import FIX.Fields.Headline
 import FIX.Fields.MsgType
+import FIX.Fields.OrigTime
+import FIX.Fields.RawData
+import FIX.Fields.URLLink
+import FIX.Fields.Urgency
 import FIX.Groups.Class
+import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
+import FIX.Groups.RelatedSymGroupElem
 import FIX.Groups.RoutingIDsGroupElem
+import FIX.Groups.UnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -25,14 +33,10 @@ import GHC.Generics (Generic)
 --   , messageType = "B"
 --   , messageCategory = "app"
 --   , messagePieces =
---       [ MessagePieceField "Headline" True
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NoLinesOfText"
---             , groupNumberField = "NoLinesOfText"
---             , groupPieces = [ MessagePieceField "Text" True ]
---             }
---           True
+--       [ MessagePieceField "OrigTime" False
+--       , MessagePieceField "Urgency" False
+--       , MessagePieceField "Headline" True
+--       , MessagePieceField "EncodedHeadline" False
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "NoRoutingIDs"
@@ -43,12 +47,54 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoRelatedSym"
+--             , groupNumberField = "NoRelatedSym"
+--             , groupPieces = [ MessagePieceComponent "Instrument" True ]
+--             }
+--           False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoLegs"
+--             , groupNumberField = "NoLegs"
+--             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
+--             }
+--           False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoUnderlyings"
+--             , groupNumberField = "NoUnderlyings"
+--             , groupPieces =
+--                 [ MessagePieceComponent "UnderlyingInstrument" True ]
+--             }
+--           False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "LinesOfText"
+--             , groupNumberField = "LinesOfText"
+--             , groupPieces =
+--                 [ MessagePieceField "Text" True
+--                 , MessagePieceField "EncodedText" False
+--                 ]
+--             }
+--           True
+--       , MessagePieceField "URLLink" False
+--       , MessagePieceField "RawData" False
 --       ]
 --   }
 data News = News
-  { newsHeadline :: !Headline,
+  { newsOrigTime :: !(Maybe OrigTime),
+    newsUrgency :: !(Maybe Urgency),
+    newsHeadline :: !Headline,
+    newsEncodedHeadline :: !(Maybe EncodedHeadline),
+    newsRoutingIDsGroup :: ![RoutingIDsGroupElem],
+    newsRelatedSymGroup :: ![RelatedSymGroupElem],
+    newsLegsGroup :: ![LegsGroupElem],
+    newsUnderlyingsGroup :: ![UnderlyingsGroupElem],
     newsLinesOfTextGroup :: !(NonEmpty LinesOfTextGroupElem),
-    newsRoutingIDsGroup :: ![RoutingIDsGroupElem]
+    newsURLLink :: !(Maybe URLLink),
+    newsRawData :: !(Maybe RawData)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -57,14 +103,30 @@ instance Validity News
 instance IsComponent News where
   toComponentFields ((News {..})) =
     mconcat
-      [ requiredFieldB newsHeadline,
+      [ optionalFieldB newsOrigTime,
+        optionalFieldB newsUrgency,
+        requiredFieldB newsHeadline,
+        optionalFieldB newsEncodedHeadline,
+        optionalGroupB newsRoutingIDsGroup,
+        optionalGroupB newsRelatedSymGroup,
+        optionalGroupB newsLegsGroup,
+        optionalGroupB newsUnderlyingsGroup,
         requiredGroupB newsLinesOfTextGroup,
-        optionalGroupB newsRoutingIDsGroup
+        optionalFieldB newsURLLink,
+        optionalFieldB newsRawData
       ]
   fromComponentFields = do
+    newsOrigTime <- optionalFieldP
+    newsUrgency <- optionalFieldP
     newsHeadline <- requiredFieldP
-    newsLinesOfTextGroup <- requiredGroupP
+    newsEncodedHeadline <- optionalFieldP
     newsRoutingIDsGroup <- optionalGroupP
+    newsRelatedSymGroup <- optionalGroupP
+    newsLegsGroup <- optionalGroupP
+    newsUnderlyingsGroup <- optionalGroupP
+    newsLinesOfTextGroup <- requiredGroupP
+    newsURLLink <- optionalFieldP
+    newsRawData <- optionalFieldP
     pure (News {..})
 
 instance IsMessage News where
@@ -72,5 +134,13 @@ instance IsMessage News where
 
 makeNews :: Headline -> (NonEmpty LinesOfTextGroupElem -> News)
 makeNews newsHeadline newsLinesOfTextGroup =
-  let newsRoutingIDsGroup = []
+  let newsOrigTime = Nothing
+      newsUrgency = Nothing
+      newsEncodedHeadline = Nothing
+      newsRoutingIDsGroup = []
+      newsRelatedSymGroup = []
+      newsLegsGroup = []
+      newsUnderlyingsGroup = []
+      newsURLLink = Nothing
+      newsRawData = Nothing
    in (News {..})

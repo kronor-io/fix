@@ -12,19 +12,37 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
+import FIX.Components.Parties
+import FIX.Fields.AvgPxPrecision
+import FIX.Fields.ClOrdID
 import FIX.Fields.DayCount
+import FIX.Fields.EncodedText
 import FIX.Fields.ExecutionVenueType
+import FIX.Fields.ExpireTime
+import FIX.Fields.FarLegRatePrecision
+import FIX.Fields.Fiduciary
+import FIX.Fields.FixingReference
+import FIX.Fields.ForwardPointsPrecision
+import FIX.Fields.ForwardRatePrecision
+import FIX.Fields.InterestRatePrecision
+import FIX.Fields.LastCapacity
 import FIX.Fields.MsgType
+import FIX.Fields.NearLegRatePrecision
 import FIX.Fields.OptionDate
+import FIX.Fields.OrdType
+import FIX.Fields.OrderCapacity
 import FIX.Fields.ProductType
 import FIX.Fields.QuoteReqID
+import FIX.Fields.RFQReqID
 import FIX.Fields.RefSpotDate
+import FIX.Fields.SpotRatePrecision
+import FIX.Fields.Text
+import FIX.Fields.Username
 import FIX.Groups.Class
 import FIX.Groups.CustomFieldsGroupElem
-import FIX.Groups.OrderAttributeGroupElem
-import FIX.Groups.PartyIDsGroupElem
-import FIX.Groups.QuotReqGrpGroupElem
-import FIX.Groups.RegulatoryTradeIDGroupElem
+import FIX.Groups.OrderAttributesGroupElem
+import FIX.Groups.RegulatoryTradeIDsGroupElem
+import FIX.Groups.RelatedSymGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -34,38 +52,63 @@ import GHC.Generics (Generic)
 --   , messageCategory = "app"
 --   , messagePieces =
 --       [ MessagePieceField "QuoteReqID" True
---       , MessagePieceField "RefSpotDate" False
---       , MessagePieceField "ProductType" True
---       , MessagePieceField "ExecutionVenueType" False
+--       , MessagePieceField "RFQReqID" False
+--       , MessagePieceField "ClOrdID" False
+--       , MessagePieceField "OrderCapacity" False
+--       , MessagePieceField "Username" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoCustomFields"
---             , groupNumberField = "NoCustomFields"
---             , groupPieces =
---                 [ MessagePieceField "CustomFieldName" True
---                 , MessagePieceField "CustomFieldValue" True
---                 ]
---             }
---           False
---       , MessagePieceField "DayCount" False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "QuotReqGrp"
+--             { groupName = "NoRelatedSym"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces =
---                 [ MessagePieceField "Symbol" True
---                 , MessagePieceField "MaturityDate" False
---                 , MessagePieceField "MaturityDate2" False
---                 , MessagePieceField "Issuer" False
---                 , MessagePieceField "QuoteType" True
+--                 [ MessagePieceComponent "Instrument" True
+--                 , MessagePieceComponent "FinancingDetails" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoUnderlyings"
+--                       , groupNumberField = "NoUnderlyings"
+--                       , groupPieces =
+--                           [ MessagePieceComponent "UnderlyingInstrument" True ]
+--                       }
+--                     False
+--                 , MessagePieceField "PrevClosePx" False
+--                 , MessagePieceField "QuoteRequestType" False
+--                 , MessagePieceField "QuoteType" False
+--                 , MessagePieceField "TradingSessionID" False
+--                 , MessagePieceField "TradingSessionSubID" False
+--                 , MessagePieceField "TradeOriginationDate" False
 --                 , MessagePieceField "Side" False
---                 , MessagePieceField "OrderQty" True
---                 , MessagePieceField "SettlDate" True
+--                 , MessagePieceField "QtyType" False
+--                 , MessagePieceComponent "OrderQtyData" True
+--                 , MessagePieceField "SettlType" False
+--                 , MessagePieceField "SettlDate" False
+--                 , MessagePieceField "SplitSettlDate" False
 --                 , MessagePieceField "SettlDate2" False
+--                 , MessagePieceField "SplitSettlDate2" False
 --                 , MessagePieceField "OrderQty2" False
 --                 , MessagePieceField "Currency" False
---                 , MessagePieceField "Account" True
+--                 , MessagePieceComponent "Stipulations" True
+--                 , MessagePieceField "Account" False
+--                 , MessagePieceField "Username" False
+--                 , MessagePieceField "AcctIDSource" False
+--                 , MessagePieceField "AccountType" False
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoQuoteQualifiers"
+--                       , groupNumberField = "NoQuoteQualifiers"
+--                       , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
+--                       }
+--                     False
+--                 , MessagePieceField "QuotePriceType" False
+--                 , MessagePieceField "OrdType" False
+--                 , MessagePieceField "ValidUntilTime" False
 --                 , MessagePieceField "ExpireTime" False
+--                 , MessagePieceField "TransactTime" False
+--                 , MessagePieceComponent "SpreadOrBenchmarkCurveData" True
+--                 , MessagePieceField "PriceType" False
+--                 , MessagePieceField "Price" False
+--                 , MessagePieceField "Price2" False
+--                 , MessagePieceComponent "YieldData" True
 --                 , MessagePieceGroup
 --                     GroupSpec
 --                       { groupName = "NoAllocs"
@@ -73,24 +116,12 @@ import GHC.Generics (Generic)
 --                       , groupPieces =
 --                           [ MessagePieceField "AllocAccount" True
 --                           , MessagePieceField "AllocQty" True
---                           , MessagePieceGroup
---                               GroupSpec
---                                 { groupName = "NoNestedPartyIDs"
---                                 , groupNumberField = "NoNestedPartyIDs"
---                                 , groupPieces =
---                                     [ MessagePieceField "NestedPartyID" True
---                                     , MessagePieceField "NestedPartyIDSource" False
---                                     , MessagePieceField "NestedPartyRole" False
---                                     , MessagePieceField "NestedPartyRoleQualifier" False
---                                     ]
---                                 }
---                               False
 --                           ]
 --                       }
 --                     False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "QuotReqLegsGrp"
+--                       { groupName = "NoLegs"
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces =
 --                           [ MessagePieceField "LegSymbol" True
@@ -104,59 +135,66 @@ import GHC.Generics (Generic)
 --                                 , groupPieces =
 --                                     [ MessagePieceField "LegAllocAccount" True
 --                                     , MessagePieceField "LegAllocQty" True
---                                     , MessagePieceGroup
---                                         GroupSpec
---                                           { groupName = "NoNestedPartyIDs"
---                                           , groupNumberField = "NoNestedPartyIDs"
---                                           , groupPieces =
---                                               [ MessagePieceField "NestedPartyID" True
---                                               , MessagePieceField "NestedPartyIDSource" False
---                                               , MessagePieceField "NestedPartyRole" False
---                                               , MessagePieceField "NestedPartyRoleQualifier" False
---                                               ]
---                                           }
---                                         False
+--                                     , MessagePieceComponent "NestedParties" True
 --                                     ]
 --                                 }
---                               True
+--                               False
 --                           , MessagePieceField "LegRefID" True
 --                           , MessagePieceField "LegSettlDate" True
+--                           , MessagePieceField "LegSplitSettlDate" False
 --                           ]
 --                       }
 --                     False
 --                 ]
 --             }
 --           True
+--       , MessagePieceComponent "Parties" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoPartyIDs"
---             , groupNumberField = "NoPartyIDs"
---             , groupPieces =
---                 [ MessagePieceField "PartyID" True
---                 , MessagePieceField "PartyIDSource" False
---                 , MessagePieceField "PartyRole" False
---                 , MessagePieceField "PartyRoleQualifier" False
---                 ]
---             }
---           False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NoRegulatoryTradeID"
---             , groupNumberField = "NoRegulatoryTradeID"
+--             { groupName = "NoRegulatoryTradeIDs"
+--             , groupNumberField = "NoRegulatoryTradeIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "RegulatoryTradeID" True
 --                 , MessagePieceField "RegulatoryTradeIDType" False
 --                 ]
 --             }
 --           False
---       , MessagePieceField "OptionDate" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoOrderAttribute"
---             , groupNumberField = "NoOrderAttribute"
+--             { groupName = "NoOrderAttributes"
+--             , groupNumberField = "NoOrderAttributes"
 --             , groupPieces =
 --                 [ MessagePieceField "OrderAttributeType" True
 --                 , MessagePieceField "OrderAttributeValue" False
+--                 ]
+--             }
+--           False
+--       , MessagePieceField "OptionDate" False
+--       , MessagePieceField "Text" False
+--       , MessagePieceField "EncodedText" False
+--       , MessagePieceField "RefSpotDate" False
+--       , MessagePieceField "ProductType" False
+--       , MessagePieceField "ExecutionVenueType" False
+--       , MessagePieceField "LastCapacity" False
+--       , MessagePieceField "DayCount" False
+--       , MessagePieceField "FixingReference" False
+--       , MessagePieceField "AvgPxPrecision" False
+--       , MessagePieceField "ExpireTime" False
+--       , MessagePieceField "Fiduciary" False
+--       , MessagePieceField "OrdType" False
+--       , MessagePieceField "SpotRatePrecision" False
+--       , MessagePieceField "ForwardRatePrecision" False
+--       , MessagePieceField "ForwardPointsPrecision" False
+--       , MessagePieceField "InterestRatePrecision" False
+--       , MessagePieceField "NearLegRatePrecision" False
+--       , MessagePieceField "FarLegRatePrecision" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NoCustomFields"
+--             , groupNumberField = "NoCustomFields"
+--             , groupPieces =
+--                 [ MessagePieceField "CustomFieldsName" True
+--                 , MessagePieceField "CustomFieldsValue" False
 --                 ]
 --             }
 --           False
@@ -164,16 +202,34 @@ import GHC.Generics (Generic)
 --   }
 data QuoteRequest = QuoteRequest
   { quoteRequestQuoteReqID :: !QuoteReqID,
-    quoteRequestRefSpotDate :: !(Maybe RefSpotDate),
-    quoteRequestProductType :: !ProductType,
-    quoteRequestExecutionVenueType :: !(Maybe ExecutionVenueType),
-    quoteRequestCustomFieldsGroup :: ![CustomFieldsGroupElem],
-    quoteRequestDayCount :: !(Maybe DayCount),
-    quoteRequestQuotReqGrpGroup :: !(NonEmpty QuotReqGrpGroupElem),
-    quoteRequestPartyIDsGroup :: ![PartyIDsGroupElem],
-    quoteRequestRegulatoryTradeIDGroup :: ![RegulatoryTradeIDGroupElem],
+    quoteRequestRFQReqID :: !(Maybe RFQReqID),
+    quoteRequestClOrdID :: !(Maybe ClOrdID),
+    quoteRequestOrderCapacity :: !(Maybe OrderCapacity),
+    quoteRequestUsername :: !(Maybe Username),
+    quoteRequestRelatedSymGroup :: !(NonEmpty RelatedSymGroupElem),
+    quoteRequestParties :: !Parties,
+    quoteRequestRegulatoryTradeIDsGroup :: ![RegulatoryTradeIDsGroupElem],
+    quoteRequestOrderAttributesGroup :: ![OrderAttributesGroupElem],
     quoteRequestOptionDate :: !(Maybe OptionDate),
-    quoteRequestOrderAttributeGroup :: ![OrderAttributeGroupElem]
+    quoteRequestText :: !(Maybe Text),
+    quoteRequestEncodedText :: !(Maybe EncodedText),
+    quoteRequestRefSpotDate :: !(Maybe RefSpotDate),
+    quoteRequestProductType :: !(Maybe ProductType),
+    quoteRequestExecutionVenueType :: !(Maybe ExecutionVenueType),
+    quoteRequestLastCapacity :: !(Maybe LastCapacity),
+    quoteRequestDayCount :: !(Maybe DayCount),
+    quoteRequestFixingReference :: !(Maybe FixingReference),
+    quoteRequestAvgPxPrecision :: !(Maybe AvgPxPrecision),
+    quoteRequestExpireTime :: !(Maybe ExpireTime),
+    quoteRequestFiduciary :: !(Maybe Fiduciary),
+    quoteRequestOrdType :: !(Maybe OrdType),
+    quoteRequestSpotRatePrecision :: !(Maybe SpotRatePrecision),
+    quoteRequestForwardRatePrecision :: !(Maybe ForwardRatePrecision),
+    quoteRequestForwardPointsPrecision :: !(Maybe ForwardPointsPrecision),
+    quoteRequestInterestRatePrecision :: !(Maybe InterestRatePrecision),
+    quoteRequestNearLegRatePrecision :: !(Maybe NearLegRatePrecision),
+    quoteRequestFarLegRatePrecision :: !(Maybe FarLegRatePrecision),
+    quoteRequestCustomFieldsGroup :: ![CustomFieldsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -183,42 +239,96 @@ instance IsComponent QuoteRequest where
   toComponentFields ((QuoteRequest {..})) =
     mconcat
       [ requiredFieldB quoteRequestQuoteReqID,
-        optionalFieldB quoteRequestRefSpotDate,
-        requiredFieldB quoteRequestProductType,
-        optionalFieldB quoteRequestExecutionVenueType,
-        optionalGroupB quoteRequestCustomFieldsGroup,
-        optionalFieldB quoteRequestDayCount,
-        requiredGroupB quoteRequestQuotReqGrpGroup,
-        optionalGroupB quoteRequestPartyIDsGroup,
-        optionalGroupB quoteRequestRegulatoryTradeIDGroup,
+        optionalFieldB quoteRequestRFQReqID,
+        optionalFieldB quoteRequestClOrdID,
+        optionalFieldB quoteRequestOrderCapacity,
+        optionalFieldB quoteRequestUsername,
+        requiredGroupB quoteRequestRelatedSymGroup,
+        requiredComponentB quoteRequestParties,
+        optionalGroupB quoteRequestRegulatoryTradeIDsGroup,
+        optionalGroupB quoteRequestOrderAttributesGroup,
         optionalFieldB quoteRequestOptionDate,
-        optionalGroupB quoteRequestOrderAttributeGroup
+        optionalFieldB quoteRequestText,
+        optionalFieldB quoteRequestEncodedText,
+        optionalFieldB quoteRequestRefSpotDate,
+        optionalFieldB quoteRequestProductType,
+        optionalFieldB quoteRequestExecutionVenueType,
+        optionalFieldB quoteRequestLastCapacity,
+        optionalFieldB quoteRequestDayCount,
+        optionalFieldB quoteRequestFixingReference,
+        optionalFieldB quoteRequestAvgPxPrecision,
+        optionalFieldB quoteRequestExpireTime,
+        optionalFieldB quoteRequestFiduciary,
+        optionalFieldB quoteRequestOrdType,
+        optionalFieldB quoteRequestSpotRatePrecision,
+        optionalFieldB quoteRequestForwardRatePrecision,
+        optionalFieldB quoteRequestForwardPointsPrecision,
+        optionalFieldB quoteRequestInterestRatePrecision,
+        optionalFieldB quoteRequestNearLegRatePrecision,
+        optionalFieldB quoteRequestFarLegRatePrecision,
+        optionalGroupB quoteRequestCustomFieldsGroup
       ]
   fromComponentFields = do
     quoteRequestQuoteReqID <- requiredFieldP
-    quoteRequestRefSpotDate <- optionalFieldP
-    quoteRequestProductType <- requiredFieldP
-    quoteRequestExecutionVenueType <- optionalFieldP
-    quoteRequestCustomFieldsGroup <- optionalGroupP
-    quoteRequestDayCount <- optionalFieldP
-    quoteRequestQuotReqGrpGroup <- requiredGroupP
-    quoteRequestPartyIDsGroup <- optionalGroupP
-    quoteRequestRegulatoryTradeIDGroup <- optionalGroupP
+    quoteRequestRFQReqID <- optionalFieldP
+    quoteRequestClOrdID <- optionalFieldP
+    quoteRequestOrderCapacity <- optionalFieldP
+    quoteRequestUsername <- optionalFieldP
+    quoteRequestRelatedSymGroup <- requiredGroupP
+    quoteRequestParties <- requiredComponentP
+    quoteRequestRegulatoryTradeIDsGroup <- optionalGroupP
+    quoteRequestOrderAttributesGroup <- optionalGroupP
     quoteRequestOptionDate <- optionalFieldP
-    quoteRequestOrderAttributeGroup <- optionalGroupP
+    quoteRequestText <- optionalFieldP
+    quoteRequestEncodedText <- optionalFieldP
+    quoteRequestRefSpotDate <- optionalFieldP
+    quoteRequestProductType <- optionalFieldP
+    quoteRequestExecutionVenueType <- optionalFieldP
+    quoteRequestLastCapacity <- optionalFieldP
+    quoteRequestDayCount <- optionalFieldP
+    quoteRequestFixingReference <- optionalFieldP
+    quoteRequestAvgPxPrecision <- optionalFieldP
+    quoteRequestExpireTime <- optionalFieldP
+    quoteRequestFiduciary <- optionalFieldP
+    quoteRequestOrdType <- optionalFieldP
+    quoteRequestSpotRatePrecision <- optionalFieldP
+    quoteRequestForwardRatePrecision <- optionalFieldP
+    quoteRequestForwardPointsPrecision <- optionalFieldP
+    quoteRequestInterestRatePrecision <- optionalFieldP
+    quoteRequestNearLegRatePrecision <- optionalFieldP
+    quoteRequestFarLegRatePrecision <- optionalFieldP
+    quoteRequestCustomFieldsGroup <- optionalGroupP
     pure (QuoteRequest {..})
 
 instance IsMessage QuoteRequest where
   messageType Proxy = MsgTypeQuoteRequest
 
-makeQuoteRequest :: QuoteReqID -> (ProductType -> (NonEmpty QuotReqGrpGroupElem -> QuoteRequest))
-makeQuoteRequest quoteRequestQuoteReqID quoteRequestProductType quoteRequestQuotReqGrpGroup =
-  let quoteRequestRefSpotDate = Nothing
-      quoteRequestExecutionVenueType = Nothing
-      quoteRequestCustomFieldsGroup = []
-      quoteRequestDayCount = Nothing
-      quoteRequestPartyIDsGroup = []
-      quoteRequestRegulatoryTradeIDGroup = []
+makeQuoteRequest :: QuoteReqID -> (NonEmpty RelatedSymGroupElem -> (Parties -> QuoteRequest))
+makeQuoteRequest quoteRequestQuoteReqID quoteRequestRelatedSymGroup quoteRequestParties =
+  let quoteRequestRFQReqID = Nothing
+      quoteRequestClOrdID = Nothing
+      quoteRequestOrderCapacity = Nothing
+      quoteRequestUsername = Nothing
+      quoteRequestRegulatoryTradeIDsGroup = []
+      quoteRequestOrderAttributesGroup = []
       quoteRequestOptionDate = Nothing
-      quoteRequestOrderAttributeGroup = []
+      quoteRequestText = Nothing
+      quoteRequestEncodedText = Nothing
+      quoteRequestRefSpotDate = Nothing
+      quoteRequestProductType = Nothing
+      quoteRequestExecutionVenueType = Nothing
+      quoteRequestLastCapacity = Nothing
+      quoteRequestDayCount = Nothing
+      quoteRequestFixingReference = Nothing
+      quoteRequestAvgPxPrecision = Nothing
+      quoteRequestExpireTime = Nothing
+      quoteRequestFiduciary = Nothing
+      quoteRequestOrdType = Nothing
+      quoteRequestSpotRatePrecision = Nothing
+      quoteRequestForwardRatePrecision = Nothing
+      quoteRequestForwardPointsPrecision = Nothing
+      quoteRequestInterestRatePrecision = Nothing
+      quoteRequestNearLegRatePrecision = Nothing
+      quoteRequestFarLegRatePrecision = Nothing
+      quoteRequestCustomFieldsGroup = []
    in (QuoteRequest {..})

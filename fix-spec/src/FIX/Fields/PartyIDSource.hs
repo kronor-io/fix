@@ -26,10 +26,13 @@ import GHC.Generics (Generic)
 --           { fieldValueEnum = "B" , fieldValueDescription = "BIC" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "C"
---           , fieldValueDescription = "GENERAL_IDENTIFIER"
+--           , fieldValueDescription =
+--               "GENERALLY_ACCEPTED_MARKET_PARTICIPANT_IDENTIFIER"
 --           }
 --       , FieldValueSpec
---           { fieldValueEnum = "D" , fieldValueDescription = "PROPRIETARY" }
+--           { fieldValueEnum = "D"
+--           , fieldValueDescription = "PROPRIETARY_CUSTOM_CODE"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "E"
 --           , fieldValueDescription = "ISO_COUNTRY_CODE"
@@ -42,7 +45,7 @@ import GHC.Generics (Generic)
 --           { fieldValueEnum = "G" , fieldValueDescription = "MIC" }
 --       , FieldValueSpec
 --           { fieldValueEnum = "H"
---           , fieldValueDescription = "CSD_PARTICIPANT"
+--           , fieldValueDescription = "CSD_PARTICIPANT_MEMBER_CODE"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "1"
@@ -50,19 +53,20 @@ import GHC.Generics (Generic)
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "2"
---           , fieldValueDescription = "TAIWANESE_FOREIGN_INVESTOR_ID"
+--           , fieldValueDescription =
+--               "TAIWANESE_QUALIFIED_FOREIGN_INVESTOR_ID_QFII_FID"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "3"
---           , fieldValueDescription = "TAIWANESE_TRADING_ACCT"
+--           , fieldValueDescription = "TAIWANESE_TRADING_ACCOUNT"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "4"
---           , fieldValueDescription = "MALAYSIAN_CENTRAL_DEPOSITORY"
+--           , fieldValueDescription = "MALAYSIAN_CENTRAL_DEPOSITORY_NUMBER"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "5"
---           , fieldValueDescription = "CHINESE_INVESTOR_ID"
+--           , fieldValueDescription = "CHINESE_B_SHARE"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "6"
@@ -74,7 +78,7 @@ import GHC.Generics (Generic)
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "8"
---           , fieldValueDescription = "US_EMPLOYER_OR_TAX_ID_NUMBER"
+--           , fieldValueDescription = "US_EMPLOYER_IDENTIFICATION_NUMBER"
 --           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "9"
@@ -85,28 +89,40 @@ import GHC.Generics (Generic)
 --           , fieldValueDescription = "AUSTRALIAN_TAX_FILE_NUMBER"
 --           }
 --       , FieldValueSpec
---           { fieldValueEnum = "I" , fieldValueDescription = "ISITC_ACRONYM" }
+--           { fieldValueEnum = "I"
+--           , fieldValueDescription = "DIRECTED_BROKER"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "N"
+--           , fieldValueDescription = "LEGAL_ENTITY_IDENTIFIER"
+--           }
+--       , FieldValueSpec
+--           { fieldValueEnum = "P"
+--           , fieldValueDescription = "SHORT_CODE_IDENTIFIER"
+--           }
 --       ]
 --   }
 data PartyIDSource
   = PartyIDSourceBic
-  | PartyIDSourceGeneralIdentifier
-  | PartyIDSourceProprietary
+  | PartyIDSourceGenerallyAcceptedMarketParticipantIdentifier
+  | PartyIDSourceProprietaryCustomCode
   | PartyIDSourceIsoCountryCode
   | PartyIDSourceSettlementEntityLocation
   | PartyIDSourceMic
-  | PartyIDSourceCsdParticipant
+  | PartyIDSourceCsdParticipantMemberCode
   | PartyIDSourceKoreanInvestorId
-  | PartyIDSourceTaiwaneseForeignInvestorId
-  | PartyIDSourceTaiwaneseTradingAcct
-  | PartyIDSourceMalaysianCentralDepository
-  | PartyIDSourceChineseInvestorId
+  | PartyIDSourceTaiwaneseQualifiedForeignInvestorIdQfiiFid
+  | PartyIDSourceTaiwaneseTradingAccount
+  | PartyIDSourceMalaysianCentralDepositoryNumber
+  | PartyIDSourceChineseBShare
   | PartyIDSourceUkNationalInsuranceOrPensionNumber
   | PartyIDSourceUsSocialSecurityNumber
-  | PartyIDSourceUsEmployerOrTaxIdNumber
+  | PartyIDSourceUsEmployerIdentificationNumber
   | PartyIDSourceAustralianBusinessNumber
   | PartyIDSourceAustralianTaxFileNumber
-  | PartyIDSourceIsitcAcronym
+  | PartyIDSourceDirectedBroker
+  | PartyIDSourceLegalEntityIdentifier
+  | PartyIDSourceShortCodeIdentifier
   deriving stock (Show, Eq, Generic)
 
 instance Validity PartyIDSource
@@ -116,40 +132,44 @@ instance IsField PartyIDSource where
   fieldIsData Proxy = False
   fieldToValue = \case
     PartyIDSourceBic -> "B"
-    PartyIDSourceGeneralIdentifier -> "C"
-    PartyIDSourceProprietary -> "D"
+    PartyIDSourceGenerallyAcceptedMarketParticipantIdentifier -> "C"
+    PartyIDSourceProprietaryCustomCode -> "D"
     PartyIDSourceIsoCountryCode -> "E"
     PartyIDSourceSettlementEntityLocation -> "F"
     PartyIDSourceMic -> "G"
-    PartyIDSourceCsdParticipant -> "H"
+    PartyIDSourceCsdParticipantMemberCode -> "H"
     PartyIDSourceKoreanInvestorId -> "1"
-    PartyIDSourceTaiwaneseForeignInvestorId -> "2"
-    PartyIDSourceTaiwaneseTradingAcct -> "3"
-    PartyIDSourceMalaysianCentralDepository -> "4"
-    PartyIDSourceChineseInvestorId -> "5"
+    PartyIDSourceTaiwaneseQualifiedForeignInvestorIdQfiiFid -> "2"
+    PartyIDSourceTaiwaneseTradingAccount -> "3"
+    PartyIDSourceMalaysianCentralDepositoryNumber -> "4"
+    PartyIDSourceChineseBShare -> "5"
     PartyIDSourceUkNationalInsuranceOrPensionNumber -> "6"
     PartyIDSourceUsSocialSecurityNumber -> "7"
-    PartyIDSourceUsEmployerOrTaxIdNumber -> "8"
+    PartyIDSourceUsEmployerIdentificationNumber -> "8"
     PartyIDSourceAustralianBusinessNumber -> "9"
     PartyIDSourceAustralianTaxFileNumber -> "A"
-    PartyIDSourceIsitcAcronym -> "I"
+    PartyIDSourceDirectedBroker -> "I"
+    PartyIDSourceLegalEntityIdentifier -> "N"
+    PartyIDSourceShortCodeIdentifier -> "P"
   fieldFromValue = \case
     "B" -> Right PartyIDSourceBic
-    "C" -> Right PartyIDSourceGeneralIdentifier
-    "D" -> Right PartyIDSourceProprietary
+    "C" -> Right PartyIDSourceGenerallyAcceptedMarketParticipantIdentifier
+    "D" -> Right PartyIDSourceProprietaryCustomCode
     "E" -> Right PartyIDSourceIsoCountryCode
     "F" -> Right PartyIDSourceSettlementEntityLocation
     "G" -> Right PartyIDSourceMic
-    "H" -> Right PartyIDSourceCsdParticipant
+    "H" -> Right PartyIDSourceCsdParticipantMemberCode
     "1" -> Right PartyIDSourceKoreanInvestorId
-    "2" -> Right PartyIDSourceTaiwaneseForeignInvestorId
-    "3" -> Right PartyIDSourceTaiwaneseTradingAcct
-    "4" -> Right PartyIDSourceMalaysianCentralDepository
-    "5" -> Right PartyIDSourceChineseInvestorId
+    "2" -> Right PartyIDSourceTaiwaneseQualifiedForeignInvestorIdQfiiFid
+    "3" -> Right PartyIDSourceTaiwaneseTradingAccount
+    "4" -> Right PartyIDSourceMalaysianCentralDepositoryNumber
+    "5" -> Right PartyIDSourceChineseBShare
     "6" -> Right PartyIDSourceUkNationalInsuranceOrPensionNumber
     "7" -> Right PartyIDSourceUsSocialSecurityNumber
-    "8" -> Right PartyIDSourceUsEmployerOrTaxIdNumber
+    "8" -> Right PartyIDSourceUsEmployerIdentificationNumber
     "9" -> Right PartyIDSourceAustralianBusinessNumber
     "A" -> Right PartyIDSourceAustralianTaxFileNumber
-    "I" -> Right PartyIDSourceIsitcAcronym
+    "I" -> Right PartyIDSourceDirectedBroker
+    "N" -> Right PartyIDSourceLegalEntityIdentifier
+    "P" -> Right PartyIDSourceShortCodeIdentifier
     v -> Left ("Unknown PartyIDSource: " <> show v)
