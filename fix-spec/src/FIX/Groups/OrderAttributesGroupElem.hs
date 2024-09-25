@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoOrderAttributes"
+--   { groupName = "OrderAttributes"
 --   , groupNumberField = "NoOrderAttributes"
 --   , groupPieces =
 --       [ MessagePieceField "OrderAttributeType" True

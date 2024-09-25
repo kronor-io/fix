@@ -50,7 +50,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "PartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoPartySubIDs"
+--                       { groupName = "PartySubIDs"
 --                       , groupNumberField = "NoPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "PartySubID" True
@@ -70,14 +70,14 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "TradingSessionSubID" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoQuoteEntries"
+--             { groupName = "QuoteEntries"
 --             , groupNumberField = "NoQuoteEntries"
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
 --                 , MessagePieceComponent "FinancingDetails" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoUnderlyings"
+--                       { groupName = "Underlyings"
 --                       , groupNumberField = "NoUnderlyings"
 --                       , groupPieces =
 --                           [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -85,7 +85,7 @@ import GHC.Generics (Generic)
 --                     False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoLegs"
+--                       { groupName = "Legs"
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --                       }

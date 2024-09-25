@@ -26,7 +26,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "PctAtRisk" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoInstrAttrib"
+--             { groupName = "InstrAttrib"
 --             , groupNumberField = "NoInstrAttrib"
 --             , groupPieces =
 --                 [ MessagePieceField "InstrAttribType" True

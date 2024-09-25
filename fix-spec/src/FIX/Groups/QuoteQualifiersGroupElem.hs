@@ -20,7 +20,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoQuoteQualifiers"
+--   { groupName = "QuoteQualifiers"
 --   , groupNumberField = "NoQuoteQualifiers"
 --   , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
 --   }

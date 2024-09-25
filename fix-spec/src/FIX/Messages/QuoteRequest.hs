@@ -58,14 +58,14 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "Username" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoRelatedSym"
+--             { groupName = "RelatedSym"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
 --                 , MessagePieceComponent "FinancingDetails" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoUnderlyings"
+--                       { groupName = "Underlyings"
 --                       , groupNumberField = "NoUnderlyings"
 --                       , groupPieces =
 --                           [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -103,7 +103,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "AccountType" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoQuoteQualifiers"
+--                       { groupName = "QuoteQualifiers"
 --                       , groupNumberField = "NoQuoteQualifiers"
 --                       , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
 --                       }
@@ -120,7 +120,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceComponent "YieldData" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoAllocs"
+--                       { groupName = "Allocs"
 --                       , groupNumberField = "NoAllocs"
 --                       , groupPieces =
 --                           [ MessagePieceField "AllocAccount" True
@@ -130,7 +130,7 @@ import GHC.Generics (Generic)
 --                     False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoLegs"
+--                       { groupName = "Legs"
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces =
 --                           [ MessagePieceField "LegSymbol" True
@@ -139,7 +139,7 @@ import GHC.Generics (Generic)
 --                           , MessagePieceField "LegQty" True
 --                           , MessagePieceGroup
 --                               GroupSpec
---                                 { groupName = "NoLegAllocs"
+--                                 { groupName = "LegAllocs"
 --                                 , groupNumberField = "NoLegAllocs"
 --                                 , groupPieces =
 --                                     [ MessagePieceField "LegAllocAccount" True
@@ -155,7 +155,7 @@ import GHC.Generics (Generic)
 --                                               , MessagePieceField "NestedPartyRoleQualifier" False
 --                                               , MessagePieceGroup
 --                                                   GroupSpec
---                                                     { groupName = "NoNestedPartySubIDs"
+--                                                     { groupName = "NestedPartySubIDs"
 --                                                     , groupNumberField = "NoNestedPartySubIDs"
 --                                                     , groupPieces =
 --                                                         [ MessagePieceField "NestedPartySubID" True
@@ -190,7 +190,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "PartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoPartySubIDs"
+--                       { groupName = "PartySubIDs"
 --                       , groupNumberField = "NoPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "PartySubID" True
@@ -203,7 +203,7 @@ import GHC.Generics (Generic)
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoRegulatoryTradeIDs"
+--             { groupName = "RegulatoryTradeIDs"
 --             , groupNumberField = "NoRegulatoryTradeIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "RegulatoryTradeID" True
@@ -213,7 +213,7 @@ import GHC.Generics (Generic)
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoOrderAttributes"
+--             { groupName = "OrderAttributes"
 --             , groupNumberField = "NoOrderAttributes"
 --             , groupPieces =
 --                 [ MessagePieceField "OrderAttributeType" True
@@ -242,7 +242,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "FarLegRatePrecision" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoCustomFields"
+--             { groupName = "CustomFields"
 --             , groupNumberField = "NoCustomFields"
 --             , groupPieces =
 --                 [ MessagePieceField "CustomFieldsName" True

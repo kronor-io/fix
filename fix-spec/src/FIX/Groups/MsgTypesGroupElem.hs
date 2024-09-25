@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoMsgTypes"
+--   { groupName = "MsgTypes"
 --   , groupNumberField = "NoMsgTypes"
 --   , groupPieces =
 --       [ MessagePieceField "RefMsgType" True

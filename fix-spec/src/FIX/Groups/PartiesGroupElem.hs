@@ -33,7 +33,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "PartyRoleQualifier" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoPartySubIDs"
+--             { groupName = "PartySubIDs"
 --             , groupNumberField = "NoPartySubIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "PartySubID" True

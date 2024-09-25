@@ -23,14 +23,14 @@ import FIX.Groups.UnderlyingsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoQuoteEntries"
+--   { groupName = "QuoteEntries"
 --   , groupNumberField = "NoQuoteEntries"
 --   , groupPieces =
 --       [ MessagePieceComponent "Instrument" True
 --       , MessagePieceComponent "FinancingDetails" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoUnderlyings"
+--             { groupName = "Underlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
 --                 [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -38,7 +38,7 @@ import GHC.Generics (Generic)
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoLegs"
+--             { groupName = "Legs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --             }

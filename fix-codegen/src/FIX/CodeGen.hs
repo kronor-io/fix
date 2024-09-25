@@ -1169,10 +1169,10 @@ gatherGroupSpecs Spec {..} =
       ]
 
 groupSpecConstructorName :: GroupSpec -> Text
-groupSpecConstructorName = (<> "GroupElem") . (\t -> fromMaybe t $ T.stripPrefix "No" t) . groupName
+groupSpecConstructorName = (<> "GroupElem") . groupName
 
 groupSpecGroupFieldName :: Text -> GroupSpec -> Name
-groupSpecGroupFieldName name gs = mkName $ lowerHead $ T.unpack $ (name <>) . (<> "Group") . (\t -> fromMaybe t $ T.stripPrefix "No" t) $ groupName gs
+groupSpecGroupFieldName name gs = mkName $ lowerHead $ T.unpack $ (name <>) . (<> "Group") $ groupName gs
 
 groupsDataFiles :: [GroupSpec] -> CodeGen
 groupsDataFiles = foldMap $ \f@GroupSpec {..} ->

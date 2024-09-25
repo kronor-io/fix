@@ -27,7 +27,7 @@ import FIX.Groups.LegAllocsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoLegs"
+--   { groupName = "Legs"
 --   , groupNumberField = "NoLegs"
 --   , groupPieces =
 --       [ MessagePieceField "LegSymbol" True
@@ -36,7 +36,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "LegQty" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoLegAllocs"
+--             { groupName = "LegAllocs"
 --             , groupNumberField = "NoLegAllocs"
 --             , groupPieces =
 --                 [ MessagePieceField "LegAllocAccount" True
@@ -52,7 +52,7 @@ import GHC.Generics (Generic)
 --                           , MessagePieceField "NestedPartyRoleQualifier" False
 --                           , MessagePieceGroup
 --                               GroupSpec
---                                 { groupName = "NoNestedPartySubIDs"
+--                                 { groupName = "NestedPartySubIDs"
 --                                 , groupNumberField = "NoNestedPartySubIDs"
 --                                 , groupPieces =
 --                                     [ MessagePieceField "NestedPartySubID" True

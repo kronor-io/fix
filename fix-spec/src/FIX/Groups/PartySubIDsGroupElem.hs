@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoPartySubIDs"
+--   { groupName = "PartySubIDs"
 --   , groupNumberField = "NoPartySubIDs"
 --   , groupPieces =
 --       [ MessagePieceField "PartySubID" True

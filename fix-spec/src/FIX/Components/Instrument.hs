@@ -68,7 +68,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "SecurityIDSource" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoSecurityAltID"
+--             { groupName = "SecurityAltID"
 --             , groupNumberField = "NoSecurityAltID"
 --             , groupPieces =
 --                 [ MessagePieceField "SecurityAltID" True
@@ -113,7 +113,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "CPRegType" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoEvents"
+--             { groupName = "Events"
 --             , groupNumberField = "NoEvents"
 --             , groupPieces =
 --                 [ MessagePieceField "EventType" True

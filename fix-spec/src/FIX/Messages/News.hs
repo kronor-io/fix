@@ -39,7 +39,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "EncodedHeadline" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoRoutingIDs"
+--             { groupName = "RoutingIDs"
 --             , groupNumberField = "NoRoutingIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "RoutingType" True
@@ -49,21 +49,21 @@ import GHC.Generics (Generic)
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoRelatedSym"
+--             { groupName = "RelatedSym"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces = [ MessagePieceComponent "Instrument" True ]
 --             }
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoLegs"
+--             { groupName = "Legs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --             }
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoUnderlyings"
+--             { groupName = "Underlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
 --                 [ MessagePieceComponent "UnderlyingInstrument" True ]

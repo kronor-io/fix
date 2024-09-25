@@ -22,7 +22,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoHops"
+--   { groupName = "Hops"
 --   , groupNumberField = "NoHops"
 --   , groupPieces =
 --       [ MessagePieceField "HopCompID" True

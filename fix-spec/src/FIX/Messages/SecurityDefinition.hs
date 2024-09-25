@@ -44,7 +44,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceComponent "InstrumentExtension" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoUnderlyings"
+--             { groupName = "Underlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
 --                 [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -57,7 +57,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "EncodedText" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoLegs"
+--             { groupName = "Legs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --             }

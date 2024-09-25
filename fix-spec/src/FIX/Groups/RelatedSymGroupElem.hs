@@ -20,7 +20,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoRelatedSym"
+--   { groupName = "RelatedSym"
 --   , groupNumberField = "NoRelatedSym"
 --   , groupPieces = [ MessagePieceComponent "Instrument" True ]
 --   }

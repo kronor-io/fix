@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoAllocs"
+--   { groupName = "Allocs"
 --   , groupNumberField = "NoAllocs"
 --   , groupPieces =
 --       [ MessagePieceField "AllocAccount" True

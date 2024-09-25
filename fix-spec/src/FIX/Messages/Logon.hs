@@ -40,7 +40,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "MaxMessageSize" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoMsgTypes"
+--             { groupName = "MsgTypes"
 --             , groupNumberField = "NoMsgTypes"
 --             , groupPieces =
 --                 [ MessagePieceField "RefMsgType" True

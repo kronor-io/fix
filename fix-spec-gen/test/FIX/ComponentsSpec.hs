@@ -51,11 +51,88 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
+    "Allocs"
+    ( do
+        genValidSpec @AllocsGroupElem
+        componentSpec @AllocsGroupElem
+        groupSpec @AllocsGroupElem
+    )
+  describe
+    "CustomFields"
+    ( do
+        genValidSpec @CustomFieldsGroupElem
+        componentSpec @CustomFieldsGroupElem
+        groupSpec @CustomFieldsGroupElem
+    )
+  describe
+    "Events"
+    ( do
+        genValidSpec @EventsGroupElem
+        componentSpec @EventsGroupElem
+        groupSpec @EventsGroupElem
+    )
+  describe
+    "Hops"
+    ( do
+        genValidSpec @HopsGroupElem
+        componentSpec @HopsGroupElem
+        groupSpec @HopsGroupElem
+    )
+  describe
+    "InstrAttrib"
+    ( do
+        genValidSpec @InstrAttribGroupElem
+        componentSpec @InstrAttribGroupElem
+        groupSpec @InstrAttribGroupElem
+    )
+  describe
+    "LegAllocs"
+    ( do
+        genValidSpec @LegAllocsGroupElem
+        componentSpec @LegAllocsGroupElem
+        groupSpec @LegAllocsGroupElem
+    )
+  describe
+    "LegSecurityAltID"
+    ( do
+        genValidSpec @LegSecurityAltIDGroupElem
+        componentSpec @LegSecurityAltIDGroupElem
+        groupSpec @LegSecurityAltIDGroupElem
+    )
+  describe
     "LegStipulations"
     ( do
         genValidSpec @LegStipulationsGroupElem
         componentSpec @LegStipulationsGroupElem
         groupSpec @LegStipulationsGroupElem
+    )
+  describe
+    "Legs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
+    "Legs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
+    "Legs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
+    )
+  describe
+    "Legs"
+    ( do
+        genValidSpec @LegsGroupElem
+        componentSpec @LegsGroupElem
+        groupSpec @LegsGroupElem
     )
   describe
     "LinesOfText"
@@ -65,6 +142,13 @@ spec = do
         groupSpec @LinesOfTextGroupElem
     )
   describe
+    "MsgTypes"
+    ( do
+        genValidSpec @MsgTypesGroupElem
+        componentSpec @MsgTypesGroupElem
+        groupSpec @MsgTypesGroupElem
+    )
+  describe
     "NestedParties"
     ( do
         genValidSpec @NestedPartiesGroupElem
@@ -72,179 +156,18 @@ spec = do
         groupSpec @NestedPartiesGroupElem
     )
   describe
-    "NoAllocs"
-    ( do
-        genValidSpec @AllocsGroupElem
-        componentSpec @AllocsGroupElem
-        groupSpec @AllocsGroupElem
-    )
-  describe
-    "NoCustomFields"
-    ( do
-        genValidSpec @CustomFieldsGroupElem
-        componentSpec @CustomFieldsGroupElem
-        groupSpec @CustomFieldsGroupElem
-    )
-  describe
-    "NoEvents"
-    ( do
-        genValidSpec @EventsGroupElem
-        componentSpec @EventsGroupElem
-        groupSpec @EventsGroupElem
-    )
-  describe
-    "NoHops"
-    ( do
-        genValidSpec @HopsGroupElem
-        componentSpec @HopsGroupElem
-        groupSpec @HopsGroupElem
-    )
-  describe
-    "NoInstrAttrib"
-    ( do
-        genValidSpec @InstrAttribGroupElem
-        componentSpec @InstrAttribGroupElem
-        groupSpec @InstrAttribGroupElem
-    )
-  describe
-    "NoLegAllocs"
-    ( do
-        genValidSpec @LegAllocsGroupElem
-        componentSpec @LegAllocsGroupElem
-        groupSpec @LegAllocsGroupElem
-    )
-  describe
-    "NoLegSecurityAltID"
-    ( do
-        genValidSpec @LegSecurityAltIDGroupElem
-        componentSpec @LegSecurityAltIDGroupElem
-        groupSpec @LegSecurityAltIDGroupElem
-    )
-  describe
-    "NoLegs"
-    ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
-    )
-  describe
-    "NoLegs"
-    ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
-    )
-  describe
-    "NoLegs"
-    ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
-    )
-  describe
-    "NoLegs"
-    ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
-    )
-  describe
-    "NoMsgTypes"
-    ( do
-        genValidSpec @MsgTypesGroupElem
-        componentSpec @MsgTypesGroupElem
-        groupSpec @MsgTypesGroupElem
-    )
-  describe
-    "NoNestedPartySubIDs"
+    "NestedPartySubIDs"
     ( do
         genValidSpec @NestedPartySubIDsGroupElem
         componentSpec @NestedPartySubIDsGroupElem
         groupSpec @NestedPartySubIDsGroupElem
     )
   describe
-    "NoOrderAttributes"
+    "OrderAttributes"
     ( do
         genValidSpec @OrderAttributesGroupElem
         componentSpec @OrderAttributesGroupElem
         groupSpec @OrderAttributesGroupElem
-    )
-  describe
-    "NoPartySubIDs"
-    ( do
-        genValidSpec @PartySubIDsGroupElem
-        componentSpec @PartySubIDsGroupElem
-        groupSpec @PartySubIDsGroupElem
-    )
-  describe
-    "NoQuoteEntries"
-    ( do
-        genValidSpec @QuoteEntriesGroupElem
-        componentSpec @QuoteEntriesGroupElem
-        groupSpec @QuoteEntriesGroupElem
-    )
-  describe
-    "NoQuoteQualifiers"
-    ( do
-        genValidSpec @QuoteQualifiersGroupElem
-        componentSpec @QuoteQualifiersGroupElem
-        groupSpec @QuoteQualifiersGroupElem
-    )
-  describe
-    "NoRegulatoryTradeIDs"
-    ( do
-        genValidSpec @RegulatoryTradeIDsGroupElem
-        componentSpec @RegulatoryTradeIDsGroupElem
-        groupSpec @RegulatoryTradeIDsGroupElem
-    )
-  describe
-    "NoRelatedSym"
-    ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
-    )
-  describe
-    "NoRelatedSym"
-    ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
-    )
-  describe
-    "NoRelatedSym"
-    ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
-    )
-  describe
-    "NoRoutingIDs"
-    ( do
-        genValidSpec @RoutingIDsGroupElem
-        componentSpec @RoutingIDsGroupElem
-        groupSpec @RoutingIDsGroupElem
-    )
-  describe
-    "NoSecurityAltID"
-    ( do
-        genValidSpec @SecurityAltIDGroupElem
-        componentSpec @SecurityAltIDGroupElem
-        groupSpec @SecurityAltIDGroupElem
-    )
-  describe
-    "NoUnderlyingSecurityAltID"
-    ( do
-        genValidSpec @UnderlyingSecurityAltIDGroupElem
-        componentSpec @UnderlyingSecurityAltIDGroupElem
-        groupSpec @UnderlyingSecurityAltIDGroupElem
-    )
-  describe
-    "NoUnderlyings"
-    ( do
-        genValidSpec @UnderlyingsGroupElem
-        componentSpec @UnderlyingsGroupElem
-        groupSpec @UnderlyingsGroupElem
     )
   describe
     "Parties"
@@ -254,6 +177,69 @@ spec = do
         groupSpec @PartiesGroupElem
     )
   describe
+    "PartySubIDs"
+    ( do
+        genValidSpec @PartySubIDsGroupElem
+        componentSpec @PartySubIDsGroupElem
+        groupSpec @PartySubIDsGroupElem
+    )
+  describe
+    "QuoteEntries"
+    ( do
+        genValidSpec @QuoteEntriesGroupElem
+        componentSpec @QuoteEntriesGroupElem
+        groupSpec @QuoteEntriesGroupElem
+    )
+  describe
+    "QuoteQualifiers"
+    ( do
+        genValidSpec @QuoteQualifiersGroupElem
+        componentSpec @QuoteQualifiersGroupElem
+        groupSpec @QuoteQualifiersGroupElem
+    )
+  describe
+    "RegulatoryTradeIDs"
+    ( do
+        genValidSpec @RegulatoryTradeIDsGroupElem
+        componentSpec @RegulatoryTradeIDsGroupElem
+        groupSpec @RegulatoryTradeIDsGroupElem
+    )
+  describe
+    "RelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
+    )
+  describe
+    "RelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
+    )
+  describe
+    "RelatedSym"
+    ( do
+        genValidSpec @RelatedSymGroupElem
+        componentSpec @RelatedSymGroupElem
+        groupSpec @RelatedSymGroupElem
+    )
+  describe
+    "RoutingIDs"
+    ( do
+        genValidSpec @RoutingIDsGroupElem
+        componentSpec @RoutingIDsGroupElem
+        groupSpec @RoutingIDsGroupElem
+    )
+  describe
+    "SecurityAltID"
+    ( do
+        genValidSpec @SecurityAltIDGroupElem
+        componentSpec @SecurityAltIDGroupElem
+        groupSpec @SecurityAltIDGroupElem
+    )
+  describe
     "Stipulations"
     ( do
         genValidSpec @StipulationsGroupElem
@@ -261,11 +247,25 @@ spec = do
         groupSpec @StipulationsGroupElem
     )
   describe
+    "UnderlyingSecurityAltID"
+    ( do
+        genValidSpec @UnderlyingSecurityAltIDGroupElem
+        componentSpec @UnderlyingSecurityAltIDGroupElem
+        groupSpec @UnderlyingSecurityAltIDGroupElem
+    )
+  describe
     "UnderlyingStipulations"
     ( do
         genValidSpec @UnderlyingStipulationsGroupElem
         componentSpec @UnderlyingStipulationsGroupElem
         groupSpec @UnderlyingStipulationsGroupElem
+    )
+  describe
+    "Underlyings"
+    ( do
+        genValidSpec @UnderlyingsGroupElem
+        componentSpec @UnderlyingsGroupElem
+        groupSpec @UnderlyingsGroupElem
     )
   describe
     "Instrument"

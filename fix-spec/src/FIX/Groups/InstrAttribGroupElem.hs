@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoInstrAttrib"
+--   { groupName = "InstrAttrib"
 --   , groupNumberField = "NoInstrAttrib"
 --   , groupPieces =
 --       [ MessagePieceField "InstrAttribType" True

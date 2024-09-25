@@ -22,7 +22,7 @@ import FIX.Groups.NestedPartiesGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoLegAllocs"
+--   { groupName = "LegAllocs"
 --   , groupNumberField = "NoLegAllocs"
 --   , groupPieces =
 --       [ MessagePieceField "LegAllocAccount" True
@@ -38,7 +38,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "NestedPartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoNestedPartySubIDs"
+--                       { groupName = "NestedPartySubIDs"
 --                       , groupNumberField = "NoNestedPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "NestedPartySubID" True

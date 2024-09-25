@@ -23,7 +23,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoEvents"
+--   { groupName = "Events"
 --   , groupNumberField = "NoEvents"
 --   , groupPieces =
 --       [ MessagePieceField "EventType" True

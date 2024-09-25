@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoRoutingIDs"
+--   { groupName = "RoutingIDs"
 --   , groupNumberField = "NoRoutingIDs"
 --   , groupPieces =
 --       [ MessagePieceField "RoutingType" True

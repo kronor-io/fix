@@ -66,7 +66,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "LegSecurityIDSource" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoLegSecurityAltID"
+--             { groupName = "LegSecurityAltID"
 --             , groupNumberField = "NoLegSecurityAltID"
 --             , groupPieces =
 --                 [ MessagePieceField "LegSecurityAltID" True

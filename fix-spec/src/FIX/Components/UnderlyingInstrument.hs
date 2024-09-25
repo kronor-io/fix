@@ -69,7 +69,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "UnderlyingSecurityIDSource" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoUnderlyingSecurityAltID"
+--             { groupName = "UnderlyingSecurityAltID"
 --             , groupNumberField = "NoUnderlyingSecurityAltID"
 --             , groupPieces =
 --                 [ MessagePieceField "UnderlyingSecurityAltID" True

@@ -33,7 +33,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "NestedPartyRoleQualifier" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoNestedPartySubIDs"
+--             { groupName = "NestedPartySubIDs"
 --             , groupNumberField = "NoNestedPartySubIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "NestedPartySubID" True

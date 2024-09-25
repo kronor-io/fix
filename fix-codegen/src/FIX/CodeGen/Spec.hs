@@ -111,8 +111,8 @@ parseMessagePiece e@Element {..} =
       -- the "number of elements" field.
       -- We want to replace the group name later, so we set both  of these to
       -- the same now and replace the name later.
-      groupName <- M.lookup "name" elementAttributes
-      let groupNumberField = groupName
+      groupNumberField <- M.lookup "name" elementAttributes
+      let groupName = fromMaybe groupNumberField $ T.stripPrefix "No" groupNumberField
       required <- M.lookup "required" elementAttributes >>= parseRequired
       groupPieces <- mapM parseMessagePiece $ subElements e
       pure $ MessagePieceGroup GroupSpec {..} required

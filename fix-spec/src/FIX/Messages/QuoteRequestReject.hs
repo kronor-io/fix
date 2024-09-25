@@ -44,14 +44,14 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "QuoteRequestRejectReason" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoRelatedSym"
+--             { groupName = "RelatedSym"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
 --                 , MessagePieceComponent "FinancingDetails" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoUnderlyings"
+--                       { groupName = "Underlyings"
 --                       , groupNumberField = "NoUnderlyings"
 --                       , groupPieces =
 --                           [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -88,7 +88,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "AccountType" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoLegs"
+--                       { groupName = "Legs"
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces =
 --                           [ MessagePieceComponent "InstrumentLeg" True
@@ -117,7 +117,7 @@ import GHC.Generics (Generic)
 --                                     , MessagePieceField "NestedPartyRoleQualifier" False
 --                                     , MessagePieceGroup
 --                                         GroupSpec
---                                           { groupName = "NoNestedPartySubIDs"
+--                                           { groupName = "NestedPartySubIDs"
 --                                           , groupNumberField = "NoNestedPartySubIDs"
 --                                           , groupPieces =
 --                                               [ MessagePieceField "NestedPartySubID" True
@@ -137,7 +137,7 @@ import GHC.Generics (Generic)
 --           True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "NoQuoteQualifiers"
+--             { groupName = "QuoteQualifiers"
 --             , groupNumberField = "NoQuoteQualifiers"
 --             , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
 --             }
@@ -162,7 +162,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "PartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NoPartySubIDs"
+--                       { groupName = "PartySubIDs"
 --                       , groupNumberField = "NoPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "PartySubID" True

@@ -21,7 +21,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoLegSecurityAltID"
+--   { groupName = "LegSecurityAltID"
 --   , groupNumberField = "NoLegSecurityAltID"
 --   , groupPieces =
 --       [ MessagePieceField "LegSecurityAltID" True

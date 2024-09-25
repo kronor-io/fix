@@ -20,7 +20,7 @@ import FIX.Groups.Class
 import GHC.Generics (Generic)
 
 -- | GroupSpec
---   { groupName = "NoUnderlyings"
+--   { groupName = "Underlyings"
 --   , groupNumberField = "NoUnderlyings"
 --   , groupPieces =
 --       [ MessagePieceComponent "UnderlyingInstrument" True ]
