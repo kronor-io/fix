@@ -18,14 +18,9 @@ library
       FIX.Components.InstrumentLeg
       FIX.Components.LegBenchmarkCurveData
       FIX.Components.LegExAnteData
-      FIX.Components.LegStipulations
-      FIX.Components.NestedParties
       FIX.Components.OrderQtyData
-      FIX.Components.Parties
       FIX.Components.SpreadOrBenchmarkCurveData
-      FIX.Components.Stipulations
       FIX.Components.UnderlyingInstrument
-      FIX.Components.UnderlyingStipulations
       FIX.Components.YieldData
       FIX.Fields
       FIX.Fields.Account
@@ -426,11 +421,10 @@ library
       FIX.Groups.LegStipulationsGroupElem
       FIX.Groups.LinesOfTextGroupElem
       FIX.Groups.MsgTypesGroupElem
-      FIX.Groups.NestedPartyIDsGroupElem
+      FIX.Groups.NestedPartiesGroupElem
       FIX.Groups.NestedPartySubIDsGroupElem
       FIX.Groups.OrderAttributesGroupElem
       FIX.Groups.PartiesGroupElem
-      FIX.Groups.PartyIDsGroupElem
       FIX.Groups.PartySubIDsGroupElem
       FIX.Groups.QuoteEntriesGroupElem
       FIX.Groups.QuoteQualifiersGroupElem
@@ -441,7 +435,6 @@ library
       FIX.Groups.StipulationsGroupElem
       FIX.Groups.UnderlyingSecurityAltIDGroupElem
       FIX.Groups.UnderlyingsGroupElem
-      FIX.Groups.UnderlyingStipsGroupElem
       FIX.Groups.UnderlyingStipulationsGroupElem
       FIX.Messages
       FIX.Messages.Class

@@ -12,7 +12,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Components.Parties
 import FIX.Fields.AvgPxPrecision
 import FIX.Fields.ClOrdID
 import FIX.Fields.DayCount
@@ -41,6 +40,7 @@ import FIX.Fields.Username
 import FIX.Groups.Class
 import FIX.Groups.CustomFieldsGroupElem
 import FIX.Groups.OrderAttributesGroupElem
+import FIX.Groups.PartiesGroupElem
 import FIX.Groups.RegulatoryTradeIDsGroupElem
 import FIX.Groups.RelatedSymGroupElem
 import FIX.Messages.Class
@@ -87,7 +87,16 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "SplitSettlDate2" False
 --                 , MessagePieceField "OrderQty2" False
 --                 , MessagePieceField "Currency" False
---                 , MessagePieceComponent "Stipulations" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "Stipulations"
+--                       , groupNumberField = "NoStipulations"
+--                       , groupPieces =
+--                           [ MessagePieceField "StipulationType" True
+--                           , MessagePieceField "StipulationValue" False
+--                           ]
+--                       }
+--                     False
 --                 , MessagePieceField "Account" False
 --                 , MessagePieceField "Username" False
 --                 , MessagePieceField "AcctIDSource" False
@@ -135,7 +144,29 @@ import GHC.Generics (Generic)
 --                                 , groupPieces =
 --                                     [ MessagePieceField "LegAllocAccount" True
 --                                     , MessagePieceField "LegAllocQty" True
---                                     , MessagePieceComponent "NestedParties" True
+--                                     , MessagePieceGroup
+--                                         GroupSpec
+--                                           { groupName = "NestedParties"
+--                                           , groupNumberField = "NoNestedPartyIDs"
+--                                           , groupPieces =
+--                                               [ MessagePieceField "NestedPartyID" True
+--                                               , MessagePieceField "NestedPartyIDSource" False
+--                                               , MessagePieceField "NestedPartyRole" False
+--                                               , MessagePieceField "NestedPartyRoleQualifier" False
+--                                               , MessagePieceGroup
+--                                                   GroupSpec
+--                                                     { groupName = "NoNestedPartySubIDs"
+--                                                     , groupNumberField = "NoNestedPartySubIDs"
+--                                                     , groupPieces =
+--                                                         [ MessagePieceField "NestedPartySubID" True
+--                                                         , MessagePieceField
+--                                                             "NestedPartySubIDType" False
+--                                                         ]
+--                                                     }
+--                                                   False
+--                                               ]
+--                                           }
+--                                         False
 --                                     ]
 --                                 }
 --                               False
@@ -148,7 +179,28 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           True
---       , MessagePieceComponent "Parties" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "Parties"
+--             , groupNumberField = "NoPartyIDs"
+--             , groupPieces =
+--                 [ MessagePieceField "PartyID" True
+--                 , MessagePieceField "PartyIDSource" False
+--                 , MessagePieceField "PartyRole" False
+--                 , MessagePieceField "PartyRoleQualifier" False
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoPartySubIDs"
+--                       , groupNumberField = "NoPartySubIDs"
+--                       , groupPieces =
+--                           [ MessagePieceField "PartySubID" True
+--                           , MessagePieceField "PartySubIDType" False
+--                           ]
+--                       }
+--                     False
+--                 ]
+--             }
+--           False
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "NoRegulatoryTradeIDs"
@@ -207,7 +259,7 @@ data QuoteRequest = QuoteRequest
     quoteRequestOrderCapacity :: !(Maybe OrderCapacity),
     quoteRequestUsername :: !(Maybe Username),
     quoteRequestRelatedSymGroup :: !(NonEmpty RelatedSymGroupElem),
-    quoteRequestParties :: !Parties,
+    quoteRequestPartiesGroup :: ![PartiesGroupElem],
     quoteRequestRegulatoryTradeIDsGroup :: ![RegulatoryTradeIDsGroupElem],
     quoteRequestOrderAttributesGroup :: ![OrderAttributesGroupElem],
     quoteRequestOptionDate :: !(Maybe OptionDate),
@@ -244,7 +296,7 @@ instance IsComponent QuoteRequest where
         optionalFieldB quoteRequestOrderCapacity,
         optionalFieldB quoteRequestUsername,
         requiredGroupB quoteRequestRelatedSymGroup,
-        requiredComponentB quoteRequestParties,
+        optionalGroupB quoteRequestPartiesGroup,
         optionalGroupB quoteRequestRegulatoryTradeIDsGroup,
         optionalGroupB quoteRequestOrderAttributesGroup,
         optionalFieldB quoteRequestOptionDate,
@@ -275,7 +327,7 @@ instance IsComponent QuoteRequest where
     quoteRequestOrderCapacity <- optionalFieldP
     quoteRequestUsername <- optionalFieldP
     quoteRequestRelatedSymGroup <- requiredGroupP
-    quoteRequestParties <- requiredComponentP
+    quoteRequestPartiesGroup <- optionalGroupP
     quoteRequestRegulatoryTradeIDsGroup <- optionalGroupP
     quoteRequestOrderAttributesGroup <- optionalGroupP
     quoteRequestOptionDate <- optionalFieldP
@@ -303,12 +355,13 @@ instance IsComponent QuoteRequest where
 instance IsMessage QuoteRequest where
   messageType Proxy = MsgTypeQuoteRequest
 
-makeQuoteRequest :: QuoteReqID -> (NonEmpty RelatedSymGroupElem -> (Parties -> QuoteRequest))
-makeQuoteRequest quoteRequestQuoteReqID quoteRequestRelatedSymGroup quoteRequestParties =
+makeQuoteRequest :: QuoteReqID -> (NonEmpty RelatedSymGroupElem -> QuoteRequest)
+makeQuoteRequest quoteRequestQuoteReqID quoteRequestRelatedSymGroup =
   let quoteRequestRFQReqID = Nothing
       quoteRequestClOrdID = Nothing
       quoteRequestOrderCapacity = Nothing
       quoteRequestUsername = Nothing
+      quoteRequestPartiesGroup = []
       quoteRequestRegulatoryTradeIDsGroup = []
       quoteRequestOrderAttributesGroup = []
       quoteRequestOptionDate = Nothing

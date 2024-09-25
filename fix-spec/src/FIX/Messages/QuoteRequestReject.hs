@@ -12,7 +12,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Components.Parties
 import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.YieldData
 import FIX.Fields.EncodedText
@@ -29,6 +28,7 @@ import FIX.Fields.RFQReqID
 import FIX.Fields.Text
 import FIX.Fields.TransactTime
 import FIX.Groups.Class
+import FIX.Groups.PartiesGroupElem
 import FIX.Groups.QuoteQualifiersGroupElem
 import FIX.Groups.RelatedSymGroupElem
 import FIX.Messages.Class
@@ -73,7 +73,16 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "SplitSettlDate2" False
 --                 , MessagePieceField "OrderQty2" False
 --                 , MessagePieceField "Currency" False
---                 , MessagePieceComponent "Stipulations" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "Stipulations"
+--                       , groupNumberField = "NoStipulations"
+--                       , groupPieces =
+--                           [ MessagePieceField "StipulationType" True
+--                           , MessagePieceField "StipulationValue" False
+--                           ]
+--                       }
+--                     False
 --                 , MessagePieceField "Account" False
 --                 , MessagePieceField "AcctIDSource" False
 --                 , MessagePieceField "AccountType" False
@@ -87,8 +96,38 @@ import GHC.Generics (Generic)
 --                           , MessagePieceField "LegSwapType" False
 --                           , MessagePieceField "LegSettlType" False
 --                           , MessagePieceField "LegSettlDate" False
---                           , MessagePieceComponent "LegStipulations" True
---                           , MessagePieceComponent "NestedParties" True
+--                           , MessagePieceGroup
+--                               GroupSpec
+--                                 { groupName = "LegStipulations"
+--                                 , groupNumberField = "NoLegStipulations"
+--                                 , groupPieces =
+--                                     [ MessagePieceField "LegStipulationType" True
+--                                     , MessagePieceField "LegStipulationValue" False
+--                                     ]
+--                                 }
+--                               False
+--                           , MessagePieceGroup
+--                               GroupSpec
+--                                 { groupName = "NestedParties"
+--                                 , groupNumberField = "NoNestedPartyIDs"
+--                                 , groupPieces =
+--                                     [ MessagePieceField "NestedPartyID" True
+--                                     , MessagePieceField "NestedPartyIDSource" False
+--                                     , MessagePieceField "NestedPartyRole" False
+--                                     , MessagePieceField "NestedPartyRoleQualifier" False
+--                                     , MessagePieceGroup
+--                                         GroupSpec
+--                                           { groupName = "NoNestedPartySubIDs"
+--                                           , groupNumberField = "NoNestedPartySubIDs"
+--                                           , groupPieces =
+--                                               [ MessagePieceField "NestedPartySubID" True
+--                                               , MessagePieceField "NestedPartySubIDType" False
+--                                               ]
+--                                           }
+--                                         False
+--                                     ]
+--                                 }
+--                               False
 --                           , MessagePieceComponent "LegBenchmarkCurveData" True
 --                           ]
 --                       }
@@ -112,7 +151,28 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "Price" False
 --       , MessagePieceField "Price2" False
 --       , MessagePieceComponent "YieldData" True
---       , MessagePieceComponent "Parties" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "Parties"
+--             , groupNumberField = "NoPartyIDs"
+--             , groupPieces =
+--                 [ MessagePieceField "PartyID" True
+--                 , MessagePieceField "PartyIDSource" False
+--                 , MessagePieceField "PartyRole" False
+--                 , MessagePieceField "PartyRoleQualifier" False
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoPartySubIDs"
+--                       , groupNumberField = "NoPartySubIDs"
+--                       , groupPieces =
+--                           [ MessagePieceField "PartySubID" True
+--                           , MessagePieceField "PartySubIDType" False
+--                           ]
+--                       }
+--                     False
+--                 ]
+--             }
+--           False
 --       , MessagePieceField "Text" False
 --       , MessagePieceField "EncodedText" False
 --       ]
@@ -132,7 +192,7 @@ data QuoteRequestReject = QuoteRequestReject
     quoteRequestRejectPrice :: !(Maybe Price),
     quoteRequestRejectPrice2 :: !(Maybe Price2),
     quoteRequestRejectYieldData :: !YieldData,
-    quoteRequestRejectParties :: !Parties,
+    quoteRequestRejectPartiesGroup :: ![PartiesGroupElem],
     quoteRequestRejectText :: !(Maybe Text),
     quoteRequestRejectEncodedText :: !(Maybe EncodedText)
   }
@@ -157,7 +217,7 @@ instance IsComponent QuoteRequestReject where
         optionalFieldB quoteRequestRejectPrice,
         optionalFieldB quoteRequestRejectPrice2,
         requiredComponentB quoteRequestRejectYieldData,
-        requiredComponentB quoteRequestRejectParties,
+        optionalGroupB quoteRequestRejectPartiesGroup,
         optionalFieldB quoteRequestRejectText,
         optionalFieldB quoteRequestRejectEncodedText
       ]
@@ -176,7 +236,7 @@ instance IsComponent QuoteRequestReject where
     quoteRequestRejectPrice <- optionalFieldP
     quoteRequestRejectPrice2 <- optionalFieldP
     quoteRequestRejectYieldData <- requiredComponentP
-    quoteRequestRejectParties <- requiredComponentP
+    quoteRequestRejectPartiesGroup <- optionalGroupP
     quoteRequestRejectText <- optionalFieldP
     quoteRequestRejectEncodedText <- optionalFieldP
     pure (QuoteRequestReject {..})
@@ -184,8 +244,8 @@ instance IsComponent QuoteRequestReject where
 instance IsMessage QuoteRequestReject where
   messageType Proxy = MsgTypeQuoteRequestReject
 
-makeQuoteRequestReject :: QuoteReqID -> (QuoteRequestRejectReason -> (NonEmpty RelatedSymGroupElem -> (SpreadOrBenchmarkCurveData -> (YieldData -> (Parties -> QuoteRequestReject)))))
-makeQuoteRequestReject quoteRequestRejectQuoteReqID quoteRequestRejectQuoteRequestRejectReason quoteRequestRejectRelatedSymGroup quoteRequestRejectSpreadOrBenchmarkCurveData quoteRequestRejectYieldData quoteRequestRejectParties =
+makeQuoteRequestReject :: QuoteReqID -> (QuoteRequestRejectReason -> (NonEmpty RelatedSymGroupElem -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuoteRequestReject))))
+makeQuoteRequestReject quoteRequestRejectQuoteReqID quoteRequestRejectQuoteRequestRejectReason quoteRequestRejectRelatedSymGroup quoteRequestRejectSpreadOrBenchmarkCurveData quoteRequestRejectYieldData =
   let quoteRequestRejectRFQReqID = Nothing
       quoteRequestRejectQuoteQualifiersGroup = []
       quoteRequestRejectQuotePriceType = Nothing
@@ -195,6 +255,7 @@ makeQuoteRequestReject quoteRequestRejectQuoteReqID quoteRequestRejectQuoteReque
       quoteRequestRejectPriceType = Nothing
       quoteRequestRejectPrice = Nothing
       quoteRequestRejectPrice2 = Nothing
+      quoteRequestRejectPartiesGroup = []
       quoteRequestRejectText = Nothing
       quoteRequestRejectEncodedText = Nothing
    in (QuoteRequestReject {..})

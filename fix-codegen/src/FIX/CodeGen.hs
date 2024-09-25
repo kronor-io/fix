@@ -35,9 +35,9 @@ runFixCodeGen = do
       let spec =
             fixupNestedOptionals $
               makeFirstGroupElementsRequired $
-                -- simplifyGroupComponents $
-                foldDataFields $
-                  filterSpec settingMessages spec'
+                simplifyGroupComponents $
+                  foldDataFields $
+                    filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
       putStrLn "Generating code according to this spec:"
       pPrint spec
@@ -247,7 +247,7 @@ simplifyGroupComponents spec =
     goPiece :: MessagePiece -> MessagePiece
     goPiece = \case
       mp@MessagePieceField {} -> mp
-      mp@MessagePieceGroup {} -> mp
+      MessagePieceGroup gs r -> MessagePieceGroup (goGroup gs) r
       mp@(MessagePieceComponent c r) -> case M.lookup c groupComponentMap of
         Nothing -> mp
         Just gs -> MessagePieceGroup (goGroup gs) r

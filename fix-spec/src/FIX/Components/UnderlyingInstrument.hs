@@ -12,7 +12,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Components.UnderlyingStipulations
 import FIX.Fields.EncodedUnderlyingIssuer
 import FIX.Fields.EncodedUnderlyingSecurityDesc
 import FIX.Fields.MsgType
@@ -58,6 +57,7 @@ import FIX.Fields.UnderlyingSymbol
 import FIX.Fields.UnderlyingSymbolSfx
 import FIX.Groups.Class
 import FIX.Groups.UnderlyingSecurityAltIDGroupElem
+import FIX.Groups.UnderlyingStipulationsGroupElem
 import GHC.Generics (Generic)
 
 -- | ComponentSpec
@@ -115,7 +115,16 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "UnderlyingStartValue" False
 --       , MessagePieceField "UnderlyingCurrentValue" False
 --       , MessagePieceField "UnderlyingEndValue" False
---       , MessagePieceComponent "UnderlyingStipulations" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "UnderlyingStipulations"
+--             , groupNumberField = "NoUnderlyingStips"
+--             , groupPieces =
+--                 [ MessagePieceField "UnderlyingStipType" True
+--                 , MessagePieceField "UnderlyingStipValue" False
+--                 ]
+--             }
+--           False
 --       ]
 --   }
 data UnderlyingInstrument = UnderlyingInstrument
@@ -162,7 +171,7 @@ data UnderlyingInstrument = UnderlyingInstrument
     underlyingInstrumentUnderlyingStartValue :: !(Maybe UnderlyingStartValue),
     underlyingInstrumentUnderlyingCurrentValue :: !(Maybe UnderlyingCurrentValue),
     underlyingInstrumentUnderlyingEndValue :: !(Maybe UnderlyingEndValue),
-    underlyingInstrumentUnderlyingStipulations :: !UnderlyingStipulations
+    underlyingInstrumentUnderlyingStipulationsGroup :: ![UnderlyingStipulationsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -214,7 +223,7 @@ instance IsComponent UnderlyingInstrument where
         optionalFieldB underlyingInstrumentUnderlyingStartValue,
         optionalFieldB underlyingInstrumentUnderlyingCurrentValue,
         optionalFieldB underlyingInstrumentUnderlyingEndValue,
-        requiredComponentB underlyingInstrumentUnderlyingStipulations
+        optionalGroupB underlyingInstrumentUnderlyingStipulationsGroup
       ]
   fromComponentFields = do
     underlyingInstrumentUnderlyingSymbol <- requiredFieldP
@@ -260,11 +269,11 @@ instance IsComponent UnderlyingInstrument where
     underlyingInstrumentUnderlyingStartValue <- optionalFieldP
     underlyingInstrumentUnderlyingCurrentValue <- optionalFieldP
     underlyingInstrumentUnderlyingEndValue <- optionalFieldP
-    underlyingInstrumentUnderlyingStipulations <- requiredComponentP
+    underlyingInstrumentUnderlyingStipulationsGroup <- optionalGroupP
     pure (UnderlyingInstrument {..})
 
-makeUnderlyingInstrument :: UnderlyingSymbol -> (UnderlyingStipulations -> UnderlyingInstrument)
-makeUnderlyingInstrument underlyingInstrumentUnderlyingSymbol underlyingInstrumentUnderlyingStipulations =
+makeUnderlyingInstrument :: UnderlyingSymbol -> UnderlyingInstrument
+makeUnderlyingInstrument underlyingInstrumentUnderlyingSymbol =
   let underlyingInstrumentUnderlyingSymbolSfx = Nothing
       underlyingInstrumentUnderlyingSecurityID = Nothing
       underlyingInstrumentUnderlyingSecurityIDSource = Nothing
@@ -307,4 +316,5 @@ makeUnderlyingInstrument underlyingInstrumentUnderlyingSymbol underlyingInstrume
       underlyingInstrumentUnderlyingStartValue = Nothing
       underlyingInstrumentUnderlyingCurrentValue = Nothing
       underlyingInstrumentUnderlyingEndValue = Nothing
+      underlyingInstrumentUnderlyingStipulationsGroup = []
    in (UnderlyingInstrument {..})

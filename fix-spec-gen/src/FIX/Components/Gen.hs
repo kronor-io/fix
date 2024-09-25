@@ -13,14 +13,9 @@ import FIX.Components.InstrumentExtension
 import FIX.Components.InstrumentLeg
 import FIX.Components.LegBenchmarkCurveData
 import FIX.Components.LegExAnteData
-import FIX.Components.LegStipulations
-import FIX.Components.NestedParties
 import FIX.Components.OrderQtyData
-import FIX.Components.Parties
 import FIX.Components.SpreadOrBenchmarkCurveData
-import FIX.Components.Stipulations
 import FIX.Components.UnderlyingInstrument
-import FIX.Components.UnderlyingStipulations
 import FIX.Components.YieldData
 import FIX.Fields.Gen ()
 import FIX.Groups.AllocsGroupElem
@@ -34,10 +29,10 @@ import FIX.Groups.LegStipulationsGroupElem
 import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.MsgTypesGroupElem
-import FIX.Groups.NestedPartyIDsGroupElem
+import FIX.Groups.NestedPartiesGroupElem
 import FIX.Groups.NestedPartySubIDsGroupElem
 import FIX.Groups.OrderAttributesGroupElem
-import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.PartiesGroupElem
 import FIX.Groups.PartySubIDsGroupElem
 import FIX.Groups.QuoteEntriesGroupElem
 import FIX.Groups.QuoteQualifiersGroupElem
@@ -47,10 +42,18 @@ import FIX.Groups.RoutingIDsGroupElem
 import FIX.Groups.SecurityAltIDGroupElem
 import FIX.Groups.StipulationsGroupElem
 import FIX.Groups.UnderlyingSecurityAltIDGroupElem
-import FIX.Groups.UnderlyingStipsGroupElem
+import FIX.Groups.UnderlyingStipulationsGroupElem
 import FIX.Groups.UnderlyingsGroupElem
 
+instance GenValid LegStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
 instance GenValid LinesOfTextGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NestedPartiesGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -82,10 +85,6 @@ instance GenValid LegSecurityAltIDGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid LegStipulationsGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid LegsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
@@ -106,19 +105,11 @@ instance GenValid MsgTypesGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid NestedPartyIDsGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid NestedPartySubIDsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid OrderAttributesGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid PartyIDsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -158,19 +149,23 @@ instance GenValid SecurityAltIDGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid StipulationsGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid UnderlyingSecurityAltIDGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid UnderlyingStipsGroupElem where
+instance GenValid UnderlyingsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid UnderlyingsGroupElem where
+instance GenValid PartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid StipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid UnderlyingStipulationsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -194,31 +189,11 @@ instance GenValid OrderQtyData where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid Parties where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid NestedParties where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid SpreadOrBenchmarkCurveData where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid LegBenchmarkCurveData where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid Stipulations where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid UnderlyingStipulations where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid LegStipulations where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

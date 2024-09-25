@@ -12,7 +12,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Components.Parties
 import FIX.Fields.Account
 import FIX.Fields.AccountType
 import FIX.Fields.AcctIDSource
@@ -26,6 +25,7 @@ import FIX.Fields.TradingSessionID
 import FIX.Fields.TradingSessionSubID
 import FIX.Fields.Username
 import FIX.Groups.Class
+import FIX.Groups.PartiesGroupElem
 import FIX.Groups.QuoteEntriesGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
@@ -39,7 +39,28 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "QuoteID" True
 --       , MessagePieceField "QuoteCancelType" True
 --       , MessagePieceField "QuoteResponseLevel" False
---       , MessagePieceComponent "Parties" True
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "Parties"
+--             , groupNumberField = "NoPartyIDs"
+--             , groupPieces =
+--                 [ MessagePieceField "PartyID" True
+--                 , MessagePieceField "PartyIDSource" False
+--                 , MessagePieceField "PartyRole" False
+--                 , MessagePieceField "PartyRoleQualifier" False
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NoPartySubIDs"
+--                       , groupNumberField = "NoPartySubIDs"
+--                       , groupPieces =
+--                           [ MessagePieceField "PartySubID" True
+--                           , MessagePieceField "PartySubIDType" False
+--                           ]
+--                       }
+--                     False
+--                 ]
+--             }
+--           False
 --       , MessagePieceField "Account" False
 --       , MessagePieceField "Username" False
 --       , MessagePieceField "ProductType" False
@@ -79,7 +100,7 @@ data QuoteCancel = QuoteCancel
     quoteCancelQuoteID :: !QuoteID,
     quoteCancelQuoteCancelType :: !QuoteCancelType,
     quoteCancelQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
-    quoteCancelParties :: !Parties,
+    quoteCancelPartiesGroup :: ![PartiesGroupElem],
     quoteCancelAccount :: !(Maybe Account),
     quoteCancelUsername :: !(Maybe Username),
     quoteCancelProductType :: !(Maybe ProductType),
@@ -100,7 +121,7 @@ instance IsComponent QuoteCancel where
         requiredFieldB quoteCancelQuoteID,
         requiredFieldB quoteCancelQuoteCancelType,
         optionalFieldB quoteCancelQuoteResponseLevel,
-        requiredComponentB quoteCancelParties,
+        optionalGroupB quoteCancelPartiesGroup,
         optionalFieldB quoteCancelAccount,
         optionalFieldB quoteCancelUsername,
         optionalFieldB quoteCancelProductType,
@@ -115,7 +136,7 @@ instance IsComponent QuoteCancel where
     quoteCancelQuoteID <- requiredFieldP
     quoteCancelQuoteCancelType <- requiredFieldP
     quoteCancelQuoteResponseLevel <- optionalFieldP
-    quoteCancelParties <- requiredComponentP
+    quoteCancelPartiesGroup <- optionalGroupP
     quoteCancelAccount <- optionalFieldP
     quoteCancelUsername <- optionalFieldP
     quoteCancelProductType <- optionalFieldP
@@ -129,10 +150,11 @@ instance IsComponent QuoteCancel where
 instance IsMessage QuoteCancel where
   messageType Proxy = MsgTypeQuoteCancel
 
-makeQuoteCancel :: QuoteID -> (QuoteCancelType -> (Parties -> QuoteCancel))
-makeQuoteCancel quoteCancelQuoteID quoteCancelQuoteCancelType quoteCancelParties =
+makeQuoteCancel :: QuoteID -> (QuoteCancelType -> QuoteCancel)
+makeQuoteCancel quoteCancelQuoteID quoteCancelQuoteCancelType =
   let quoteCancelQuoteReqID = Nothing
       quoteCancelQuoteResponseLevel = Nothing
+      quoteCancelPartiesGroup = []
       quoteCancelAccount = Nothing
       quoteCancelUsername = Nothing
       quoteCancelProductType = Nothing

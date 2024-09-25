@@ -41,7 +41,28 @@ import GHC.Generics (Generic)
 --             , groupPieces =
 --                 [ MessagePieceField "LegAllocAccount" True
 --                 , MessagePieceField "LegAllocQty" True
---                 , MessagePieceComponent "NestedParties" True
+--                 , MessagePieceGroup
+--                     GroupSpec
+--                       { groupName = "NestedParties"
+--                       , groupNumberField = "NoNestedPartyIDs"
+--                       , groupPieces =
+--                           [ MessagePieceField "NestedPartyID" True
+--                           , MessagePieceField "NestedPartyIDSource" False
+--                           , MessagePieceField "NestedPartyRole" False
+--                           , MessagePieceField "NestedPartyRoleQualifier" False
+--                           , MessagePieceGroup
+--                               GroupSpec
+--                                 { groupName = "NoNestedPartySubIDs"
+--                                 , groupNumberField = "NoNestedPartySubIDs"
+--                                 , groupPieces =
+--                                     [ MessagePieceField "NestedPartySubID" True
+--                                     , MessagePieceField "NestedPartySubIDType" False
+--                                     ]
+--                                 }
+--                               False
+--                           ]
+--                       }
+--                     False
 --                 ]
 --             }
 --           False

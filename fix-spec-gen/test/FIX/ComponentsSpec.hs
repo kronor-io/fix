@@ -13,15 +13,10 @@ import FIX.Components.InstrumentExtension
 import FIX.Components.InstrumentLeg
 import FIX.Components.LegBenchmarkCurveData
 import FIX.Components.LegExAnteData
-import FIX.Components.LegStipulations
-import FIX.Components.NestedParties
 import FIX.Components.OrderQtyData
-import FIX.Components.Parties
 import FIX.Components.SpreadOrBenchmarkCurveData
-import FIX.Components.Stipulations
 import FIX.Components.TestUtils
 import FIX.Components.UnderlyingInstrument
-import FIX.Components.UnderlyingStipulations
 import FIX.Components.YieldData
 import FIX.Groups.AllocsGroupElem
 import FIX.Groups.CustomFieldsGroupElem
@@ -34,10 +29,10 @@ import FIX.Groups.LegStipulationsGroupElem
 import FIX.Groups.LegsGroupElem
 import FIX.Groups.LinesOfTextGroupElem
 import FIX.Groups.MsgTypesGroupElem
-import FIX.Groups.NestedPartyIDsGroupElem
+import FIX.Groups.NestedPartiesGroupElem
 import FIX.Groups.NestedPartySubIDsGroupElem
 import FIX.Groups.OrderAttributesGroupElem
-import FIX.Groups.PartyIDsGroupElem
+import FIX.Groups.PartiesGroupElem
 import FIX.Groups.PartySubIDsGroupElem
 import FIX.Groups.QuoteEntriesGroupElem
 import FIX.Groups.QuoteQualifiersGroupElem
@@ -48,7 +43,7 @@ import FIX.Groups.SecurityAltIDGroupElem
 import FIX.Groups.StipulationsGroupElem
 import FIX.Groups.TestUtils
 import FIX.Groups.UnderlyingSecurityAltIDGroupElem
-import FIX.Groups.UnderlyingStipsGroupElem
+import FIX.Groups.UnderlyingStipulationsGroupElem
 import FIX.Groups.UnderlyingsGroupElem
 import Test.Syd
 import Test.Syd.Validity
@@ -56,11 +51,25 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
+    "LegStipulations"
+    ( do
+        genValidSpec @LegStipulationsGroupElem
+        componentSpec @LegStipulationsGroupElem
+        groupSpec @LegStipulationsGroupElem
+    )
+  describe
     "LinesOfText"
     ( do
         genValidSpec @LinesOfTextGroupElem
         componentSpec @LinesOfTextGroupElem
         groupSpec @LinesOfTextGroupElem
+    )
+  describe
+    "NestedParties"
+    ( do
+        genValidSpec @NestedPartiesGroupElem
+        componentSpec @NestedPartiesGroupElem
+        groupSpec @NestedPartiesGroupElem
     )
   describe
     "NoAllocs"
@@ -112,13 +121,6 @@ spec = do
         groupSpec @LegSecurityAltIDGroupElem
     )
   describe
-    "NoLegStipulations"
-    ( do
-        genValidSpec @LegStipulationsGroupElem
-        componentSpec @LegStipulationsGroupElem
-        groupSpec @LegStipulationsGroupElem
-    )
-  describe
     "NoLegs"
     ( do
         genValidSpec @LegsGroupElem
@@ -154,13 +156,6 @@ spec = do
         groupSpec @MsgTypesGroupElem
     )
   describe
-    "NoNestedPartyIDs"
-    ( do
-        genValidSpec @NestedPartyIDsGroupElem
-        componentSpec @NestedPartyIDsGroupElem
-        groupSpec @NestedPartyIDsGroupElem
-    )
-  describe
     "NoNestedPartySubIDs"
     ( do
         genValidSpec @NestedPartySubIDsGroupElem
@@ -173,13 +168,6 @@ spec = do
         genValidSpec @OrderAttributesGroupElem
         componentSpec @OrderAttributesGroupElem
         groupSpec @OrderAttributesGroupElem
-    )
-  describe
-    "NoPartyIDs"
-    ( do
-        genValidSpec @PartyIDsGroupElem
-        componentSpec @PartyIDsGroupElem
-        groupSpec @PartyIDsGroupElem
     )
   describe
     "NoPartySubIDs"
@@ -245,13 +233,6 @@ spec = do
         groupSpec @SecurityAltIDGroupElem
     )
   describe
-    "NoStipulations"
-    ( do
-        genValidSpec @StipulationsGroupElem
-        componentSpec @StipulationsGroupElem
-        groupSpec @StipulationsGroupElem
-    )
-  describe
     "NoUnderlyingSecurityAltID"
     ( do
         genValidSpec @UnderlyingSecurityAltIDGroupElem
@@ -259,18 +240,32 @@ spec = do
         groupSpec @UnderlyingSecurityAltIDGroupElem
     )
   describe
-    "NoUnderlyingStips"
-    ( do
-        genValidSpec @UnderlyingStipsGroupElem
-        componentSpec @UnderlyingStipsGroupElem
-        groupSpec @UnderlyingStipsGroupElem
-    )
-  describe
     "NoUnderlyings"
     ( do
         genValidSpec @UnderlyingsGroupElem
         componentSpec @UnderlyingsGroupElem
         groupSpec @UnderlyingsGroupElem
+    )
+  describe
+    "Parties"
+    ( do
+        genValidSpec @PartiesGroupElem
+        componentSpec @PartiesGroupElem
+        groupSpec @PartiesGroupElem
+    )
+  describe
+    "Stipulations"
+    ( do
+        genValidSpec @StipulationsGroupElem
+        componentSpec @StipulationsGroupElem
+        groupSpec @StipulationsGroupElem
+    )
+  describe
+    "UnderlyingStipulations"
+    ( do
+        genValidSpec @UnderlyingStipulationsGroupElem
+        componentSpec @UnderlyingStipulationsGroupElem
+        groupSpec @UnderlyingStipulationsGroupElem
     )
   describe
     "Instrument"
@@ -303,18 +298,6 @@ spec = do
         componentSpec @OrderQtyData
     )
   describe
-    "Parties"
-    ( do
-        genValidSpec @Parties
-        componentSpec @Parties
-    )
-  describe
-    "NestedParties"
-    ( do
-        genValidSpec @NestedParties
-        componentSpec @NestedParties
-    )
-  describe
     "SpreadOrBenchmarkCurveData"
     ( do
         genValidSpec @SpreadOrBenchmarkCurveData
@@ -325,24 +308,6 @@ spec = do
     ( do
         genValidSpec @LegBenchmarkCurveData
         componentSpec @LegBenchmarkCurveData
-    )
-  describe
-    "Stipulations"
-    ( do
-        genValidSpec @Stipulations
-        componentSpec @Stipulations
-    )
-  describe
-    "UnderlyingStipulations"
-    ( do
-        genValidSpec @UnderlyingStipulations
-        componentSpec @UnderlyingStipulations
-    )
-  describe
-    "LegStipulations"
-    ( do
-        genValidSpec @LegStipulations
-        componentSpec @LegStipulations
     )
   describe
     "YieldData"
