@@ -38,11 +38,11 @@ import FIX.Fields.SpotRatePrecision
 import FIX.Fields.Text
 import FIX.Fields.Username
 import FIX.Groups.Class
-import FIX.Groups.CustomFieldsGroupElem
-import FIX.Groups.OrderAttributesGroupElem
-import FIX.Groups.PartiesGroupElem
-import FIX.Groups.RegulatoryTradeIDsGroupElem
-import FIX.Groups.RelatedSymGroupElem
+import FIX.Groups.QuoteRequestCustomFieldsGroupElem
+import FIX.Groups.QuoteRequestOrderAttributesGroupElem
+import FIX.Groups.QuoteRequestPartiesGroupElem
+import FIX.Groups.QuoteRequestRegulatoryTradeIDsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -58,14 +58,14 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "Username" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "RelatedSym"
+--             { groupName = "QuoteRequestRelatedSym"
 --             , groupNumberField = "NoRelatedSym"
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
 --                 , MessagePieceComponent "FinancingDetails" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "Underlyings"
+--                       { groupName = "QuoteRequestRelatedSymUnderlyings"
 --                       , groupNumberField = "NoUnderlyings"
 --                       , groupPieces =
 --                           [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -89,7 +89,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "Currency" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "Stipulations"
+--                       { groupName = "QuoteRequestRelatedSymStipulations"
 --                       , groupNumberField = "NoStipulations"
 --                       , groupPieces =
 --                           [ MessagePieceField "StipulationType" True
@@ -103,7 +103,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "AccountType" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "QuoteQualifiers"
+--                       { groupName = "QuoteRequestRelatedSymQuoteQualifiers"
 --                       , groupNumberField = "NoQuoteQualifiers"
 --                       , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
 --                       }
@@ -120,7 +120,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceComponent "YieldData" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "Allocs"
+--                       { groupName = "QuoteRequestRelatedSymAllocs"
 --                       , groupNumberField = "NoAllocs"
 --                       , groupPieces =
 --                           [ MessagePieceField "AllocAccount" True
@@ -130,7 +130,7 @@ import GHC.Generics (Generic)
 --                     False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "Legs"
+--                       { groupName = "QuoteRequestRelatedSymLegs"
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces =
 --                           [ MessagePieceField "LegSymbol" True
@@ -139,14 +139,15 @@ import GHC.Generics (Generic)
 --                           , MessagePieceField "LegQty" True
 --                           , MessagePieceGroup
 --                               GroupSpec
---                                 { groupName = "LegAllocs"
+--                                 { groupName = "QuoteRequestRelatedSymLegsLegAllocs"
 --                                 , groupNumberField = "NoLegAllocs"
 --                                 , groupPieces =
 --                                     [ MessagePieceField "LegAllocAccount" True
 --                                     , MessagePieceField "LegAllocQty" True
 --                                     , MessagePieceGroup
 --                                         GroupSpec
---                                           { groupName = "NestedParties"
+--                                           { groupName =
+--                                               "QuoteRequestRelatedSymLegsLegAllocsNestedParties"
 --                                           , groupNumberField = "NoNestedPartyIDs"
 --                                           , groupPieces =
 --                                               [ MessagePieceField "NestedPartyID" True
@@ -155,7 +156,8 @@ import GHC.Generics (Generic)
 --                                               , MessagePieceField "NestedPartyRoleQualifier" False
 --                                               , MessagePieceGroup
 --                                                   GroupSpec
---                                                     { groupName = "NestedPartySubIDs"
+--                                                     { groupName =
+--                                                         "QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDs"
 --                                                     , groupNumberField = "NoNestedPartySubIDs"
 --                                                     , groupPieces =
 --                                                         [ MessagePieceField "NestedPartySubID" True
@@ -181,7 +183,7 @@ import GHC.Generics (Generic)
 --           True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Parties"
+--             { groupName = "QuoteRequestParties"
 --             , groupNumberField = "NoPartyIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "PartyID" True
@@ -190,7 +192,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "PartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "PartySubIDs"
+--                       { groupName = "QuoteRequestPartiesPartySubIDs"
 --                       , groupNumberField = "NoPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "PartySubID" True
@@ -203,7 +205,7 @@ import GHC.Generics (Generic)
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "RegulatoryTradeIDs"
+--             { groupName = "QuoteRequestRegulatoryTradeIDs"
 --             , groupNumberField = "NoRegulatoryTradeIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "RegulatoryTradeID" True
@@ -213,7 +215,7 @@ import GHC.Generics (Generic)
 --           False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "OrderAttributes"
+--             { groupName = "QuoteRequestOrderAttributes"
 --             , groupNumberField = "NoOrderAttributes"
 --             , groupPieces =
 --                 [ MessagePieceField "OrderAttributeType" True
@@ -242,7 +244,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "FarLegRatePrecision" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "CustomFields"
+--             { groupName = "QuoteRequestCustomFields"
 --             , groupNumberField = "NoCustomFields"
 --             , groupPieces =
 --                 [ MessagePieceField "CustomFieldsName" True
@@ -258,10 +260,10 @@ data QuoteRequest = QuoteRequest
     quoteRequestClOrdID :: !(Maybe ClOrdID),
     quoteRequestOrderCapacity :: !(Maybe OrderCapacity),
     quoteRequestUsername :: !(Maybe Username),
-    quoteRequestRelatedSymGroup :: !(NonEmpty RelatedSymGroupElem),
-    quoteRequestPartiesGroup :: ![PartiesGroupElem],
-    quoteRequestRegulatoryTradeIDsGroup :: ![RegulatoryTradeIDsGroupElem],
-    quoteRequestOrderAttributesGroup :: ![OrderAttributesGroupElem],
+    quoteRequestQuoteRequestRelatedSymGroup :: !(NonEmpty QuoteRequestRelatedSymGroupElem),
+    quoteRequestQuoteRequestPartiesGroup :: ![QuoteRequestPartiesGroupElem],
+    quoteRequestQuoteRequestRegulatoryTradeIDsGroup :: ![QuoteRequestRegulatoryTradeIDsGroupElem],
+    quoteRequestQuoteRequestOrderAttributesGroup :: ![QuoteRequestOrderAttributesGroupElem],
     quoteRequestOptionDate :: !(Maybe OptionDate),
     quoteRequestText :: !(Maybe Text),
     quoteRequestEncodedText :: !(Maybe EncodedText),
@@ -281,7 +283,7 @@ data QuoteRequest = QuoteRequest
     quoteRequestInterestRatePrecision :: !(Maybe InterestRatePrecision),
     quoteRequestNearLegRatePrecision :: !(Maybe NearLegRatePrecision),
     quoteRequestFarLegRatePrecision :: !(Maybe FarLegRatePrecision),
-    quoteRequestCustomFieldsGroup :: ![CustomFieldsGroupElem]
+    quoteRequestQuoteRequestCustomFieldsGroup :: ![QuoteRequestCustomFieldsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -295,10 +297,10 @@ instance IsComponent QuoteRequest where
         optionalFieldB quoteRequestClOrdID,
         optionalFieldB quoteRequestOrderCapacity,
         optionalFieldB quoteRequestUsername,
-        requiredGroupB quoteRequestRelatedSymGroup,
-        optionalGroupB quoteRequestPartiesGroup,
-        optionalGroupB quoteRequestRegulatoryTradeIDsGroup,
-        optionalGroupB quoteRequestOrderAttributesGroup,
+        requiredGroupB quoteRequestQuoteRequestRelatedSymGroup,
+        optionalGroupB quoteRequestQuoteRequestPartiesGroup,
+        optionalGroupB quoteRequestQuoteRequestRegulatoryTradeIDsGroup,
+        optionalGroupB quoteRequestQuoteRequestOrderAttributesGroup,
         optionalFieldB quoteRequestOptionDate,
         optionalFieldB quoteRequestText,
         optionalFieldB quoteRequestEncodedText,
@@ -318,7 +320,7 @@ instance IsComponent QuoteRequest where
         optionalFieldB quoteRequestInterestRatePrecision,
         optionalFieldB quoteRequestNearLegRatePrecision,
         optionalFieldB quoteRequestFarLegRatePrecision,
-        optionalGroupB quoteRequestCustomFieldsGroup
+        optionalGroupB quoteRequestQuoteRequestCustomFieldsGroup
       ]
   fromComponentFields = do
     quoteRequestQuoteReqID <- requiredFieldP
@@ -326,10 +328,10 @@ instance IsComponent QuoteRequest where
     quoteRequestClOrdID <- optionalFieldP
     quoteRequestOrderCapacity <- optionalFieldP
     quoteRequestUsername <- optionalFieldP
-    quoteRequestRelatedSymGroup <- requiredGroupP
-    quoteRequestPartiesGroup <- optionalGroupP
-    quoteRequestRegulatoryTradeIDsGroup <- optionalGroupP
-    quoteRequestOrderAttributesGroup <- optionalGroupP
+    quoteRequestQuoteRequestRelatedSymGroup <- requiredGroupP
+    quoteRequestQuoteRequestPartiesGroup <- optionalGroupP
+    quoteRequestQuoteRequestRegulatoryTradeIDsGroup <- optionalGroupP
+    quoteRequestQuoteRequestOrderAttributesGroup <- optionalGroupP
     quoteRequestOptionDate <- optionalFieldP
     quoteRequestText <- optionalFieldP
     quoteRequestEncodedText <- optionalFieldP
@@ -349,21 +351,21 @@ instance IsComponent QuoteRequest where
     quoteRequestInterestRatePrecision <- optionalFieldP
     quoteRequestNearLegRatePrecision <- optionalFieldP
     quoteRequestFarLegRatePrecision <- optionalFieldP
-    quoteRequestCustomFieldsGroup <- optionalGroupP
+    quoteRequestQuoteRequestCustomFieldsGroup <- optionalGroupP
     pure (QuoteRequest {..})
 
 instance IsMessage QuoteRequest where
   messageType Proxy = MsgTypeQuoteRequest
 
-makeQuoteRequest :: QuoteReqID -> (NonEmpty RelatedSymGroupElem -> QuoteRequest)
-makeQuoteRequest quoteRequestQuoteReqID quoteRequestRelatedSymGroup =
+makeQuoteRequest :: QuoteReqID -> (NonEmpty QuoteRequestRelatedSymGroupElem -> QuoteRequest)
+makeQuoteRequest quoteRequestQuoteReqID quoteRequestQuoteRequestRelatedSymGroup =
   let quoteRequestRFQReqID = Nothing
       quoteRequestClOrdID = Nothing
       quoteRequestOrderCapacity = Nothing
       quoteRequestUsername = Nothing
-      quoteRequestPartiesGroup = []
-      quoteRequestRegulatoryTradeIDsGroup = []
-      quoteRequestOrderAttributesGroup = []
+      quoteRequestQuoteRequestPartiesGroup = []
+      quoteRequestQuoteRequestRegulatoryTradeIDsGroup = []
+      quoteRequestQuoteRequestOrderAttributesGroup = []
       quoteRequestOptionDate = Nothing
       quoteRequestText = Nothing
       quoteRequestEncodedText = Nothing
@@ -383,5 +385,5 @@ makeQuoteRequest quoteRequestQuoteReqID quoteRequestRelatedSymGroup =
       quoteRequestInterestRatePrecision = Nothing
       quoteRequestNearLegRatePrecision = Nothing
       quoteRequestFarLegRatePrecision = Nothing
-      quoteRequestCustomFieldsGroup = []
+      quoteRequestQuoteRequestCustomFieldsGroup = []
    in (QuoteRequest {..})

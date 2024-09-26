@@ -27,8 +27,8 @@ import FIX.Fields.Text
 import FIX.Fields.TradingSessionID
 import FIX.Fields.TradingSessionSubID
 import FIX.Groups.Class
-import FIX.Groups.LegsGroupElem
-import FIX.Groups.UnderlyingsGroupElem
+import FIX.Groups.SecurityDefinitionLegsGroupElem
+import FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -44,7 +44,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceComponent "InstrumentExtension" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Underlyings"
+--             { groupName = "SecurityDefinitionUnderlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
 --                 [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -57,7 +57,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "EncodedText" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Legs"
+--             { groupName = "SecurityDefinitionLegs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --             }
@@ -73,13 +73,13 @@ data SecurityDefinition = SecurityDefinition
     securityDefinitionSecurityResponseType :: !SecurityResponseType,
     securityDefinitionInstrument :: !(Maybe Instrument),
     securityDefinitionInstrumentExtension :: !InstrumentExtension,
-    securityDefinitionUnderlyingsGroup :: ![UnderlyingsGroupElem],
+    securityDefinitionSecurityDefinitionUnderlyingsGroup :: ![SecurityDefinitionUnderlyingsGroupElem],
     securityDefinitionCurrency :: !(Maybe Currency),
     securityDefinitionTradingSessionID :: !(Maybe TradingSessionID),
     securityDefinitionTradingSessionSubID :: !(Maybe TradingSessionSubID),
     securityDefinitionText :: !(Maybe Text),
     securityDefinitionEncodedText :: !(Maybe EncodedText),
-    securityDefinitionLegsGroup :: ![LegsGroupElem],
+    securityDefinitionSecurityDefinitionLegsGroup :: ![SecurityDefinitionLegsGroupElem],
     securityDefinitionExpirationCycle :: !(Maybe ExpirationCycle),
     securityDefinitionRoundLot :: !(Maybe RoundLot),
     securityDefinitionMinTradeVol :: !(Maybe MinTradeVol)
@@ -96,13 +96,13 @@ instance IsComponent SecurityDefinition where
         requiredFieldB securityDefinitionSecurityResponseType,
         optionalComponentB securityDefinitionInstrument,
         requiredComponentB securityDefinitionInstrumentExtension,
-        optionalGroupB securityDefinitionUnderlyingsGroup,
+        optionalGroupB securityDefinitionSecurityDefinitionUnderlyingsGroup,
         optionalFieldB securityDefinitionCurrency,
         optionalFieldB securityDefinitionTradingSessionID,
         optionalFieldB securityDefinitionTradingSessionSubID,
         optionalFieldB securityDefinitionText,
         optionalFieldB securityDefinitionEncodedText,
-        optionalGroupB securityDefinitionLegsGroup,
+        optionalGroupB securityDefinitionSecurityDefinitionLegsGroup,
         optionalFieldB securityDefinitionExpirationCycle,
         optionalFieldB securityDefinitionRoundLot,
         optionalFieldB securityDefinitionMinTradeVol
@@ -113,13 +113,13 @@ instance IsComponent SecurityDefinition where
     securityDefinitionSecurityResponseType <- requiredFieldP
     securityDefinitionInstrument <- optionalComponentP
     securityDefinitionInstrumentExtension <- requiredComponentP
-    securityDefinitionUnderlyingsGroup <- optionalGroupP
+    securityDefinitionSecurityDefinitionUnderlyingsGroup <- optionalGroupP
     securityDefinitionCurrency <- optionalFieldP
     securityDefinitionTradingSessionID <- optionalFieldP
     securityDefinitionTradingSessionSubID <- optionalFieldP
     securityDefinitionText <- optionalFieldP
     securityDefinitionEncodedText <- optionalFieldP
-    securityDefinitionLegsGroup <- optionalGroupP
+    securityDefinitionSecurityDefinitionLegsGroup <- optionalGroupP
     securityDefinitionExpirationCycle <- optionalFieldP
     securityDefinitionRoundLot <- optionalFieldP
     securityDefinitionMinTradeVol <- optionalFieldP
@@ -131,13 +131,13 @@ instance IsMessage SecurityDefinition where
 makeSecurityDefinition :: SecurityReqID -> (SecurityResponseID -> (SecurityResponseType -> (InstrumentExtension -> SecurityDefinition)))
 makeSecurityDefinition securityDefinitionSecurityReqID securityDefinitionSecurityResponseID securityDefinitionSecurityResponseType securityDefinitionInstrumentExtension =
   let securityDefinitionInstrument = Nothing
-      securityDefinitionUnderlyingsGroup = []
+      securityDefinitionSecurityDefinitionUnderlyingsGroup = []
       securityDefinitionCurrency = Nothing
       securityDefinitionTradingSessionID = Nothing
       securityDefinitionTradingSessionSubID = Nothing
       securityDefinitionText = Nothing
       securityDefinitionEncodedText = Nothing
-      securityDefinitionLegsGroup = []
+      securityDefinitionSecurityDefinitionLegsGroup = []
       securityDefinitionExpirationCycle = Nothing
       securityDefinitionRoundLot = Nothing
       securityDefinitionMinTradeVol = Nothing

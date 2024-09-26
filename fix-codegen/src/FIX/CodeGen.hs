@@ -35,9 +35,10 @@ runFixCodeGen = do
       let spec =
             fixupNestedOptionals $
               makeFirstGroupElementsRequired $
-                simplifyGroupComponents $
-                  foldDataFields $
-                    filterSpec settingMessages spec'
+                renameGroupNamesForUniqueness $
+                  simplifyGroupComponents $
+                    foldDataFields $
+                      filterSpec settingMessages spec'
       let groupSpecs = gatherGroupSpecs spec
       putStrLn "Generating code according to this spec:"
       pPrint spec
@@ -251,6 +252,34 @@ simplifyGroupComponents spec =
       mp@(MessagePieceComponent c r) -> case M.lookup c groupComponentMap of
         Nothing -> mp
         Just gs -> MessagePieceGroup (goGroup gs) r
+
+renameGroupNamesForUniqueness :: Spec -> Spec
+renameGroupNamesForUniqueness spec =
+  Spec
+    { specFields = specFields spec,
+      specHeader = goPieces [] (specHeader spec),
+      specTrailer = goPieces [] (specTrailer spec),
+      specComponents = map goComponent (specComponents spec),
+      specMessages = map goMessage (specMessages spec)
+    }
+  where
+    goMessage ms = ms {messagePieces = goPieces [messageName ms] (messagePieces ms)}
+    goComponent cs = cs {componentPieces = goPieces [componentName cs] (componentPieces cs)}
+    goGroup trail gs =
+      let newGroupName = T.concat trail <> groupName gs
+       in gs
+            { groupName = newGroupName,
+              groupPieces = goPieces [newGroupName] (groupPieces gs)
+            }
+
+    goPieces :: [Text] -> [MessagePiece] -> [MessagePiece]
+    goPieces trail = map (goPiece trail)
+
+    goPiece :: [Text] -> MessagePiece -> MessagePiece
+    goPiece trail = \case
+      mp@MessagePieceField {} -> mp
+      MessagePieceGroup gs r -> MessagePieceGroup (goGroup trail gs) r
+      mp@MessagePieceComponent {} -> mp
 
 -- @
 -- If the repeating group is used, the first field of the repeating group

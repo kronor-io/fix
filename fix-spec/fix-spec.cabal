@@ -18,14 +18,9 @@ library
       FIX.Components.InstrumentLeg
       FIX.Components.LegBenchmarkCurveData
       FIX.Components.LegExAnteData
-      FIX.Components.LegStipulations
-      FIX.Components.NestedParties
       FIX.Components.OrderQtyData
-      FIX.Components.Parties
       FIX.Components.SpreadOrBenchmarkCurveData
-      FIX.Components.Stipulations
       FIX.Components.UnderlyingInstrument
-      FIX.Components.UnderlyingStipulations
       FIX.Components.YieldData
       FIX.Fields
       FIX.Fields.Account
@@ -414,36 +409,62 @@ library
       FIX.Fields.YieldRedemptionPrice
       FIX.Fields.YieldRedemptionPriceType
       FIX.Fields.YieldType
-      FIX.Groups.AllocsGroupElem
       FIX.Groups.Class
-      FIX.Groups.CustomFieldsGroupElem
-      FIX.Groups.EventsGroupElem
       FIX.Groups.HopsGroupElem
-      FIX.Groups.InstrAttribGroupElem
-      FIX.Groups.LegAllocsGroupElem
-      FIX.Groups.LegSecurityAltIDGroupElem
-      FIX.Groups.LegsGroupElem
-      FIX.Groups.LegStipulationsGroupElem
-      FIX.Groups.LinesOfTextGroupElem
-      FIX.Groups.MsgTypesGroupElem
-      FIX.Groups.NestedPartiesGroupElem
-      FIX.Groups.NestedPartyIDsGroupElem
-      FIX.Groups.NestedPartySubIDsGroupElem
-      FIX.Groups.OrderAttributesGroupElem
-      FIX.Groups.PartiesGroupElem
-      FIX.Groups.PartyIDsGroupElem
-      FIX.Groups.PartySubIDsGroupElem
-      FIX.Groups.QuoteEntriesGroupElem
-      FIX.Groups.QuoteQualifiersGroupElem
-      FIX.Groups.RegulatoryTradeIDsGroupElem
-      FIX.Groups.RelatedSymGroupElem
-      FIX.Groups.RoutingIDsGroupElem
-      FIX.Groups.SecurityAltIDGroupElem
-      FIX.Groups.StipulationsGroupElem
-      FIX.Groups.UnderlyingSecurityAltIDGroupElem
-      FIX.Groups.UnderlyingsGroupElem
-      FIX.Groups.UnderlyingStipsGroupElem
-      FIX.Groups.UnderlyingStipulationsGroupElem
+      FIX.Groups.InstrumentEventsGroupElem
+      FIX.Groups.InstrumentExtensionInstrAttribGroupElem
+      FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
+      FIX.Groups.InstrumentSecurityAltIDGroupElem
+      FIX.Groups.LogonMsgTypesGroupElem
+      FIX.Groups.NewsLegsGroupElem
+      FIX.Groups.NewsLinesOfTextGroupElem
+      FIX.Groups.NewsRelatedSymGroupElem
+      FIX.Groups.NewsRoutingIDsGroupElem
+      FIX.Groups.NewsUnderlyingsGroupElem
+      FIX.Groups.QuoteCancelPartiesGroupElem
+      FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
+      FIX.Groups.QuoteCancelQuoteEntriesGroupElem
+      FIX.Groups.QuoteCancelQuoteEntriesLegsGroupElem
+      FIX.Groups.QuoteCancelQuoteEntriesUnderlyingsGroupElem
+      FIX.Groups.QuoteLegsGroupElem
+      FIX.Groups.QuoteLegsLegStipulationsGroupElem
+      FIX.Groups.QuoteLegsNestedPartiesGroupElem
+      FIX.Groups.QuoteLegsNestedPartiesNestedPartySubIDsGroupElem
+      FIX.Groups.QuotePartiesGroupElem
+      FIX.Groups.QuotePartiesPartySubIDsGroupElem
+      FIX.Groups.QuoteQuoteQualifiersGroupElem
+      FIX.Groups.QuoteRequestCustomFieldsGroupElem
+      FIX.Groups.QuoteRequestOrderAttributesGroupElem
+      FIX.Groups.QuoteRequestPartiesGroupElem
+      FIX.Groups.QuoteRequestPartiesPartySubIDsGroupElem
+      FIX.Groups.QuoteRequestRegulatoryTradeIDsGroupElem
+      FIX.Groups.QuoteRequestRejectPartiesGroupElem
+      FIX.Groups.QuoteRequestRejectPartiesPartySubIDsGroupElem
+      FIX.Groups.QuoteRequestRejectQuoteQualifiersGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymLegsGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymStipulationsGroupElem
+      FIX.Groups.QuoteRequestRejectRelatedSymUnderlyingsGroupElem
+      FIX.Groups.QuoteRequestRelatedSymAllocsGroupElem
+      FIX.Groups.QuoteRequestRelatedSymGroupElem
+      FIX.Groups.QuoteRequestRelatedSymLegsGroupElem
+      FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsGroupElem
+      FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesGroupElem
+      FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
+      FIX.Groups.QuoteRequestRelatedSymQuoteQualifiersGroupElem
+      FIX.Groups.QuoteRequestRelatedSymStipulationsGroupElem
+      FIX.Groups.QuoteRequestRelatedSymUnderlyingsGroupElem
+      FIX.Groups.QuoteStipulationsGroupElem
+      FIX.Groups.QuoteUnderlyingsGroupElem
+      FIX.Groups.SecurityDefinitionLegsGroupElem
+      FIX.Groups.SecurityDefinitionRequestLegsGroupElem
+      FIX.Groups.SecurityDefinitionRequestUnderlyingsGroupElem
+      FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
+      FIX.Groups.UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
+      FIX.Groups.UnderlyingInstrumentUnderlyingStipulationsGroupElem
       FIX.Messages
       FIX.Messages.Class
       FIX.Messages.Envelope

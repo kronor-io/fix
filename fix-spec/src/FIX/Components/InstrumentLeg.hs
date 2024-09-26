@@ -54,7 +54,7 @@ import FIX.Fields.LegSymbolSfx
 import FIX.Fields.LegUPICode
 import FIX.Fields.MsgType
 import FIX.Groups.Class
-import FIX.Groups.LegSecurityAltIDGroupElem
+import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
 import GHC.Generics (Generic)
 
 -- | ComponentSpec
@@ -66,7 +66,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "LegSecurityIDSource" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "LegSecurityAltID"
+--             { groupName = "InstrumentLegLegSecurityAltID"
 --             , groupNumberField = "NoLegSecurityAltID"
 --             , groupPieces =
 --                 [ MessagePieceField "LegSecurityAltID" True
@@ -117,7 +117,7 @@ data InstrumentLeg = InstrumentLeg
     instrumentLegLegSymbolSfx :: !(Maybe LegSymbolSfx),
     instrumentLegLegSecurityID :: !(Maybe LegSecurityID),
     instrumentLegLegSecurityIDSource :: !(Maybe LegSecurityIDSource),
-    instrumentLegLegSecurityAltIDGroup :: ![LegSecurityAltIDGroupElem],
+    instrumentLegInstrumentLegLegSecurityAltIDGroup :: ![InstrumentLegLegSecurityAltIDGroupElem],
     instrumentLegLegProduct :: !(Maybe LegProduct),
     instrumentLegLegCFICode :: !(Maybe LegCFICode),
     instrumentLegLegUPICode :: !(Maybe LegUPICode),
@@ -166,7 +166,7 @@ instance IsComponent InstrumentLeg where
         optionalFieldB instrumentLegLegSymbolSfx,
         optionalFieldB instrumentLegLegSecurityID,
         optionalFieldB instrumentLegLegSecurityIDSource,
-        optionalGroupB instrumentLegLegSecurityAltIDGroup,
+        optionalGroupB instrumentLegInstrumentLegLegSecurityAltIDGroup,
         optionalFieldB instrumentLegLegProduct,
         optionalFieldB instrumentLegLegCFICode,
         optionalFieldB instrumentLegLegUPICode,
@@ -209,7 +209,7 @@ instance IsComponent InstrumentLeg where
     instrumentLegLegSymbolSfx <- optionalFieldP
     instrumentLegLegSecurityID <- optionalFieldP
     instrumentLegLegSecurityIDSource <- optionalFieldP
-    instrumentLegLegSecurityAltIDGroup <- optionalGroupP
+    instrumentLegInstrumentLegLegSecurityAltIDGroup <- optionalGroupP
     instrumentLegLegProduct <- optionalFieldP
     instrumentLegLegCFICode <- optionalFieldP
     instrumentLegLegUPICode <- optionalFieldP
@@ -254,7 +254,7 @@ makeInstrumentLeg =
       instrumentLegLegSymbolSfx = Nothing
       instrumentLegLegSecurityID = Nothing
       instrumentLegLegSecurityIDSource = Nothing
-      instrumentLegLegSecurityAltIDGroup = []
+      instrumentLegInstrumentLegLegSecurityAltIDGroup = []
       instrumentLegLegProduct = Nothing
       instrumentLegLegCFICode = Nothing
       instrumentLegLegUPICode = Nothing

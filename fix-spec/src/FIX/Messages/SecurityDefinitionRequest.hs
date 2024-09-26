@@ -25,8 +25,8 @@ import FIX.Fields.Text
 import FIX.Fields.TradingSessionID
 import FIX.Fields.TradingSessionSubID
 import FIX.Groups.Class
-import FIX.Groups.LegsGroupElem
-import FIX.Groups.UnderlyingsGroupElem
+import FIX.Groups.SecurityDefinitionRequestLegsGroupElem
+import FIX.Groups.SecurityDefinitionRequestUnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -41,7 +41,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceComponent "InstrumentExtension" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Underlyings"
+--             { groupName = "SecurityDefinitionRequestUnderlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
 --                 [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -54,7 +54,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "TradingSessionSubID" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Legs"
+--             { groupName = "SecurityDefinitionRequestLegs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --             }
@@ -68,13 +68,13 @@ data SecurityDefinitionRequest = SecurityDefinitionRequest
     securityDefinitionRequestSecurityRequestType :: !SecurityRequestType,
     securityDefinitionRequestInstrument :: !(Maybe Instrument),
     securityDefinitionRequestInstrumentExtension :: !InstrumentExtension,
-    securityDefinitionRequestUnderlyingsGroup :: ![UnderlyingsGroupElem],
+    securityDefinitionRequestSecurityDefinitionRequestUnderlyingsGroup :: ![SecurityDefinitionRequestUnderlyingsGroupElem],
     securityDefinitionRequestCurrency :: !(Maybe Currency),
     securityDefinitionRequestText :: !(Maybe Text),
     securityDefinitionRequestEncodedText :: !(Maybe EncodedText),
     securityDefinitionRequestTradingSessionID :: !(Maybe TradingSessionID),
     securityDefinitionRequestTradingSessionSubID :: !(Maybe TradingSessionSubID),
-    securityDefinitionRequestLegsGroup :: ![LegsGroupElem],
+    securityDefinitionRequestSecurityDefinitionRequestLegsGroup :: ![SecurityDefinitionRequestLegsGroupElem],
     securityDefinitionRequestExpirationCycle :: !(Maybe ExpirationCycle),
     securityDefinitionRequestSubscriptionRequestType :: !(Maybe SubscriptionRequestType)
   }
@@ -89,13 +89,13 @@ instance IsComponent SecurityDefinitionRequest where
         requiredFieldB securityDefinitionRequestSecurityRequestType,
         optionalComponentB securityDefinitionRequestInstrument,
         requiredComponentB securityDefinitionRequestInstrumentExtension,
-        optionalGroupB securityDefinitionRequestUnderlyingsGroup,
+        optionalGroupB securityDefinitionRequestSecurityDefinitionRequestUnderlyingsGroup,
         optionalFieldB securityDefinitionRequestCurrency,
         optionalFieldB securityDefinitionRequestText,
         optionalFieldB securityDefinitionRequestEncodedText,
         optionalFieldB securityDefinitionRequestTradingSessionID,
         optionalFieldB securityDefinitionRequestTradingSessionSubID,
-        optionalGroupB securityDefinitionRequestLegsGroup,
+        optionalGroupB securityDefinitionRequestSecurityDefinitionRequestLegsGroup,
         optionalFieldB securityDefinitionRequestExpirationCycle,
         optionalFieldB securityDefinitionRequestSubscriptionRequestType
       ]
@@ -104,13 +104,13 @@ instance IsComponent SecurityDefinitionRequest where
     securityDefinitionRequestSecurityRequestType <- requiredFieldP
     securityDefinitionRequestInstrument <- optionalComponentP
     securityDefinitionRequestInstrumentExtension <- requiredComponentP
-    securityDefinitionRequestUnderlyingsGroup <- optionalGroupP
+    securityDefinitionRequestSecurityDefinitionRequestUnderlyingsGroup <- optionalGroupP
     securityDefinitionRequestCurrency <- optionalFieldP
     securityDefinitionRequestText <- optionalFieldP
     securityDefinitionRequestEncodedText <- optionalFieldP
     securityDefinitionRequestTradingSessionID <- optionalFieldP
     securityDefinitionRequestTradingSessionSubID <- optionalFieldP
-    securityDefinitionRequestLegsGroup <- optionalGroupP
+    securityDefinitionRequestSecurityDefinitionRequestLegsGroup <- optionalGroupP
     securityDefinitionRequestExpirationCycle <- optionalFieldP
     securityDefinitionRequestSubscriptionRequestType <- optionalFieldP
     pure (SecurityDefinitionRequest {..})
@@ -121,13 +121,13 @@ instance IsMessage SecurityDefinitionRequest where
 makeSecurityDefinitionRequest :: SecurityReqID -> (SecurityRequestType -> (InstrumentExtension -> SecurityDefinitionRequest))
 makeSecurityDefinitionRequest securityDefinitionRequestSecurityReqID securityDefinitionRequestSecurityRequestType securityDefinitionRequestInstrumentExtension =
   let securityDefinitionRequestInstrument = Nothing
-      securityDefinitionRequestUnderlyingsGroup = []
+      securityDefinitionRequestSecurityDefinitionRequestUnderlyingsGroup = []
       securityDefinitionRequestCurrency = Nothing
       securityDefinitionRequestText = Nothing
       securityDefinitionRequestEncodedText = Nothing
       securityDefinitionRequestTradingSessionID = Nothing
       securityDefinitionRequestTradingSessionSubID = Nothing
-      securityDefinitionRequestLegsGroup = []
+      securityDefinitionRequestSecurityDefinitionRequestLegsGroup = []
       securityDefinitionRequestExpirationCycle = Nothing
       securityDefinitionRequestSubscriptionRequestType = Nothing
    in (SecurityDefinitionRequest {..})

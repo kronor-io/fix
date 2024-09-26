@@ -25,8 +25,8 @@ import FIX.Fields.TradingSessionID
 import FIX.Fields.TradingSessionSubID
 import FIX.Fields.Username
 import FIX.Groups.Class
-import FIX.Groups.PartiesGroupElem
-import FIX.Groups.QuoteEntriesGroupElem
+import FIX.Groups.QuoteCancelPartiesGroupElem
+import FIX.Groups.QuoteCancelQuoteEntriesGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -41,7 +41,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "QuoteResponseLevel" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Parties"
+--             { groupName = "QuoteCancelParties"
 --             , groupNumberField = "NoPartyIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "PartyID" True
@@ -50,7 +50,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "PartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "PartySubIDs"
+--                       { groupName = "QuoteCancelPartiesPartySubIDs"
 --                       , groupNumberField = "NoPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "PartySubID" True
@@ -70,14 +70,14 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "TradingSessionSubID" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "QuoteEntries"
+--             { groupName = "QuoteCancelQuoteEntries"
 --             , groupNumberField = "NoQuoteEntries"
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
 --                 , MessagePieceComponent "FinancingDetails" True
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "Underlyings"
+--                       { groupName = "QuoteCancelQuoteEntriesUnderlyings"
 --                       , groupNumberField = "NoUnderlyings"
 --                       , groupPieces =
 --                           [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -85,7 +85,7 @@ import GHC.Generics (Generic)
 --                     False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "Legs"
+--                       { groupName = "QuoteCancelQuoteEntriesLegs"
 --                       , groupNumberField = "NoLegs"
 --                       , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
 --                       }
@@ -100,7 +100,7 @@ data QuoteCancel = QuoteCancel
     quoteCancelQuoteID :: !QuoteID,
     quoteCancelQuoteCancelType :: !QuoteCancelType,
     quoteCancelQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
-    quoteCancelPartiesGroup :: ![PartiesGroupElem],
+    quoteCancelQuoteCancelPartiesGroup :: ![QuoteCancelPartiesGroupElem],
     quoteCancelAccount :: !(Maybe Account),
     quoteCancelUsername :: !(Maybe Username),
     quoteCancelProductType :: !(Maybe ProductType),
@@ -108,7 +108,7 @@ data QuoteCancel = QuoteCancel
     quoteCancelAccountType :: !(Maybe AccountType),
     quoteCancelTradingSessionID :: !(Maybe TradingSessionID),
     quoteCancelTradingSessionSubID :: !(Maybe TradingSessionSubID),
-    quoteCancelQuoteEntriesGroup :: ![QuoteEntriesGroupElem]
+    quoteCancelQuoteCancelQuoteEntriesGroup :: ![QuoteCancelQuoteEntriesGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -121,7 +121,7 @@ instance IsComponent QuoteCancel where
         requiredFieldB quoteCancelQuoteID,
         requiredFieldB quoteCancelQuoteCancelType,
         optionalFieldB quoteCancelQuoteResponseLevel,
-        optionalGroupB quoteCancelPartiesGroup,
+        optionalGroupB quoteCancelQuoteCancelPartiesGroup,
         optionalFieldB quoteCancelAccount,
         optionalFieldB quoteCancelUsername,
         optionalFieldB quoteCancelProductType,
@@ -129,14 +129,14 @@ instance IsComponent QuoteCancel where
         optionalFieldB quoteCancelAccountType,
         optionalFieldB quoteCancelTradingSessionID,
         optionalFieldB quoteCancelTradingSessionSubID,
-        optionalGroupB quoteCancelQuoteEntriesGroup
+        optionalGroupB quoteCancelQuoteCancelQuoteEntriesGroup
       ]
   fromComponentFields = do
     quoteCancelQuoteReqID <- optionalFieldP
     quoteCancelQuoteID <- requiredFieldP
     quoteCancelQuoteCancelType <- requiredFieldP
     quoteCancelQuoteResponseLevel <- optionalFieldP
-    quoteCancelPartiesGroup <- optionalGroupP
+    quoteCancelQuoteCancelPartiesGroup <- optionalGroupP
     quoteCancelAccount <- optionalFieldP
     quoteCancelUsername <- optionalFieldP
     quoteCancelProductType <- optionalFieldP
@@ -144,7 +144,7 @@ instance IsComponent QuoteCancel where
     quoteCancelAccountType <- optionalFieldP
     quoteCancelTradingSessionID <- optionalFieldP
     quoteCancelTradingSessionSubID <- optionalFieldP
-    quoteCancelQuoteEntriesGroup <- optionalGroupP
+    quoteCancelQuoteCancelQuoteEntriesGroup <- optionalGroupP
     pure (QuoteCancel {..})
 
 instance IsMessage QuoteCancel where
@@ -154,7 +154,7 @@ makeQuoteCancel :: QuoteID -> (QuoteCancelType -> QuoteCancel)
 makeQuoteCancel quoteCancelQuoteID quoteCancelQuoteCancelType =
   let quoteCancelQuoteReqID = Nothing
       quoteCancelQuoteResponseLevel = Nothing
-      quoteCancelPartiesGroup = []
+      quoteCancelQuoteCancelPartiesGroup = []
       quoteCancelAccount = Nothing
       quoteCancelUsername = Nothing
       quoteCancelProductType = Nothing
@@ -162,5 +162,5 @@ makeQuoteCancel quoteCancelQuoteID quoteCancelQuoteCancelType =
       quoteCancelAccountType = Nothing
       quoteCancelTradingSessionID = Nothing
       quoteCancelTradingSessionSubID = Nothing
-      quoteCancelQuoteEntriesGroup = []
+      quoteCancelQuoteCancelQuoteEntriesGroup = []
    in (QuoteCancel {..})

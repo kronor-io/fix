@@ -81,11 +81,11 @@ import FIX.Fields.TransactTime
 import FIX.Fields.Username
 import FIX.Fields.ValidUntilTime
 import FIX.Groups.Class
-import FIX.Groups.LegsGroupElem
-import FIX.Groups.PartiesGroupElem
-import FIX.Groups.QuoteQualifiersGroupElem
-import FIX.Groups.StipulationsGroupElem
-import FIX.Groups.UnderlyingsGroupElem
+import FIX.Groups.QuoteLegsGroupElem
+import FIX.Groups.QuotePartiesGroupElem
+import FIX.Groups.QuoteQuoteQualifiersGroupElem
+import FIX.Groups.QuoteStipulationsGroupElem
+import FIX.Groups.QuoteUnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -100,7 +100,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "QuoteType" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "QuoteQualifiers"
+--             { groupName = "QuoteQuoteQualifiers"
 --             , groupNumberField = "NoQuoteQualifiers"
 --             , groupPieces = [ MessagePieceField "QuoteQualifier" True ]
 --             }
@@ -108,7 +108,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "QuoteResponseLevel" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Parties"
+--             { groupName = "QuoteParties"
 --             , groupNumberField = "NoPartyIDs"
 --             , groupPieces =
 --                 [ MessagePieceField "PartyID" True
@@ -117,7 +117,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "PartyRoleQualifier" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "PartySubIDs"
+--                       { groupName = "QuotePartiesPartySubIDs"
 --                       , groupNumberField = "NoPartySubIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "PartySubID" True
@@ -134,7 +134,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceComponent "FinancingDetails" True
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Underlyings"
+--             { groupName = "QuoteUnderlyings"
 --             , groupNumberField = "NoUnderlyings"
 --             , groupPieces =
 --                 [ MessagePieceComponent "UnderlyingInstrument" True ]
@@ -151,7 +151,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "Currency" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Stipulations"
+--             { groupName = "QuoteStipulations"
 --             , groupNumberField = "NoStipulations"
 --             , groupPieces =
 --                 [ MessagePieceField "StipulationType" True
@@ -165,7 +165,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "AccountType" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Legs"
+--             { groupName = "QuoteLegs"
 --             , groupNumberField = "NoLegs"
 --             , groupPieces =
 --                 [ MessagePieceComponent "InstrumentLeg" True
@@ -175,7 +175,7 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "LegSettlDate" False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "LegStipulations"
+--                       { groupName = "QuoteLegsLegStipulations"
 --                       , groupNumberField = "NoLegStipulations"
 --                       , groupPieces =
 --                           [ MessagePieceField "LegStipulationType" True
@@ -185,7 +185,7 @@ import GHC.Generics (Generic)
 --                     False
 --                 , MessagePieceGroup
 --                     GroupSpec
---                       { groupName = "NestedParties"
+--                       { groupName = "QuoteLegsNestedParties"
 --                       , groupNumberField = "NoNestedPartyIDs"
 --                       , groupPieces =
 --                           [ MessagePieceField "NestedPartyID" True
@@ -194,7 +194,7 @@ import GHC.Generics (Generic)
 --                           , MessagePieceField "NestedPartyRoleQualifier" False
 --                           , MessagePieceGroup
 --                               GroupSpec
---                                 { groupName = "NestedPartySubIDs"
+--                                 { groupName = "QuoteLegsNestedPartiesNestedPartySubIDs"
 --                                 , groupNumberField = "NoNestedPartySubIDs"
 --                                 , groupPieces =
 --                                     [ MessagePieceField "NestedPartySubID" True
@@ -267,14 +267,14 @@ data Quote = Quote
     quoteQuoteID :: !QuoteID,
     quoteQuoteRespID :: !(Maybe QuoteRespID),
     quoteQuoteType :: !(Maybe QuoteType),
-    quoteQuoteQualifiersGroup :: ![QuoteQualifiersGroupElem],
+    quoteQuoteQuoteQualifiersGroup :: ![QuoteQuoteQualifiersGroupElem],
     quoteQuoteResponseLevel :: !(Maybe QuoteResponseLevel),
-    quotePartiesGroup :: ![PartiesGroupElem],
+    quoteQuotePartiesGroup :: ![QuotePartiesGroupElem],
     quoteTradingSessionID :: !(Maybe TradingSessionID),
     quoteTradingSessionSubID :: !(Maybe TradingSessionSubID),
     quoteInstrument :: !Instrument,
     quoteFinancingDetails :: !FinancingDetails,
-    quoteUnderlyingsGroup :: ![UnderlyingsGroupElem],
+    quoteQuoteUnderlyingsGroup :: ![QuoteUnderlyingsGroupElem],
     quoteSide :: !(Maybe Side),
     quoteOrderQtyData :: !OrderQtyData,
     quoteSettlType :: !(Maybe SettlType),
@@ -284,12 +284,12 @@ data Quote = Quote
     quoteSplitSettlDate2 :: !(Maybe SplitSettlDate2),
     quoteOrderQty2 :: !(Maybe OrderQty2),
     quoteCurrency :: !(Maybe Currency),
-    quoteStipulationsGroup :: ![StipulationsGroupElem],
+    quoteQuoteStipulationsGroup :: ![QuoteStipulationsGroupElem],
     quoteAccount :: !(Maybe Account),
     quoteUsername :: !(Maybe Username),
     quoteAcctIDSource :: !(Maybe AcctIDSource),
     quoteAccountType :: !(Maybe AccountType),
-    quoteLegsGroup :: ![LegsGroupElem],
+    quoteQuoteLegsGroup :: ![QuoteLegsGroupElem],
     quoteBidPx :: !(Maybe BidPx),
     quoteOfferPx :: !(Maybe OfferPx),
     quoteBidInterestAtMaturity :: !(Maybe BidInterestAtMaturity),
@@ -347,14 +347,14 @@ instance IsComponent Quote where
         requiredFieldB quoteQuoteID,
         optionalFieldB quoteQuoteRespID,
         optionalFieldB quoteQuoteType,
-        optionalGroupB quoteQuoteQualifiersGroup,
+        optionalGroupB quoteQuoteQuoteQualifiersGroup,
         optionalFieldB quoteQuoteResponseLevel,
-        optionalGroupB quotePartiesGroup,
+        optionalGroupB quoteQuotePartiesGroup,
         optionalFieldB quoteTradingSessionID,
         optionalFieldB quoteTradingSessionSubID,
         requiredComponentB quoteInstrument,
         requiredComponentB quoteFinancingDetails,
-        optionalGroupB quoteUnderlyingsGroup,
+        optionalGroupB quoteQuoteUnderlyingsGroup,
         optionalFieldB quoteSide,
         requiredComponentB quoteOrderQtyData,
         optionalFieldB quoteSettlType,
@@ -364,12 +364,12 @@ instance IsComponent Quote where
         optionalFieldB quoteSplitSettlDate2,
         optionalFieldB quoteOrderQty2,
         optionalFieldB quoteCurrency,
-        optionalGroupB quoteStipulationsGroup,
+        optionalGroupB quoteQuoteStipulationsGroup,
         optionalFieldB quoteAccount,
         optionalFieldB quoteUsername,
         optionalFieldB quoteAcctIDSource,
         optionalFieldB quoteAccountType,
-        optionalGroupB quoteLegsGroup,
+        optionalGroupB quoteQuoteLegsGroup,
         optionalFieldB quoteBidPx,
         optionalFieldB quoteOfferPx,
         optionalFieldB quoteBidInterestAtMaturity,
@@ -421,14 +421,14 @@ instance IsComponent Quote where
     quoteQuoteID <- requiredFieldP
     quoteQuoteRespID <- optionalFieldP
     quoteQuoteType <- optionalFieldP
-    quoteQuoteQualifiersGroup <- optionalGroupP
+    quoteQuoteQuoteQualifiersGroup <- optionalGroupP
     quoteQuoteResponseLevel <- optionalFieldP
-    quotePartiesGroup <- optionalGroupP
+    quoteQuotePartiesGroup <- optionalGroupP
     quoteTradingSessionID <- optionalFieldP
     quoteTradingSessionSubID <- optionalFieldP
     quoteInstrument <- requiredComponentP
     quoteFinancingDetails <- requiredComponentP
-    quoteUnderlyingsGroup <- optionalGroupP
+    quoteQuoteUnderlyingsGroup <- optionalGroupP
     quoteSide <- optionalFieldP
     quoteOrderQtyData <- requiredComponentP
     quoteSettlType <- optionalFieldP
@@ -438,12 +438,12 @@ instance IsComponent Quote where
     quoteSplitSettlDate2 <- optionalFieldP
     quoteOrderQty2 <- optionalFieldP
     quoteCurrency <- optionalFieldP
-    quoteStipulationsGroup <- optionalGroupP
+    quoteQuoteStipulationsGroup <- optionalGroupP
     quoteAccount <- optionalFieldP
     quoteUsername <- optionalFieldP
     quoteAcctIDSource <- optionalFieldP
     quoteAccountType <- optionalFieldP
-    quoteLegsGroup <- optionalGroupP
+    quoteQuoteLegsGroup <- optionalGroupP
     quoteBidPx <- optionalFieldP
     quoteOfferPx <- optionalFieldP
     quoteBidInterestAtMaturity <- optionalFieldP
@@ -499,12 +499,12 @@ makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData q
   let quoteQuoteReqID = Nothing
       quoteQuoteRespID = Nothing
       quoteQuoteType = Nothing
-      quoteQuoteQualifiersGroup = []
+      quoteQuoteQuoteQualifiersGroup = []
       quoteQuoteResponseLevel = Nothing
-      quotePartiesGroup = []
+      quoteQuotePartiesGroup = []
       quoteTradingSessionID = Nothing
       quoteTradingSessionSubID = Nothing
-      quoteUnderlyingsGroup = []
+      quoteQuoteUnderlyingsGroup = []
       quoteSide = Nothing
       quoteSettlType = Nothing
       quoteSettlDate = Nothing
@@ -513,12 +513,12 @@ makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData q
       quoteSplitSettlDate2 = Nothing
       quoteOrderQty2 = Nothing
       quoteCurrency = Nothing
-      quoteStipulationsGroup = []
+      quoteQuoteStipulationsGroup = []
       quoteAccount = Nothing
       quoteUsername = Nothing
       quoteAcctIDSource = Nothing
       quoteAccountType = Nothing
-      quoteLegsGroup = []
+      quoteQuoteLegsGroup = []
       quoteBidPx = Nothing
       quoteOfferPx = Nothing
       quoteBidInterestAtMaturity = Nothing

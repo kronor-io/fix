@@ -55,8 +55,8 @@ import FIX.Fields.SymbolSfx
 import FIX.Fields.UPICode
 import FIX.Fields.UPICode2
 import FIX.Groups.Class
-import FIX.Groups.EventsGroupElem
-import FIX.Groups.SecurityAltIDGroupElem
+import FIX.Groups.InstrumentEventsGroupElem
+import FIX.Groups.InstrumentSecurityAltIDGroupElem
 import GHC.Generics (Generic)
 
 -- | ComponentSpec
@@ -68,7 +68,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "SecurityIDSource" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "SecurityAltID"
+--             { groupName = "InstrumentSecurityAltID"
 --             , groupNumberField = "NoSecurityAltID"
 --             , groupPieces =
 --                 [ MessagePieceField "SecurityAltID" True
@@ -113,7 +113,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "CPRegType" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "Events"
+--             { groupName = "InstrumentEvents"
 --             , groupNumberField = "NoEvents"
 --             , groupPieces =
 --                 [ MessagePieceField "EventType" True
@@ -132,7 +132,7 @@ data Instrument = Instrument
     instrumentSymbolSfx :: !(Maybe SymbolSfx),
     instrumentSecurityID :: !(Maybe SecurityID),
     instrumentSecurityIDSource :: !(Maybe SecurityIDSource),
-    instrumentSecurityAltIDGroup :: ![SecurityAltIDGroupElem],
+    instrumentInstrumentSecurityAltIDGroup :: ![InstrumentSecurityAltIDGroupElem],
     instrumentProduct :: !(Maybe Product),
     instrumentCFICode :: !(Maybe CFICode),
     instrumentUPICode :: !(Maybe UPICode),
@@ -168,7 +168,7 @@ data Instrument = Instrument
     instrumentContractSettlMonth :: !(Maybe ContractSettlMonth),
     instrumentCPProgram :: !(Maybe CPProgram),
     instrumentCPRegType :: !(Maybe CPRegType),
-    instrumentEventsGroup :: ![EventsGroupElem],
+    instrumentInstrumentEventsGroup :: ![InstrumentEventsGroupElem],
     instrumentDatedDate :: !(Maybe DatedDate),
     instrumentInterestAccrualDate :: !(Maybe InterestAccrualDate)
   }
@@ -183,7 +183,7 @@ instance IsComponent Instrument where
         optionalFieldB instrumentSymbolSfx,
         optionalFieldB instrumentSecurityID,
         optionalFieldB instrumentSecurityIDSource,
-        optionalGroupB instrumentSecurityAltIDGroup,
+        optionalGroupB instrumentInstrumentSecurityAltIDGroup,
         optionalFieldB instrumentProduct,
         optionalFieldB instrumentCFICode,
         optionalFieldB instrumentUPICode,
@@ -219,7 +219,7 @@ instance IsComponent Instrument where
         optionalFieldB instrumentContractSettlMonth,
         optionalFieldB instrumentCPProgram,
         optionalFieldB instrumentCPRegType,
-        optionalGroupB instrumentEventsGroup,
+        optionalGroupB instrumentInstrumentEventsGroup,
         optionalFieldB instrumentDatedDate,
         optionalFieldB instrumentInterestAccrualDate
       ]
@@ -228,7 +228,7 @@ instance IsComponent Instrument where
     instrumentSymbolSfx <- optionalFieldP
     instrumentSecurityID <- optionalFieldP
     instrumentSecurityIDSource <- optionalFieldP
-    instrumentSecurityAltIDGroup <- optionalGroupP
+    instrumentInstrumentSecurityAltIDGroup <- optionalGroupP
     instrumentProduct <- optionalFieldP
     instrumentCFICode <- optionalFieldP
     instrumentUPICode <- optionalFieldP
@@ -264,7 +264,7 @@ instance IsComponent Instrument where
     instrumentContractSettlMonth <- optionalFieldP
     instrumentCPProgram <- optionalFieldP
     instrumentCPRegType <- optionalFieldP
-    instrumentEventsGroup <- optionalGroupP
+    instrumentInstrumentEventsGroup <- optionalGroupP
     instrumentDatedDate <- optionalFieldP
     instrumentInterestAccrualDate <- optionalFieldP
     pure (Instrument {..})
@@ -274,7 +274,7 @@ makeInstrument instrumentSymbol =
   let instrumentSymbolSfx = Nothing
       instrumentSecurityID = Nothing
       instrumentSecurityIDSource = Nothing
-      instrumentSecurityAltIDGroup = []
+      instrumentInstrumentSecurityAltIDGroup = []
       instrumentProduct = Nothing
       instrumentCFICode = Nothing
       instrumentUPICode = Nothing
@@ -310,7 +310,7 @@ makeInstrument instrumentSymbol =
       instrumentContractSettlMonth = Nothing
       instrumentCPProgram = Nothing
       instrumentCPRegType = Nothing
-      instrumentEventsGroup = []
+      instrumentInstrumentEventsGroup = []
       instrumentDatedDate = Nothing
       instrumentInterestAccrualDate = Nothing
    in (Instrument {..})

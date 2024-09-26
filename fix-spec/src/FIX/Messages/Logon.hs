@@ -23,7 +23,7 @@ import FIX.Fields.ResetSeqNumFlag
 import FIX.Fields.TestMessageIndicator
 import FIX.Fields.Username
 import FIX.Groups.Class
-import FIX.Groups.MsgTypesGroupElem
+import FIX.Groups.LogonMsgTypesGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -40,7 +40,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "MaxMessageSize" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "MsgTypes"
+--             { groupName = "LogonMsgTypes"
 --             , groupNumberField = "NoMsgTypes"
 --             , groupPieces =
 --                 [ MessagePieceField "RefMsgType" True
@@ -60,7 +60,7 @@ data Logon = Logon
     logonResetSeqNumFlag :: !(Maybe ResetSeqNumFlag),
     logonNextExpectedMsgSeqNum :: !(Maybe NextExpectedMsgSeqNum),
     logonMaxMessageSize :: !(Maybe MaxMessageSize),
-    logonMsgTypesGroup :: ![MsgTypesGroupElem],
+    logonLogonMsgTypesGroup :: ![LogonMsgTypesGroupElem],
     logonTestMessageIndicator :: !(Maybe TestMessageIndicator),
     logonUsername :: !(Maybe Username),
     logonPassword :: !(Maybe Password)
@@ -78,7 +78,7 @@ instance IsComponent Logon where
         optionalFieldB logonResetSeqNumFlag,
         optionalFieldB logonNextExpectedMsgSeqNum,
         optionalFieldB logonMaxMessageSize,
-        optionalGroupB logonMsgTypesGroup,
+        optionalGroupB logonLogonMsgTypesGroup,
         optionalFieldB logonTestMessageIndicator,
         optionalFieldB logonUsername,
         optionalFieldB logonPassword
@@ -90,7 +90,7 @@ instance IsComponent Logon where
     logonResetSeqNumFlag <- optionalFieldP
     logonNextExpectedMsgSeqNum <- optionalFieldP
     logonMaxMessageSize <- optionalFieldP
-    logonMsgTypesGroup <- optionalGroupP
+    logonLogonMsgTypesGroup <- optionalGroupP
     logonTestMessageIndicator <- optionalFieldP
     logonUsername <- optionalFieldP
     logonPassword <- optionalFieldP
@@ -105,7 +105,7 @@ makeLogon logonEncryptMethod logonHeartBtInt =
       logonResetSeqNumFlag = Nothing
       logonNextExpectedMsgSeqNum = Nothing
       logonMaxMessageSize = Nothing
-      logonMsgTypesGroup = []
+      logonLogonMsgTypesGroup = []
       logonTestMessageIndicator = Nothing
       logonUsername = Nothing
       logonPassword = Nothing

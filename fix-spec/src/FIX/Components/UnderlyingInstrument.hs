@@ -56,8 +56,8 @@ import FIX.Fields.UnderlyingStrikePrice
 import FIX.Fields.UnderlyingSymbol
 import FIX.Fields.UnderlyingSymbolSfx
 import FIX.Groups.Class
-import FIX.Groups.UnderlyingSecurityAltIDGroupElem
-import FIX.Groups.UnderlyingStipulationsGroupElem
+import FIX.Groups.UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
+import FIX.Groups.UnderlyingInstrumentUnderlyingStipulationsGroupElem
 import GHC.Generics (Generic)
 
 -- | ComponentSpec
@@ -69,7 +69,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "UnderlyingSecurityIDSource" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "UnderlyingSecurityAltID"
+--             { groupName = "UnderlyingInstrumentUnderlyingSecurityAltID"
 --             , groupNumberField = "NoUnderlyingSecurityAltID"
 --             , groupPieces =
 --                 [ MessagePieceField "UnderlyingSecurityAltID" True
@@ -117,7 +117,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "UnderlyingEndValue" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "UnderlyingStipulations"
+--             { groupName = "UnderlyingInstrumentUnderlyingStipulations"
 --             , groupNumberField = "NoUnderlyingStips"
 --             , groupPieces =
 --                 [ MessagePieceField "UnderlyingStipType" True
@@ -132,7 +132,7 @@ data UnderlyingInstrument = UnderlyingInstrument
     underlyingInstrumentUnderlyingSymbolSfx :: !(Maybe UnderlyingSymbolSfx),
     underlyingInstrumentUnderlyingSecurityID :: !(Maybe UnderlyingSecurityID),
     underlyingInstrumentUnderlyingSecurityIDSource :: !(Maybe UnderlyingSecurityIDSource),
-    underlyingInstrumentUnderlyingSecurityAltIDGroup :: ![UnderlyingSecurityAltIDGroupElem],
+    underlyingInstrumentUnderlyingInstrumentUnderlyingSecurityAltIDGroup :: ![UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem],
     underlyingInstrumentUnderlyingProduct :: !(Maybe UnderlyingProduct),
     underlyingInstrumentUnderlyingCFICode :: !(Maybe UnderlyingCFICode),
     underlyingInstrumentUnderlyingSecurityType :: !(Maybe UnderlyingSecurityType),
@@ -171,7 +171,7 @@ data UnderlyingInstrument = UnderlyingInstrument
     underlyingInstrumentUnderlyingStartValue :: !(Maybe UnderlyingStartValue),
     underlyingInstrumentUnderlyingCurrentValue :: !(Maybe UnderlyingCurrentValue),
     underlyingInstrumentUnderlyingEndValue :: !(Maybe UnderlyingEndValue),
-    underlyingInstrumentUnderlyingStipulationsGroup :: ![UnderlyingStipulationsGroupElem]
+    underlyingInstrumentUnderlyingInstrumentUnderlyingStipulationsGroup :: ![UnderlyingInstrumentUnderlyingStipulationsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -184,7 +184,7 @@ instance IsComponent UnderlyingInstrument where
         optionalFieldB underlyingInstrumentUnderlyingSymbolSfx,
         optionalFieldB underlyingInstrumentUnderlyingSecurityID,
         optionalFieldB underlyingInstrumentUnderlyingSecurityIDSource,
-        optionalGroupB underlyingInstrumentUnderlyingSecurityAltIDGroup,
+        optionalGroupB underlyingInstrumentUnderlyingInstrumentUnderlyingSecurityAltIDGroup,
         optionalFieldB underlyingInstrumentUnderlyingProduct,
         optionalFieldB underlyingInstrumentUnderlyingCFICode,
         optionalFieldB underlyingInstrumentUnderlyingSecurityType,
@@ -223,14 +223,14 @@ instance IsComponent UnderlyingInstrument where
         optionalFieldB underlyingInstrumentUnderlyingStartValue,
         optionalFieldB underlyingInstrumentUnderlyingCurrentValue,
         optionalFieldB underlyingInstrumentUnderlyingEndValue,
-        optionalGroupB underlyingInstrumentUnderlyingStipulationsGroup
+        optionalGroupB underlyingInstrumentUnderlyingInstrumentUnderlyingStipulationsGroup
       ]
   fromComponentFields = do
     underlyingInstrumentUnderlyingSymbol <- requiredFieldP
     underlyingInstrumentUnderlyingSymbolSfx <- optionalFieldP
     underlyingInstrumentUnderlyingSecurityID <- optionalFieldP
     underlyingInstrumentUnderlyingSecurityIDSource <- optionalFieldP
-    underlyingInstrumentUnderlyingSecurityAltIDGroup <- optionalGroupP
+    underlyingInstrumentUnderlyingInstrumentUnderlyingSecurityAltIDGroup <- optionalGroupP
     underlyingInstrumentUnderlyingProduct <- optionalFieldP
     underlyingInstrumentUnderlyingCFICode <- optionalFieldP
     underlyingInstrumentUnderlyingSecurityType <- optionalFieldP
@@ -269,7 +269,7 @@ instance IsComponent UnderlyingInstrument where
     underlyingInstrumentUnderlyingStartValue <- optionalFieldP
     underlyingInstrumentUnderlyingCurrentValue <- optionalFieldP
     underlyingInstrumentUnderlyingEndValue <- optionalFieldP
-    underlyingInstrumentUnderlyingStipulationsGroup <- optionalGroupP
+    underlyingInstrumentUnderlyingInstrumentUnderlyingStipulationsGroup <- optionalGroupP
     pure (UnderlyingInstrument {..})
 
 makeUnderlyingInstrument :: UnderlyingSymbol -> UnderlyingInstrument
@@ -277,7 +277,7 @@ makeUnderlyingInstrument underlyingInstrumentUnderlyingSymbol =
   let underlyingInstrumentUnderlyingSymbolSfx = Nothing
       underlyingInstrumentUnderlyingSecurityID = Nothing
       underlyingInstrumentUnderlyingSecurityIDSource = Nothing
-      underlyingInstrumentUnderlyingSecurityAltIDGroup = []
+      underlyingInstrumentUnderlyingInstrumentUnderlyingSecurityAltIDGroup = []
       underlyingInstrumentUnderlyingProduct = Nothing
       underlyingInstrumentUnderlyingCFICode = Nothing
       underlyingInstrumentUnderlyingSecurityType = Nothing
@@ -316,5 +316,5 @@ makeUnderlyingInstrument underlyingInstrumentUnderlyingSymbol =
       underlyingInstrumentUnderlyingStartValue = Nothing
       underlyingInstrumentUnderlyingCurrentValue = Nothing
       underlyingInstrumentUnderlyingEndValue = Nothing
-      underlyingInstrumentUnderlyingStipulationsGroup = []
+      underlyingInstrumentUnderlyingInstrumentUnderlyingStipulationsGroup = []
    in (UnderlyingInstrument {..})

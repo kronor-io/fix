@@ -18,59 +18,67 @@ import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.TestUtils
 import FIX.Components.UnderlyingInstrument
 import FIX.Components.YieldData
-import FIX.Groups.AllocsGroupElem
-import FIX.Groups.CustomFieldsGroupElem
-import FIX.Groups.EventsGroupElem
 import FIX.Groups.HopsGroupElem
-import FIX.Groups.InstrAttribGroupElem
-import FIX.Groups.LegAllocsGroupElem
-import FIX.Groups.LegSecurityAltIDGroupElem
-import FIX.Groups.LegStipulationsGroupElem
-import FIX.Groups.LegsGroupElem
-import FIX.Groups.LinesOfTextGroupElem
-import FIX.Groups.MsgTypesGroupElem
-import FIX.Groups.NestedPartiesGroupElem
-import FIX.Groups.NestedPartySubIDsGroupElem
-import FIX.Groups.OrderAttributesGroupElem
-import FIX.Groups.PartiesGroupElem
-import FIX.Groups.PartySubIDsGroupElem
-import FIX.Groups.QuoteEntriesGroupElem
-import FIX.Groups.QuoteQualifiersGroupElem
-import FIX.Groups.RegulatoryTradeIDsGroupElem
-import FIX.Groups.RelatedSymGroupElem
-import FIX.Groups.RoutingIDsGroupElem
-import FIX.Groups.SecurityAltIDGroupElem
-import FIX.Groups.StipulationsGroupElem
+import FIX.Groups.InstrumentEventsGroupElem
+import FIX.Groups.InstrumentExtensionInstrAttribGroupElem
+import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
+import FIX.Groups.InstrumentSecurityAltIDGroupElem
+import FIX.Groups.LogonMsgTypesGroupElem
+import FIX.Groups.NewsLegsGroupElem
+import FIX.Groups.NewsLinesOfTextGroupElem
+import FIX.Groups.NewsRelatedSymGroupElem
+import FIX.Groups.NewsRoutingIDsGroupElem
+import FIX.Groups.NewsUnderlyingsGroupElem
+import FIX.Groups.QuoteCancelPartiesGroupElem
+import FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
+import FIX.Groups.QuoteCancelQuoteEntriesGroupElem
+import FIX.Groups.QuoteCancelQuoteEntriesLegsGroupElem
+import FIX.Groups.QuoteCancelQuoteEntriesUnderlyingsGroupElem
+import FIX.Groups.QuoteLegsGroupElem
+import FIX.Groups.QuoteLegsLegStipulationsGroupElem
+import FIX.Groups.QuoteLegsNestedPartiesGroupElem
+import FIX.Groups.QuoteLegsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.QuotePartiesGroupElem
+import FIX.Groups.QuotePartiesPartySubIDsGroupElem
+import FIX.Groups.QuoteQuoteQualifiersGroupElem
+import FIX.Groups.QuoteRequestCustomFieldsGroupElem
+import FIX.Groups.QuoteRequestOrderAttributesGroupElem
+import FIX.Groups.QuoteRequestPartiesGroupElem
+import FIX.Groups.QuoteRequestPartiesPartySubIDsGroupElem
+import FIX.Groups.QuoteRequestRegulatoryTradeIDsGroupElem
+import FIX.Groups.QuoteRequestRejectPartiesGroupElem
+import FIX.Groups.QuoteRequestRejectPartiesPartySubIDsGroupElem
+import FIX.Groups.QuoteRequestRejectQuoteQualifiersGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymLegsGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymStipulationsGroupElem
+import FIX.Groups.QuoteRequestRejectRelatedSymUnderlyingsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymAllocsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymGroupElem
+import FIX.Groups.QuoteRequestRelatedSymLegsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesGroupElem
+import FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymQuoteQualifiersGroupElem
+import FIX.Groups.QuoteRequestRelatedSymStipulationsGroupElem
+import FIX.Groups.QuoteRequestRelatedSymUnderlyingsGroupElem
+import FIX.Groups.QuoteStipulationsGroupElem
+import FIX.Groups.QuoteUnderlyingsGroupElem
+import FIX.Groups.SecurityDefinitionLegsGroupElem
+import FIX.Groups.SecurityDefinitionRequestLegsGroupElem
+import FIX.Groups.SecurityDefinitionRequestUnderlyingsGroupElem
+import FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
 import FIX.Groups.TestUtils
-import FIX.Groups.UnderlyingSecurityAltIDGroupElem
-import FIX.Groups.UnderlyingStipulationsGroupElem
-import FIX.Groups.UnderlyingsGroupElem
+import FIX.Groups.UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
+import FIX.Groups.UnderlyingInstrumentUnderlyingStipulationsGroupElem
 import Test.Syd
 import Test.Syd.Validity
 
 spec :: Spec
 spec = do
-  describe
-    "Allocs"
-    ( do
-        genValidSpec @AllocsGroupElem
-        componentSpec @AllocsGroupElem
-        groupSpec @AllocsGroupElem
-    )
-  describe
-    "CustomFields"
-    ( do
-        genValidSpec @CustomFieldsGroupElem
-        componentSpec @CustomFieldsGroupElem
-        groupSpec @CustomFieldsGroupElem
-    )
-  describe
-    "Events"
-    ( do
-        genValidSpec @EventsGroupElem
-        componentSpec @EventsGroupElem
-        groupSpec @EventsGroupElem
-    )
   describe
     "Hops"
     ( do
@@ -79,193 +87,382 @@ spec = do
         groupSpec @HopsGroupElem
     )
   describe
-    "InstrAttrib"
+    "InstrumentEvents"
     ( do
-        genValidSpec @InstrAttribGroupElem
-        componentSpec @InstrAttribGroupElem
-        groupSpec @InstrAttribGroupElem
+        genValidSpec @InstrumentEventsGroupElem
+        componentSpec @InstrumentEventsGroupElem
+        groupSpec @InstrumentEventsGroupElem
     )
   describe
-    "LegAllocs"
+    "InstrumentExtensionInstrAttrib"
     ( do
-        genValidSpec @LegAllocsGroupElem
-        componentSpec @LegAllocsGroupElem
-        groupSpec @LegAllocsGroupElem
+        genValidSpec @InstrumentExtensionInstrAttribGroupElem
+        componentSpec @InstrumentExtensionInstrAttribGroupElem
+        groupSpec @InstrumentExtensionInstrAttribGroupElem
     )
   describe
-    "LegSecurityAltID"
+    "InstrumentLegLegSecurityAltID"
     ( do
-        genValidSpec @LegSecurityAltIDGroupElem
-        componentSpec @LegSecurityAltIDGroupElem
-        groupSpec @LegSecurityAltIDGroupElem
+        genValidSpec @InstrumentLegLegSecurityAltIDGroupElem
+        componentSpec @InstrumentLegLegSecurityAltIDGroupElem
+        groupSpec @InstrumentLegLegSecurityAltIDGroupElem
     )
   describe
-    "LegStipulations"
+    "InstrumentSecurityAltID"
     ( do
-        genValidSpec @LegStipulationsGroupElem
-        componentSpec @LegStipulationsGroupElem
-        groupSpec @LegStipulationsGroupElem
+        genValidSpec @InstrumentSecurityAltIDGroupElem
+        componentSpec @InstrumentSecurityAltIDGroupElem
+        groupSpec @InstrumentSecurityAltIDGroupElem
     )
   describe
-    "Legs"
+    "LogonMsgTypes"
     ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
+        genValidSpec @LogonMsgTypesGroupElem
+        componentSpec @LogonMsgTypesGroupElem
+        groupSpec @LogonMsgTypesGroupElem
     )
   describe
-    "Legs"
+    "NewsLegs"
     ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
+        genValidSpec @NewsLegsGroupElem
+        componentSpec @NewsLegsGroupElem
+        groupSpec @NewsLegsGroupElem
     )
   describe
-    "Legs"
+    "NewsLinesOfText"
     ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
+        genValidSpec @NewsLinesOfTextGroupElem
+        componentSpec @NewsLinesOfTextGroupElem
+        groupSpec @NewsLinesOfTextGroupElem
     )
   describe
-    "Legs"
+    "NewsRelatedSym"
     ( do
-        genValidSpec @LegsGroupElem
-        componentSpec @LegsGroupElem
-        groupSpec @LegsGroupElem
+        genValidSpec @NewsRelatedSymGroupElem
+        componentSpec @NewsRelatedSymGroupElem
+        groupSpec @NewsRelatedSymGroupElem
     )
   describe
-    "LinesOfText"
+    "NewsRoutingIDs"
     ( do
-        genValidSpec @LinesOfTextGroupElem
-        componentSpec @LinesOfTextGroupElem
-        groupSpec @LinesOfTextGroupElem
+        genValidSpec @NewsRoutingIDsGroupElem
+        componentSpec @NewsRoutingIDsGroupElem
+        groupSpec @NewsRoutingIDsGroupElem
     )
   describe
-    "MsgTypes"
+    "NewsUnderlyings"
     ( do
-        genValidSpec @MsgTypesGroupElem
-        componentSpec @MsgTypesGroupElem
-        groupSpec @MsgTypesGroupElem
+        genValidSpec @NewsUnderlyingsGroupElem
+        componentSpec @NewsUnderlyingsGroupElem
+        groupSpec @NewsUnderlyingsGroupElem
     )
   describe
-    "NestedParties"
+    "QuoteCancelParties"
     ( do
-        genValidSpec @NestedPartiesGroupElem
-        componentSpec @NestedPartiesGroupElem
-        groupSpec @NestedPartiesGroupElem
+        genValidSpec @QuoteCancelPartiesGroupElem
+        componentSpec @QuoteCancelPartiesGroupElem
+        groupSpec @QuoteCancelPartiesGroupElem
     )
   describe
-    "NestedPartySubIDs"
+    "QuoteCancelPartiesPartySubIDs"
     ( do
-        genValidSpec @NestedPartySubIDsGroupElem
-        componentSpec @NestedPartySubIDsGroupElem
-        groupSpec @NestedPartySubIDsGroupElem
+        genValidSpec @QuoteCancelPartiesPartySubIDsGroupElem
+        componentSpec @QuoteCancelPartiesPartySubIDsGroupElem
+        groupSpec @QuoteCancelPartiesPartySubIDsGroupElem
     )
   describe
-    "OrderAttributes"
+    "QuoteCancelQuoteEntries"
     ( do
-        genValidSpec @OrderAttributesGroupElem
-        componentSpec @OrderAttributesGroupElem
-        groupSpec @OrderAttributesGroupElem
+        genValidSpec @QuoteCancelQuoteEntriesGroupElem
+        componentSpec @QuoteCancelQuoteEntriesGroupElem
+        groupSpec @QuoteCancelQuoteEntriesGroupElem
     )
   describe
-    "Parties"
+    "QuoteCancelQuoteEntriesLegs"
     ( do
-        genValidSpec @PartiesGroupElem
-        componentSpec @PartiesGroupElem
-        groupSpec @PartiesGroupElem
+        genValidSpec @QuoteCancelQuoteEntriesLegsGroupElem
+        componentSpec @QuoteCancelQuoteEntriesLegsGroupElem
+        groupSpec @QuoteCancelQuoteEntriesLegsGroupElem
     )
   describe
-    "PartySubIDs"
+    "QuoteCancelQuoteEntriesUnderlyings"
     ( do
-        genValidSpec @PartySubIDsGroupElem
-        componentSpec @PartySubIDsGroupElem
-        groupSpec @PartySubIDsGroupElem
+        genValidSpec @QuoteCancelQuoteEntriesUnderlyingsGroupElem
+        componentSpec @QuoteCancelQuoteEntriesUnderlyingsGroupElem
+        groupSpec @QuoteCancelQuoteEntriesUnderlyingsGroupElem
     )
   describe
-    "QuoteEntries"
+    "QuoteLegs"
     ( do
-        genValidSpec @QuoteEntriesGroupElem
-        componentSpec @QuoteEntriesGroupElem
-        groupSpec @QuoteEntriesGroupElem
+        genValidSpec @QuoteLegsGroupElem
+        componentSpec @QuoteLegsGroupElem
+        groupSpec @QuoteLegsGroupElem
     )
   describe
-    "QuoteQualifiers"
+    "QuoteLegsLegStipulations"
     ( do
-        genValidSpec @QuoteQualifiersGroupElem
-        componentSpec @QuoteQualifiersGroupElem
-        groupSpec @QuoteQualifiersGroupElem
+        genValidSpec @QuoteLegsLegStipulationsGroupElem
+        componentSpec @QuoteLegsLegStipulationsGroupElem
+        groupSpec @QuoteLegsLegStipulationsGroupElem
     )
   describe
-    "RegulatoryTradeIDs"
+    "QuoteLegsNestedParties"
     ( do
-        genValidSpec @RegulatoryTradeIDsGroupElem
-        componentSpec @RegulatoryTradeIDsGroupElem
-        groupSpec @RegulatoryTradeIDsGroupElem
+        genValidSpec @QuoteLegsNestedPartiesGroupElem
+        componentSpec @QuoteLegsNestedPartiesGroupElem
+        groupSpec @QuoteLegsNestedPartiesGroupElem
     )
   describe
-    "RelatedSym"
+    "QuoteLegsNestedPartiesNestedPartySubIDs"
     ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
+        genValidSpec @QuoteLegsNestedPartiesNestedPartySubIDsGroupElem
+        componentSpec @QuoteLegsNestedPartiesNestedPartySubIDsGroupElem
+        groupSpec @QuoteLegsNestedPartiesNestedPartySubIDsGroupElem
     )
   describe
-    "RelatedSym"
+    "QuoteParties"
     ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
+        genValidSpec @QuotePartiesGroupElem
+        componentSpec @QuotePartiesGroupElem
+        groupSpec @QuotePartiesGroupElem
     )
   describe
-    "RelatedSym"
+    "QuotePartiesPartySubIDs"
     ( do
-        genValidSpec @RelatedSymGroupElem
-        componentSpec @RelatedSymGroupElem
-        groupSpec @RelatedSymGroupElem
+        genValidSpec @QuotePartiesPartySubIDsGroupElem
+        componentSpec @QuotePartiesPartySubIDsGroupElem
+        groupSpec @QuotePartiesPartySubIDsGroupElem
     )
   describe
-    "RoutingIDs"
+    "QuoteQuoteQualifiers"
     ( do
-        genValidSpec @RoutingIDsGroupElem
-        componentSpec @RoutingIDsGroupElem
-        groupSpec @RoutingIDsGroupElem
+        genValidSpec @QuoteQuoteQualifiersGroupElem
+        componentSpec @QuoteQuoteQualifiersGroupElem
+        groupSpec @QuoteQuoteQualifiersGroupElem
     )
   describe
-    "SecurityAltID"
+    "QuoteRequestCustomFields"
     ( do
-        genValidSpec @SecurityAltIDGroupElem
-        componentSpec @SecurityAltIDGroupElem
-        groupSpec @SecurityAltIDGroupElem
+        genValidSpec @QuoteRequestCustomFieldsGroupElem
+        componentSpec @QuoteRequestCustomFieldsGroupElem
+        groupSpec @QuoteRequestCustomFieldsGroupElem
     )
   describe
-    "Stipulations"
+    "QuoteRequestOrderAttributes"
     ( do
-        genValidSpec @StipulationsGroupElem
-        componentSpec @StipulationsGroupElem
-        groupSpec @StipulationsGroupElem
+        genValidSpec @QuoteRequestOrderAttributesGroupElem
+        componentSpec @QuoteRequestOrderAttributesGroupElem
+        groupSpec @QuoteRequestOrderAttributesGroupElem
     )
   describe
-    "UnderlyingSecurityAltID"
+    "QuoteRequestParties"
     ( do
-        genValidSpec @UnderlyingSecurityAltIDGroupElem
-        componentSpec @UnderlyingSecurityAltIDGroupElem
-        groupSpec @UnderlyingSecurityAltIDGroupElem
+        genValidSpec @QuoteRequestPartiesGroupElem
+        componentSpec @QuoteRequestPartiesGroupElem
+        groupSpec @QuoteRequestPartiesGroupElem
     )
   describe
-    "UnderlyingStipulations"
+    "QuoteRequestPartiesPartySubIDs"
     ( do
-        genValidSpec @UnderlyingStipulationsGroupElem
-        componentSpec @UnderlyingStipulationsGroupElem
-        groupSpec @UnderlyingStipulationsGroupElem
+        genValidSpec @QuoteRequestPartiesPartySubIDsGroupElem
+        componentSpec @QuoteRequestPartiesPartySubIDsGroupElem
+        groupSpec @QuoteRequestPartiesPartySubIDsGroupElem
     )
   describe
-    "Underlyings"
+    "QuoteRequestRegulatoryTradeIDs"
     ( do
-        genValidSpec @UnderlyingsGroupElem
-        componentSpec @UnderlyingsGroupElem
-        groupSpec @UnderlyingsGroupElem
+        genValidSpec @QuoteRequestRegulatoryTradeIDsGroupElem
+        componentSpec @QuoteRequestRegulatoryTradeIDsGroupElem
+        groupSpec @QuoteRequestRegulatoryTradeIDsGroupElem
+    )
+  describe
+    "QuoteRequestRejectParties"
+    ( do
+        genValidSpec @QuoteRequestRejectPartiesGroupElem
+        componentSpec @QuoteRequestRejectPartiesGroupElem
+        groupSpec @QuoteRequestRejectPartiesGroupElem
+    )
+  describe
+    "QuoteRequestRejectPartiesPartySubIDs"
+    ( do
+        genValidSpec @QuoteRequestRejectPartiesPartySubIDsGroupElem
+        componentSpec @QuoteRequestRejectPartiesPartySubIDsGroupElem
+        groupSpec @QuoteRequestRejectPartiesPartySubIDsGroupElem
+    )
+  describe
+    "QuoteRequestRejectQuoteQualifiers"
+    ( do
+        genValidSpec @QuoteRequestRejectQuoteQualifiersGroupElem
+        componentSpec @QuoteRequestRejectQuoteQualifiersGroupElem
+        groupSpec @QuoteRequestRejectQuoteQualifiersGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSym"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSymLegs"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymLegsGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymLegsGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymLegsGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSymLegsLegStipulations"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSymLegsNestedParties"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDs"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSymStipulations"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymStipulationsGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymStipulationsGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymStipulationsGroupElem
+    )
+  describe
+    "QuoteRequestRejectRelatedSymUnderlyings"
+    ( do
+        genValidSpec @QuoteRequestRejectRelatedSymUnderlyingsGroupElem
+        componentSpec @QuoteRequestRejectRelatedSymUnderlyingsGroupElem
+        groupSpec @QuoteRequestRejectRelatedSymUnderlyingsGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSym"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymGroupElem
+        componentSpec @QuoteRequestRelatedSymGroupElem
+        groupSpec @QuoteRequestRelatedSymGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymAllocs"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymAllocsGroupElem
+        componentSpec @QuoteRequestRelatedSymAllocsGroupElem
+        groupSpec @QuoteRequestRelatedSymAllocsGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymLegs"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymLegsGroupElem
+        componentSpec @QuoteRequestRelatedSymLegsGroupElem
+        groupSpec @QuoteRequestRelatedSymLegsGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymLegsLegAllocs"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymLegsLegAllocsGroupElem
+        componentSpec @QuoteRequestRelatedSymLegsLegAllocsGroupElem
+        groupSpec @QuoteRequestRelatedSymLegsLegAllocsGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymLegsLegAllocsNestedParties"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymLegsLegAllocsNestedPartiesGroupElem
+        componentSpec @QuoteRequestRelatedSymLegsLegAllocsNestedPartiesGroupElem
+        groupSpec @QuoteRequestRelatedSymLegsLegAllocsNestedPartiesGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDs"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
+        componentSpec @QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
+        groupSpec @QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymQuoteQualifiers"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymQuoteQualifiersGroupElem
+        componentSpec @QuoteRequestRelatedSymQuoteQualifiersGroupElem
+        groupSpec @QuoteRequestRelatedSymQuoteQualifiersGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymStipulations"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymStipulationsGroupElem
+        componentSpec @QuoteRequestRelatedSymStipulationsGroupElem
+        groupSpec @QuoteRequestRelatedSymStipulationsGroupElem
+    )
+  describe
+    "QuoteRequestRelatedSymUnderlyings"
+    ( do
+        genValidSpec @QuoteRequestRelatedSymUnderlyingsGroupElem
+        componentSpec @QuoteRequestRelatedSymUnderlyingsGroupElem
+        groupSpec @QuoteRequestRelatedSymUnderlyingsGroupElem
+    )
+  describe
+    "QuoteStipulations"
+    ( do
+        genValidSpec @QuoteStipulationsGroupElem
+        componentSpec @QuoteStipulationsGroupElem
+        groupSpec @QuoteStipulationsGroupElem
+    )
+  describe
+    "QuoteUnderlyings"
+    ( do
+        genValidSpec @QuoteUnderlyingsGroupElem
+        componentSpec @QuoteUnderlyingsGroupElem
+        groupSpec @QuoteUnderlyingsGroupElem
+    )
+  describe
+    "SecurityDefinitionLegs"
+    ( do
+        genValidSpec @SecurityDefinitionLegsGroupElem
+        componentSpec @SecurityDefinitionLegsGroupElem
+        groupSpec @SecurityDefinitionLegsGroupElem
+    )
+  describe
+    "SecurityDefinitionRequestLegs"
+    ( do
+        genValidSpec @SecurityDefinitionRequestLegsGroupElem
+        componentSpec @SecurityDefinitionRequestLegsGroupElem
+        groupSpec @SecurityDefinitionRequestLegsGroupElem
+    )
+  describe
+    "SecurityDefinitionRequestUnderlyings"
+    ( do
+        genValidSpec @SecurityDefinitionRequestUnderlyingsGroupElem
+        componentSpec @SecurityDefinitionRequestUnderlyingsGroupElem
+        groupSpec @SecurityDefinitionRequestUnderlyingsGroupElem
+    )
+  describe
+    "SecurityDefinitionUnderlyings"
+    ( do
+        genValidSpec @SecurityDefinitionUnderlyingsGroupElem
+        componentSpec @SecurityDefinitionUnderlyingsGroupElem
+        groupSpec @SecurityDefinitionUnderlyingsGroupElem
+    )
+  describe
+    "UnderlyingInstrumentUnderlyingSecurityAltID"
+    ( do
+        genValidSpec @UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
+        componentSpec @UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
+        groupSpec @UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
+    )
+  describe
+    "UnderlyingInstrumentUnderlyingStipulations"
+    ( do
+        genValidSpec @UnderlyingInstrumentUnderlyingStipulationsGroupElem
+        componentSpec @UnderlyingInstrumentUnderlyingStipulationsGroupElem
+        groupSpec @UnderlyingInstrumentUnderlyingStipulationsGroupElem
     )
   describe
     "Instrument"

@@ -16,7 +16,7 @@ import FIX.Fields.DeliveryForm
 import FIX.Fields.MsgType
 import FIX.Fields.PctAtRisk
 import FIX.Groups.Class
-import FIX.Groups.InstrAttribGroupElem
+import FIX.Groups.InstrumentExtensionInstrAttribGroupElem
 import GHC.Generics (Generic)
 
 -- | ComponentSpec
@@ -26,7 +26,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "PctAtRisk" False
 --       , MessagePieceGroup
 --           GroupSpec
---             { groupName = "InstrAttrib"
+--             { groupName = "InstrumentExtensionInstrAttrib"
 --             , groupNumberField = "NoInstrAttrib"
 --             , groupPieces =
 --                 [ MessagePieceField "InstrAttribType" True
@@ -39,7 +39,7 @@ import GHC.Generics (Generic)
 data InstrumentExtension = InstrumentExtension
   { instrumentExtensionDeliveryForm :: !(Maybe DeliveryForm),
     instrumentExtensionPctAtRisk :: !(Maybe PctAtRisk),
-    instrumentExtensionInstrAttribGroup :: ![InstrAttribGroupElem]
+    instrumentExtensionInstrumentExtensionInstrAttribGroup :: ![InstrumentExtensionInstrAttribGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -50,17 +50,17 @@ instance IsComponent InstrumentExtension where
     mconcat
       [ optionalFieldB instrumentExtensionDeliveryForm,
         optionalFieldB instrumentExtensionPctAtRisk,
-        optionalGroupB instrumentExtensionInstrAttribGroup
+        optionalGroupB instrumentExtensionInstrumentExtensionInstrAttribGroup
       ]
   fromComponentFields = do
     instrumentExtensionDeliveryForm <- optionalFieldP
     instrumentExtensionPctAtRisk <- optionalFieldP
-    instrumentExtensionInstrAttribGroup <- optionalGroupP
+    instrumentExtensionInstrumentExtensionInstrAttribGroup <- optionalGroupP
     pure (InstrumentExtension {..})
 
 makeInstrumentExtension :: InstrumentExtension
 makeInstrumentExtension =
   let instrumentExtensionDeliveryForm = Nothing
       instrumentExtensionPctAtRisk = Nothing
-      instrumentExtensionInstrAttribGroup = []
+      instrumentExtensionInstrumentExtensionInstrAttribGroup = []
    in (InstrumentExtension {..})
