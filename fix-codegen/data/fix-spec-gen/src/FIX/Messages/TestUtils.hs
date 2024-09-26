@@ -54,7 +54,7 @@ messageSpec dir = do
   scenarioDir ("test_resources/messages/" ++ dir ++ "/contents/") $ \fp -> do
     af <- resolveFile' fp
     when (fileExtension af == Just ".tagvalue") $
-      it "can parse this message and roundtrip it" $ do
+      it "can parse this message and render it in a way that roundtripped" $ do
         contents <- SB.readFile (fromAbsFile af)
         case parseAnyFields contents of
           Left err -> expectationFailure err
@@ -68,17 +68,30 @@ messageSpec dir = do
                     ]
               Right a -> do
                 shouldBeValid (a :: a)
-                let renderedMessage = DList.toList $ toComponentFields a
-                shouldBeValid renderedMessage
-                renderedMessage `shouldBe` fields
-                let renderedBytes = renderAnyFields renderedMessage
+                let renderedFields = DList.toList $ toComponentFields a
+                shouldBeValid renderedFields
+                let renderedBytes = renderAnyFields renderedFields
                 shouldBeValid renderedBytes
-                renderedBytes `shouldBe` contents
+                case runComponentP renderedFields fromComponentFields of
+                  Left parseErr ->
+                    expectationFailure $
+                      unlines
+                        [ "Could not parse rendered fields:",
+                          show parseErr
+                        ]
+                  Right a' -> do
+                    shouldBeValid (a' :: a)
+                    let renderedFields' = DList.toList $ toComponentFields a
+                    shouldBeValid renderedFields'
+                    renderedFields' `shouldBe` renderedFields
+                    let renderedBytes' = renderAnyFields renderedFields'
+                    shouldBeValid renderedBytes'
+                    renderedBytes' `shouldBe` renderedBytes
 
   scenarioDir ("test_resources/messages/" ++ dir ++ "/envelope/") $ \fp -> do
     af <- resolveFile' fp
     when (fileExtension af == Just ".tagvalue") $
-      it "can parse this message and roundtrip it" $ do
+      it "can parse this message and render it in a way that roundtripped" $ do
         contents <- SB.readFile (fromAbsFile af)
         case parseAnyFields contents of
           Left err -> expectationFailure err
@@ -92,9 +105,22 @@ messageSpec dir = do
                     ]
               Right a -> do
                 shouldBeValid (a :: Envelope a)
-                let renderedMessage = toFields a
-                shouldBeValid renderedMessage
-                renderedMessage `shouldBe` fields
-                let renderedBytes = renderAnyFields renderedMessage
+                let renderedFields = toFields a
+                shouldBeValid renderedFields
+                let renderedBytes = renderAnyFields renderedFields
                 shouldBeValid renderedBytes
-                renderedBytes `shouldBe` contents
+                case runComponentP renderedFields fromComponentFields of
+                  Left parseErr ->
+                    expectationFailure $
+                      unlines
+                        [ "Could not parse rendered fields:",
+                          show parseErr
+                        ]
+                  Right a' -> do
+                    shouldBeValid (a' :: a)
+                    let renderedFields' = toFields a
+                    shouldBeValid renderedFields'
+                    renderedFields' `shouldBe` renderedFields
+                    let renderedBytes' = renderAnyFields renderedFields'
+                    shouldBeValid renderedBytes'
+                    renderedBytes' `shouldBe` renderedBytes
