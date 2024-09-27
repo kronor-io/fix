@@ -73,12 +73,8 @@ library
       FIX.Fields.CustOrderCapacity
       FIX.Fields.DatedDate
       FIX.Fields.DayCount
-      FIX.Fields.DeliverToCompID
-      FIX.Fields.DeliverToLocationID
-      FIX.Fields.DeliverToSubID
       FIX.Fields.DeliveryForm
       FIX.Fields.DeliveryType
-      FIX.Fields.EncodedHeadline
       FIX.Fields.EncodedIssuer
       FIX.Fields.EncodedLegIssuer
       FIX.Fields.EncodedLegSecurityDesc
@@ -104,9 +100,6 @@ library
       FIX.Fields.ForwardRatePrecision
       FIX.Fields.Headline
       FIX.Fields.HeartBtInt
-      FIX.Fields.HopCompID
-      FIX.Fields.HopRefID
-      FIX.Fields.HopSendingTime
       FIX.Fields.InstrAttribType
       FIX.Fields.InstrAttribValue
       FIX.Fields.InstrRegistry
@@ -115,7 +108,6 @@ library
       FIX.Fields.IssueDate
       FIX.Fields.Issuer
       FIX.Fields.LastCapacity
-      FIX.Fields.LastMsgSeqNumProcessed
       FIX.Fields.LegAllocAccount
       FIX.Fields.LegAllocQty
       FIX.Fields.LegBenchmarkCurveCurrency
@@ -185,8 +177,6 @@ library
       FIX.Fields.MaturityDate
       FIX.Fields.MaturityDate2
       FIX.Fields.MaturityMonthYear
-      FIX.Fields.MaxMessageSize
-      FIX.Fields.MessageEncoding
       FIX.Fields.MidPx
       FIX.Fields.MidPx2
       FIX.Fields.MidSpotRate
@@ -196,7 +186,6 @@ library
       FIX.Fields.MinTradeVol
       FIX.Fields.MktBidPx
       FIX.Fields.MktOfferPx
-      FIX.Fields.MsgDirection
       FIX.Fields.MsgSeqNum
       FIX.Fields.MsgType
       FIX.Fields.NearLegRatePrecision
@@ -206,17 +195,14 @@ library
       FIX.Fields.NestedPartyRoleQualifier
       FIX.Fields.NestedPartySubID
       FIX.Fields.NestedPartySubIDType
-      FIX.Fields.NextExpectedMsgSeqNum
       FIX.Fields.NoAllocs
       FIX.Fields.NoCustomFields
       FIX.Fields.NoEvents
-      FIX.Fields.NoHops
       FIX.Fields.NoInstrAttrib
       FIX.Fields.NoLegAllocs
       FIX.Fields.NoLegs
       FIX.Fields.NoLegSecurityAltID
       FIX.Fields.NoLegStipulations
-      FIX.Fields.NoMsgTypes
       FIX.Fields.NoNestedPartyIDs
       FIX.Fields.NoNestedPartySubIDs
       FIX.Fields.NoOrderAttributes
@@ -242,9 +228,6 @@ library
       FIX.Fields.OfferSize
       FIX.Fields.OfferSpotRate
       FIX.Fields.OfferYield
-      FIX.Fields.OnBehalfOfCompID
-      FIX.Fields.OnBehalfOfLocationID
-      FIX.Fields.OnBehalfOfSubID
       FIX.Fields.OptAttribute
       FIX.Fields.OptionDate
       FIX.Fields.OptionPeriod
@@ -255,8 +238,6 @@ library
       FIX.Fields.OrderQty
       FIX.Fields.OrderQty2
       FIX.Fields.OrdType
-      FIX.Fields.OrigSendingTime
-      FIX.Fields.OrigTime
       FIX.Fields.PartyID
       FIX.Fields.PartyIDSource
       FIX.Fields.PartyRole
@@ -266,8 +247,6 @@ library
       FIX.Fields.Password
       FIX.Fields.PctAtRisk
       FIX.Fields.Pool
-      FIX.Fields.PossDupFlag
-      FIX.Fields.PossResend
       FIX.Fields.PrevClosePx
       FIX.Fields.Price
       FIX.Fields.Price2
@@ -285,7 +264,6 @@ library
       FIX.Fields.QuoteRespID
       FIX.Fields.QuoteResponseLevel
       FIX.Fields.QuoteType
-      FIX.Fields.RawData
       FIX.Fields.RedemptionDate
       FIX.Fields.RefMsgType
       FIX.Fields.RefSeqNum
@@ -303,7 +281,6 @@ library
       FIX.Fields.RoundLot
       FIX.Fields.RoutingID
       FIX.Fields.RoutingType
-      FIX.Fields.SecureData
       FIX.Fields.SecurityAltID
       FIX.Fields.SecurityAltIDSource
       FIX.Fields.SecurityDesc
@@ -317,7 +294,6 @@ library
       FIX.Fields.SecuritySubType
       FIX.Fields.SecurityType
       FIX.Fields.SenderCompID
-      FIX.Fields.SenderLocationID
       FIX.Fields.SenderSubID
       FIX.Fields.SendingTime
       FIX.Fields.SessionRejectReason
@@ -342,10 +318,7 @@ library
       FIX.Fields.Symbol
       FIX.Fields.SymbolSfx
       FIX.Fields.TargetCompID
-      FIX.Fields.TargetLocationID
-      FIX.Fields.TargetSubID
       FIX.Fields.TerminationType
-      FIX.Fields.TestMessageIndicator
       FIX.Fields.TestReqID
       FIX.Fields.Text
       FIX.Fields.TradeOriginationDate
@@ -398,11 +371,8 @@ library
       FIX.Fields.UnderlyingSymbolSfx
       FIX.Fields.UPICode
       FIX.Fields.UPICode2
-      FIX.Fields.Urgency
-      FIX.Fields.URLLink
       FIX.Fields.Username
       FIX.Fields.ValidUntilTime
-      FIX.Fields.XmlData
       FIX.Fields.Yield
       FIX.Fields.YieldCalcDate
       FIX.Fields.YieldRedemptionDate
@@ -410,17 +380,12 @@ library
       FIX.Fields.YieldRedemptionPriceType
       FIX.Fields.YieldType
       FIX.Groups.Class
-      FIX.Groups.HopsGroupElem
       FIX.Groups.InstrumentEventsGroupElem
       FIX.Groups.InstrumentExtensionInstrAttribGroupElem
       FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
       FIX.Groups.InstrumentSecurityAltIDGroupElem
-      FIX.Groups.LogonMsgTypesGroupElem
-      FIX.Groups.NewsLegsGroupElem
       FIX.Groups.NewsLinesOfTextGroupElem
-      FIX.Groups.NewsRelatedSymGroupElem
       FIX.Groups.NewsRoutingIDsGroupElem
-      FIX.Groups.NewsUnderlyingsGroupElem
       FIX.Groups.QuoteCancelPartiesGroupElem
       FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
       FIX.Groups.QuoteCancelQuoteEntriesGroupElem

@@ -12,7 +12,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Fields.EncodedText
 import FIX.Fields.MsgType
 import FIX.Fields.Text
 import FIX.Groups.Class
@@ -23,28 +22,17 @@ import GHC.Generics (Generic)
 --   { messageName = "Logout"
 --   , messageType = "5"
 --   , messageCategory = "admin"
---   , messagePieces =
---       [ MessagePieceField "Text" False
---       , MessagePieceField "EncodedText" False
---       ]
+--   , messagePieces = [ MessagePieceField "Text" False ]
 --   }
-data Logout = Logout
-  { logoutText :: !(Maybe Text),
-    logoutEncodedText :: !(Maybe EncodedText)
-  }
+data Logout = Logout {logoutText :: !(Maybe Text)}
   deriving stock (Show, Eq, Generic)
 
 instance Validity Logout
 
 instance IsComponent Logout where
-  toComponentFields ((Logout {..})) =
-    mconcat
-      [ optionalFieldB logoutText,
-        optionalFieldB logoutEncodedText
-      ]
+  toComponentFields ((Logout {..})) = mconcat [optionalFieldB logoutText]
   fromComponentFields = do
     logoutText <- optionalFieldP
-    logoutEncodedText <- optionalFieldP
     pure (Logout {..})
 
 instance IsMessage Logout where
@@ -53,5 +41,4 @@ instance IsMessage Logout where
 makeLogout :: Logout
 makeLogout =
   let logoutText = Nothing
-      logoutEncodedText = Nothing
    in (Logout {..})

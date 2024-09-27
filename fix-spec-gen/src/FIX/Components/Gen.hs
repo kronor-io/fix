@@ -18,17 +18,12 @@ import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.UnderlyingInstrument
 import FIX.Components.YieldData
 import FIX.Fields.Gen ()
-import FIX.Groups.HopsGroupElem
 import FIX.Groups.InstrumentEventsGroupElem
 import FIX.Groups.InstrumentExtensionInstrAttribGroupElem
 import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
 import FIX.Groups.InstrumentSecurityAltIDGroupElem
-import FIX.Groups.LogonMsgTypesGroupElem
-import FIX.Groups.NewsLegsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
-import FIX.Groups.NewsRelatedSymGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
-import FIX.Groups.NewsUnderlyingsGroupElem
 import FIX.Groups.QuoteCancelPartiesGroupElem
 import FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
 import FIX.Groups.QuoteCancelQuoteEntriesGroupElem
@@ -74,10 +69,6 @@ import FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
 import FIX.Groups.UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
 import FIX.Groups.UnderlyingInstrumentUnderlyingStipulationsGroupElem
 
-instance GenValid HopsGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid InstrumentEventsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
@@ -94,27 +85,11 @@ instance GenValid InstrumentSecurityAltIDGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid LogonMsgTypesGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid NewsLegsGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid NewsLinesOfTextGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid NewsRelatedSymGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid NewsRoutingIDsGroupElem where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid NewsUnderlyingsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

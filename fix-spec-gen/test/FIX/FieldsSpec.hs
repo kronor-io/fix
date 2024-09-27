@@ -55,12 +55,8 @@ import FIX.Fields.CustomFieldsName
 import FIX.Fields.CustomFieldsValue
 import FIX.Fields.DatedDate
 import FIX.Fields.DayCount
-import FIX.Fields.DeliverToCompID
-import FIX.Fields.DeliverToLocationID
-import FIX.Fields.DeliverToSubID
 import FIX.Fields.DeliveryForm
 import FIX.Fields.DeliveryType
-import FIX.Fields.EncodedHeadline
 import FIX.Fields.EncodedIssuer
 import FIX.Fields.EncodedLegIssuer
 import FIX.Fields.EncodedLegSecurityDesc
@@ -87,9 +83,6 @@ import FIX.Fields.ForwardRatePrecision
 import FIX.Fields.Gen ()
 import FIX.Fields.Headline
 import FIX.Fields.HeartBtInt
-import FIX.Fields.HopCompID
-import FIX.Fields.HopRefID
-import FIX.Fields.HopSendingTime
 import FIX.Fields.InstrAttribType
 import FIX.Fields.InstrAttribValue
 import FIX.Fields.InstrRegistry
@@ -98,7 +91,6 @@ import FIX.Fields.InterestRatePrecision
 import FIX.Fields.IssueDate
 import FIX.Fields.Issuer
 import FIX.Fields.LastCapacity
-import FIX.Fields.LastMsgSeqNumProcessed
 import FIX.Fields.LegAllocAccount
 import FIX.Fields.LegAllocQty
 import FIX.Fields.LegBenchmarkCurveCurrency
@@ -168,8 +160,6 @@ import FIX.Fields.MarginRatio
 import FIX.Fields.MaturityDate
 import FIX.Fields.MaturityDate2
 import FIX.Fields.MaturityMonthYear
-import FIX.Fields.MaxMessageSize
-import FIX.Fields.MessageEncoding
 import FIX.Fields.MidPx
 import FIX.Fields.MidPx2
 import FIX.Fields.MidSpotRate
@@ -179,7 +169,6 @@ import FIX.Fields.MinOfferSize
 import FIX.Fields.MinTradeVol
 import FIX.Fields.MktBidPx
 import FIX.Fields.MktOfferPx
-import FIX.Fields.MsgDirection
 import FIX.Fields.MsgSeqNum
 import FIX.Fields.MsgType
 import FIX.Fields.NearLegRatePrecision
@@ -189,17 +178,14 @@ import FIX.Fields.NestedPartyRole
 import FIX.Fields.NestedPartyRoleQualifier
 import FIX.Fields.NestedPartySubID
 import FIX.Fields.NestedPartySubIDType
-import FIX.Fields.NextExpectedMsgSeqNum
 import FIX.Fields.NoAllocs
 import FIX.Fields.NoCustomFields
 import FIX.Fields.NoEvents
-import FIX.Fields.NoHops
 import FIX.Fields.NoInstrAttrib
 import FIX.Fields.NoLegAllocs
 import FIX.Fields.NoLegSecurityAltID
 import FIX.Fields.NoLegStipulations
 import FIX.Fields.NoLegs
-import FIX.Fields.NoMsgTypes
 import FIX.Fields.NoNestedPartyIDs
 import FIX.Fields.NoNestedPartySubIDs
 import FIX.Fields.NoOrderAttributes
@@ -225,9 +211,6 @@ import FIX.Fields.OfferPx2
 import FIX.Fields.OfferSize
 import FIX.Fields.OfferSpotRate
 import FIX.Fields.OfferYield
-import FIX.Fields.OnBehalfOfCompID
-import FIX.Fields.OnBehalfOfLocationID
-import FIX.Fields.OnBehalfOfSubID
 import FIX.Fields.OptAttribute
 import FIX.Fields.OptionDate
 import FIX.Fields.OptionPeriod
@@ -238,8 +221,6 @@ import FIX.Fields.OrderCapacity
 import FIX.Fields.OrderPercent
 import FIX.Fields.OrderQty
 import FIX.Fields.OrderQty2
-import FIX.Fields.OrigSendingTime
-import FIX.Fields.OrigTime
 import FIX.Fields.PartyID
 import FIX.Fields.PartyIDSource
 import FIX.Fields.PartyRole
@@ -249,8 +230,6 @@ import FIX.Fields.PartySubIDType
 import FIX.Fields.Password
 import FIX.Fields.PctAtRisk
 import FIX.Fields.Pool
-import FIX.Fields.PossDupFlag
-import FIX.Fields.PossResend
 import FIX.Fields.PrevClosePx
 import FIX.Fields.Price
 import FIX.Fields.Price2
@@ -269,7 +248,6 @@ import FIX.Fields.QuoteRespID
 import FIX.Fields.QuoteResponseLevel
 import FIX.Fields.QuoteType
 import FIX.Fields.RFQReqID
-import FIX.Fields.RawData
 import FIX.Fields.RedemptionDate
 import FIX.Fields.RefMsgType
 import FIX.Fields.RefSeqNum
@@ -286,7 +264,6 @@ import FIX.Fields.RoundingDirection
 import FIX.Fields.RoundingModulus
 import FIX.Fields.RoutingID
 import FIX.Fields.RoutingType
-import FIX.Fields.SecureData
 import FIX.Fields.SecurityAltID
 import FIX.Fields.SecurityAltIDSource
 import FIX.Fields.SecurityDesc
@@ -300,7 +277,6 @@ import FIX.Fields.SecurityResponseType
 import FIX.Fields.SecuritySubType
 import FIX.Fields.SecurityType
 import FIX.Fields.SenderCompID
-import FIX.Fields.SenderLocationID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
 import FIX.Fields.SessionRejectReason
@@ -325,10 +301,7 @@ import FIX.Fields.SubscriptionRequestType
 import FIX.Fields.Symbol
 import FIX.Fields.SymbolSfx
 import FIX.Fields.TargetCompID
-import FIX.Fields.TargetLocationID
-import FIX.Fields.TargetSubID
 import FIX.Fields.TerminationType
-import FIX.Fields.TestMessageIndicator
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
 import FIX.Fields.TradeOriginationDate
@@ -337,7 +310,6 @@ import FIX.Fields.TradingSessionSubID
 import FIX.Fields.TransactTime
 import FIX.Fields.UPICode
 import FIX.Fields.UPICode2
-import FIX.Fields.URLLink
 import FIX.Fields.UnderlyingCFICode
 import FIX.Fields.UnderlyingCPProgram
 import FIX.Fields.UnderlyingCPRegType
@@ -382,10 +354,8 @@ import FIX.Fields.UnderlyingStrikeCurrency
 import FIX.Fields.UnderlyingStrikePrice
 import FIX.Fields.UnderlyingSymbol
 import FIX.Fields.UnderlyingSymbolSfx
-import FIX.Fields.Urgency
 import FIX.Fields.Username
 import FIX.Fields.ValidUntilTime
-import FIX.Fields.XmlData
 import FIX.Fields.Yield
 import FIX.Fields.YieldCalcDate
 import FIX.Fields.YieldRedemptionDate
@@ -411,8 +381,6 @@ spec = do
   fieldSpec @MsgType
   fieldSpec @OrderQty
   fieldSpec @OrdType
-  fieldSpec @OrigTime
-  fieldSpec @PossDupFlag
   fieldSpec @Price
   fieldSpec @RefSeqNum
   fieldSpec @SecurityID
@@ -422,10 +390,8 @@ spec = do
   fieldSpec @Side
   fieldSpec @Symbol
   fieldSpec @TargetCompID
-  fieldSpec @TargetSubID
   fieldSpec @Text
   fieldSpec @TransactTime
-  fieldSpec @Urgency
   fieldSpec @ValidUntilTime
   fieldSpec @SettlType
   fieldSpec @SettlDate
@@ -434,22 +400,14 @@ spec = do
   fieldSpec @NoAllocs
   fieldSpec @AllocAccount
   fieldSpec @AllocQty
-  fieldSpec @SecureData
-  fieldSpec @RawData
-  fieldSpec @PossResend
   fieldSpec @EncryptMethod
   fieldSpec @ExDestination
   fieldSpec @Issuer
   fieldSpec @SecurityDesc
   fieldSpec @HeartBtInt
   fieldSpec @TestReqID
-  fieldSpec @OnBehalfOfCompID
-  fieldSpec @OnBehalfOfSubID
   fieldSpec @QuoteID
-  fieldSpec @OrigSendingTime
   fieldSpec @ExpireTime
-  fieldSpec @DeliverToCompID
-  fieldSpec @DeliverToSubID
   fieldSpec @QuoteReqID
   fieldSpec @BidPx
   fieldSpec @OfferPx
@@ -457,13 +415,8 @@ spec = do
   fieldSpec @OfferSize
   fieldSpec @PrevClosePx
   fieldSpec @ResetSeqNumFlag
-  fieldSpec @SenderLocationID
-  fieldSpec @TargetLocationID
-  fieldSpec @OnBehalfOfLocationID
-  fieldSpec @DeliverToLocationID
   fieldSpec @NoRelatedSym
   fieldSpec @Headline
-  fieldSpec @URLLink
   fieldSpec @CashOrderQty
   fieldSpec @SettlCurrFxRateCalc
   fieldSpec @SecurityType
@@ -477,7 +430,6 @@ spec = do
   fieldSpec @StrikePrice
   fieldSpec @OptAttribute
   fieldSpec @SecurityExchange
-  fieldSpec @XmlData
   fieldSpec @NoRoutingIDs
   fieldSpec @RoutingType
   fieldSpec @RoutingID
@@ -539,20 +491,14 @@ spec = do
   fieldSpec @SecurityResponseID
   fieldSpec @SecurityResponseType
   fieldSpec @TradingSessionID
-  fieldSpec @MessageEncoding
   fieldSpec @EncodedIssuer
   fieldSpec @EncodedSecurityDesc
   fieldSpec @EncodedText
-  fieldSpec @EncodedHeadline
   fieldSpec @EncodedUnderlyingIssuer
   fieldSpec @EncodedUnderlyingSecurityDesc
-  fieldSpec @LastMsgSeqNumProcessed
   fieldSpec @RefTagID
   fieldSpec @RefMsgType
   fieldSpec @SessionRejectReason
-  fieldSpec @MaxMessageSize
-  fieldSpec @NoMsgTypes
-  fieldSpec @MsgDirection
   fieldSpec @PriceType
   fieldSpec @UnderlyingCouponRate
   fieldSpec @UnderlyingContractMultiplier
@@ -570,7 +516,6 @@ spec = do
   fieldSpec @CFICode
   fieldSpec @UnderlyingProduct
   fieldSpec @UnderlyingCFICode
-  fieldSpec @TestMessageIndicator
   fieldSpec @RoundingDirection
   fieldSpec @RoundingModulus
   fieldSpec @CountryOfIssue
@@ -630,10 +575,6 @@ spec = do
   fieldSpec @LegRatioQty
   fieldSpec @LegSide
   fieldSpec @TradingSessionSubID
-  fieldSpec @NoHops
-  fieldSpec @HopCompID
-  fieldSpec @HopSendingTime
-  fieldSpec @HopRefID
   fieldSpec @MidPx
   fieldSpec @BidYield
   fieldSpec @MidYield
@@ -689,7 +630,6 @@ spec = do
   fieldSpec @UnderlyingSecuritySubType
   fieldSpec @LegSecuritySubType
   fieldSpec @TerminationType
-  fieldSpec @NextExpectedMsgSeqNum
   fieldSpec @NoPartySubIDs
   fieldSpec @PartySubIDType
   fieldSpec @NoNestedPartySubIDs

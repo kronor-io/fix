@@ -12,19 +12,11 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Fields.EncodedHeadline
 import FIX.Fields.Headline
 import FIX.Fields.MsgType
-import FIX.Fields.OrigTime
-import FIX.Fields.RawData
-import FIX.Fields.URLLink
-import FIX.Fields.Urgency
 import FIX.Groups.Class
-import FIX.Groups.NewsLegsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
-import FIX.Groups.NewsRelatedSymGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
-import FIX.Groups.NewsUnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -33,42 +25,7 @@ import GHC.Generics (Generic)
 --   , messageType = "B"
 --   , messageCategory = "app"
 --   , messagePieces =
---       [ MessagePieceField "OrigTime" False
---       , MessagePieceField "Urgency" False
---       , MessagePieceField "Headline" True
---       , MessagePieceField "EncodedHeadline" False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NewsRoutingIDs"
---             , groupNumberField = "NoRoutingIDs"
---             , groupPieces =
---                 [ MessagePieceField "RoutingType" True
---                 , MessagePieceField "RoutingID" False
---                 ]
---             }
---           False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NewsRelatedSym"
---             , groupNumberField = "NoRelatedSym"
---             , groupPieces = [ MessagePieceComponent "Instrument" True ]
---             }
---           False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NewsLegs"
---             , groupNumberField = "NoLegs"
---             , groupPieces = [ MessagePieceComponent "InstrumentLeg" True ]
---             }
---           False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "NewsUnderlyings"
---             , groupNumberField = "NoUnderlyings"
---             , groupPieces =
---                 [ MessagePieceComponent "UnderlyingInstrument" True ]
---             }
---           False
+--       [ MessagePieceField "Headline" True
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "NewsLinesOfText"
@@ -79,22 +36,22 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           True
---       , MessagePieceField "URLLink" False
---       , MessagePieceField "RawData" False
+--       , MessagePieceGroup
+--           GroupSpec
+--             { groupName = "NewsRoutingIDs"
+--             , groupNumberField = "NoRoutingIDs"
+--             , groupPieces =
+--                 [ MessagePieceField "RoutingType" True
+--                 , MessagePieceField "RoutingID" False
+--                 ]
+--             }
+--           False
 --       ]
 --   }
 data News = News
-  { newsOrigTime :: !(Maybe OrigTime),
-    newsUrgency :: !(Maybe Urgency),
-    newsHeadline :: !Headline,
-    newsEncodedHeadline :: !(Maybe EncodedHeadline),
-    newsNewsRoutingIDsGroup :: ![NewsRoutingIDsGroupElem],
-    newsNewsRelatedSymGroup :: ![NewsRelatedSymGroupElem],
-    newsNewsLegsGroup :: ![NewsLegsGroupElem],
-    newsNewsUnderlyingsGroup :: ![NewsUnderlyingsGroupElem],
+  { newsHeadline :: !Headline,
     newsNewsLinesOfTextGroup :: !(NonEmpty NewsLinesOfTextGroupElem),
-    newsURLLink :: !(Maybe URLLink),
-    newsRawData :: !(Maybe RawData)
+    newsNewsRoutingIDsGroup :: ![NewsRoutingIDsGroupElem]
   }
   deriving stock (Show, Eq, Generic)
 
@@ -103,30 +60,14 @@ instance Validity News
 instance IsComponent News where
   toComponentFields ((News {..})) =
     mconcat
-      [ optionalFieldB newsOrigTime,
-        optionalFieldB newsUrgency,
-        requiredFieldB newsHeadline,
-        optionalFieldB newsEncodedHeadline,
-        optionalGroupB newsNewsRoutingIDsGroup,
-        optionalGroupB newsNewsRelatedSymGroup,
-        optionalGroupB newsNewsLegsGroup,
-        optionalGroupB newsNewsUnderlyingsGroup,
+      [ requiredFieldB newsHeadline,
         requiredGroupB newsNewsLinesOfTextGroup,
-        optionalFieldB newsURLLink,
-        optionalFieldB newsRawData
+        optionalGroupB newsNewsRoutingIDsGroup
       ]
   fromComponentFields = do
-    newsOrigTime <- optionalFieldP
-    newsUrgency <- optionalFieldP
     newsHeadline <- requiredFieldP
-    newsEncodedHeadline <- optionalFieldP
-    newsNewsRoutingIDsGroup <- optionalGroupP
-    newsNewsRelatedSymGroup <- optionalGroupP
-    newsNewsLegsGroup <- optionalGroupP
-    newsNewsUnderlyingsGroup <- optionalGroupP
     newsNewsLinesOfTextGroup <- requiredGroupP
-    newsURLLink <- optionalFieldP
-    newsRawData <- optionalFieldP
+    newsNewsRoutingIDsGroup <- optionalGroupP
     pure (News {..})
 
 instance IsMessage News where
@@ -134,13 +75,5 @@ instance IsMessage News where
 
 makeNews :: Headline -> (NonEmpty NewsLinesOfTextGroupElem -> News)
 makeNews newsHeadline newsNewsLinesOfTextGroup =
-  let newsOrigTime = Nothing
-      newsUrgency = Nothing
-      newsEncodedHeadline = Nothing
-      newsNewsRoutingIDsGroup = []
-      newsNewsRelatedSymGroup = []
-      newsNewsLegsGroup = []
-      newsNewsUnderlyingsGroup = []
-      newsURLLink = Nothing
-      newsRawData = Nothing
+  let newsNewsRoutingIDsGroup = []
    in (News {..})

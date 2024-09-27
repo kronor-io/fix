@@ -38,8 +38,8 @@ import GHC.Generics (Generic)
 import Text.Megaparsec
 
 data AnyMessage
-  = SomeHeartbeat !Heartbeat
-  | SomeLogon !Logon
+  = SomeLogon !Logon
+  | SomeHeartbeat !Heartbeat
   | SomeReject !Reject
   | SomeLogout !Logout
   | SomeNews !News
@@ -55,8 +55,8 @@ instance Validity AnyMessage
 
 anyMessageType :: AnyMessage -> MsgType
 anyMessageType = \case
-  SomeHeartbeat _ -> MsgTypeHeartbeat
   SomeLogon _ -> MsgTypeLogon
+  SomeHeartbeat _ -> MsgTypeHeartbeat
   SomeReject _ -> MsgTypeReject
   SomeLogout _ -> MsgTypeLogout
   SomeNews _ -> MsgTypeNews
@@ -76,8 +76,8 @@ anyMessageB ((Envelope {..})) =
         ByteString.Builder
       mb = messageB envelopeHeader envelopeTrailer
    in case envelopeContents of
-        SomeHeartbeat f -> mb f
         SomeLogon f -> mb f
+        SomeHeartbeat f -> mb f
         SomeReject f -> mb f
         SomeLogout f -> mb f
         SomeNews f -> mb f
@@ -99,8 +99,8 @@ anyMessageP = do
         Parsec Void ByteString (Envelope f)
       mp = messageP bs bl typ
   case typ of
-    MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp
     MsgTypeLogon -> fmap SomeLogon <$> mp
+    MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp
     MsgTypeReject -> fmap SomeReject <$> mp
     MsgTypeLogout -> fmap SomeLogout <$> mp
     MsgTypeNews -> fmap SomeNews <$> mp
@@ -116,16 +116,16 @@ class (IsMessage a) => IsAnyMessage a where
   unpackAnyMessage :: AnyMessage -> Maybe a
   packAnyMessage :: a -> AnyMessage
 
-instance IsAnyMessage Heartbeat where
-  packAnyMessage = SomeHeartbeat
-  unpackAnyMessage = \case
-    SomeHeartbeat f -> Just f
-    _ -> Nothing
-
 instance IsAnyMessage Logon where
   packAnyMessage = SomeLogon
   unpackAnyMessage = \case
     SomeLogon f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage Heartbeat where
+  packAnyMessage = SomeHeartbeat
+  unpackAnyMessage = \case
+    SomeHeartbeat f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage Reject where

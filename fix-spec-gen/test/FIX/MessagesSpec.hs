@@ -25,18 +25,18 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
-    "Heartbeat"
-    ( do
-        genValidSpec @Heartbeat
-        componentSpec @Heartbeat
-        messageSpec @Heartbeat "Heartbeat"
-    )
-  describe
     "Logon"
     ( do
         genValidSpec @Logon
         componentSpec @Logon
         messageSpec @Logon "Logon"
+    )
+  describe
+    "Heartbeat"
+    ( do
+        genValidSpec @Heartbeat
+        componentSpec @Heartbeat
+        messageSpec @Heartbeat "Heartbeat"
     )
   describe
     "Reject"

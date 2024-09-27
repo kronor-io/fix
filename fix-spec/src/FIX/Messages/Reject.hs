@@ -12,7 +12,6 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Fields.EncodedText
 import FIX.Fields.MsgType
 import FIX.Fields.RefMsgType
 import FIX.Fields.RefSeqNum
@@ -29,20 +28,18 @@ import GHC.Generics (Generic)
 --   , messageCategory = "admin"
 --   , messagePieces =
 --       [ MessagePieceField "RefSeqNum" True
+--       , MessagePieceField "Text" False
 --       , MessagePieceField "RefTagID" False
 --       , MessagePieceField "RefMsgType" False
 --       , MessagePieceField "SessionRejectReason" False
---       , MessagePieceField "Text" False
---       , MessagePieceField "EncodedText" False
 --       ]
 --   }
 data Reject = Reject
   { rejectRefSeqNum :: !RefSeqNum,
+    rejectText :: !(Maybe Text),
     rejectRefTagID :: !(Maybe RefTagID),
     rejectRefMsgType :: !(Maybe RefMsgType),
-    rejectSessionRejectReason :: !(Maybe SessionRejectReason),
-    rejectText :: !(Maybe Text),
-    rejectEncodedText :: !(Maybe EncodedText)
+    rejectSessionRejectReason :: !(Maybe SessionRejectReason)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -52,19 +49,17 @@ instance IsComponent Reject where
   toComponentFields ((Reject {..})) =
     mconcat
       [ requiredFieldB rejectRefSeqNum,
+        optionalFieldB rejectText,
         optionalFieldB rejectRefTagID,
         optionalFieldB rejectRefMsgType,
-        optionalFieldB rejectSessionRejectReason,
-        optionalFieldB rejectText,
-        optionalFieldB rejectEncodedText
+        optionalFieldB rejectSessionRejectReason
       ]
   fromComponentFields = do
     rejectRefSeqNum <- requiredFieldP
+    rejectText <- optionalFieldP
     rejectRefTagID <- optionalFieldP
     rejectRefMsgType <- optionalFieldP
     rejectSessionRejectReason <- optionalFieldP
-    rejectText <- optionalFieldP
-    rejectEncodedText <- optionalFieldP
     pure (Reject {..})
 
 instance IsMessage Reject where
@@ -72,9 +67,8 @@ instance IsMessage Reject where
 
 makeReject :: RefSeqNum -> Reject
 makeReject rejectRefSeqNum =
-  let rejectRefTagID = Nothing
+  let rejectText = Nothing
+      rejectRefTagID = Nothing
       rejectRefMsgType = Nothing
       rejectSessionRejectReason = Nothing
-      rejectText = Nothing
-      rejectEncodedText = Nothing
    in (Reject {..})

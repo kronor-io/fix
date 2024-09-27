@@ -18,17 +18,12 @@ import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.TestUtils
 import FIX.Components.UnderlyingInstrument
 import FIX.Components.YieldData
-import FIX.Groups.HopsGroupElem
 import FIX.Groups.InstrumentEventsGroupElem
 import FIX.Groups.InstrumentExtensionInstrAttribGroupElem
 import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
 import FIX.Groups.InstrumentSecurityAltIDGroupElem
-import FIX.Groups.LogonMsgTypesGroupElem
-import FIX.Groups.NewsLegsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
-import FIX.Groups.NewsRelatedSymGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
-import FIX.Groups.NewsUnderlyingsGroupElem
 import FIX.Groups.QuoteCancelPartiesGroupElem
 import FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
 import FIX.Groups.QuoteCancelQuoteEntriesGroupElem
@@ -80,13 +75,6 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
-    "Hops"
-    ( do
-        genValidSpec @HopsGroupElem
-        componentSpec @HopsGroupElem
-        groupSpec @HopsGroupElem
-    )
-  describe
     "InstrumentEvents"
     ( do
         genValidSpec @InstrumentEventsGroupElem
@@ -115,20 +103,6 @@ spec = do
         groupSpec @InstrumentSecurityAltIDGroupElem
     )
   describe
-    "LogonMsgTypes"
-    ( do
-        genValidSpec @LogonMsgTypesGroupElem
-        componentSpec @LogonMsgTypesGroupElem
-        groupSpec @LogonMsgTypesGroupElem
-    )
-  describe
-    "NewsLegs"
-    ( do
-        genValidSpec @NewsLegsGroupElem
-        componentSpec @NewsLegsGroupElem
-        groupSpec @NewsLegsGroupElem
-    )
-  describe
     "NewsLinesOfText"
     ( do
         genValidSpec @NewsLinesOfTextGroupElem
@@ -136,25 +110,11 @@ spec = do
         groupSpec @NewsLinesOfTextGroupElem
     )
   describe
-    "NewsRelatedSym"
-    ( do
-        genValidSpec @NewsRelatedSymGroupElem
-        componentSpec @NewsRelatedSymGroupElem
-        groupSpec @NewsRelatedSymGroupElem
-    )
-  describe
     "NewsRoutingIDs"
     ( do
         genValidSpec @NewsRoutingIDsGroupElem
         componentSpec @NewsRoutingIDsGroupElem
         groupSpec @NewsRoutingIDsGroupElem
-    )
-  describe
-    "NewsUnderlyings"
-    ( do
-        genValidSpec @NewsUnderlyingsGroupElem
-        componentSpec @NewsUnderlyingsGroupElem
-        groupSpec @NewsUnderlyingsGroupElem
     )
   describe
     "QuoteCancelParties"
