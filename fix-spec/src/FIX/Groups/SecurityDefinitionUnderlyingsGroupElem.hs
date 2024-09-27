@@ -13,9 +13,12 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Components.UnderlyingInstrument
 import FIX.Fields.MsgType
 import FIX.Fields.NoUnderlyings
+import FIX.Fields.UnderlyingMaturityDate
+import FIX.Fields.UnderlyingSecurityDesc
+import FIX.Fields.UnderlyingSecurityID
+import FIX.Fields.UnderlyingSymbol
 import FIX.Groups.Class
 import GHC.Generics (Generic)
 
@@ -23,17 +26,35 @@ import GHC.Generics (Generic)
 --   { groupName = "SecurityDefinitionUnderlyings"
 --   , groupNumberField = "NoUnderlyings"
 --   , groupPieces =
---       [ MessagePieceComponent "UnderlyingInstrument" True ]
+--       [ MessagePieceField "UnderlyingSymbol" True
+--       , MessagePieceField "UnderlyingSecurityID" True
+--       , MessagePieceField "UnderlyingMaturityDate" True
+--       , MessagePieceField "UnderlyingSecurityDesc" True
+--       ]
 --   }
-data SecurityDefinitionUnderlyingsGroupElem = SecurityDefinitionUnderlyingsGroupElem {securityDefinitionUnderlyingsGroupElemUnderlyingInstrument :: !UnderlyingInstrument}
+data SecurityDefinitionUnderlyingsGroupElem = SecurityDefinitionUnderlyingsGroupElem
+  { securityDefinitionUnderlyingsGroupElemUnderlyingSymbol :: !UnderlyingSymbol,
+    securityDefinitionUnderlyingsGroupElemUnderlyingSecurityID :: !UnderlyingSecurityID,
+    securityDefinitionUnderlyingsGroupElemUnderlyingMaturityDate :: !UnderlyingMaturityDate,
+    securityDefinitionUnderlyingsGroupElemUnderlyingSecurityDesc :: !UnderlyingSecurityDesc
+  }
   deriving stock (Show, Eq, Generic)
 
 instance Validity SecurityDefinitionUnderlyingsGroupElem
 
 instance IsComponent SecurityDefinitionUnderlyingsGroupElem where
-  toComponentFields ((SecurityDefinitionUnderlyingsGroupElem {..})) = mconcat [requiredComponentB securityDefinitionUnderlyingsGroupElemUnderlyingInstrument]
+  toComponentFields ((SecurityDefinitionUnderlyingsGroupElem {..})) =
+    mconcat
+      [ requiredFieldB securityDefinitionUnderlyingsGroupElemUnderlyingSymbol,
+        requiredFieldB securityDefinitionUnderlyingsGroupElemUnderlyingSecurityID,
+        requiredFieldB securityDefinitionUnderlyingsGroupElemUnderlyingMaturityDate,
+        requiredFieldB securityDefinitionUnderlyingsGroupElemUnderlyingSecurityDesc
+      ]
   fromComponentFields = do
-    securityDefinitionUnderlyingsGroupElemUnderlyingInstrument <- requiredComponentP
+    securityDefinitionUnderlyingsGroupElemUnderlyingSymbol <- requiredFieldP
+    securityDefinitionUnderlyingsGroupElemUnderlyingSecurityID <- requiredFieldP
+    securityDefinitionUnderlyingsGroupElemUnderlyingMaturityDate <- requiredFieldP
+    securityDefinitionUnderlyingsGroupElemUnderlyingSecurityDesc <- requiredFieldP
     pure (SecurityDefinitionUnderlyingsGroupElem {..})
 
 instance IsGroupElement SecurityDefinitionUnderlyingsGroupElem where
@@ -41,7 +62,7 @@ instance IsGroupElement SecurityDefinitionUnderlyingsGroupElem where
   mkGroupNum Proxy = NoUnderlyings
   countGroupNum Proxy = unNoUnderlyings
 
-makeSecurityDefinitionUnderlyingsGroupElem :: UnderlyingInstrument -> SecurityDefinitionUnderlyingsGroupElem
-makeSecurityDefinitionUnderlyingsGroupElem securityDefinitionUnderlyingsGroupElemUnderlyingInstrument =
+makeSecurityDefinitionUnderlyingsGroupElem :: UnderlyingSymbol -> (UnderlyingSecurityID -> (UnderlyingMaturityDate -> (UnderlyingSecurityDesc -> SecurityDefinitionUnderlyingsGroupElem)))
+makeSecurityDefinitionUnderlyingsGroupElem securityDefinitionUnderlyingsGroupElemUnderlyingSymbol securityDefinitionUnderlyingsGroupElemUnderlyingSecurityID securityDefinitionUnderlyingsGroupElemUnderlyingMaturityDate securityDefinitionUnderlyingsGroupElemUnderlyingSecurityDesc =
   let
    in (SecurityDefinitionUnderlyingsGroupElem {..})

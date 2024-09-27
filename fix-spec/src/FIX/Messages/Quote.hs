@@ -78,14 +78,12 @@ import FIX.Fields.Text
 import FIX.Fields.TradingSessionID
 import FIX.Fields.TradingSessionSubID
 import FIX.Fields.TransactTime
-import FIX.Fields.Username
 import FIX.Fields.ValidUntilTime
 import FIX.Groups.Class
 import FIX.Groups.QuoteLegsGroupElem
 import FIX.Groups.QuotePartiesGroupElem
 import FIX.Groups.QuoteQuoteQualifiersGroupElem
 import FIX.Groups.QuoteStipulationsGroupElem
-import FIX.Groups.QuoteUnderlyingsGroupElem
 import FIX.Messages.Class
 import GHC.Generics (Generic)
 
@@ -132,14 +130,6 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "TradingSessionSubID" False
 --       , MessagePieceComponent "Instrument" True
 --       , MessagePieceComponent "FinancingDetails" True
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "QuoteUnderlyings"
---             , groupNumberField = "NoUnderlyings"
---             , groupPieces =
---                 [ MessagePieceComponent "UnderlyingInstrument" True ]
---             }
---           False
 --       , MessagePieceField "Side" False
 --       , MessagePieceComponent "OrderQtyData" True
 --       , MessagePieceField "SettlType" False
@@ -160,7 +150,6 @@ import GHC.Generics (Generic)
 --             }
 --           False
 --       , MessagePieceField "Account" False
---       , MessagePieceField "Username" False
 --       , MessagePieceField "AcctIDSource" False
 --       , MessagePieceField "AccountType" False
 --       , MessagePieceGroup
@@ -274,7 +263,6 @@ data Quote = Quote
     quoteTradingSessionSubID :: !(Maybe TradingSessionSubID),
     quoteInstrument :: !Instrument,
     quoteFinancingDetails :: !FinancingDetails,
-    quoteQuoteUnderlyingsGroup :: ![QuoteUnderlyingsGroupElem],
     quoteSide :: !(Maybe Side),
     quoteOrderQtyData :: !OrderQtyData,
     quoteSettlType :: !(Maybe SettlType),
@@ -286,7 +274,6 @@ data Quote = Quote
     quoteCurrency :: !(Maybe Currency),
     quoteQuoteStipulationsGroup :: ![QuoteStipulationsGroupElem],
     quoteAccount :: !(Maybe Account),
-    quoteUsername :: !(Maybe Username),
     quoteAcctIDSource :: !(Maybe AcctIDSource),
     quoteAccountType :: !(Maybe AccountType),
     quoteQuoteLegsGroup :: ![QuoteLegsGroupElem],
@@ -354,7 +341,6 @@ instance IsComponent Quote where
         optionalFieldB quoteTradingSessionSubID,
         requiredComponentB quoteInstrument,
         requiredComponentB quoteFinancingDetails,
-        optionalGroupB quoteQuoteUnderlyingsGroup,
         optionalFieldB quoteSide,
         requiredComponentB quoteOrderQtyData,
         optionalFieldB quoteSettlType,
@@ -366,7 +352,6 @@ instance IsComponent Quote where
         optionalFieldB quoteCurrency,
         optionalGroupB quoteQuoteStipulationsGroup,
         optionalFieldB quoteAccount,
-        optionalFieldB quoteUsername,
         optionalFieldB quoteAcctIDSource,
         optionalFieldB quoteAccountType,
         optionalGroupB quoteQuoteLegsGroup,
@@ -428,7 +413,6 @@ instance IsComponent Quote where
     quoteTradingSessionSubID <- optionalFieldP
     quoteInstrument <- requiredComponentP
     quoteFinancingDetails <- requiredComponentP
-    quoteQuoteUnderlyingsGroup <- optionalGroupP
     quoteSide <- optionalFieldP
     quoteOrderQtyData <- requiredComponentP
     quoteSettlType <- optionalFieldP
@@ -440,7 +424,6 @@ instance IsComponent Quote where
     quoteCurrency <- optionalFieldP
     quoteQuoteStipulationsGroup <- optionalGroupP
     quoteAccount <- optionalFieldP
-    quoteUsername <- optionalFieldP
     quoteAcctIDSource <- optionalFieldP
     quoteAccountType <- optionalFieldP
     quoteQuoteLegsGroup <- optionalGroupP
@@ -504,7 +487,6 @@ makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData q
       quoteQuotePartiesGroup = []
       quoteTradingSessionID = Nothing
       quoteTradingSessionSubID = Nothing
-      quoteQuoteUnderlyingsGroup = []
       quoteSide = Nothing
       quoteSettlType = Nothing
       quoteSettlDate = Nothing
@@ -515,7 +497,6 @@ makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData q
       quoteCurrency = Nothing
       quoteQuoteStipulationsGroup = []
       quoteAccount = Nothing
-      quoteUsername = Nothing
       quoteAcctIDSource = Nothing
       quoteAccountType = Nothing
       quoteQuoteLegsGroup = []

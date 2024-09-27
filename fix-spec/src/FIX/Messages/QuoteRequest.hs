@@ -36,7 +36,6 @@ import FIX.Fields.RFQReqID
 import FIX.Fields.RefSpotDate
 import FIX.Fields.SpotRatePrecision
 import FIX.Fields.Text
-import FIX.Fields.Username
 import FIX.Groups.Class
 import FIX.Groups.QuoteRequestCustomFieldsGroupElem
 import FIX.Groups.QuoteRequestOrderAttributesGroupElem
@@ -52,10 +51,6 @@ import GHC.Generics (Generic)
 --   , messageCategory = "app"
 --   , messagePieces =
 --       [ MessagePieceField "QuoteReqID" True
---       , MessagePieceField "RFQReqID" False
---       , MessagePieceField "ClOrdID" False
---       , MessagePieceField "OrderCapacity" False
---       , MessagePieceField "Username" False
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "QuoteRequestRelatedSym"
@@ -63,14 +58,6 @@ import GHC.Generics (Generic)
 --             , groupPieces =
 --                 [ MessagePieceComponent "Instrument" True
 --                 , MessagePieceComponent "FinancingDetails" True
---                 , MessagePieceGroup
---                     GroupSpec
---                       { groupName = "QuoteRequestRelatedSymUnderlyings"
---                       , groupNumberField = "NoUnderlyings"
---                       , groupPieces =
---                           [ MessagePieceComponent "UnderlyingInstrument" True ]
---                       }
---                     False
 --                 , MessagePieceField "PrevClosePx" False
 --                 , MessagePieceField "QuoteRequestType" False
 --                 , MessagePieceField "QuoteType" False
@@ -98,7 +85,6 @@ import GHC.Generics (Generic)
 --                       }
 --                     False
 --                 , MessagePieceField "Account" False
---                 , MessagePieceField "Username" False
 --                 , MessagePieceField "AcctIDSource" False
 --                 , MessagePieceField "AccountType" False
 --                 , MessagePieceGroup
@@ -181,6 +167,9 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           True
+--       , MessagePieceField "RFQReqID" False
+--       , MessagePieceField "ClOrdID" False
+--       , MessagePieceField "OrderCapacity" False
 --       , MessagePieceGroup
 --           GroupSpec
 --             { groupName = "QuoteRequestParties"
@@ -256,11 +245,10 @@ import GHC.Generics (Generic)
 --   }
 data QuoteRequest = QuoteRequest
   { quoteRequestQuoteReqID :: !QuoteReqID,
+    quoteRequestQuoteRequestRelatedSymGroup :: !(NonEmpty QuoteRequestRelatedSymGroupElem),
     quoteRequestRFQReqID :: !(Maybe RFQReqID),
     quoteRequestClOrdID :: !(Maybe ClOrdID),
     quoteRequestOrderCapacity :: !(Maybe OrderCapacity),
-    quoteRequestUsername :: !(Maybe Username),
-    quoteRequestQuoteRequestRelatedSymGroup :: !(NonEmpty QuoteRequestRelatedSymGroupElem),
     quoteRequestQuoteRequestPartiesGroup :: ![QuoteRequestPartiesGroupElem],
     quoteRequestQuoteRequestRegulatoryTradeIDsGroup :: ![QuoteRequestRegulatoryTradeIDsGroupElem],
     quoteRequestQuoteRequestOrderAttributesGroup :: ![QuoteRequestOrderAttributesGroupElem],
@@ -293,11 +281,10 @@ instance IsComponent QuoteRequest where
   toComponentFields ((QuoteRequest {..})) =
     mconcat
       [ requiredFieldB quoteRequestQuoteReqID,
+        requiredGroupB quoteRequestQuoteRequestRelatedSymGroup,
         optionalFieldB quoteRequestRFQReqID,
         optionalFieldB quoteRequestClOrdID,
         optionalFieldB quoteRequestOrderCapacity,
-        optionalFieldB quoteRequestUsername,
-        requiredGroupB quoteRequestQuoteRequestRelatedSymGroup,
         optionalGroupB quoteRequestQuoteRequestPartiesGroup,
         optionalGroupB quoteRequestQuoteRequestRegulatoryTradeIDsGroup,
         optionalGroupB quoteRequestQuoteRequestOrderAttributesGroup,
@@ -324,11 +311,10 @@ instance IsComponent QuoteRequest where
       ]
   fromComponentFields = do
     quoteRequestQuoteReqID <- requiredFieldP
+    quoteRequestQuoteRequestRelatedSymGroup <- requiredGroupP
     quoteRequestRFQReqID <- optionalFieldP
     quoteRequestClOrdID <- optionalFieldP
     quoteRequestOrderCapacity <- optionalFieldP
-    quoteRequestUsername <- optionalFieldP
-    quoteRequestQuoteRequestRelatedSymGroup <- requiredGroupP
     quoteRequestQuoteRequestPartiesGroup <- optionalGroupP
     quoteRequestQuoteRequestRegulatoryTradeIDsGroup <- optionalGroupP
     quoteRequestQuoteRequestOrderAttributesGroup <- optionalGroupP
@@ -362,7 +348,6 @@ makeQuoteRequest quoteRequestQuoteReqID quoteRequestQuoteRequestRelatedSymGroup 
   let quoteRequestRFQReqID = Nothing
       quoteRequestClOrdID = Nothing
       quoteRequestOrderCapacity = Nothing
-      quoteRequestUsername = Nothing
       quoteRequestQuoteRequestPartiesGroup = []
       quoteRequestQuoteRequestRegulatoryTradeIDsGroup = []
       quoteRequestQuoteRequestOrderAttributesGroup = []

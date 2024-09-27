@@ -14,13 +14,11 @@ library
       FIX.Components.ExAnteData
       FIX.Components.FinancingDetails
       FIX.Components.Instrument
-      FIX.Components.InstrumentExtension
       FIX.Components.InstrumentLeg
       FIX.Components.LegBenchmarkCurveData
       FIX.Components.LegExAnteData
       FIX.Components.OrderQtyData
       FIX.Components.SpreadOrBenchmarkCurveData
-      FIX.Components.UnderlyingInstrument
       FIX.Components.YieldData
       FIX.Fields
       FIX.Fields.Account
@@ -73,15 +71,12 @@ library
       FIX.Fields.CustOrderCapacity
       FIX.Fields.DatedDate
       FIX.Fields.DayCount
-      FIX.Fields.DeliveryForm
       FIX.Fields.DeliveryType
       FIX.Fields.EncodedIssuer
       FIX.Fields.EncodedLegIssuer
       FIX.Fields.EncodedLegSecurityDesc
       FIX.Fields.EncodedSecurityDesc
       FIX.Fields.EncodedText
-      FIX.Fields.EncodedUnderlyingIssuer
-      FIX.Fields.EncodedUnderlyingSecurityDesc
       FIX.Fields.EncryptMethod
       FIX.Fields.EndDate
       FIX.Fields.EventDate
@@ -90,7 +85,6 @@ library
       FIX.Fields.EventType
       FIX.Fields.ExDestination
       FIX.Fields.ExecutionVenueType
-      FIX.Fields.ExpirationCycle
       FIX.Fields.ExpireTime
       FIX.Fields.Factor
       FIX.Fields.FarLegRatePrecision
@@ -100,8 +94,6 @@ library
       FIX.Fields.ForwardRatePrecision
       FIX.Fields.Headline
       FIX.Fields.HeartBtInt
-      FIX.Fields.InstrAttribType
-      FIX.Fields.InstrAttribValue
       FIX.Fields.InstrRegistry
       FIX.Fields.InterestAccrualDate
       FIX.Fields.InterestRatePrecision
@@ -183,7 +175,6 @@ library
       FIX.Fields.MidYield
       FIX.Fields.MinBidSize
       FIX.Fields.MinOfferSize
-      FIX.Fields.MinTradeVol
       FIX.Fields.MktBidPx
       FIX.Fields.MktOfferPx
       FIX.Fields.MsgSeqNum
@@ -198,7 +189,6 @@ library
       FIX.Fields.NoAllocs
       FIX.Fields.NoCustomFields
       FIX.Fields.NoEvents
-      FIX.Fields.NoInstrAttrib
       FIX.Fields.NoLegAllocs
       FIX.Fields.NoLegs
       FIX.Fields.NoLegSecurityAltID
@@ -208,7 +198,6 @@ library
       FIX.Fields.NoOrderAttributes
       FIX.Fields.NoPartyIDs
       FIX.Fields.NoPartySubIDs
-      FIX.Fields.NoQuoteEntries
       FIX.Fields.NoQuoteQualifiers
       FIX.Fields.NoRegulatoryTradeIDs
       FIX.Fields.NoRelatedSym
@@ -216,8 +205,6 @@ library
       FIX.Fields.NoSecurityAltID
       FIX.Fields.NoStipulations
       FIX.Fields.NoUnderlyings
-      FIX.Fields.NoUnderlyingSecurityAltID
-      FIX.Fields.NoUnderlyingStips
       FIX.Fields.OfferExAnteCost
       FIX.Fields.OfferExAnteCostPercentage
       FIX.Fields.OfferForwardPoints
@@ -245,7 +232,6 @@ library
       FIX.Fields.PartySubID
       FIX.Fields.PartySubIDType
       FIX.Fields.Password
-      FIX.Fields.PctAtRisk
       FIX.Fields.Pool
       FIX.Fields.PrevClosePx
       FIX.Fields.Price
@@ -278,7 +264,6 @@ library
       FIX.Fields.RFQReqID
       FIX.Fields.RoundingDirection
       FIX.Fields.RoundingModulus
-      FIX.Fields.RoundLot
       FIX.Fields.RoutingID
       FIX.Fields.RoutingType
       FIX.Fields.SecurityAltID
@@ -314,7 +299,6 @@ library
       FIX.Fields.StipulationValue
       FIX.Fields.StrikeCurrency
       FIX.Fields.StrikePrice
-      FIX.Fields.SubscriptionRequestType
       FIX.Fields.Symbol
       FIX.Fields.SymbolSfx
       FIX.Fields.TargetCompID
@@ -325,53 +309,12 @@ library
       FIX.Fields.TradingSessionID
       FIX.Fields.TradingSessionSubID
       FIX.Fields.TransactTime
-      FIX.Fields.UnderlyingCFICode
-      FIX.Fields.UnderlyingContractMultiplier
-      FIX.Fields.UnderlyingCountryOfIssue
-      FIX.Fields.UnderlyingCouponPaymentDate
-      FIX.Fields.UnderlyingCouponRate
-      FIX.Fields.UnderlyingCPProgram
-      FIX.Fields.UnderlyingCPRegType
-      FIX.Fields.UnderlyingCreditRating
-      FIX.Fields.UnderlyingCurrency
-      FIX.Fields.UnderlyingCurrentValue
-      FIX.Fields.UnderlyingDirtyPrice
-      FIX.Fields.UnderlyingEndPrice
-      FIX.Fields.UnderlyingEndValue
-      FIX.Fields.UnderlyingFactor
-      FIX.Fields.UnderlyingInstrRegistry
-      FIX.Fields.UnderlyingIssueDate
-      FIX.Fields.UnderlyingIssuer
-      FIX.Fields.UnderlyingLocaleOfIssue
       FIX.Fields.UnderlyingMaturityDate
-      FIX.Fields.UnderlyingMaturityMonthYear
-      FIX.Fields.UnderlyingOptAttribute
-      FIX.Fields.UnderlyingProduct
-      FIX.Fields.UnderlyingPx
-      FIX.Fields.UnderlyingQty
-      FIX.Fields.UnderlyingRedemptionDate
-      FIX.Fields.UnderlyingRepoCollateralSecurityType
-      FIX.Fields.UnderlyingRepurchaseRate
-      FIX.Fields.UnderlyingRepurchaseTerm
-      FIX.Fields.UnderlyingSecurityAltID
-      FIX.Fields.UnderlyingSecurityAltIDSource
       FIX.Fields.UnderlyingSecurityDesc
-      FIX.Fields.UnderlyingSecurityExchange
       FIX.Fields.UnderlyingSecurityID
-      FIX.Fields.UnderlyingSecurityIDSource
-      FIX.Fields.UnderlyingSecuritySubType
-      FIX.Fields.UnderlyingSecurityType
-      FIX.Fields.UnderlyingStartValue
-      FIX.Fields.UnderlyingStateOrProvinceOfIssue
-      FIX.Fields.UnderlyingStipType
-      FIX.Fields.UnderlyingStipValue
-      FIX.Fields.UnderlyingStrikeCurrency
-      FIX.Fields.UnderlyingStrikePrice
       FIX.Fields.UnderlyingSymbol
-      FIX.Fields.UnderlyingSymbolSfx
       FIX.Fields.UPICode
       FIX.Fields.UPICode2
-      FIX.Fields.Username
       FIX.Fields.ValidUntilTime
       FIX.Fields.Yield
       FIX.Fields.YieldCalcDate
@@ -381,16 +324,10 @@ library
       FIX.Fields.YieldType
       FIX.Groups.Class
       FIX.Groups.InstrumentEventsGroupElem
-      FIX.Groups.InstrumentExtensionInstrAttribGroupElem
       FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
       FIX.Groups.InstrumentSecurityAltIDGroupElem
       FIX.Groups.NewsLinesOfTextGroupElem
       FIX.Groups.NewsRoutingIDsGroupElem
-      FIX.Groups.QuoteCancelPartiesGroupElem
-      FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
-      FIX.Groups.QuoteCancelQuoteEntriesGroupElem
-      FIX.Groups.QuoteCancelQuoteEntriesLegsGroupElem
-      FIX.Groups.QuoteCancelQuoteEntriesUnderlyingsGroupElem
       FIX.Groups.QuoteLegsGroupElem
       FIX.Groups.QuoteLegsLegStipulationsGroupElem
       FIX.Groups.QuoteLegsNestedPartiesGroupElem
@@ -403,16 +340,7 @@ library
       FIX.Groups.QuoteRequestPartiesGroupElem
       FIX.Groups.QuoteRequestPartiesPartySubIDsGroupElem
       FIX.Groups.QuoteRequestRegulatoryTradeIDsGroupElem
-      FIX.Groups.QuoteRequestRejectPartiesGroupElem
-      FIX.Groups.QuoteRequestRejectPartiesPartySubIDsGroupElem
-      FIX.Groups.QuoteRequestRejectQuoteQualifiersGroupElem
       FIX.Groups.QuoteRequestRejectRelatedSymGroupElem
-      FIX.Groups.QuoteRequestRejectRelatedSymLegsGroupElem
-      FIX.Groups.QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
-      FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
-      FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
-      FIX.Groups.QuoteRequestRejectRelatedSymStipulationsGroupElem
-      FIX.Groups.QuoteRequestRejectRelatedSymUnderlyingsGroupElem
       FIX.Groups.QuoteRequestRelatedSymAllocsGroupElem
       FIX.Groups.QuoteRequestRelatedSymGroupElem
       FIX.Groups.QuoteRequestRelatedSymLegsGroupElem
@@ -421,15 +349,8 @@ library
       FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
       FIX.Groups.QuoteRequestRelatedSymQuoteQualifiersGroupElem
       FIX.Groups.QuoteRequestRelatedSymStipulationsGroupElem
-      FIX.Groups.QuoteRequestRelatedSymUnderlyingsGroupElem
       FIX.Groups.QuoteStipulationsGroupElem
-      FIX.Groups.QuoteUnderlyingsGroupElem
-      FIX.Groups.SecurityDefinitionLegsGroupElem
-      FIX.Groups.SecurityDefinitionRequestLegsGroupElem
-      FIX.Groups.SecurityDefinitionRequestUnderlyingsGroupElem
       FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
-      FIX.Groups.UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
-      FIX.Groups.UnderlyingInstrumentUnderlyingStipulationsGroupElem
       FIX.Messages
       FIX.Messages.Class
       FIX.Messages.Envelope

@@ -45,14 +45,12 @@ import FIX.Fields.TradeOriginationDate
 import FIX.Fields.TradingSessionID
 import FIX.Fields.TradingSessionSubID
 import FIX.Fields.TransactTime
-import FIX.Fields.Username
 import FIX.Fields.ValidUntilTime
 import FIX.Groups.Class
 import FIX.Groups.QuoteRequestRelatedSymAllocsGroupElem
 import FIX.Groups.QuoteRequestRelatedSymLegsGroupElem
 import FIX.Groups.QuoteRequestRelatedSymQuoteQualifiersGroupElem
 import FIX.Groups.QuoteRequestRelatedSymStipulationsGroupElem
-import FIX.Groups.QuoteRequestRelatedSymUnderlyingsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
@@ -61,14 +59,6 @@ import GHC.Generics (Generic)
 --   , groupPieces =
 --       [ MessagePieceComponent "Instrument" True
 --       , MessagePieceComponent "FinancingDetails" True
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "QuoteRequestRelatedSymUnderlyings"
---             , groupNumberField = "NoUnderlyings"
---             , groupPieces =
---                 [ MessagePieceComponent "UnderlyingInstrument" True ]
---             }
---           False
 --       , MessagePieceField "PrevClosePx" False
 --       , MessagePieceField "QuoteRequestType" False
 --       , MessagePieceField "QuoteType" False
@@ -96,7 +86,6 @@ import GHC.Generics (Generic)
 --             }
 --           False
 --       , MessagePieceField "Account" False
---       , MessagePieceField "Username" False
 --       , MessagePieceField "AcctIDSource" False
 --       , MessagePieceField "AccountType" False
 --       , MessagePieceGroup
@@ -179,7 +168,6 @@ import GHC.Generics (Generic)
 data QuoteRequestRelatedSymGroupElem = QuoteRequestRelatedSymGroupElem
   { quoteRequestRelatedSymGroupElemInstrument :: !Instrument,
     quoteRequestRelatedSymGroupElemFinancingDetails :: !FinancingDetails,
-    quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymUnderlyingsGroup :: ![QuoteRequestRelatedSymUnderlyingsGroupElem],
     quoteRequestRelatedSymGroupElemPrevClosePx :: !(Maybe PrevClosePx),
     quoteRequestRelatedSymGroupElemQuoteRequestType :: !(Maybe QuoteRequestType),
     quoteRequestRelatedSymGroupElemQuoteType :: !(Maybe QuoteType),
@@ -198,7 +186,6 @@ data QuoteRequestRelatedSymGroupElem = QuoteRequestRelatedSymGroupElem
     quoteRequestRelatedSymGroupElemCurrency :: !(Maybe Currency),
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup :: ![QuoteRequestRelatedSymStipulationsGroupElem],
     quoteRequestRelatedSymGroupElemAccount :: !(Maybe Account),
-    quoteRequestRelatedSymGroupElemUsername :: !(Maybe Username),
     quoteRequestRelatedSymGroupElemAcctIDSource :: !(Maybe AcctIDSource),
     quoteRequestRelatedSymGroupElemAccountType :: !(Maybe AccountType),
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup :: ![QuoteRequestRelatedSymQuoteQualifiersGroupElem],
@@ -224,7 +211,6 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
     mconcat
       [ requiredComponentB quoteRequestRelatedSymGroupElemInstrument,
         requiredComponentB quoteRequestRelatedSymGroupElemFinancingDetails,
-        optionalGroupB quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymUnderlyingsGroup,
         optionalFieldB quoteRequestRelatedSymGroupElemPrevClosePx,
         optionalFieldB quoteRequestRelatedSymGroupElemQuoteRequestType,
         optionalFieldB quoteRequestRelatedSymGroupElemQuoteType,
@@ -243,7 +229,6 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
         optionalFieldB quoteRequestRelatedSymGroupElemCurrency,
         optionalGroupB quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup,
         optionalFieldB quoteRequestRelatedSymGroupElemAccount,
-        optionalFieldB quoteRequestRelatedSymGroupElemUsername,
         optionalFieldB quoteRequestRelatedSymGroupElemAcctIDSource,
         optionalFieldB quoteRequestRelatedSymGroupElemAccountType,
         optionalGroupB quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup,
@@ -263,7 +248,6 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
   fromComponentFields = do
     quoteRequestRelatedSymGroupElemInstrument <- requiredComponentP
     quoteRequestRelatedSymGroupElemFinancingDetails <- requiredComponentP
-    quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymUnderlyingsGroup <- optionalGroupP
     quoteRequestRelatedSymGroupElemPrevClosePx <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteRequestType <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteType <- optionalFieldP
@@ -282,7 +266,6 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
     quoteRequestRelatedSymGroupElemCurrency <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup <- optionalGroupP
     quoteRequestRelatedSymGroupElemAccount <- optionalFieldP
-    quoteRequestRelatedSymGroupElemUsername <- optionalFieldP
     quoteRequestRelatedSymGroupElemAcctIDSource <- optionalFieldP
     quoteRequestRelatedSymGroupElemAccountType <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup <- optionalGroupP
@@ -307,8 +290,7 @@ instance IsGroupElement QuoteRequestRelatedSymGroupElem where
 
 makeQuoteRequestRelatedSymGroupElem :: Instrument -> (FinancingDetails -> (OrderQtyData -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuoteRequestRelatedSymGroupElem))))
 makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument quoteRequestRelatedSymGroupElemFinancingDetails quoteRequestRelatedSymGroupElemOrderQtyData quoteRequestRelatedSymGroupElemSpreadOrBenchmarkCurveData quoteRequestRelatedSymGroupElemYieldData =
-  let quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymUnderlyingsGroup = []
-      quoteRequestRelatedSymGroupElemPrevClosePx = Nothing
+  let quoteRequestRelatedSymGroupElemPrevClosePx = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestType = Nothing
       quoteRequestRelatedSymGroupElemQuoteType = Nothing
       quoteRequestRelatedSymGroupElemTradingSessionID = Nothing
@@ -325,7 +307,6 @@ makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument qu
       quoteRequestRelatedSymGroupElemCurrency = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup = []
       quoteRequestRelatedSymGroupElemAccount = Nothing
-      quoteRequestRelatedSymGroupElemUsername = Nothing
       quoteRequestRelatedSymGroupElemAcctIDSource = Nothing
       quoteRequestRelatedSymGroupElemAccountType = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup = []

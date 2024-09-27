@@ -55,15 +55,12 @@ import FIX.Fields.CustomFieldsName
 import FIX.Fields.CustomFieldsValue
 import FIX.Fields.DatedDate
 import FIX.Fields.DayCount
-import FIX.Fields.DeliveryForm
 import FIX.Fields.DeliveryType
 import FIX.Fields.EncodedIssuer
 import FIX.Fields.EncodedLegIssuer
 import FIX.Fields.EncodedLegSecurityDesc
 import FIX.Fields.EncodedSecurityDesc
 import FIX.Fields.EncodedText
-import FIX.Fields.EncodedUnderlyingIssuer
-import FIX.Fields.EncodedUnderlyingSecurityDesc
 import FIX.Fields.EncryptMethod
 import FIX.Fields.EndDate
 import FIX.Fields.EventDate
@@ -72,7 +69,6 @@ import FIX.Fields.EventText
 import FIX.Fields.EventType
 import FIX.Fields.ExDestination
 import FIX.Fields.ExecutionVenueType
-import FIX.Fields.ExpirationCycle
 import FIX.Fields.ExpireTime
 import FIX.Fields.Factor
 import FIX.Fields.FarLegRatePrecision
@@ -83,8 +79,6 @@ import FIX.Fields.ForwardRatePrecision
 import FIX.Fields.Gen ()
 import FIX.Fields.Headline
 import FIX.Fields.HeartBtInt
-import FIX.Fields.InstrAttribType
-import FIX.Fields.InstrAttribValue
 import FIX.Fields.InstrRegistry
 import FIX.Fields.InterestAccrualDate
 import FIX.Fields.InterestRatePrecision
@@ -166,7 +160,6 @@ import FIX.Fields.MidSpotRate
 import FIX.Fields.MidYield
 import FIX.Fields.MinBidSize
 import FIX.Fields.MinOfferSize
-import FIX.Fields.MinTradeVol
 import FIX.Fields.MktBidPx
 import FIX.Fields.MktOfferPx
 import FIX.Fields.MsgSeqNum
@@ -181,7 +174,6 @@ import FIX.Fields.NestedPartySubIDType
 import FIX.Fields.NoAllocs
 import FIX.Fields.NoCustomFields
 import FIX.Fields.NoEvents
-import FIX.Fields.NoInstrAttrib
 import FIX.Fields.NoLegAllocs
 import FIX.Fields.NoLegSecurityAltID
 import FIX.Fields.NoLegStipulations
@@ -191,15 +183,12 @@ import FIX.Fields.NoNestedPartySubIDs
 import FIX.Fields.NoOrderAttributes
 import FIX.Fields.NoPartyIDs
 import FIX.Fields.NoPartySubIDs
-import FIX.Fields.NoQuoteEntries
 import FIX.Fields.NoQuoteQualifiers
 import FIX.Fields.NoRegulatoryTradeIDs
 import FIX.Fields.NoRelatedSym
 import FIX.Fields.NoRoutingIDs
 import FIX.Fields.NoSecurityAltID
 import FIX.Fields.NoStipulations
-import FIX.Fields.NoUnderlyingSecurityAltID
-import FIX.Fields.NoUnderlyingStips
 import FIX.Fields.NoUnderlyings
 import FIX.Fields.OfferExAnteCost
 import FIX.Fields.OfferExAnteCostPercentage
@@ -228,7 +217,6 @@ import FIX.Fields.PartyRoleQualifier
 import FIX.Fields.PartySubID
 import FIX.Fields.PartySubIDType
 import FIX.Fields.Password
-import FIX.Fields.PctAtRisk
 import FIX.Fields.Pool
 import FIX.Fields.PrevClosePx
 import FIX.Fields.Price
@@ -259,7 +247,6 @@ import FIX.Fields.RepoCollateralSecurityType
 import FIX.Fields.RepurchaseRate
 import FIX.Fields.RepurchaseTerm
 import FIX.Fields.ResetSeqNumFlag
-import FIX.Fields.RoundLot
 import FIX.Fields.RoundingDirection
 import FIX.Fields.RoundingModulus
 import FIX.Fields.RoutingID
@@ -297,7 +284,6 @@ import FIX.Fields.StipulationType
 import FIX.Fields.StipulationValue
 import FIX.Fields.StrikeCurrency
 import FIX.Fields.StrikePrice
-import FIX.Fields.SubscriptionRequestType
 import FIX.Fields.Symbol
 import FIX.Fields.SymbolSfx
 import FIX.Fields.TargetCompID
@@ -310,51 +296,10 @@ import FIX.Fields.TradingSessionSubID
 import FIX.Fields.TransactTime
 import FIX.Fields.UPICode
 import FIX.Fields.UPICode2
-import FIX.Fields.UnderlyingCFICode
-import FIX.Fields.UnderlyingCPProgram
-import FIX.Fields.UnderlyingCPRegType
-import FIX.Fields.UnderlyingContractMultiplier
-import FIX.Fields.UnderlyingCountryOfIssue
-import FIX.Fields.UnderlyingCouponPaymentDate
-import FIX.Fields.UnderlyingCouponRate
-import FIX.Fields.UnderlyingCreditRating
-import FIX.Fields.UnderlyingCurrency
-import FIX.Fields.UnderlyingCurrentValue
-import FIX.Fields.UnderlyingDirtyPrice
-import FIX.Fields.UnderlyingEndPrice
-import FIX.Fields.UnderlyingEndValue
-import FIX.Fields.UnderlyingFactor
-import FIX.Fields.UnderlyingInstrRegistry
-import FIX.Fields.UnderlyingIssueDate
-import FIX.Fields.UnderlyingIssuer
-import FIX.Fields.UnderlyingLocaleOfIssue
 import FIX.Fields.UnderlyingMaturityDate
-import FIX.Fields.UnderlyingMaturityMonthYear
-import FIX.Fields.UnderlyingOptAttribute
-import FIX.Fields.UnderlyingProduct
-import FIX.Fields.UnderlyingPx
-import FIX.Fields.UnderlyingQty
-import FIX.Fields.UnderlyingRedemptionDate
-import FIX.Fields.UnderlyingRepoCollateralSecurityType
-import FIX.Fields.UnderlyingRepurchaseRate
-import FIX.Fields.UnderlyingRepurchaseTerm
-import FIX.Fields.UnderlyingSecurityAltID
-import FIX.Fields.UnderlyingSecurityAltIDSource
 import FIX.Fields.UnderlyingSecurityDesc
-import FIX.Fields.UnderlyingSecurityExchange
 import FIX.Fields.UnderlyingSecurityID
-import FIX.Fields.UnderlyingSecurityIDSource
-import FIX.Fields.UnderlyingSecuritySubType
-import FIX.Fields.UnderlyingSecurityType
-import FIX.Fields.UnderlyingStartValue
-import FIX.Fields.UnderlyingStateOrProvinceOfIssue
-import FIX.Fields.UnderlyingStipType
-import FIX.Fields.UnderlyingStipValue
-import FIX.Fields.UnderlyingStrikeCurrency
-import FIX.Fields.UnderlyingStrikePrice
 import FIX.Fields.UnderlyingSymbol
-import FIX.Fields.UnderlyingSymbolSfx
-import FIX.Fields.Username
 import FIX.Fields.ValidUntilTime
 import FIX.Fields.Yield
 import FIX.Fields.YieldCalcDate
@@ -452,13 +397,6 @@ spec = do
   fieldSpec @Yield
   fieldSpec @RepoCollateralSecurityType
   fieldSpec @RedemptionDate
-  fieldSpec @UnderlyingCouponPaymentDate
-  fieldSpec @UnderlyingIssueDate
-  fieldSpec @UnderlyingRepoCollateralSecurityType
-  fieldSpec @UnderlyingRepurchaseTerm
-  fieldSpec @UnderlyingRepurchaseRate
-  fieldSpec @UnderlyingFactor
-  fieldSpec @UnderlyingRedemptionDate
   fieldSpec @LegCouponPaymentDate
   fieldSpec @LegIssueDate
   fieldSpec @LegRepoCollateralSecurityType
@@ -467,25 +405,13 @@ spec = do
   fieldSpec @LegFactor
   fieldSpec @LegRedemptionDate
   fieldSpec @CreditRating
-  fieldSpec @UnderlyingCreditRating
   fieldSpec @LegCreditRating
-  fieldSpec @SubscriptionRequestType
-  fieldSpec @NoQuoteEntries
   fieldSpec @QuoteCancelType
   fieldSpec @QuoteResponseLevel
   fieldSpec @QuoteRequestType
-  fieldSpec @UnderlyingSecurityIDSource
-  fieldSpec @UnderlyingIssuer
   fieldSpec @UnderlyingSecurityDesc
-  fieldSpec @UnderlyingSecurityExchange
   fieldSpec @UnderlyingSecurityID
-  fieldSpec @UnderlyingSecurityType
   fieldSpec @UnderlyingSymbol
-  fieldSpec @UnderlyingSymbolSfx
-  fieldSpec @UnderlyingMaturityMonthYear
-  fieldSpec @UnderlyingStrikePrice
-  fieldSpec @UnderlyingOptAttribute
-  fieldSpec @UnderlyingCurrency
   fieldSpec @SecurityReqID
   fieldSpec @SecurityRequestType
   fieldSpec @SecurityResponseID
@@ -494,14 +420,10 @@ spec = do
   fieldSpec @EncodedIssuer
   fieldSpec @EncodedSecurityDesc
   fieldSpec @EncodedText
-  fieldSpec @EncodedUnderlyingIssuer
-  fieldSpec @EncodedUnderlyingSecurityDesc
   fieldSpec @RefTagID
   fieldSpec @RefMsgType
   fieldSpec @SessionRejectReason
   fieldSpec @PriceType
-  fieldSpec @UnderlyingCouponRate
-  fieldSpec @UnderlyingContractMultiplier
   fieldSpec @PartyIDSource
   fieldSpec @PartyID
   fieldSpec @PartyRole
@@ -509,13 +431,8 @@ spec = do
   fieldSpec @NoSecurityAltID
   fieldSpec @SecurityAltID
   fieldSpec @SecurityAltIDSource
-  fieldSpec @NoUnderlyingSecurityAltID
-  fieldSpec @UnderlyingSecurityAltID
-  fieldSpec @UnderlyingSecurityAltIDSource
   fieldSpec @Product
   fieldSpec @CFICode
-  fieldSpec @UnderlyingProduct
-  fieldSpec @UnderlyingCFICode
   fieldSpec @RoundingDirection
   fieldSpec @RoundingModulus
   fieldSpec @CountryOfIssue
@@ -533,20 +450,13 @@ spec = do
   fieldSpec @UnderlyingMaturityDate
   fieldSpec @InstrRegistry
   fieldSpec @NestedPartySubID
-  fieldSpec @Username
   fieldSpec @Password
   fieldSpec @NoLegs
   fieldSpec @LegCurrency
-  fieldSpec @RoundLot
-  fieldSpec @MinTradeVol
   fieldSpec @AccountType
   fieldSpec @CustOrderCapacity
   fieldSpec @LegSettlType
   fieldSpec @LegSettlDate
-  fieldSpec @UnderlyingCountryOfIssue
-  fieldSpec @UnderlyingStateOrProvinceOfIssue
-  fieldSpec @UnderlyingLocaleOfIssue
-  fieldSpec @UnderlyingInstrRegistry
   fieldSpec @LegCountryOfIssue
   fieldSpec @LegStateOrProvinceOfIssue
   fieldSpec @LegLocaleOfIssue
@@ -595,7 +505,6 @@ spec = do
   fieldSpec @BenchmarkPrice
   fieldSpec @BenchmarkPriceType
   fieldSpec @ContractSettlMonth
-  fieldSpec @DeliveryForm
   fieldSpec @NoLegAllocs
   fieldSpec @LegAllocAccount
   fieldSpec @LegAllocQty
@@ -627,40 +536,22 @@ spec = do
   fieldSpec @LegPool
   fieldSpec @BenchmarkSecurityIDSource
   fieldSpec @SecuritySubType
-  fieldSpec @UnderlyingSecuritySubType
   fieldSpec @LegSecuritySubType
   fieldSpec @TerminationType
   fieldSpec @NoPartySubIDs
   fieldSpec @PartySubIDType
   fieldSpec @NoNestedPartySubIDs
   fieldSpec @NestedPartySubIDType
-  fieldSpec @UnderlyingPx
-  fieldSpec @ExpirationCycle
   fieldSpec @QtyType
   fieldSpec @NoEvents
   fieldSpec @EventType
   fieldSpec @EventDate
   fieldSpec @EventPx
   fieldSpec @EventText
-  fieldSpec @PctAtRisk
-  fieldSpec @NoInstrAttrib
-  fieldSpec @InstrAttribType
-  fieldSpec @InstrAttribValue
   fieldSpec @DatedDate
   fieldSpec @InterestAccrualDate
   fieldSpec @CPProgram
   fieldSpec @CPRegType
-  fieldSpec @UnderlyingCPProgram
-  fieldSpec @UnderlyingCPRegType
-  fieldSpec @UnderlyingQty
-  fieldSpec @UnderlyingDirtyPrice
-  fieldSpec @UnderlyingEndPrice
-  fieldSpec @UnderlyingStartValue
-  fieldSpec @UnderlyingCurrentValue
-  fieldSpec @UnderlyingEndValue
-  fieldSpec @NoUnderlyingStips
-  fieldSpec @UnderlyingStipType
-  fieldSpec @UnderlyingStipValue
   fieldSpec @MarginRatio
   fieldSpec @AgreementDesc
   fieldSpec @AgreementID
@@ -669,7 +560,6 @@ spec = do
   fieldSpec @EndDate
   fieldSpec @AgreementCurrency
   fieldSpec @DeliveryType
-  fieldSpec @UnderlyingStrikeCurrency
   fieldSpec @LegStrikeCurrency
   fieldSpec @StrikeCurrency
   fieldSpec @LegContractSettlMonth

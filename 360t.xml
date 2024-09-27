@@ -58,16 +58,9 @@
         </message>
         <message name="QuoteRequest" msgtype="R" msgcat="app">
             <field name="QuoteReqID" required="Y"/>
-            <field name="RFQReqID" required="N"/>
-            <field name="ClOrdID" required="N"/>
-            <field name="OrderCapacity" required="N"/>
-            <field name="Username" required="N"/>
             <group name="NoRelatedSym" required="Y">
                 <component name="Instrument" required="Y"/>
                 <component name="FinancingDetails" required="N"/>
-                <group name="NoUnderlyings" required="N">
-                    <component name="UnderlyingInstrument" required="N"/>
-                </group>
                 <field name="PrevClosePx" required="N"/>
                 <field name="QuoteRequestType" required="N"/>
                 <field name="QuoteType" required="N"/>
@@ -86,7 +79,6 @@
                 <field name="Currency" required="N"/>
                 <component name="Stipulations" required="N"/>
                 <field name="Account" required="N"/>
-                <field name="Username" required="N"/>
                 <field name="AcctIDSource" required="N"/>
                 <field name="AccountType" required="N"/>
                 <group name="NoQuoteQualifiers" required="N">
@@ -121,6 +113,9 @@
                     <field name="LegSplitSettlDate" required="N"/>
                 </group>
             </group>
+            <field name="RFQReqID" required="N"/>
+            <field name="ClOrdID" required="N"/>
+            <field name="OrderCapacity" required="N"/>
             <component name="Parties" required="N"/>
             <group name="NoRegulatoryTradeIDs" required="N">
                 <field name="RegulatoryTradeID" required="N"/>
@@ -157,61 +152,13 @@
         </message>
         <message name="QuoteRequestReject" msgtype="AG" msgcat="app">
             <field name="QuoteReqID" required="Y"/>
-            <field name="RFQReqID" required="N"/>
             <field name="QuoteRequestRejectReason" required="Y"/>
             <group name="NoRelatedSym" required="Y">
-                <component name="Instrument" required="Y"/>
-                <component name="FinancingDetails" required="N"/>
-                <group name="NoUnderlyings" required="N">
-                    <component name="UnderlyingInstrument" required="N"/>
-                </group>
-                <field name="PrevClosePx" required="N"/>
-                <field name="QuoteRequestType" required="N"/>
-                <field name="QuoteType" required="N"/>
-                <field name="TradingSessionID" required="N"/>
-                <field name="TradingSessionSubID" required="N"/>
-                <field name="TradeOriginationDate" required="N"/>
-                <field name="Side" required="N"/>
-                <field name="QtyType" required="N"/>
-                <component name="OrderQtyData" required="N"/>
-                <field name="SettlType" required="N"/>
-                <field name="SettlDate" required="N"/>
-                <field name="SplitSettlDate" required="N"/>
-                <field name="SettlDate2" required="N"/>
-                <field name="SplitSettlDate2" required="N"/>
-                <field name="OrderQty2" required="N"/>
+                <field name="Symbol" required="Y"/>
+                <field name="QuoteType" required="Y"/>
                 <field name="Currency" required="N"/>
-                <component name="Stipulations" required="N"/>
-                <field name="Account" required="N"/>
-                <field name="AcctIDSource" required="N"/>
-                <field name="AccountType" required="N"/>
-                <group name="NoLegs" required="N">
-                    <component name="InstrumentLeg" required="N"/>
-                    <field name="LegQty" required="N"/>
-                    <field name="LegSwapType" required="N"/>
-                    <field name="LegSettlType" required="N"/>
-                    <field name="LegSettlDate" required="N"/>
-                    <component name="LegStipulations" required="N"/>
-                    <component name="NestedParties" required="N"/>
-                    <component name="LegBenchmarkCurveData" required="N"/>
-                </group>
             </group>
-            <group name="NoQuoteQualifiers" required="N">
-                <field name="QuoteQualifier" required="N"/>
-            </group>
-            <field name="QuotePriceType" required="N"/>
-            <field name="OrdType" required="N"/>
-            <field name="ExpireTime" required="N"/>
-            <field name="TransactTime" required="N"/>
-            <component name="SpreadOrBenchmarkCurveData" required="N"/>
-            <field name="PriceType" required="N"/>
-            <field name="Price" required="N"/>
-            <field name="Price2" required="N"/>
-            <component name="YieldData" required="N"/>
-            <component name="Parties" required="N"/>
             <field name="Text" required="N"/>
-            <field name="EncodedTextLen" required="N"/>
-            <field name="EncodedText" required="N"/>
         </message>
         <message name="BusinessMessageReject" msgtype="j" msgcat="app">
             <field name="RefSeqNum" required="N"/>
@@ -219,8 +166,6 @@
             <field name="BusinessRejectRefID" required="N"/>
             <field name="BusinessRejectReason" required="Y"/>
             <field name="Text" required="N"/>
-            <field name="EncodedTextLen" required="N"/>
-            <field name="EncodedText" required="N"/>
         </message>
         <message name="Quote" msgtype="S" msgcat="app">
             <field name="QuoteReqID" required="N"/>
@@ -236,9 +181,6 @@
             <field name="TradingSessionSubID" required="N"/>
             <component name="Instrument" required="Y"/>
             <component name="FinancingDetails" required="N"/>
-            <group name="NoUnderlyings" required="N">
-                <component name="UnderlyingInstrument" required="N"/>
-            </group>
             <field name="Side" required="N"/>
             <component name="OrderQtyData" required="N"/>
             <field name="SettlType" required="N"/>
@@ -250,7 +192,6 @@
             <field name="Currency" required="N"/>
             <component name="Stipulations" required="N"/>
             <field name="Account" required="N"/>
-            <field name="Username" required="N"/>
             <field name="AcctIDSource" required="N"/>
             <field name="AccountType" required="N"/>
             <group name="NoLegs" required="N">
@@ -317,28 +258,10 @@
             <component name="ExAnteData" required="N"/>
         </message>
         <message name="QuoteCancel" msgtype="Z" msgcat="app">
-            <field name="QuoteReqID" required="N"/>
             <field name="QuoteID" required="Y"/>
+            <field name="QuoteReqID" required="N"/>
             <field name="QuoteCancelType" required="Y"/>
-            <field name="QuoteResponseLevel" required="N"/>
-            <component name="Parties" required="N"/>
-            <field name="Account" required="N"/>
-            <field name="Username" required="N"/>
             <field name="ProductType" required="N"/>
-            <field name="AcctIDSource" required="N"/>
-            <field name="AccountType" required="N"/>
-            <field name="TradingSessionID" required="N"/>
-            <field name="TradingSessionSubID" required="N"/>
-            <group name="NoQuoteEntries" required="N">
-                <component name="Instrument" required="N"/>
-                <component name="FinancingDetails" required="N"/>
-                <group name="NoUnderlyings" required="N">
-                    <component name="UnderlyingInstrument" required="N"/>
-                </group>
-                <group name="NoLegs" required="N">
-                    <component name="InstrumentLeg" required="N"/>
-                </group>
-            </group>
         </message>
         <message name="OrderSingle" msgtype="D" msgcat="app">
             <field name="ClOrdID" required="Y"/>
@@ -348,7 +271,6 @@
             <field name="TradeOriginationDate" required="N"/>
             <field name="TradeDate" required="N"/>
             <field name="Account" required="N"/>
-            <field name="Username" required="N"/>
             <field name="AcctIDSource" required="N"/>
             <field name="AccountType" required="N"/>
             <field name="DayBookingInst" required="N"/>
@@ -380,9 +302,6 @@
             <field name="ProcessCode" required="N"/>
             <component name="Instrument" required="Y"/>
             <component name="FinancingDetails" required="N"/>
-            <group name="NoUnderlyings" required="N">
-                <component name="UnderlyingInstrument" required="N"/>
-            </group>
             <field name="PrevClosePx" required="N"/>
             <field name="Side" required="Y"/>
             <field name="LocateReqd" required="N"/>
@@ -487,9 +406,6 @@
             <field name="ProcessCode" required="N"/>
             <field name="Side" required="Y"/>
             <component name="Instrument" required="Y"/>
-            <group name="NoUnderlyings" required="N">
-                <component name="UnderlyingInstrument" required="N"/>
-            </group>
             <field name="PrevClosePx" required="N"/>
             <group name="NoLegs" required="Y">
                 <component name="InstrumentLeg" required="N"/>
@@ -603,7 +519,6 @@
             <field name="OrdRejReason" required="N"/>
             <field name="ExecRestatementReason" required="N"/>
             <field name="Account" required="N"/>
-            <field name="Username" required="N"/>
             <field name="AcctIDSource" required="N"/>
             <field name="AccountType" required="N"/>
             <field name="DayBookingInst" required="N"/>
@@ -616,9 +531,6 @@
             <field name="ClearingFeeIndicator" required="N"/>
             <component name="Instrument" required="Y"/>
             <component name="FinancingDetails" required="N"/>
-            <group name="NoUnderlyings" required="N">
-                <component name="UnderlyingInstrument" required="N"/>
-            </group>
             <field name="Side" required="Y"/>
             <component name="Stipulations" required="N"/>
             <field name="QtyType" required="N"/>
@@ -802,44 +714,18 @@
         <message name="SecurityDefinitionRequest" msgtype="c" msgcat="app">
             <field name="SecurityReqID" required="Y"/>
             <field name="SecurityRequestType" required="Y"/>
-            <component name="Instrument" required="N"/>
-            <component name="InstrumentExtension" required="N"/>
-            <group name="NoUnderlyings" required="N">
-                <component name="UnderlyingInstrument" required="N"/>
-            </group>
-            <field name="Currency" required="N"/>
-            <field name="Text" required="N"/>
-            <field name="EncodedTextLen" required="N"/>
-            <field name="EncodedText" required="N"/>
-            <field name="TradingSessionID" required="N"/>
-            <field name="TradingSessionSubID" required="N"/>
-            <group name="NoLegs" required="N">
-                <component name="InstrumentLeg" required="N"/>
-            </group>
-            <field name="ExpirationCycle" required="N"/>
-            <field name="SubscriptionRequestType" required="N"/>
+            <field name="Symbol" required="Y"/>
         </message>
         <message name="SecurityDefinition" msgtype="d" msgcat="app">
             <field name="SecurityReqID" required="Y"/>
             <field name="SecurityResponseID" required="Y"/>
             <field name="SecurityResponseType" required="Y"/>
-            <component name="Instrument" required="N"/>
-            <component name="InstrumentExtension" required="N"/>
             <group name="NoUnderlyings" required="N">
-                <component name="UnderlyingInstrument" required="N"/>
+                <field name="UnderlyingSymbol" required="Y"/>
+                <field name="UnderlyingSecurityID" required="Y"/>
+                <field name="UnderlyingMaturityDate" required="Y"/>
+                <field name="UnderlyingSecurityDesc" required="Y"/>
             </group>
-            <field name="Currency" required="N"/>
-            <field name="TradingSessionID" required="N"/>
-            <field name="TradingSessionSubID" required="N"/>
-            <field name="Text" required="N"/>
-            <field name="EncodedTextLen" required="N"/>
-            <field name="EncodedText" required="N"/>
-            <group name="NoLegs" required="N">
-                <component name="InstrumentLeg" required="N"/>
-            </group>
-            <field name="ExpirationCycle" required="N"/>
-            <field name="RoundLot" required="N"/>
-            <field name="MinTradeVol" required="N"/>
         </message>
     </messages>
     <components>
@@ -897,57 +783,6 @@
             </group>
             <field name="DatedDate" required="N"/>
             <field name="InterestAccrualDate" required="N"/>
-        </component>
-        <component name="UnderlyingInstrument">
-            <field name="UnderlyingSymbol" required="Y"/>
-            <field name="UnderlyingSymbolSfx" required="N"/>
-            <field name="UnderlyingSecurityID" required="N"/>
-            <field name="UnderlyingSecurityIDSource" required="N"/>
-            <group name="NoUnderlyingSecurityAltID" required="N">
-                <field name="UnderlyingSecurityAltID" required="N"/>
-                <field name="UnderlyingSecurityAltIDSource" required="N"/>
-            </group>
-            <field name="UnderlyingProduct" required="N"/>
-            <field name="UnderlyingCFICode" required="N"/>
-            <field name="UnderlyingSecurityType" required="N"/>
-            <field name="UnderlyingSecuritySubType" required="N"/>
-            <field name="UnderlyingMaturityMonthYear" required="N"/>
-            <field name="UnderlyingMaturityDate" required="N"/>
-            <field name="UnderlyingCouponPaymentDate" required="N"/>
-            <field name="UnderlyingIssueDate" required="N"/>
-            <field name="UnderlyingRepoCollateralSecurityType" required="N"/>
-            <field name="UnderlyingRepurchaseTerm" required="N"/>
-            <field name="UnderlyingRepurchaseRate" required="N"/>
-            <field name="UnderlyingFactor" required="N"/>
-            <field name="UnderlyingCreditRating" required="N"/>
-            <field name="UnderlyingInstrRegistry" required="N"/>
-            <field name="UnderlyingCountryOfIssue" required="N"/>
-            <field name="UnderlyingStateOrProvinceOfIssue" required="N"/>
-            <field name="UnderlyingLocaleOfIssue" required="N"/>
-            <field name="UnderlyingRedemptionDate" required="N"/>
-            <field name="UnderlyingStrikePrice" required="N"/>
-            <field name="UnderlyingStrikeCurrency" required="N"/>
-            <field name="UnderlyingOptAttribute" required="N"/>
-            <field name="UnderlyingContractMultiplier" required="N"/>
-            <field name="UnderlyingCouponRate" required="N"/>
-            <field name="UnderlyingSecurityExchange" required="N"/>
-            <field name="UnderlyingIssuer" required="N"/>
-            <field name="EncodedUnderlyingIssuerLen" required="N"/>
-            <field name="EncodedUnderlyingIssuer" required="N"/>
-            <field name="UnderlyingSecurityDesc" required="N"/>
-            <field name="EncodedUnderlyingSecurityDescLen" required="N"/>
-            <field name="EncodedUnderlyingSecurityDesc" required="N"/>
-            <field name="UnderlyingCPProgram" required="N"/>
-            <field name="UnderlyingCPRegType" required="N"/>
-            <field name="UnderlyingCurrency" required="N"/>
-            <field name="UnderlyingQty" required="N"/>
-            <field name="UnderlyingPx" required="N"/>
-            <field name="UnderlyingDirtyPrice" required="N"/>
-            <field name="UnderlyingEndPrice" required="N"/>
-            <field name="UnderlyingStartValue" required="N"/>
-            <field name="UnderlyingCurrentValue" required="N"/>
-            <field name="UnderlyingEndValue" required="N"/>
-            <component name="UnderlyingStipulations" required="N"/>
         </component>
         <component name="InstrumentLeg">
             <field name="LegSymbol" required="N"/>
@@ -1096,12 +931,6 @@
             <group name="NoStipulations" required="N">
                 <field name="StipulationType" required="N"/>
                 <field name="StipulationValue" required="N"/>
-            </group>
-        </component>
-        <component name="UnderlyingStipulations">
-            <group name="NoUnderlyingStips" required="N">
-                <field name="UnderlyingStipType" required="N"/>
-                <field name="UnderlyingStipValue" required="N"/>
             </group>
         </component>
         <component name="LegStipulations">

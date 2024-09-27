@@ -13,152 +13,27 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Proxy
 import Data.Validity
 import FIX.Components.Class
-import FIX.Components.FinancingDetails
-import FIX.Components.Instrument
-import FIX.Components.OrderQtyData
-import FIX.Fields.Account
-import FIX.Fields.AccountType
-import FIX.Fields.AcctIDSource
 import FIX.Fields.Currency
 import FIX.Fields.MsgType
 import FIX.Fields.NoRelatedSym
-import FIX.Fields.OrderQty2
-import FIX.Fields.PrevClosePx
-import FIX.Fields.QtyType
-import FIX.Fields.QuoteRequestType
 import FIX.Fields.QuoteType
-import FIX.Fields.SettlDate
-import FIX.Fields.SettlDate2
-import FIX.Fields.SettlType
-import FIX.Fields.Side
-import FIX.Fields.SplitSettlDate
-import FIX.Fields.SplitSettlDate2
-import FIX.Fields.TradeOriginationDate
-import FIX.Fields.TradingSessionID
-import FIX.Fields.TradingSessionSubID
+import FIX.Fields.Symbol
 import FIX.Groups.Class
-import FIX.Groups.QuoteRequestRejectRelatedSymLegsGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymStipulationsGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymUnderlyingsGroupElem
 import GHC.Generics (Generic)
 
 -- | GroupSpec
 --   { groupName = "QuoteRequestRejectRelatedSym"
 --   , groupNumberField = "NoRelatedSym"
 --   , groupPieces =
---       [ MessagePieceComponent "Instrument" True
---       , MessagePieceComponent "FinancingDetails" True
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "QuoteRequestRejectRelatedSymUnderlyings"
---             , groupNumberField = "NoUnderlyings"
---             , groupPieces =
---                 [ MessagePieceComponent "UnderlyingInstrument" True ]
---             }
---           False
---       , MessagePieceField "PrevClosePx" False
---       , MessagePieceField "QuoteRequestType" False
---       , MessagePieceField "QuoteType" False
---       , MessagePieceField "TradingSessionID" False
---       , MessagePieceField "TradingSessionSubID" False
---       , MessagePieceField "TradeOriginationDate" False
---       , MessagePieceField "Side" False
---       , MessagePieceField "QtyType" False
---       , MessagePieceComponent "OrderQtyData" True
---       , MessagePieceField "SettlType" False
---       , MessagePieceField "SettlDate" False
---       , MessagePieceField "SplitSettlDate" False
---       , MessagePieceField "SettlDate2" False
---       , MessagePieceField "SplitSettlDate2" False
---       , MessagePieceField "OrderQty2" False
+--       [ MessagePieceField "Symbol" True
+--       , MessagePieceField "QuoteType" True
 --       , MessagePieceField "Currency" False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "QuoteRequestRejectRelatedSymStipulations"
---             , groupNumberField = "NoStipulations"
---             , groupPieces =
---                 [ MessagePieceField "StipulationType" True
---                 , MessagePieceField "StipulationValue" False
---                 ]
---             }
---           False
---       , MessagePieceField "Account" False
---       , MessagePieceField "AcctIDSource" False
---       , MessagePieceField "AccountType" False
---       , MessagePieceGroup
---           GroupSpec
---             { groupName = "QuoteRequestRejectRelatedSymLegs"
---             , groupNumberField = "NoLegs"
---             , groupPieces =
---                 [ MessagePieceComponent "InstrumentLeg" True
---                 , MessagePieceField "LegQty" False
---                 , MessagePieceField "LegSwapType" False
---                 , MessagePieceField "LegSettlType" False
---                 , MessagePieceField "LegSettlDate" False
---                 , MessagePieceGroup
---                     GroupSpec
---                       { groupName = "QuoteRequestRejectRelatedSymLegsLegStipulations"
---                       , groupNumberField = "NoLegStipulations"
---                       , groupPieces =
---                           [ MessagePieceField "LegStipulationType" True
---                           , MessagePieceField "LegStipulationValue" False
---                           ]
---                       }
---                     False
---                 , MessagePieceGroup
---                     GroupSpec
---                       { groupName = "QuoteRequestRejectRelatedSymLegsNestedParties"
---                       , groupNumberField = "NoNestedPartyIDs"
---                       , groupPieces =
---                           [ MessagePieceField "NestedPartyID" True
---                           , MessagePieceField "NestedPartyIDSource" False
---                           , MessagePieceField "NestedPartyRole" False
---                           , MessagePieceField "NestedPartyRoleQualifier" False
---                           , MessagePieceGroup
---                               GroupSpec
---                                 { groupName =
---                                     "QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDs"
---                                 , groupNumberField = "NoNestedPartySubIDs"
---                                 , groupPieces =
---                                     [ MessagePieceField "NestedPartySubID" True
---                                     , MessagePieceField "NestedPartySubIDType" False
---                                     ]
---                                 }
---                               False
---                           ]
---                       }
---                     False
---                 , MessagePieceComponent "LegBenchmarkCurveData" True
---                 ]
---             }
---           False
 --       ]
 --   }
 data QuoteRequestRejectRelatedSymGroupElem = QuoteRequestRejectRelatedSymGroupElem
-  { quoteRequestRejectRelatedSymGroupElemInstrument :: !Instrument,
-    quoteRequestRejectRelatedSymGroupElemFinancingDetails :: !FinancingDetails,
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymUnderlyingsGroup :: ![QuoteRequestRejectRelatedSymUnderlyingsGroupElem],
-    quoteRequestRejectRelatedSymGroupElemPrevClosePx :: !(Maybe PrevClosePx),
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestType :: !(Maybe QuoteRequestType),
-    quoteRequestRejectRelatedSymGroupElemQuoteType :: !(Maybe QuoteType),
-    quoteRequestRejectRelatedSymGroupElemTradingSessionID :: !(Maybe TradingSessionID),
-    quoteRequestRejectRelatedSymGroupElemTradingSessionSubID :: !(Maybe TradingSessionSubID),
-    quoteRequestRejectRelatedSymGroupElemTradeOriginationDate :: !(Maybe TradeOriginationDate),
-    quoteRequestRejectRelatedSymGroupElemSide :: !(Maybe Side),
-    quoteRequestRejectRelatedSymGroupElemQtyType :: !(Maybe QtyType),
-    quoteRequestRejectRelatedSymGroupElemOrderQtyData :: !OrderQtyData,
-    quoteRequestRejectRelatedSymGroupElemSettlType :: !(Maybe SettlType),
-    quoteRequestRejectRelatedSymGroupElemSettlDate :: !(Maybe SettlDate),
-    quoteRequestRejectRelatedSymGroupElemSplitSettlDate :: !(Maybe SplitSettlDate),
-    quoteRequestRejectRelatedSymGroupElemSettlDate2 :: !(Maybe SettlDate2),
-    quoteRequestRejectRelatedSymGroupElemSplitSettlDate2 :: !(Maybe SplitSettlDate2),
-    quoteRequestRejectRelatedSymGroupElemOrderQty2 :: !(Maybe OrderQty2),
-    quoteRequestRejectRelatedSymGroupElemCurrency :: !(Maybe Currency),
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymStipulationsGroup :: ![QuoteRequestRejectRelatedSymStipulationsGroupElem],
-    quoteRequestRejectRelatedSymGroupElemAccount :: !(Maybe Account),
-    quoteRequestRejectRelatedSymGroupElemAcctIDSource :: !(Maybe AcctIDSource),
-    quoteRequestRejectRelatedSymGroupElemAccountType :: !(Maybe AccountType),
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymLegsGroup :: ![QuoteRequestRejectRelatedSymLegsGroupElem]
+  { quoteRequestRejectRelatedSymGroupElemSymbol :: !Symbol,
+    quoteRequestRejectRelatedSymGroupElemQuoteType :: !QuoteType,
+    quoteRequestRejectRelatedSymGroupElemCurrency :: !(Maybe Currency)
   }
   deriving stock (Show, Eq, Generic)
 
@@ -167,56 +42,14 @@ instance Validity QuoteRequestRejectRelatedSymGroupElem
 instance IsComponent QuoteRequestRejectRelatedSymGroupElem where
   toComponentFields ((QuoteRequestRejectRelatedSymGroupElem {..})) =
     mconcat
-      [ requiredComponentB quoteRequestRejectRelatedSymGroupElemInstrument,
-        requiredComponentB quoteRequestRejectRelatedSymGroupElemFinancingDetails,
-        optionalGroupB quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymUnderlyingsGroup,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemPrevClosePx,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemQuoteRequestType,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemQuoteType,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemTradingSessionID,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemTradingSessionSubID,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemTradeOriginationDate,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemSide,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemQtyType,
-        requiredComponentB quoteRequestRejectRelatedSymGroupElemOrderQtyData,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemSettlType,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemSettlDate,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemSplitSettlDate,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemSettlDate2,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemSplitSettlDate2,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemOrderQty2,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemCurrency,
-        optionalGroupB quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymStipulationsGroup,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemAccount,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemAcctIDSource,
-        optionalFieldB quoteRequestRejectRelatedSymGroupElemAccountType,
-        optionalGroupB quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymLegsGroup
+      [ requiredFieldB quoteRequestRejectRelatedSymGroupElemSymbol,
+        requiredFieldB quoteRequestRejectRelatedSymGroupElemQuoteType,
+        optionalFieldB quoteRequestRejectRelatedSymGroupElemCurrency
       ]
   fromComponentFields = do
-    quoteRequestRejectRelatedSymGroupElemInstrument <- requiredComponentP
-    quoteRequestRejectRelatedSymGroupElemFinancingDetails <- requiredComponentP
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymUnderlyingsGroup <- optionalGroupP
-    quoteRequestRejectRelatedSymGroupElemPrevClosePx <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestType <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemQuoteType <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemTradingSessionID <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemTradingSessionSubID <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemTradeOriginationDate <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemSide <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemQtyType <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemOrderQtyData <- requiredComponentP
-    quoteRequestRejectRelatedSymGroupElemSettlType <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemSettlDate <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemSplitSettlDate <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemSettlDate2 <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemSplitSettlDate2 <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemOrderQty2 <- optionalFieldP
+    quoteRequestRejectRelatedSymGroupElemSymbol <- requiredFieldP
+    quoteRequestRejectRelatedSymGroupElemQuoteType <- requiredFieldP
     quoteRequestRejectRelatedSymGroupElemCurrency <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymStipulationsGroup <- optionalGroupP
-    quoteRequestRejectRelatedSymGroupElemAccount <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemAcctIDSource <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemAccountType <- optionalFieldP
-    quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymLegsGroup <- optionalGroupP
     pure (QuoteRequestRejectRelatedSymGroupElem {..})
 
 instance IsGroupElement QuoteRequestRejectRelatedSymGroupElem where
@@ -224,27 +57,7 @@ instance IsGroupElement QuoteRequestRejectRelatedSymGroupElem where
   mkGroupNum Proxy = NoRelatedSym
   countGroupNum Proxy = unNoRelatedSym
 
-makeQuoteRequestRejectRelatedSymGroupElem :: Instrument -> (FinancingDetails -> (OrderQtyData -> QuoteRequestRejectRelatedSymGroupElem))
-makeQuoteRequestRejectRelatedSymGroupElem quoteRequestRejectRelatedSymGroupElemInstrument quoteRequestRejectRelatedSymGroupElemFinancingDetails quoteRequestRejectRelatedSymGroupElemOrderQtyData =
-  let quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymUnderlyingsGroup = []
-      quoteRequestRejectRelatedSymGroupElemPrevClosePx = Nothing
-      quoteRequestRejectRelatedSymGroupElemQuoteRequestType = Nothing
-      quoteRequestRejectRelatedSymGroupElemQuoteType = Nothing
-      quoteRequestRejectRelatedSymGroupElemTradingSessionID = Nothing
-      quoteRequestRejectRelatedSymGroupElemTradingSessionSubID = Nothing
-      quoteRequestRejectRelatedSymGroupElemTradeOriginationDate = Nothing
-      quoteRequestRejectRelatedSymGroupElemSide = Nothing
-      quoteRequestRejectRelatedSymGroupElemQtyType = Nothing
-      quoteRequestRejectRelatedSymGroupElemSettlType = Nothing
-      quoteRequestRejectRelatedSymGroupElemSettlDate = Nothing
-      quoteRequestRejectRelatedSymGroupElemSplitSettlDate = Nothing
-      quoteRequestRejectRelatedSymGroupElemSettlDate2 = Nothing
-      quoteRequestRejectRelatedSymGroupElemSplitSettlDate2 = Nothing
-      quoteRequestRejectRelatedSymGroupElemOrderQty2 = Nothing
-      quoteRequestRejectRelatedSymGroupElemCurrency = Nothing
-      quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymStipulationsGroup = []
-      quoteRequestRejectRelatedSymGroupElemAccount = Nothing
-      quoteRequestRejectRelatedSymGroupElemAcctIDSource = Nothing
-      quoteRequestRejectRelatedSymGroupElemAccountType = Nothing
-      quoteRequestRejectRelatedSymGroupElemQuoteRequestRejectRelatedSymLegsGroup = []
+makeQuoteRequestRejectRelatedSymGroupElem :: Symbol -> (QuoteType -> QuoteRequestRejectRelatedSymGroupElem)
+makeQuoteRequestRejectRelatedSymGroupElem quoteRequestRejectRelatedSymGroupElemSymbol quoteRequestRejectRelatedSymGroupElemQuoteType =
+  let quoteRequestRejectRelatedSymGroupElemCurrency = Nothing
    in (QuoteRequestRejectRelatedSymGroupElem {..})

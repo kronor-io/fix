@@ -9,26 +9,18 @@ import FIX.Components.ExAnteData
 import FIX.Components.FinancingDetails
 import FIX.Components.Gen ()
 import FIX.Components.Instrument
-import FIX.Components.InstrumentExtension
 import FIX.Components.InstrumentLeg
 import FIX.Components.LegBenchmarkCurveData
 import FIX.Components.LegExAnteData
 import FIX.Components.OrderQtyData
 import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.TestUtils
-import FIX.Components.UnderlyingInstrument
 import FIX.Components.YieldData
 import FIX.Groups.InstrumentEventsGroupElem
-import FIX.Groups.InstrumentExtensionInstrAttribGroupElem
 import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
 import FIX.Groups.InstrumentSecurityAltIDGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
-import FIX.Groups.QuoteCancelPartiesGroupElem
-import FIX.Groups.QuoteCancelPartiesPartySubIDsGroupElem
-import FIX.Groups.QuoteCancelQuoteEntriesGroupElem
-import FIX.Groups.QuoteCancelQuoteEntriesLegsGroupElem
-import FIX.Groups.QuoteCancelQuoteEntriesUnderlyingsGroupElem
 import FIX.Groups.QuoteLegsGroupElem
 import FIX.Groups.QuoteLegsLegStipulationsGroupElem
 import FIX.Groups.QuoteLegsNestedPartiesGroupElem
@@ -41,16 +33,7 @@ import FIX.Groups.QuoteRequestOrderAttributesGroupElem
 import FIX.Groups.QuoteRequestPartiesGroupElem
 import FIX.Groups.QuoteRequestPartiesPartySubIDsGroupElem
 import FIX.Groups.QuoteRequestRegulatoryTradeIDsGroupElem
-import FIX.Groups.QuoteRequestRejectPartiesGroupElem
-import FIX.Groups.QuoteRequestRejectPartiesPartySubIDsGroupElem
-import FIX.Groups.QuoteRequestRejectQuoteQualifiersGroupElem
 import FIX.Groups.QuoteRequestRejectRelatedSymGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymLegsGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymStipulationsGroupElem
-import FIX.Groups.QuoteRequestRejectRelatedSymUnderlyingsGroupElem
 import FIX.Groups.QuoteRequestRelatedSymAllocsGroupElem
 import FIX.Groups.QuoteRequestRelatedSymGroupElem
 import FIX.Groups.QuoteRequestRelatedSymLegsGroupElem
@@ -59,16 +42,9 @@ import FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesGroupElem
 import FIX.Groups.QuoteRequestRelatedSymLegsLegAllocsNestedPartiesNestedPartySubIDsGroupElem
 import FIX.Groups.QuoteRequestRelatedSymQuoteQualifiersGroupElem
 import FIX.Groups.QuoteRequestRelatedSymStipulationsGroupElem
-import FIX.Groups.QuoteRequestRelatedSymUnderlyingsGroupElem
 import FIX.Groups.QuoteStipulationsGroupElem
-import FIX.Groups.QuoteUnderlyingsGroupElem
-import FIX.Groups.SecurityDefinitionLegsGroupElem
-import FIX.Groups.SecurityDefinitionRequestLegsGroupElem
-import FIX.Groups.SecurityDefinitionRequestUnderlyingsGroupElem
 import FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
 import FIX.Groups.TestUtils
-import FIX.Groups.UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
-import FIX.Groups.UnderlyingInstrumentUnderlyingStipulationsGroupElem
 import Test.Syd
 import Test.Syd.Validity
 
@@ -80,13 +56,6 @@ spec = do
         genValidSpec @InstrumentEventsGroupElem
         componentSpec @InstrumentEventsGroupElem
         groupSpec @InstrumentEventsGroupElem
-    )
-  describe
-    "InstrumentExtensionInstrAttrib"
-    ( do
-        genValidSpec @InstrumentExtensionInstrAttribGroupElem
-        componentSpec @InstrumentExtensionInstrAttribGroupElem
-        groupSpec @InstrumentExtensionInstrAttribGroupElem
     )
   describe
     "InstrumentLegLegSecurityAltID"
@@ -115,41 +84,6 @@ spec = do
         genValidSpec @NewsRoutingIDsGroupElem
         componentSpec @NewsRoutingIDsGroupElem
         groupSpec @NewsRoutingIDsGroupElem
-    )
-  describe
-    "QuoteCancelParties"
-    ( do
-        genValidSpec @QuoteCancelPartiesGroupElem
-        componentSpec @QuoteCancelPartiesGroupElem
-        groupSpec @QuoteCancelPartiesGroupElem
-    )
-  describe
-    "QuoteCancelPartiesPartySubIDs"
-    ( do
-        genValidSpec @QuoteCancelPartiesPartySubIDsGroupElem
-        componentSpec @QuoteCancelPartiesPartySubIDsGroupElem
-        groupSpec @QuoteCancelPartiesPartySubIDsGroupElem
-    )
-  describe
-    "QuoteCancelQuoteEntries"
-    ( do
-        genValidSpec @QuoteCancelQuoteEntriesGroupElem
-        componentSpec @QuoteCancelQuoteEntriesGroupElem
-        groupSpec @QuoteCancelQuoteEntriesGroupElem
-    )
-  describe
-    "QuoteCancelQuoteEntriesLegs"
-    ( do
-        genValidSpec @QuoteCancelQuoteEntriesLegsGroupElem
-        componentSpec @QuoteCancelQuoteEntriesLegsGroupElem
-        groupSpec @QuoteCancelQuoteEntriesLegsGroupElem
-    )
-  describe
-    "QuoteCancelQuoteEntriesUnderlyings"
-    ( do
-        genValidSpec @QuoteCancelQuoteEntriesUnderlyingsGroupElem
-        componentSpec @QuoteCancelQuoteEntriesUnderlyingsGroupElem
-        groupSpec @QuoteCancelQuoteEntriesUnderlyingsGroupElem
     )
   describe
     "QuoteLegs"
@@ -236,74 +170,11 @@ spec = do
         groupSpec @QuoteRequestRegulatoryTradeIDsGroupElem
     )
   describe
-    "QuoteRequestRejectParties"
-    ( do
-        genValidSpec @QuoteRequestRejectPartiesGroupElem
-        componentSpec @QuoteRequestRejectPartiesGroupElem
-        groupSpec @QuoteRequestRejectPartiesGroupElem
-    )
-  describe
-    "QuoteRequestRejectPartiesPartySubIDs"
-    ( do
-        genValidSpec @QuoteRequestRejectPartiesPartySubIDsGroupElem
-        componentSpec @QuoteRequestRejectPartiesPartySubIDsGroupElem
-        groupSpec @QuoteRequestRejectPartiesPartySubIDsGroupElem
-    )
-  describe
-    "QuoteRequestRejectQuoteQualifiers"
-    ( do
-        genValidSpec @QuoteRequestRejectQuoteQualifiersGroupElem
-        componentSpec @QuoteRequestRejectQuoteQualifiersGroupElem
-        groupSpec @QuoteRequestRejectQuoteQualifiersGroupElem
-    )
-  describe
     "QuoteRequestRejectRelatedSym"
     ( do
         genValidSpec @QuoteRequestRejectRelatedSymGroupElem
         componentSpec @QuoteRequestRejectRelatedSymGroupElem
         groupSpec @QuoteRequestRejectRelatedSymGroupElem
-    )
-  describe
-    "QuoteRequestRejectRelatedSymLegs"
-    ( do
-        genValidSpec @QuoteRequestRejectRelatedSymLegsGroupElem
-        componentSpec @QuoteRequestRejectRelatedSymLegsGroupElem
-        groupSpec @QuoteRequestRejectRelatedSymLegsGroupElem
-    )
-  describe
-    "QuoteRequestRejectRelatedSymLegsLegStipulations"
-    ( do
-        genValidSpec @QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
-        componentSpec @QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
-        groupSpec @QuoteRequestRejectRelatedSymLegsLegStipulationsGroupElem
-    )
-  describe
-    "QuoteRequestRejectRelatedSymLegsNestedParties"
-    ( do
-        genValidSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
-        componentSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
-        groupSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesGroupElem
-    )
-  describe
-    "QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDs"
-    ( do
-        genValidSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
-        componentSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
-        groupSpec @QuoteRequestRejectRelatedSymLegsNestedPartiesNestedPartySubIDsGroupElem
-    )
-  describe
-    "QuoteRequestRejectRelatedSymStipulations"
-    ( do
-        genValidSpec @QuoteRequestRejectRelatedSymStipulationsGroupElem
-        componentSpec @QuoteRequestRejectRelatedSymStipulationsGroupElem
-        groupSpec @QuoteRequestRejectRelatedSymStipulationsGroupElem
-    )
-  describe
-    "QuoteRequestRejectRelatedSymUnderlyings"
-    ( do
-        genValidSpec @QuoteRequestRejectRelatedSymUnderlyingsGroupElem
-        componentSpec @QuoteRequestRejectRelatedSymUnderlyingsGroupElem
-        groupSpec @QuoteRequestRejectRelatedSymUnderlyingsGroupElem
     )
   describe
     "QuoteRequestRelatedSym"
@@ -362,46 +233,11 @@ spec = do
         groupSpec @QuoteRequestRelatedSymStipulationsGroupElem
     )
   describe
-    "QuoteRequestRelatedSymUnderlyings"
-    ( do
-        genValidSpec @QuoteRequestRelatedSymUnderlyingsGroupElem
-        componentSpec @QuoteRequestRelatedSymUnderlyingsGroupElem
-        groupSpec @QuoteRequestRelatedSymUnderlyingsGroupElem
-    )
-  describe
     "QuoteStipulations"
     ( do
         genValidSpec @QuoteStipulationsGroupElem
         componentSpec @QuoteStipulationsGroupElem
         groupSpec @QuoteStipulationsGroupElem
-    )
-  describe
-    "QuoteUnderlyings"
-    ( do
-        genValidSpec @QuoteUnderlyingsGroupElem
-        componentSpec @QuoteUnderlyingsGroupElem
-        groupSpec @QuoteUnderlyingsGroupElem
-    )
-  describe
-    "SecurityDefinitionLegs"
-    ( do
-        genValidSpec @SecurityDefinitionLegsGroupElem
-        componentSpec @SecurityDefinitionLegsGroupElem
-        groupSpec @SecurityDefinitionLegsGroupElem
-    )
-  describe
-    "SecurityDefinitionRequestLegs"
-    ( do
-        genValidSpec @SecurityDefinitionRequestLegsGroupElem
-        componentSpec @SecurityDefinitionRequestLegsGroupElem
-        groupSpec @SecurityDefinitionRequestLegsGroupElem
-    )
-  describe
-    "SecurityDefinitionRequestUnderlyings"
-    ( do
-        genValidSpec @SecurityDefinitionRequestUnderlyingsGroupElem
-        componentSpec @SecurityDefinitionRequestUnderlyingsGroupElem
-        groupSpec @SecurityDefinitionRequestUnderlyingsGroupElem
     )
   describe
     "SecurityDefinitionUnderlyings"
@@ -411,42 +247,16 @@ spec = do
         groupSpec @SecurityDefinitionUnderlyingsGroupElem
     )
   describe
-    "UnderlyingInstrumentUnderlyingSecurityAltID"
-    ( do
-        genValidSpec @UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
-        componentSpec @UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
-        groupSpec @UnderlyingInstrumentUnderlyingSecurityAltIDGroupElem
-    )
-  describe
-    "UnderlyingInstrumentUnderlyingStipulations"
-    ( do
-        genValidSpec @UnderlyingInstrumentUnderlyingStipulationsGroupElem
-        componentSpec @UnderlyingInstrumentUnderlyingStipulationsGroupElem
-        groupSpec @UnderlyingInstrumentUnderlyingStipulationsGroupElem
-    )
-  describe
     "Instrument"
     ( do
         genValidSpec @Instrument
         componentSpec @Instrument
     )
   describe
-    "UnderlyingInstrument"
-    ( do
-        genValidSpec @UnderlyingInstrument
-        componentSpec @UnderlyingInstrument
-    )
-  describe
     "InstrumentLeg"
     ( do
         genValidSpec @InstrumentLeg
         componentSpec @InstrumentLeg
-    )
-  describe
-    "InstrumentExtension"
-    ( do
-        genValidSpec @InstrumentExtension
-        componentSpec @InstrumentExtension
     )
   describe
     "OrderQtyData"
