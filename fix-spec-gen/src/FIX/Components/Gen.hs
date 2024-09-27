@@ -6,6 +6,8 @@ module FIX.Components.Gen where
 
 import Data.GenValidity
 import Data.GenValidity.ByteString ()
+import FIX.Components.CommissionData
+import FIX.Components.DiscretionInstructions
 import FIX.Components.ExAnteData
 import FIX.Components.FinancingDetails
 import FIX.Components.Instrument
@@ -13,12 +15,42 @@ import FIX.Components.InstrumentLeg
 import FIX.Components.LegBenchmarkCurveData
 import FIX.Components.LegExAnteData
 import FIX.Components.OrderQtyData
+import FIX.Components.PegInstructions
 import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.YieldData
 import FIX.Fields.Gen ()
+import FIX.Groups.ExecutionReportAllocsGroupElem
+import FIX.Groups.ExecutionReportAllocsNestedPartiesGroupElem
+import FIX.Groups.ExecutionReportAllocsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.ExecutionReportContAmtsGroupElem
+import FIX.Groups.ExecutionReportContraBrokersGroupElem
+import FIX.Groups.ExecutionReportCustomFieldsGroupElem
+import FIX.Groups.ExecutionReportLegsGroupElem
+import FIX.Groups.ExecutionReportLegsLegAllocsGroupElem
+import FIX.Groups.ExecutionReportMiscFeesGroupElem
+import FIX.Groups.ExecutionReportPartiesGroupElem
+import FIX.Groups.ExecutionReportPartiesPartySubIDsGroupElem
+import FIX.Groups.ExecutionReportRegulatoryTradeIDsGroupElem
+import FIX.Groups.ExecutionReportStipulationsGroupElem
+import FIX.Groups.ExecutionReportTrdRegPublicationsGroupElem
 import FIX.Groups.InstrumentEventsGroupElem
 import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
 import FIX.Groups.InstrumentSecurityAltIDGroupElem
+import FIX.Groups.NewOrderMultilegAllocsGroupElem
+import FIX.Groups.NewOrderMultilegAllocsNestedParties3GroupElem
+import FIX.Groups.NewOrderMultilegAllocsNestedParties3Nested3PartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegCustomFieldsGroupElem
+import FIX.Groups.NewOrderMultilegLegsGroupElem
+import FIX.Groups.NewOrderMultilegLegsLegAllocsGroupElem
+import FIX.Groups.NewOrderMultilegLegsLegAllocsNestedParties2GroupElem
+import FIX.Groups.NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegLegsLegStipulationsGroupElem
+import FIX.Groups.NewOrderMultilegLegsNestedPartiesGroupElem
+import FIX.Groups.NewOrderMultilegLegsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegPartiesGroupElem
+import FIX.Groups.NewOrderMultilegPartiesPartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegStipulationsGroupElem
+import FIX.Groups.NewOrderMultilegTradingSessionsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
 import FIX.Groups.QuoteLegsGroupElem
@@ -45,6 +77,62 @@ import FIX.Groups.QuoteRequestRelatedSymStipulationsGroupElem
 import FIX.Groups.QuoteStipulationsGroupElem
 import FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
 
+instance GenValid ExecutionReportAllocsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportAllocsNestedPartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportAllocsNestedPartiesNestedPartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportContAmtsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportContraBrokersGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportCustomFieldsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportLegsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportLegsLegAllocsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportMiscFeesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportPartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportPartiesPartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportRegulatoryTradeIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid ExecutionReportTrdRegPublicationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
 instance GenValid InstrumentEventsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
@@ -54,6 +142,66 @@ instance GenValid InstrumentLegLegSecurityAltIDGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid InstrumentSecurityAltIDGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegAllocsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegAllocsNestedParties3GroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegAllocsNestedParties3Nested3PartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegCustomFieldsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsLegAllocsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsLegAllocsNestedParties2GroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsLegStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsNestedPartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegLegsNestedPartiesNestedPartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegPartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegPartiesPartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderMultilegTradingSessionsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -169,6 +317,10 @@ instance GenValid OrderQtyData where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
+instance GenValid CommissionData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
 instance GenValid SpreadOrBenchmarkCurveData where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
@@ -178,6 +330,14 @@ instance GenValid LegBenchmarkCurveData where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid YieldData where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid PegInstructions where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid DiscretionInstructions where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

@@ -16,6 +16,7 @@ messages:
   - Quote
   - QuoteCancel
   - NewOrderSingle
-  - Execution
+  - NewOrderMultileg
+  - ExecutionReport
   - SecurityDefinitionRequest
   - SecurityDefinition

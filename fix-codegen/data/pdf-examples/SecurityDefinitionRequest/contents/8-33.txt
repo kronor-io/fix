@@ -1,0 +1,4 @@
+35MsgTypec
+320SecurityReqIDMySecDefReqID-12345
+321SecurityRequestType3
+55SymbolEUR/USD

@@ -42,6 +42,17 @@ data-files:
     data/fix-spec/src/FIX/Messages/Class.hs
     data/fix-spec/src/FIX/Messages/Envelope.hs
     data/pdf-examples/BusinessMessageReject/contents/8-14.txt
+    data/pdf-examples/ExecutionReport/contents/8-31.txt
+    data/pdf-examples/ExecutionReport/contents/8-32.txt
+    data/pdf-examples/NewOrderMultiLeg/contents/8-29.txt
+    data/pdf-examples/NewOrderMultiLeg/contents/8-30.txt
+    data/pdf-examples/NewOrderSingle/contents/8-22.txt
+    data/pdf-examples/NewOrderSingle/contents/8-23.txt
+    data/pdf-examples/NewOrderSingle/contents/8-24.txt
+    data/pdf-examples/NewOrderSingle/contents/8-25.txt
+    data/pdf-examples/NewOrderSingle/contents/8-26.txt
+    data/pdf-examples/NewOrderSingle/contents/8-27.txt
+    data/pdf-examples/NewOrderSingle/contents/8-28.txt
     data/pdf-examples/News/contents/8-1.txt
     data/pdf-examples/News/contents/8-2.txt
     data/pdf-examples/Quote/contents/8-15.txt
@@ -62,6 +73,8 @@ data-files:
     data/pdf-examples/QuoteRequest/contents/8.12.txt
     data/pdf-examples/QuoteRequest/contents/8.9.txt
     data/pdf-examples/QuoteRequestReject/contents/8.13.txt
+    data/pdf-examples/SecurityDefinition/contents/8-34.txt
+    data/pdf-examples/SecurityDefinitionRequest/contents/8-33.txt
 
 library
   exposed-modules:

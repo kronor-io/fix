@@ -7,10 +7,12 @@ module FIX.MessagesSpec where
 
 import FIX.Components.TestUtils
 import FIX.Messages.BusinessMessageReject
+import FIX.Messages.ExecutionReport
 import FIX.Messages.Gen ()
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
 import FIX.Messages.Logout
+import FIX.Messages.NewOrderMultileg
 import FIX.Messages.News
 import FIX.Messages.Quote
 import FIX.Messages.QuoteCancel
@@ -94,6 +96,20 @@ spec = do
         genValidSpec @QuoteCancel
         componentSpec @QuoteCancel
         messageSpec @QuoteCancel "QuoteCancel"
+    )
+  describe
+    "NewOrderMultileg"
+    ( do
+        genValidSpec @NewOrderMultileg
+        componentSpec @NewOrderMultileg
+        messageSpec @NewOrderMultileg "NewOrderMultileg"
+    )
+  describe
+    "ExecutionReport"
+    ( do
+        genValidSpec @ExecutionReport
+        componentSpec @ExecutionReport
+        messageSpec @ExecutionReport "ExecutionReport"
     )
   describe
     "SecurityDefinitionRequest"

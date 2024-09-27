@@ -5,6 +5,8 @@
 -- Any manual edits will be undone the next time fix-codegen is run.
 module FIX.ComponentsSpec where
 
+import FIX.Components.CommissionData
+import FIX.Components.DiscretionInstructions
 import FIX.Components.ExAnteData
 import FIX.Components.FinancingDetails
 import FIX.Components.Gen ()
@@ -13,12 +15,42 @@ import FIX.Components.InstrumentLeg
 import FIX.Components.LegBenchmarkCurveData
 import FIX.Components.LegExAnteData
 import FIX.Components.OrderQtyData
+import FIX.Components.PegInstructions
 import FIX.Components.SpreadOrBenchmarkCurveData
 import FIX.Components.TestUtils
 import FIX.Components.YieldData
+import FIX.Groups.ExecutionReportAllocsGroupElem
+import FIX.Groups.ExecutionReportAllocsNestedPartiesGroupElem
+import FIX.Groups.ExecutionReportAllocsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.ExecutionReportContAmtsGroupElem
+import FIX.Groups.ExecutionReportContraBrokersGroupElem
+import FIX.Groups.ExecutionReportCustomFieldsGroupElem
+import FIX.Groups.ExecutionReportLegsGroupElem
+import FIX.Groups.ExecutionReportLegsLegAllocsGroupElem
+import FIX.Groups.ExecutionReportMiscFeesGroupElem
+import FIX.Groups.ExecutionReportPartiesGroupElem
+import FIX.Groups.ExecutionReportPartiesPartySubIDsGroupElem
+import FIX.Groups.ExecutionReportRegulatoryTradeIDsGroupElem
+import FIX.Groups.ExecutionReportStipulationsGroupElem
+import FIX.Groups.ExecutionReportTrdRegPublicationsGroupElem
 import FIX.Groups.InstrumentEventsGroupElem
 import FIX.Groups.InstrumentLegLegSecurityAltIDGroupElem
 import FIX.Groups.InstrumentSecurityAltIDGroupElem
+import FIX.Groups.NewOrderMultilegAllocsGroupElem
+import FIX.Groups.NewOrderMultilegAllocsNestedParties3GroupElem
+import FIX.Groups.NewOrderMultilegAllocsNestedParties3Nested3PartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegCustomFieldsGroupElem
+import FIX.Groups.NewOrderMultilegLegsGroupElem
+import FIX.Groups.NewOrderMultilegLegsLegAllocsGroupElem
+import FIX.Groups.NewOrderMultilegLegsLegAllocsNestedParties2GroupElem
+import FIX.Groups.NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegLegsLegStipulationsGroupElem
+import FIX.Groups.NewOrderMultilegLegsNestedPartiesGroupElem
+import FIX.Groups.NewOrderMultilegLegsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegPartiesGroupElem
+import FIX.Groups.NewOrderMultilegPartiesPartySubIDsGroupElem
+import FIX.Groups.NewOrderMultilegStipulationsGroupElem
+import FIX.Groups.NewOrderMultilegTradingSessionsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
 import FIX.Groups.QuoteLegsGroupElem
@@ -51,6 +83,104 @@ import Test.Syd.Validity
 spec :: Spec
 spec = do
   describe
+    "ExecutionReportAllocs"
+    ( do
+        genValidSpec @ExecutionReportAllocsGroupElem
+        componentSpec @ExecutionReportAllocsGroupElem
+        groupSpec @ExecutionReportAllocsGroupElem
+    )
+  describe
+    "ExecutionReportAllocsNestedParties"
+    ( do
+        genValidSpec @ExecutionReportAllocsNestedPartiesGroupElem
+        componentSpec @ExecutionReportAllocsNestedPartiesGroupElem
+        groupSpec @ExecutionReportAllocsNestedPartiesGroupElem
+    )
+  describe
+    "ExecutionReportAllocsNestedPartiesNestedPartySubIDs"
+    ( do
+        genValidSpec @ExecutionReportAllocsNestedPartiesNestedPartySubIDsGroupElem
+        componentSpec @ExecutionReportAllocsNestedPartiesNestedPartySubIDsGroupElem
+        groupSpec @ExecutionReportAllocsNestedPartiesNestedPartySubIDsGroupElem
+    )
+  describe
+    "ExecutionReportContAmts"
+    ( do
+        genValidSpec @ExecutionReportContAmtsGroupElem
+        componentSpec @ExecutionReportContAmtsGroupElem
+        groupSpec @ExecutionReportContAmtsGroupElem
+    )
+  describe
+    "ExecutionReportContraBrokers"
+    ( do
+        genValidSpec @ExecutionReportContraBrokersGroupElem
+        componentSpec @ExecutionReportContraBrokersGroupElem
+        groupSpec @ExecutionReportContraBrokersGroupElem
+    )
+  describe
+    "ExecutionReportCustomFields"
+    ( do
+        genValidSpec @ExecutionReportCustomFieldsGroupElem
+        componentSpec @ExecutionReportCustomFieldsGroupElem
+        groupSpec @ExecutionReportCustomFieldsGroupElem
+    )
+  describe
+    "ExecutionReportLegs"
+    ( do
+        genValidSpec @ExecutionReportLegsGroupElem
+        componentSpec @ExecutionReportLegsGroupElem
+        groupSpec @ExecutionReportLegsGroupElem
+    )
+  describe
+    "ExecutionReportLegsLegAllocs"
+    ( do
+        genValidSpec @ExecutionReportLegsLegAllocsGroupElem
+        componentSpec @ExecutionReportLegsLegAllocsGroupElem
+        groupSpec @ExecutionReportLegsLegAllocsGroupElem
+    )
+  describe
+    "ExecutionReportMiscFees"
+    ( do
+        genValidSpec @ExecutionReportMiscFeesGroupElem
+        componentSpec @ExecutionReportMiscFeesGroupElem
+        groupSpec @ExecutionReportMiscFeesGroupElem
+    )
+  describe
+    "ExecutionReportParties"
+    ( do
+        genValidSpec @ExecutionReportPartiesGroupElem
+        componentSpec @ExecutionReportPartiesGroupElem
+        groupSpec @ExecutionReportPartiesGroupElem
+    )
+  describe
+    "ExecutionReportPartiesPartySubIDs"
+    ( do
+        genValidSpec @ExecutionReportPartiesPartySubIDsGroupElem
+        componentSpec @ExecutionReportPartiesPartySubIDsGroupElem
+        groupSpec @ExecutionReportPartiesPartySubIDsGroupElem
+    )
+  describe
+    "ExecutionReportRegulatoryTradeIDs"
+    ( do
+        genValidSpec @ExecutionReportRegulatoryTradeIDsGroupElem
+        componentSpec @ExecutionReportRegulatoryTradeIDsGroupElem
+        groupSpec @ExecutionReportRegulatoryTradeIDsGroupElem
+    )
+  describe
+    "ExecutionReportStipulations"
+    ( do
+        genValidSpec @ExecutionReportStipulationsGroupElem
+        componentSpec @ExecutionReportStipulationsGroupElem
+        groupSpec @ExecutionReportStipulationsGroupElem
+    )
+  describe
+    "ExecutionReportTrdRegPublications"
+    ( do
+        genValidSpec @ExecutionReportTrdRegPublicationsGroupElem
+        componentSpec @ExecutionReportTrdRegPublicationsGroupElem
+        groupSpec @ExecutionReportTrdRegPublicationsGroupElem
+    )
+  describe
     "InstrumentEvents"
     ( do
         genValidSpec @InstrumentEventsGroupElem
@@ -70,6 +200,111 @@ spec = do
         genValidSpec @InstrumentSecurityAltIDGroupElem
         componentSpec @InstrumentSecurityAltIDGroupElem
         groupSpec @InstrumentSecurityAltIDGroupElem
+    )
+  describe
+    "NewOrderMultilegAllocs"
+    ( do
+        genValidSpec @NewOrderMultilegAllocsGroupElem
+        componentSpec @NewOrderMultilegAllocsGroupElem
+        groupSpec @NewOrderMultilegAllocsGroupElem
+    )
+  describe
+    "NewOrderMultilegAllocsNestedParties3"
+    ( do
+        genValidSpec @NewOrderMultilegAllocsNestedParties3GroupElem
+        componentSpec @NewOrderMultilegAllocsNestedParties3GroupElem
+        groupSpec @NewOrderMultilegAllocsNestedParties3GroupElem
+    )
+  describe
+    "NewOrderMultilegAllocsNestedParties3Nested3PartySubIDs"
+    ( do
+        genValidSpec @NewOrderMultilegAllocsNestedParties3Nested3PartySubIDsGroupElem
+        componentSpec @NewOrderMultilegAllocsNestedParties3Nested3PartySubIDsGroupElem
+        groupSpec @NewOrderMultilegAllocsNestedParties3Nested3PartySubIDsGroupElem
+    )
+  describe
+    "NewOrderMultilegCustomFields"
+    ( do
+        genValidSpec @NewOrderMultilegCustomFieldsGroupElem
+        componentSpec @NewOrderMultilegCustomFieldsGroupElem
+        groupSpec @NewOrderMultilegCustomFieldsGroupElem
+    )
+  describe
+    "NewOrderMultilegLegs"
+    ( do
+        genValidSpec @NewOrderMultilegLegsGroupElem
+        componentSpec @NewOrderMultilegLegsGroupElem
+        groupSpec @NewOrderMultilegLegsGroupElem
+    )
+  describe
+    "NewOrderMultilegLegsLegAllocs"
+    ( do
+        genValidSpec @NewOrderMultilegLegsLegAllocsGroupElem
+        componentSpec @NewOrderMultilegLegsLegAllocsGroupElem
+        groupSpec @NewOrderMultilegLegsLegAllocsGroupElem
+    )
+  describe
+    "NewOrderMultilegLegsLegAllocsNestedParties2"
+    ( do
+        genValidSpec @NewOrderMultilegLegsLegAllocsNestedParties2GroupElem
+        componentSpec @NewOrderMultilegLegsLegAllocsNestedParties2GroupElem
+        groupSpec @NewOrderMultilegLegsLegAllocsNestedParties2GroupElem
+    )
+  describe
+    "NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDs"
+    ( do
+        genValidSpec @NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDsGroupElem
+        componentSpec @NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDsGroupElem
+        groupSpec @NewOrderMultilegLegsLegAllocsNestedParties2Nested2PartySubIDsGroupElem
+    )
+  describe
+    "NewOrderMultilegLegsLegStipulations"
+    ( do
+        genValidSpec @NewOrderMultilegLegsLegStipulationsGroupElem
+        componentSpec @NewOrderMultilegLegsLegStipulationsGroupElem
+        groupSpec @NewOrderMultilegLegsLegStipulationsGroupElem
+    )
+  describe
+    "NewOrderMultilegLegsNestedParties"
+    ( do
+        genValidSpec @NewOrderMultilegLegsNestedPartiesGroupElem
+        componentSpec @NewOrderMultilegLegsNestedPartiesGroupElem
+        groupSpec @NewOrderMultilegLegsNestedPartiesGroupElem
+    )
+  describe
+    "NewOrderMultilegLegsNestedPartiesNestedPartySubIDs"
+    ( do
+        genValidSpec @NewOrderMultilegLegsNestedPartiesNestedPartySubIDsGroupElem
+        componentSpec @NewOrderMultilegLegsNestedPartiesNestedPartySubIDsGroupElem
+        groupSpec @NewOrderMultilegLegsNestedPartiesNestedPartySubIDsGroupElem
+    )
+  describe
+    "NewOrderMultilegParties"
+    ( do
+        genValidSpec @NewOrderMultilegPartiesGroupElem
+        componentSpec @NewOrderMultilegPartiesGroupElem
+        groupSpec @NewOrderMultilegPartiesGroupElem
+    )
+  describe
+    "NewOrderMultilegPartiesPartySubIDs"
+    ( do
+        genValidSpec @NewOrderMultilegPartiesPartySubIDsGroupElem
+        componentSpec @NewOrderMultilegPartiesPartySubIDsGroupElem
+        groupSpec @NewOrderMultilegPartiesPartySubIDsGroupElem
+    )
+  describe
+    "NewOrderMultilegStipulations"
+    ( do
+        genValidSpec @NewOrderMultilegStipulationsGroupElem
+        componentSpec @NewOrderMultilegStipulationsGroupElem
+        groupSpec @NewOrderMultilegStipulationsGroupElem
+    )
+  describe
+    "NewOrderMultilegTradingSessions"
+    ( do
+        genValidSpec @NewOrderMultilegTradingSessionsGroupElem
+        componentSpec @NewOrderMultilegTradingSessionsGroupElem
+        groupSpec @NewOrderMultilegTradingSessionsGroupElem
     )
   describe
     "NewsLinesOfText"
@@ -265,6 +500,12 @@ spec = do
         componentSpec @OrderQtyData
     )
   describe
+    "CommissionData"
+    ( do
+        genValidSpec @CommissionData
+        componentSpec @CommissionData
+    )
+  describe
     "SpreadOrBenchmarkCurveData"
     ( do
         genValidSpec @SpreadOrBenchmarkCurveData
@@ -281,6 +522,18 @@ spec = do
     ( do
         genValidSpec @YieldData
         componentSpec @YieldData
+    )
+  describe
+    "PegInstructions"
+    ( do
+        genValidSpec @PegInstructions
+        componentSpec @PegInstructions
+    )
+  describe
+    "DiscretionInstructions"
+    ( do
+        genValidSpec @DiscretionInstructions
+        componentSpec @DiscretionInstructions
     )
   describe
     "FinancingDetails"

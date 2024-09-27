@@ -24,9 +24,11 @@ import FIX.Fields
 import FIX.Messages.BusinessMessageReject as X
 import FIX.Messages.Class
 import FIX.Messages.Envelope
+import FIX.Messages.ExecutionReport as X
 import FIX.Messages.Heartbeat as X
 import FIX.Messages.Logon as X
 import FIX.Messages.Logout as X
+import FIX.Messages.NewOrderMultileg as X
 import FIX.Messages.News as X
 import FIX.Messages.Quote as X
 import FIX.Messages.QuoteCancel as X
@@ -49,6 +51,8 @@ data AnyMessage
   | SomeBusinessMessageReject !BusinessMessageReject
   | SomeQuote !Quote
   | SomeQuoteCancel !QuoteCancel
+  | SomeNewOrderMultileg !NewOrderMultileg
+  | SomeExecutionReport !ExecutionReport
   | SomeSecurityDefinitionRequest !SecurityDefinitionRequest
   | SomeSecurityDefinition !SecurityDefinition
   deriving stock (Show, Eq, Generic)
@@ -67,6 +71,8 @@ anyMessageType = \case
   SomeBusinessMessageReject _ -> MsgTypeBusinessMessageReject
   SomeQuote _ -> MsgTypeQuote
   SomeQuoteCancel _ -> MsgTypeQuoteCancel
+  SomeNewOrderMultileg _ -> MsgTypeNewOrderMultileg
+  SomeExecutionReport _ -> MsgTypeExecutionReport
   SomeSecurityDefinitionRequest _ -> MsgTypeSecurityDefinitionRequest
   SomeSecurityDefinition _ -> MsgTypeSecurityDefinition
 
@@ -89,6 +95,8 @@ anyMessageB ((Envelope {..})) =
         SomeBusinessMessageReject f -> mb f
         SomeQuote f -> mb f
         SomeQuoteCancel f -> mb f
+        SomeNewOrderMultileg f -> mb f
+        SomeExecutionReport f -> mb f
         SomeSecurityDefinitionRequest f -> mb f
         SomeSecurityDefinition f -> mb f
 
@@ -113,6 +121,8 @@ anyMessageP = do
     MsgTypeBusinessMessageReject -> fmap SomeBusinessMessageReject <$> mp
     MsgTypeQuote -> fmap SomeQuote <$> mp
     MsgTypeQuoteCancel -> fmap SomeQuoteCancel <$> mp
+    MsgTypeNewOrderMultileg -> fmap SomeNewOrderMultileg <$> mp
+    MsgTypeExecutionReport -> fmap SomeExecutionReport <$> mp
     MsgTypeSecurityDefinitionRequest -> fmap SomeSecurityDefinitionRequest <$> mp
     MsgTypeSecurityDefinition -> fmap SomeSecurityDefinition <$> mp
     _ -> fail ("Unknown message tag: " <> show typ)
@@ -179,6 +189,18 @@ instance IsAnyMessage QuoteCancel where
   packAnyMessage = SomeQuoteCancel
   unpackAnyMessage = \case
     SomeQuoteCancel f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage NewOrderMultileg where
+  packAnyMessage = SomeNewOrderMultileg
+  unpackAnyMessage = \case
+    SomeNewOrderMultileg f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage ExecutionReport where
+  packAnyMessage = SomeExecutionReport
+  unpackAnyMessage = \case
+    SomeExecutionReport f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage SecurityDefinitionRequest where
