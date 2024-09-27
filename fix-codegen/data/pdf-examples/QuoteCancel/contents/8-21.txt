@@ -1,0 +1,5 @@
+35MsgTypeZ
+117QuoteIDfd8d67a1-8eae-4195-946b-d1306bcaa2c4-000001
+131QuoteReqIDfd8d67a1-8eae-4195-946b-d1306bcaa2c4
+298QuoteCancelType1
+7071ProductTypeFX-STD

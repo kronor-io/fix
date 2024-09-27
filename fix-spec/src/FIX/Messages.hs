@@ -21,6 +21,7 @@ import qualified Data.ByteString.Builder as ByteString
 import Data.Validity
 import Data.Void (Void)
 import FIX.Fields
+import FIX.Messages.BusinessMessageReject as X
 import FIX.Messages.Class
 import FIX.Messages.Envelope
 import FIX.Messages.Heartbeat as X
@@ -45,6 +46,7 @@ data AnyMessage
   | SomeNews !News
   | SomeQuoteRequest !QuoteRequest
   | SomeQuoteRequestReject !QuoteRequestReject
+  | SomeBusinessMessageReject !BusinessMessageReject
   | SomeQuote !Quote
   | SomeQuoteCancel !QuoteCancel
   | SomeSecurityDefinitionRequest !SecurityDefinitionRequest
@@ -62,6 +64,7 @@ anyMessageType = \case
   SomeNews _ -> MsgTypeNews
   SomeQuoteRequest _ -> MsgTypeQuoteRequest
   SomeQuoteRequestReject _ -> MsgTypeQuoteRequestReject
+  SomeBusinessMessageReject _ -> MsgTypeBusinessMessageReject
   SomeQuote _ -> MsgTypeQuote
   SomeQuoteCancel _ -> MsgTypeQuoteCancel
   SomeSecurityDefinitionRequest _ -> MsgTypeSecurityDefinitionRequest
@@ -83,6 +86,7 @@ anyMessageB ((Envelope {..})) =
         SomeNews f -> mb f
         SomeQuoteRequest f -> mb f
         SomeQuoteRequestReject f -> mb f
+        SomeBusinessMessageReject f -> mb f
         SomeQuote f -> mb f
         SomeQuoteCancel f -> mb f
         SomeSecurityDefinitionRequest f -> mb f
@@ -106,6 +110,7 @@ anyMessageP = do
     MsgTypeNews -> fmap SomeNews <$> mp
     MsgTypeQuoteRequest -> fmap SomeQuoteRequest <$> mp
     MsgTypeQuoteRequestReject -> fmap SomeQuoteRequestReject <$> mp
+    MsgTypeBusinessMessageReject -> fmap SomeBusinessMessageReject <$> mp
     MsgTypeQuote -> fmap SomeQuote <$> mp
     MsgTypeQuoteCancel -> fmap SomeQuoteCancel <$> mp
     MsgTypeSecurityDefinitionRequest -> fmap SomeSecurityDefinitionRequest <$> mp
@@ -156,6 +161,12 @@ instance IsAnyMessage QuoteRequestReject where
   packAnyMessage = SomeQuoteRequestReject
   unpackAnyMessage = \case
     SomeQuoteRequestReject f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage BusinessMessageReject where
+  packAnyMessage = SomeBusinessMessageReject
+  unpackAnyMessage = \case
+    SomeBusinessMessageReject f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage Quote where

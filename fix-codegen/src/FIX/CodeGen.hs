@@ -7,6 +7,9 @@
 module FIX.CodeGen (runFixCodeGen) where
 
 import Control.Monad
+import Data.ByteString (ByteString)
+import qualified Data.ByteString as SB
+import qualified Data.ByteString.Char8 as SB8
 import Data.Foldable
 import qualified Data.Map as M
 import Data.Maybe
@@ -14,6 +17,7 @@ import Data.Set (Set)
 import qualified Data.Set as S
 import Data.Text (Text)
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
 import FIX.CodeGen.Code
 import FIX.CodeGen.OptParse
 import FIX.CodeGen.Spec
@@ -43,7 +47,10 @@ runFixCodeGen = do
       putStrLn "Generating code according to this spec:"
       pPrint spec
 
+      let fieldSpecs = specFields spec
+
       testResourcesFiles <- genTestResources
+      pdfExampleFiles <- genPdfExampleFiles fieldSpecs
 
       runCodeGen settingOutputDir $
         mconcat
@@ -53,14 +60,13 @@ runFixCodeGen = do
             genDataFile "fix-spec-gen/package.yaml",
             genDataFile "fix-spec-gen/fix-spec-gen.cabal",
             genDataFile "fix-spec-gen/default.nix",
-            let fieldSpecs = specFields spec
-             in mconcat
-                  [ fieldsDataFiles fieldSpecs,
-                    fieldsGenFile fieldSpecs,
-                    fieldsSpecFile fieldSpecs,
-                    topLevelFieldsFile fieldSpecs,
-                    genHaskellDataFile "fix-spec-gen/test/FIX/AnyFieldSpec.hs"
-                  ],
+            mconcat
+              [ fieldsDataFiles fieldSpecs,
+                fieldsGenFile fieldSpecs,
+                fieldsSpecFile fieldSpecs,
+                topLevelFieldsFile fieldSpecs,
+                genHaskellDataFile "fix-spec-gen/test/FIX/AnyFieldSpec.hs"
+              ],
             headerDataFile (specHeader spec),
             trailerDataFile (specTrailer spec),
             -- Groups
@@ -94,7 +100,8 @@ runFixCodeGen = do
                     genHaskellDataFile "fix-spec-gen/test/FIX/AnyMessageSpec.hs"
                   ],
             genHaskellDataFile "fix-spec-gen/test/Spec.hs",
-            testResourcesFiles
+            testResourcesFiles,
+            pdfExampleFiles
           ]
 
 filterSpec :: Maybe (Set Text) -> Spec -> Spec
@@ -1876,6 +1883,44 @@ genTestResources = do
   let subdir = [reldir|fix-spec-gen/test_resources|]
   files <- fmap (fromMaybe []) $ forgivingAbsence $ snd <$> listDirRecurRel (dataDir </> subdir)
   pure $ foldMap (genDataFile . fromRelFile . (subdir </>)) files
+
+genPdfExampleFiles :: [FieldSpec] -> IO CodeGen
+genPdfExampleFiles fieldSpecs = do
+  dataDir <- getDataDir >>= resolveDir' >>= (`resolveDir` "data")
+  let subdir = [reldir|pdf-examples|]
+  files <- fmap (fromMaybe []) $ forgivingAbsence $ snd <$> listDirRecurRel (dataDir </> subdir)
+  fmap mconcat $ forM files $ \from -> do
+    contents <- SB.readFile $ fromAbsFile (dataDir </> subdir </> from)
+    let to = [reldir|fix-spec-gen/test_resources/messages|] </> from
+    let messageContents = pdfExampleToMessageBytes fieldSpecs contents
+    pure $ genData (fromRelFile to) messageContents
+
+pdfExampleToMessageBytes :: [FieldSpec] -> ByteString -> ByteString
+pdfExampleToMessageBytes fieldSpecs pdfExample =
+  let ls = map SB8.strip $ SB8.lines pdfExample
+      fields = flip map ls $ \l ->
+        case SB8.readInt l of
+          Nothing -> error "Example doesn't begin with a number"
+          Just (w, rest) ->
+            case find ((== fromIntegral w) . fieldNumber) fieldSpecs of
+              Nothing -> error $ unwords ["Unknown field:", show w]
+              Just fieldSpec -> case SB.stripPrefix (TE.encodeUtf8 (fieldName fieldSpec)) rest of
+                Nothing ->
+                  error $
+                    unlines
+                      [ "Field name mismatch:",
+                        "expected:",
+                        show (fieldName fieldSpec),
+                        "actual:",
+                        show rest
+                      ]
+                Just val ->
+                  mconcat
+                    [ TE.encodeUtf8 (T.pack (show w) <> "="),
+                      val,
+                      "\SOH"
+                    ]
+   in SB.concat fields
 
 commentString :: String -> String
 commentString s =

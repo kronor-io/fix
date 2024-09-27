@@ -1,0 +1,11 @@
+35MsgTypeB
+148HeadlineFx Spot
+33LinesOfText5
+58TextBOAL.DEMO
+58TextRBS.LND.DEMO
+58TextSEB.FRA.DEMO
+58TextCITIBANK.DEMO
+58TextBarclays BARX.DEMO
+215NoRoutingIDs1
+216RoutingType1
+217RoutingIDACME

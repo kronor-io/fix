@@ -1,0 +1,10 @@
+35MsgTypeS
+1AccountACME
+15CurrencyEUR
+38OrderQty1000000
+55SymbolEUR/USD
+106IssuerBarclays BARX.DEMO
+117QuoteIDMyQuoteReq-98765-000001
+131QuoteReqIDMyQuoteReq-98765
+190OfferSpotRate1.4051
+7070RefSpotDate20110720

@@ -1,0 +1,13 @@
+35MsgTypeR
+131QuoteReqIDc63f07a1b8d4
+7071ProductTypeMM
+7072DayCountACT/360
+146NoRelatedSym1
+55SymbolEUR
+537QuoteType1
+54SideG
+38OrderQty11000
+64SettlDate20231226
+541MaturityDate20231229
+15CurrencyEUR
+1AccountGroupE

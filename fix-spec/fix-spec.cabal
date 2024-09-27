@@ -50,6 +50,8 @@ library
       FIX.Fields.BidSpotRate
       FIX.Fields.BidYield
       FIX.Fields.BodyLength
+      FIX.Fields.BusinessRejectReason
+      FIX.Fields.BusinessRejectRefID
       FIX.Fields.CashOrderQty
       FIX.Fields.CFICode
       FIX.Fields.CheckSum
@@ -352,6 +354,7 @@ library
       FIX.Groups.QuoteStipulationsGroupElem
       FIX.Groups.SecurityDefinitionUnderlyingsGroupElem
       FIX.Messages
+      FIX.Messages.BusinessMessageReject
       FIX.Messages.Class
       FIX.Messages.Envelope
       FIX.Messages.Header

@@ -237,7 +237,7 @@ import GHC.Generics (Generic)
 --             , groupNumberField = "NoCustomFields"
 --             , groupPieces =
 --                 [ MessagePieceField "CustomFieldsName" True
---                 , MessagePieceField "CustomFieldsValue" False
+--                 , MessagePieceField "CustomFieldsValue" True
 --                 ]
 --             }
 --           False

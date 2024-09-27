@@ -146,8 +146,8 @@
             <field name="NearLegRatePrecision" required="N"/>
             <field name="FarLegRatePrecision" required="N"/>
             <group name="NoCustomFields" required="N">
-                <field name="CustomFieldsName" required="N"/>
-                <field name="CustomFieldsValue" required="N"/>
+                <field name="CustomFieldsName" required="Y"/>
+                <field name="CustomFieldsValue" required="Y"/>
             </group>
         </message>
         <message name="QuoteRequestReject" msgtype="AG" msgcat="app">

@@ -34,6 +34,8 @@ import FIX.Fields.BidSize
 import FIX.Fields.BidSpotRate
 import FIX.Fields.BidYield
 import FIX.Fields.BodyLength
+import FIX.Fields.BusinessRejectReason
+import FIX.Fields.BusinessRejectRefID
 import FIX.Fields.CFICode
 import FIX.Fields.CPProgram
 import FIX.Fields.CPRegType
@@ -423,6 +425,8 @@ spec = do
   fieldSpec @RefTagID
   fieldSpec @RefMsgType
   fieldSpec @SessionRejectReason
+  fieldSpec @BusinessRejectRefID
+  fieldSpec @BusinessRejectReason
   fieldSpec @PriceType
   fieldSpec @PartyIDSource
   fieldSpec @PartyID

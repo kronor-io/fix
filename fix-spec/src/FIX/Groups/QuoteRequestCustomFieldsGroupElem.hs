@@ -25,12 +25,12 @@ import GHC.Generics (Generic)
 --   , groupNumberField = "NoCustomFields"
 --   , groupPieces =
 --       [ MessagePieceField "CustomFieldsName" True
---       , MessagePieceField "CustomFieldsValue" False
+--       , MessagePieceField "CustomFieldsValue" True
 --       ]
 --   }
 data QuoteRequestCustomFieldsGroupElem = QuoteRequestCustomFieldsGroupElem
   { quoteRequestCustomFieldsGroupElemCustomFieldsName :: !CustomFieldsName,
-    quoteRequestCustomFieldsGroupElemCustomFieldsValue :: !(Maybe CustomFieldsValue)
+    quoteRequestCustomFieldsGroupElemCustomFieldsValue :: !CustomFieldsValue
   }
   deriving stock (Show, Eq, Generic)
 
@@ -40,11 +40,11 @@ instance IsComponent QuoteRequestCustomFieldsGroupElem where
   toComponentFields ((QuoteRequestCustomFieldsGroupElem {..})) =
     mconcat
       [ requiredFieldB quoteRequestCustomFieldsGroupElemCustomFieldsName,
-        optionalFieldB quoteRequestCustomFieldsGroupElemCustomFieldsValue
+        requiredFieldB quoteRequestCustomFieldsGroupElemCustomFieldsValue
       ]
   fromComponentFields = do
     quoteRequestCustomFieldsGroupElemCustomFieldsName <- requiredFieldP
-    quoteRequestCustomFieldsGroupElemCustomFieldsValue <- optionalFieldP
+    quoteRequestCustomFieldsGroupElemCustomFieldsValue <- requiredFieldP
     pure (QuoteRequestCustomFieldsGroupElem {..})
 
 instance IsGroupElement QuoteRequestCustomFieldsGroupElem where
@@ -52,7 +52,7 @@ instance IsGroupElement QuoteRequestCustomFieldsGroupElem where
   mkGroupNum Proxy = NoCustomFields
   countGroupNum Proxy = unNoCustomFields
 
-makeQuoteRequestCustomFieldsGroupElem :: CustomFieldsName -> QuoteRequestCustomFieldsGroupElem
-makeQuoteRequestCustomFieldsGroupElem quoteRequestCustomFieldsGroupElemCustomFieldsName =
-  let quoteRequestCustomFieldsGroupElemCustomFieldsValue = Nothing
+makeQuoteRequestCustomFieldsGroupElem :: CustomFieldsName -> (CustomFieldsValue -> QuoteRequestCustomFieldsGroupElem)
+makeQuoteRequestCustomFieldsGroupElem quoteRequestCustomFieldsGroupElemCustomFieldsName quoteRequestCustomFieldsGroupElemCustomFieldsValue =
+  let
    in (QuoteRequestCustomFieldsGroupElem {..})

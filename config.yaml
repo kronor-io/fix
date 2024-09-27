@@ -12,6 +12,7 @@ messages:
   - QuoteRequest
   - QuoteRequestReject
   - Business
+  - BusinessMessageReject
   - Quote
   - QuoteCancel
   - NewOrderSingle

@@ -41,6 +41,27 @@ data-files:
     data/fix-spec/src/FIX/Groups/Class.hs
     data/fix-spec/src/FIX/Messages/Class.hs
     data/fix-spec/src/FIX/Messages/Envelope.hs
+    data/pdf-examples/BusinessMessageReject/contents/8-14.txt
+    data/pdf-examples/News/contents/8-1.txt
+    data/pdf-examples/News/contents/8-2.txt
+    data/pdf-examples/Quote/contents/8-15.txt
+    data/pdf-examples/Quote/contents/8-16.txt
+    data/pdf-examples/Quote/contents/8-17.txt
+    data/pdf-examples/Quote/contents/8-18.txt
+    data/pdf-examples/Quote/contents/8-19.txt
+    data/pdf-examples/QuoteCancel/contents/8-20.txt
+    data/pdf-examples/QuoteCancel/contents/8-21.txt
+    data/pdf-examples/QuoteRequest/contents/8-3.txt
+    data/pdf-examples/QuoteRequest/contents/8-4.txt
+    data/pdf-examples/QuoteRequest/contents/8-5.txt
+    data/pdf-examples/QuoteRequest/contents/8-6.txt
+    data/pdf-examples/QuoteRequest/contents/8-7.txt
+    data/pdf-examples/QuoteRequest/contents/8-8.txt
+    data/pdf-examples/QuoteRequest/contents/8.10.txt
+    data/pdf-examples/QuoteRequest/contents/8.11.txt
+    data/pdf-examples/QuoteRequest/contents/8.12.txt
+    data/pdf-examples/QuoteRequest/contents/8.9.txt
+    data/pdf-examples/QuoteRequestReject/contents/8.13.txt
 
 library
   exposed-modules:
@@ -54,6 +75,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , containers
     , opt-env-conf
     , path

@@ -2,6 +2,8 @@
 
 module FIX.CodeGen.Code where
 
+import Data.ByteString (ByteString)
+import qualified Data.ByteString as SB
 import Data.Char as Char
 import Data.Map (Map)
 import qualified Data.Map as M
@@ -17,6 +19,7 @@ data GenContents
   = GenHaskell !String
   | GenHaskellDataFile
   | GenDataFile
+  | GenData !ByteString
 
 instance Semigroup CodeGen where
   (<>) (CodeGen m1) (CodeGen m2) = CodeGen (M.union m1 m2)
@@ -34,6 +37,9 @@ genHaskellDataFile fp = CodeGen $ M.singleton fp GenHaskellDataFile
 genDataFile :: FilePath -> CodeGen
 genDataFile fp = CodeGen $ M.singleton fp GenDataFile
 
+genData :: FilePath -> ByteString -> CodeGen
+genData fp contents = CodeGen $ M.singleton fp $ GenData contents
+
 -- We run all the IO here so that we can maximally use concurrency and only pass in the ouputDir once.
 runCodeGen :: Path Abs Dir -> CodeGen -> IO ()
 runCodeGen outputDir (CodeGen m) =
@@ -48,6 +54,10 @@ runCodeGen outputDir (CodeGen m) =
       to <- resolveFile outputDir fp
       ensureDir (parent to)
       copyFile from to
+    GenData contents -> do
+      to <- resolveFile outputDir fp
+      ensureDir (parent to)
+      SB.writeFile (fromAbsFile to) contents
 
 copyHaskellDataFile :: Path Abs Dir -> FilePath -> IO ()
 copyHaskellDataFile outputDir filePath = do

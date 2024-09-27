@@ -48,6 +48,8 @@ import FIX.Fields.BidSize as X
 import FIX.Fields.BidSpotRate as X
 import FIX.Fields.BidYield as X
 import FIX.Fields.BodyLength as X
+import FIX.Fields.BusinessRejectReason as X
+import FIX.Fields.BusinessRejectRefID as X
 import FIX.Fields.CFICode as X
 import FIX.Fields.CPProgram as X
 import FIX.Fields.CPRegType as X
@@ -437,6 +439,8 @@ data AnyField
   | SomeRefTagID !RefTagID
   | SomeRefMsgType !RefMsgType
   | SomeSessionRejectReason !SessionRejectReason
+  | SomeBusinessRejectRefID !BusinessRejectRefID
+  | SomeBusinessRejectReason !BusinessRejectReason
   | SomePriceType !PriceType
   | SomePartyIDSource !PartyIDSource
   | SomePartyID !PartyID
@@ -744,6 +748,8 @@ anyFieldB = \case
   SomeRefTagID f -> fieldB f
   SomeRefMsgType f -> fieldB f
   SomeSessionRejectReason f -> fieldB f
+  SomeBusinessRejectRefID f -> fieldB f
+  SomeBusinessRejectReason f -> fieldB f
   SomePriceType f -> fieldB f
   SomePartyIDSource f -> fieldB f
   SomePartyID f -> fieldB f
@@ -1052,6 +1058,8 @@ anyFieldP = do
     371 -> SomeRefTagID <$> fp
     372 -> SomeRefMsgType <$> fp
     373 -> SomeSessionRejectReason <$> fp
+    379 -> SomeBusinessRejectRefID <$> fp
+    380 -> SomeBusinessRejectReason <$> fp
     423 -> SomePriceType <$> fp
     447 -> SomePartyIDSource <$> fp
     448 -> SomePartyID <$> fp
@@ -1917,6 +1925,18 @@ instance IsAnyField SessionRejectReason where
   packAnyField = SomeSessionRejectReason
   unpackAnyField = \case
     SomeSessionRejectReason f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BusinessRejectRefID where
+  packAnyField = SomeBusinessRejectRefID
+  unpackAnyField = \case
+    SomeBusinessRejectRefID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField BusinessRejectReason where
+  packAnyField = SomeBusinessRejectReason
+  unpackAnyField = \case
+    SomeBusinessRejectReason f -> Just f
     _ -> Nothing
 
 instance IsAnyField PriceType where

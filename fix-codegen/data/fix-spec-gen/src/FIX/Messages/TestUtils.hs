@@ -81,7 +81,8 @@ messageSpec dir = do
                         ]
                   Right a' -> do
                     shouldBeValid (a' :: a)
-                    let renderedFields' = DList.toList $ toComponentFields a
+                    a' `shouldBe` a
+                    let renderedFields' = DList.toList $ toComponentFields a'
                     shouldBeValid renderedFields'
                     renderedFields' `shouldBe` renderedFields
                     let renderedBytes' = renderAnyFields renderedFields'
@@ -109,7 +110,7 @@ messageSpec dir = do
                 shouldBeValid renderedFields
                 let renderedBytes = renderAnyFields renderedFields
                 shouldBeValid renderedBytes
-                case runComponentP renderedFields fromComponentFields of
+                case fromFields renderedFields of
                   Left parseErr ->
                     expectationFailure $
                       unlines
@@ -117,8 +118,9 @@ messageSpec dir = do
                           show parseErr
                         ]
                   Right a' -> do
-                    shouldBeValid (a' :: a)
-                    let renderedFields' = toFields a
+                    shouldBeValid (a' :: Envelope a)
+                    a' `shouldBe` a
+                    let renderedFields' = toFields a'
                     shouldBeValid renderedFields'
                     renderedFields' `shouldBe` renderedFields
                     let renderedBytes' = renderAnyFields renderedFields'

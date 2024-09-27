@@ -6,6 +6,7 @@
 module FIX.MessagesSpec where
 
 import FIX.Components.TestUtils
+import FIX.Messages.BusinessMessageReject
 import FIX.Messages.Gen ()
 import FIX.Messages.Heartbeat
 import FIX.Messages.Logon
@@ -72,6 +73,13 @@ spec = do
         genValidSpec @QuoteRequestReject
         componentSpec @QuoteRequestReject
         messageSpec @QuoteRequestReject "QuoteRequestReject"
+    )
+  describe
+    "BusinessMessageReject"
+    ( do
+        genValidSpec @BusinessMessageReject
+        componentSpec @BusinessMessageReject
+        messageSpec @BusinessMessageReject "BusinessMessageReject"
     )
   describe
     "Quote"
