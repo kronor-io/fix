@@ -73,7 +73,7 @@ fieldParserHelper inOrder = go
           Just f -> ([], Just f, fs)
           Nothing ->
             if inOrder
-              then ([], Nothing, (af : fs))
+              then ([], Nothing, af : fs)
               else
                 let (befores, mf, afters) = go fs
                  in (af : befores, mf, afters)
