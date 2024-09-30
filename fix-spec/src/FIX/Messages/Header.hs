@@ -18,6 +18,7 @@ import FIX.Fields.SenderCompID
 import FIX.Fields.SenderSubID
 import FIX.Fields.SendingTime
 import FIX.Fields.TargetCompID
+import FIX.Fields.TargetSubID
 import FIX.Groups.Class
 import GHC.Generics (Generic)
 
@@ -30,6 +31,7 @@ data Header = Header
     headerSenderSubID :: !(Maybe SenderSubID),
     headerSendingTime :: !SendingTime,
     headerTargetCompID :: !TargetCompID,
+    headerTargetSubID :: !(Maybe TargetSubID),
     headerCstmApplVerID :: !(Maybe CstmApplVerID)
   }
   deriving stock (Show, Eq, Generic)
@@ -47,6 +49,7 @@ instance IsComponent Header where
         optionalFieldB headerSenderSubID,
         requiredFieldB headerSendingTime,
         requiredFieldB headerTargetCompID,
+        optionalFieldB headerTargetSubID,
         optionalFieldB headerCstmApplVerID
       ]
   fromComponentFields = do
@@ -58,11 +61,13 @@ instance IsComponent Header where
     headerSenderSubID <- optionalFieldP
     headerSendingTime <- requiredFieldP
     headerTargetCompID <- requiredFieldP
+    headerTargetSubID <- optionalFieldP
     headerCstmApplVerID <- optionalFieldP
     pure (Header {..})
 
 makeHeader :: BeginString -> (BodyLength -> (MsgType -> (MsgSeqNum -> (SenderCompID -> (SendingTime -> (TargetCompID -> Header))))))
 makeHeader headerBeginString headerBodyLength headerMsgType headerMsgSeqNum headerSenderCompID headerSendingTime headerTargetCompID =
   let headerSenderSubID = Nothing
+      headerTargetSubID = Nothing
       headerCstmApplVerID = Nothing
    in (Header {..})

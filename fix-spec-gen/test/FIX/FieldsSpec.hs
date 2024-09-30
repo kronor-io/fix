@@ -450,6 +450,7 @@ import FIX.Fields.TargetCompID
 import FIX.Fields.TargetStrategy
 import FIX.Fields.TargetStrategyParameters
 import FIX.Fields.TargetStrategyPerformance
+import FIX.Fields.TargetSubID
 import FIX.Fields.TerminationType
 import FIX.Fields.TestReqID
 import FIX.Fields.Text
@@ -530,6 +531,7 @@ spec = do
   fieldSpec @Side
   fieldSpec @Symbol
   fieldSpec @TargetCompID
+  fieldSpec @TargetSubID
   fieldSpec @Text
   fieldSpec @TimeInForce
   fieldSpec @TransactTime

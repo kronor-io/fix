@@ -13,6 +13,7 @@ library:
   - fix-spec
   - megaparsec
   - network
+  - pretty-show
   - stm-chans
   - stm-conduit
   - text

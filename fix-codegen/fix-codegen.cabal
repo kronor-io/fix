@@ -20,6 +20,7 @@ data-files:
     data/fix-spec-gen/test/Spec.hs
     data/fix-spec-gen/test_resources/messages/Heartbeat/envelope/example.tagvalue
     data/fix-spec-gen/test_resources/messages/Logon/envelope/example.tagvalue
+    data/fix-spec-gen/test_resources/messages/Logon/envelope/t360.tagvalue
     data/fix-spec-gen/test_resources/messages/Logout/envelope/example.tagvalue
     data/fix-spec-gen/test_resources/messages/News/contents/example-8-1.tagvalue
     data/fix-spec-gen/test_resources/messages/News/contents/example-8-2.tagvalue

@@ -9,6 +9,7 @@
         <field name="SenderSubID" required="N"/>
         <field name="SendingTime" required="Y"/>
         <field name="TargetCompID" required="Y"/>
+        <field name="TargetSubID" required="N"/>
         <field name="CstmApplVerID" required="N"/>
     </header>
     <trailer>

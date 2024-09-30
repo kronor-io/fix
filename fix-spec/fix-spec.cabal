@@ -468,6 +468,7 @@ library
       FIX.Fields.TargetStrategy
       FIX.Fields.TargetStrategyParameters
       FIX.Fields.TargetStrategyPerformance
+      FIX.Fields.TargetSubID
       FIX.Fields.TerminationType
       FIX.Fields.TestReqID
       FIX.Fields.Text

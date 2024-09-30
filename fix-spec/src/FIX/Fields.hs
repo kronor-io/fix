@@ -463,6 +463,7 @@ import FIX.Fields.TargetCompID as X
 import FIX.Fields.TargetStrategy as X
 import FIX.Fields.TargetStrategyParameters as X
 import FIX.Fields.TargetStrategyPerformance as X
+import FIX.Fields.TargetSubID as X
 import FIX.Fields.TerminationType as X
 import FIX.Fields.TestReqID as X
 import FIX.Fields.Text as X
@@ -544,6 +545,7 @@ data AnyField
   | SomeSide !Side
   | SomeSymbol !Symbol
   | SomeTargetCompID !TargetCompID
+  | SomeTargetSubID !TargetSubID
   | SomeText !Text
   | SomeTimeInForce !TimeInForce
   | SomeTransactTime !TransactTime
@@ -1033,6 +1035,7 @@ anyFieldB = \case
   SomeSide f -> fieldB f
   SomeSymbol f -> fieldB f
   SomeTargetCompID f -> fieldB f
+  SomeTargetSubID f -> fieldB f
   SomeText f -> fieldB f
   SomeTimeInForce f -> fieldB f
   SomeTransactTime f -> fieldB f
@@ -1523,6 +1526,7 @@ anyFieldP = do
     54 -> SomeSide <$> fp
     55 -> SomeSymbol <$> fp
     56 -> SomeTargetCompID <$> fp
+    57 -> SomeTargetSubID <$> fp
     58 -> SomeText <$> fp
     59 -> SomeTimeInForce <$> fp
     60 -> SomeTransactTime <$> fp
@@ -2195,6 +2199,12 @@ instance IsAnyField TargetCompID where
   packAnyField = SomeTargetCompID
   unpackAnyField = \case
     SomeTargetCompID f -> Just f
+    _ -> Nothing
+
+instance IsAnyField TargetSubID where
+  packAnyField = SomeTargetSubID
+  unpackAnyField = \case
+    SomeTargetSubID f -> Just f
     _ -> Nothing
 
 instance IsAnyField Text where

@@ -5,8 +5,9 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module FIX.Conduit
-  ( FixHandle (..),
+  ( FixSettings (..),
     runFIXApp,
+    FixHandle (..),
   )
 where
 
@@ -19,6 +20,7 @@ import qualified Data.Conduit.Combinators as C
 import Data.Conduit.Network (sinkSocket, sourceSocket)
 import Data.Conduit.TQueue
 import Data.Text (Text)
+import qualified Data.Text as T
 import FIX.Fields.MsgSeqNum
 import FIX.Messages
 import FIX.Messages.Envelope
@@ -27,6 +29,7 @@ import FIX.Messages.Trailer
 import Network.Socket as Network (Socket, close)
 import System.Exit
 import Text.Megaparsec as Megaparsec
+import Text.Show.Pretty
 import UnliftIO
 
 -- TODO handle:
@@ -64,21 +67,28 @@ runFIXApp FixSettings {..} userAppFunc = do
   receivingQueue <- liftIO $ newTBMQueueIO 1
   let receiver = do
         logMessage Debug "Receiver starting."
-        liftIO $
-          runConduit $
-            sourceSocket sock
-              .| anyMessageSource
-              .| C.mapM
-                ( \case
-                    Left err ->
+        runConduit $
+          transPipe liftIO (sourceSocket sock)
+            .| C.mapM
+              ( \bs -> do
+                  logMessage Debug $ T.pack $ unlines ["Received message:", ppShow bs]
+                  pure bs
+              )
+            .| anyMessageSource
+            .| C.mapM
+              ( \case
+                  Left err ->
+                    liftIO $
                       die $
                         unlines
                           [ "Failed to parse message: ",
                             errorBundlePretty err
                           ]
-                    Right am -> pure am
-                )
-              .| sinkTBMQueue receivingQueue
+                  Right am -> do
+                    logMessage Debug $ T.pack $ unlines ["Decoded message:", ppShow am]
+                    pure am
+              )
+            .| sinkTBMQueue receivingQueue
         logMessage Debug "Receiver done."
       awaitOutsideMessage :: STM (Maybe (Envelope AnyMessage))
       awaitOutsideMessage = readTBMQueue receivingQueue
@@ -87,11 +97,20 @@ runFIXApp FixSettings {..} userAppFunc = do
   sendingQueue <- liftIO $ newTBMQueueIO 1
   let sender = do
         logMessage Debug "Sender starting."
-        liftIO $
-          runConduit $
-            sourceTBMQueue sendingQueue
-              .| anyMessageSink
-              .| sinkSocket sock
+        runConduit $
+          transPipe liftIO (sourceTBMQueue sendingQueue)
+            .| C.mapM
+              ( \am -> do
+                  logMessage Debug $ T.pack $ unlines ["Encoding message:", ppShow am]
+                  pure am
+              )
+            .| transPipe liftIO anyMessageSink
+            .| C.mapM
+              ( \bs -> do
+                  logMessage Debug $ T.pack $ unlines ["Sending message:", ppShow bs]
+                  pure bs
+              )
+            .| transPipe liftIO (sinkSocket sock)
         logMessage Debug "Sender done."
       sendMessageOut :: Envelope AnyMessage -> m ()
       sendMessageOut eam = do
