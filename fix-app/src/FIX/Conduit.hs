@@ -44,12 +44,16 @@ import UnliftIO
 
 data LogLevel
   = Debug
+  | Error
+  deriving (Eq, Ord)
 
 data FixSettings m = FixSettings
   { sock :: Network.Socket,
     headerPrototype :: Header,
-    logMessage :: LogLevel -> Text -> m ()
+    logMessage :: LogFunc m
   }
+
+type LogFunc m = LogLevel -> Text -> m ()
 
 data FixHandle m = FixHandle
   { awaitMessage :: m AnyMessage,
@@ -74,7 +78,7 @@ runFIXApp FixSettings {..} userAppFunc = do
                   logMessage Debug $ T.pack $ unlines ["Received message:", ppShow bs]
                   pure bs
               )
-            .| anyMessageSource
+            .| anyMessageSource logMessage
             .| C.mapM
               ( \case
                   Left err ->
@@ -219,8 +223,9 @@ runFIXApp FixSettings {..} userAppFunc = do
 anyMessageSource ::
   forall m.
   (Monad m) =>
+  LogFunc m ->
   ConduitT ByteString (Either (ParseErrorBundle ByteString Void) (Envelope AnyMessage)) m ()
-anyMessageSource = go initialState
+anyMessageSource logMessage = go initialState
   where
     initialState :: State ByteString e
     initialState =
@@ -249,6 +254,13 @@ anyMessageSource = go initialState
           case res of
             Right _ -> yield res
             Left err -> do
+              lift $
+                logMessage Error $
+                  T.pack $
+                    unlines
+                      [ "Failed to parse message:",
+                        errorBundlePretty err
+                      ]
               let isEOFError = \case
                     -- No need to report errors that only happened because
                     -- there is not enough input.
