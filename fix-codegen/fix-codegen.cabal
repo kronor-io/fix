@@ -18,6 +18,7 @@ data-files:
     data/fix-spec-gen/test/FIX/AnyMessageSpec.hs
     data/fix-spec-gen/test/FIX/Messages/EnvelopeSpec.hs
     data/fix-spec-gen/test/Spec.hs
+    data/fix-spec-gen/test_resources/messages/BusinessMessageReject/envelope/360t.tagvalue
     data/fix-spec-gen/test_resources/messages/Heartbeat/envelope/example.tagvalue
     data/fix-spec-gen/test_resources/messages/Logon/envelope/example.tagvalue
     data/fix-spec-gen/test_resources/messages/Logon/envelope/t360.tagvalue

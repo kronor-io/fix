@@ -84,7 +84,7 @@ import GHC.Generics (Generic)
 --                           ]
 --                       }
 --                     False
---                 , MessagePieceField "Account" False
+--                 , MessagePieceField "Account" True
 --                 , MessagePieceField "AcctIDSource" False
 --                 , MessagePieceField "AccountType" False
 --                 , MessagePieceGroup

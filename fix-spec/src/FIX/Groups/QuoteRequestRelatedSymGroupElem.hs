@@ -85,7 +85,7 @@ import GHC.Generics (Generic)
 --                 ]
 --             }
 --           False
---       , MessagePieceField "Account" False
+--       , MessagePieceField "Account" True
 --       , MessagePieceField "AcctIDSource" False
 --       , MessagePieceField "AccountType" False
 --       , MessagePieceGroup
@@ -185,7 +185,7 @@ data QuoteRequestRelatedSymGroupElem = QuoteRequestRelatedSymGroupElem
     quoteRequestRelatedSymGroupElemOrderQty2 :: !(Maybe OrderQty2),
     quoteRequestRelatedSymGroupElemCurrency :: !(Maybe Currency),
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup :: ![QuoteRequestRelatedSymStipulationsGroupElem],
-    quoteRequestRelatedSymGroupElemAccount :: !(Maybe Account),
+    quoteRequestRelatedSymGroupElemAccount :: !Account,
     quoteRequestRelatedSymGroupElemAcctIDSource :: !(Maybe AcctIDSource),
     quoteRequestRelatedSymGroupElemAccountType :: !(Maybe AccountType),
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup :: ![QuoteRequestRelatedSymQuoteQualifiersGroupElem],
@@ -228,7 +228,7 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
         optionalFieldB quoteRequestRelatedSymGroupElemOrderQty2,
         optionalFieldB quoteRequestRelatedSymGroupElemCurrency,
         optionalGroupB quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup,
-        optionalFieldB quoteRequestRelatedSymGroupElemAccount,
+        requiredFieldB quoteRequestRelatedSymGroupElemAccount,
         optionalFieldB quoteRequestRelatedSymGroupElemAcctIDSource,
         optionalFieldB quoteRequestRelatedSymGroupElemAccountType,
         optionalGroupB quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup,
@@ -265,7 +265,7 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
     quoteRequestRelatedSymGroupElemOrderQty2 <- optionalFieldP
     quoteRequestRelatedSymGroupElemCurrency <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup <- optionalGroupP
-    quoteRequestRelatedSymGroupElemAccount <- optionalFieldP
+    quoteRequestRelatedSymGroupElemAccount <- requiredFieldP
     quoteRequestRelatedSymGroupElemAcctIDSource <- optionalFieldP
     quoteRequestRelatedSymGroupElemAccountType <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup <- optionalGroupP
@@ -288,8 +288,8 @@ instance IsGroupElement QuoteRequestRelatedSymGroupElem where
   mkGroupNum Proxy = NoRelatedSym
   countGroupNum Proxy = unNoRelatedSym
 
-makeQuoteRequestRelatedSymGroupElem :: Instrument -> (FinancingDetails -> (OrderQtyData -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuoteRequestRelatedSymGroupElem))))
-makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument quoteRequestRelatedSymGroupElemFinancingDetails quoteRequestRelatedSymGroupElemOrderQtyData quoteRequestRelatedSymGroupElemSpreadOrBenchmarkCurveData quoteRequestRelatedSymGroupElemYieldData =
+makeQuoteRequestRelatedSymGroupElem :: Instrument -> (FinancingDetails -> (OrderQtyData -> (Account -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuoteRequestRelatedSymGroupElem)))))
+makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument quoteRequestRelatedSymGroupElemFinancingDetails quoteRequestRelatedSymGroupElemOrderQtyData quoteRequestRelatedSymGroupElemAccount quoteRequestRelatedSymGroupElemSpreadOrBenchmarkCurveData quoteRequestRelatedSymGroupElemYieldData =
   let quoteRequestRelatedSymGroupElemPrevClosePx = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestType = Nothing
       quoteRequestRelatedSymGroupElemQuoteType = Nothing
@@ -306,7 +306,6 @@ makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument qu
       quoteRequestRelatedSymGroupElemOrderQty2 = Nothing
       quoteRequestRelatedSymGroupElemCurrency = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymStipulationsGroup = []
-      quoteRequestRelatedSymGroupElemAccount = Nothing
       quoteRequestRelatedSymGroupElemAcctIDSource = Nothing
       quoteRequestRelatedSymGroupElemAccountType = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestRelatedSymQuoteQualifiersGroup = []

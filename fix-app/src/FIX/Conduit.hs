@@ -21,6 +21,8 @@ import Data.Conduit.Network (sinkSocket, sourceSocket)
 import Data.Conduit.TQueue
 import Data.Text (Text)
 import qualified Data.Text as T
+import FIX.Fields.BeginSeqNo
+import FIX.Fields.EndSeqNo
 import FIX.Fields.MsgSeqNum
 import FIX.Messages
 import FIX.Messages.Envelope
@@ -171,12 +173,12 @@ runFIXApp FixSettings {..} userAppFunc = do
       STM (Maybe AnyMessage) ->
       (Envelope AnyMessage -> m ()) ->
       m ()
-    systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1)
+    systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1) (MsgSeqNum 1)
       where
         -- Pass in the "next" message sequence number to use when sending a
         -- message or to expect when receiving a message.
-        go :: MsgSeqNum -> m ()
-        go nextSeqNum = do
+        go :: MsgSeqNum -> MsgSeqNum -> m ()
+        go nextInSeqNum nextOutSeqNum = do
           inOrOut <-
             atomically $
               (Left <$> awaitOutsideMessage)
@@ -189,7 +191,7 @@ runFIXApp FixSettings {..} userAppFunc = do
               let msgType = anyMessageType msgOut
               let header =
                     headerPrototype
-                      { headerMsgSeqNum = nextSeqNum,
+                      { headerMsgSeqNum = nextOutSeqNum,
                         headerMsgType = msgType
                       }
               let envelopeOut =
@@ -202,7 +204,7 @@ runFIXApp FixSettings {..} userAppFunc = do
                           makeTrailer $ renderCheckSum 0
                       }
               sendMessageOut envelopeOut
-              go (incrementMsgSeqNum nextSeqNum)
+              go nextInSeqNum (incrementMsgSeqNum nextOutSeqNum)
             Left mMsgIn -> do
               case mMsgIn of
                 Nothing -> error "Connection was broken early."
@@ -216,9 +218,25 @@ runFIXApp FixSettings {..} userAppFunc = do
                     SomeLogout _ -> do
                       pass
                       pure () -- Done
+                    SomeResendRequest resendRequest -> do
+                      let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
+                      let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
+                      logMessage Debug $
+                        T.pack $
+                          unlines
+                            [ "Got a resend request for",
+                              if end == 0
+                                then unwords ["all messages from", show begin, "onwards"]
+                                else
+                                  if begin == end
+                                    then unwords ["message", show begin]
+                                    else unwords ["messages from", show begin, "to", show end],
+                              "this is not implemented yet."
+                            ]
+                      pure ()
                     _ -> do
                       pass
-                      go (incrementMsgSeqNum nextSeqNum)
+                      go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
 
 anyMessageSource ::
   forall m.

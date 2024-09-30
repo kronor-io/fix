@@ -79,7 +79,7 @@
                 <field name="OrderQty2" required="N"/>
                 <field name="Currency" required="N"/>
                 <component name="Stipulations" required="N"/>
-                <field name="Account" required="N"/>
+                <field name="Account" required="Y"/>
                 <field name="AcctIDSource" required="N"/>
                 <field name="AccountType" required="N"/>
                 <group name="NoQuoteQualifiers" required="N">
