@@ -19,6 +19,10 @@ instance GenValid AvgPx where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
+instance GenValid BeginSeqNo where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
 instance GenValid BeginString where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
@@ -48,6 +52,10 @@ instance GenValid CumQty where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid Currency where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid EndSeqNo where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
@@ -100,6 +108,10 @@ instance GenValid MsgSeqNum where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid MsgType where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewSeqNo where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

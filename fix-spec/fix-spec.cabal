@@ -42,6 +42,7 @@ library
       FIX.Fields.AvgPxPrecision
       FIX.Fields.BasisFeatureDate
       FIX.Fields.BasisFeaturePrice
+      FIX.Fields.BeginSeqNo
       FIX.Fields.BeginString
       FIX.Fields.BenchmarkCurveCurrency
       FIX.Fields.BenchmarkCurveName
@@ -131,6 +132,7 @@ library
       FIX.Fields.EndAccruedInterestAmt
       FIX.Fields.EndCash
       FIX.Fields.EndDate
+      FIX.Fields.EndSeqNo
       FIX.Fields.EventDate
       FIX.Fields.EventPx
       FIX.Fields.EventText
@@ -298,6 +300,7 @@ library
       FIX.Fields.NestedPartySubID
       FIX.Fields.NestedPartySubIDType
       FIX.Fields.NetMoney
+      FIX.Fields.NewSeqNo
       FIX.Fields.NoAllocs
       FIX.Fields.NoContAmts
       FIX.Fields.NoContraBrokers
@@ -582,8 +585,11 @@ library
       FIX.Messages.QuoteRequest
       FIX.Messages.QuoteRequestReject
       FIX.Messages.Reject
+      FIX.Messages.ResendRequest
       FIX.Messages.SecurityDefinition
       FIX.Messages.SecurityDefinitionRequest
+      FIX.Messages.SequenceReset
+      FIX.Messages.TestRequest
       FIX.Messages.Trailer
   other-modules:
       Paths_fix_spec

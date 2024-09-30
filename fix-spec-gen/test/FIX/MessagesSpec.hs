@@ -19,8 +19,11 @@ import FIX.Messages.QuoteCancel
 import FIX.Messages.QuoteRequest
 import FIX.Messages.QuoteRequestReject
 import FIX.Messages.Reject
+import FIX.Messages.ResendRequest
 import FIX.Messages.SecurityDefinition
 import FIX.Messages.SecurityDefinitionRequest
+import FIX.Messages.SequenceReset
+import FIX.Messages.TestRequest
 import FIX.Messages.TestUtils
 import Test.Syd
 import Test.Syd.Validity
@@ -42,11 +45,32 @@ spec = do
         messageSpec @Heartbeat "Heartbeat"
     )
   describe
+    "TestRequest"
+    ( do
+        genValidSpec @TestRequest
+        componentSpec @TestRequest
+        messageSpec @TestRequest "TestRequest"
+    )
+  describe
+    "ResendRequest"
+    ( do
+        genValidSpec @ResendRequest
+        componentSpec @ResendRequest
+        messageSpec @ResendRequest "ResendRequest"
+    )
+  describe
     "Reject"
     ( do
         genValidSpec @Reject
         componentSpec @Reject
         messageSpec @Reject "Reject"
+    )
+  describe
+    "SequenceReset"
+    ( do
+        genValidSpec @SequenceReset
+        componentSpec @SequenceReset
+        messageSpec @SequenceReset "SequenceReset"
     )
   describe
     "Logout"

@@ -35,6 +35,7 @@ data-files:
     data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-8.tagvalue
     data/fix-spec-gen/test_resources/messages/QuoteRequest/contents/example-8-9.tagvalue
     data/fix-spec-gen/test_resources/messages/QuoteRequestReject/contents/example-8-13.tagvalue
+    data/fix-spec-gen/test_resources/messages/ResendRequest/envelope/360t.tagvalue
     data/fix-spec/default.nix
     data/fix-spec/fix-spec.cabal
     data/fix-spec/package.yaml

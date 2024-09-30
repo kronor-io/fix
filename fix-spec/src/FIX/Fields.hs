@@ -37,6 +37,7 @@ import FIX.Fields.AvgPx as X
 import FIX.Fields.AvgPxPrecision as X
 import FIX.Fields.BasisFeatureDate as X
 import FIX.Fields.BasisFeaturePrice as X
+import FIX.Fields.BeginSeqNo as X
 import FIX.Fields.BeginString as X
 import FIX.Fields.BenchmarkCurveCurrency as X
 import FIX.Fields.BenchmarkCurveName as X
@@ -126,6 +127,7 @@ import FIX.Fields.EncryptMethod as X
 import FIX.Fields.EndAccruedInterestAmt as X
 import FIX.Fields.EndCash as X
 import FIX.Fields.EndDate as X
+import FIX.Fields.EndSeqNo as X
 import FIX.Fields.EventDate as X
 import FIX.Fields.EventPx as X
 import FIX.Fields.EventText as X
@@ -293,6 +295,7 @@ import FIX.Fields.NestedPartyRoleQualifier as X
 import FIX.Fields.NestedPartySubID as X
 import FIX.Fields.NestedPartySubIDType as X
 import FIX.Fields.NetMoney as X
+import FIX.Fields.NewSeqNo as X
 import FIX.Fields.NoAllocs as X
 import FIX.Fields.NoContAmts as X
 import FIX.Fields.NoContraBrokers as X
@@ -510,6 +513,7 @@ import Text.Megaparsec.Byte.Lexer
 data AnyField
   = SomeAccount !Account
   | SomeAvgPx !AvgPx
+  | SomeBeginSeqNo !BeginSeqNo
   | SomeBeginString !BeginString
   | SomeBodyLength !BodyLength
   | SomeCheckSum !CheckSum
@@ -518,6 +522,7 @@ data AnyField
   | SomeCommType !CommType
   | SomeCumQty !CumQty
   | SomeCurrency !Currency
+  | SomeEndSeqNo !EndSeqNo
   | SomeExecID !ExecID
   | SomeExecInst !ExecInst
   | SomeExecRefID !ExecRefID
@@ -531,6 +536,7 @@ data AnyField
   | SomeLinesOfText !LinesOfText
   | SomeMsgSeqNum !MsgSeqNum
   | SomeMsgType !MsgType
+  | SomeNewSeqNo !NewSeqNo
   | SomeOrderID !OrderID
   | SomeOrderQty !OrderQty
   | SomeOrdStatus !OrdStatus
@@ -1000,6 +1006,7 @@ anyFieldB :: AnyField -> ByteString.Builder
 anyFieldB = \case
   SomeAccount f -> fieldB f
   SomeAvgPx f -> fieldB f
+  SomeBeginSeqNo f -> fieldB f
   SomeBeginString f -> fieldB f
   SomeBodyLength f -> fieldB f
   SomeCheckSum f -> fieldB f
@@ -1008,6 +1015,7 @@ anyFieldB = \case
   SomeCommType f -> fieldB f
   SomeCumQty f -> fieldB f
   SomeCurrency f -> fieldB f
+  SomeEndSeqNo f -> fieldB f
   SomeExecID f -> fieldB f
   SomeExecInst f -> fieldB f
   SomeExecRefID f -> fieldB f
@@ -1021,6 +1029,7 @@ anyFieldB = \case
   SomeLinesOfText f -> fieldB f
   SomeMsgSeqNum f -> fieldB f
   SomeMsgType f -> fieldB f
+  SomeNewSeqNo f -> fieldB f
   SomeOrderID f -> fieldB f
   SomeOrderQty f -> fieldB f
   SomeOrdStatus f -> fieldB f
@@ -1491,6 +1500,7 @@ anyFieldP = do
   case tag of
     1 -> SomeAccount <$> fp
     6 -> SomeAvgPx <$> fp
+    7 -> SomeBeginSeqNo <$> fp
     8 -> SomeBeginString <$> fp
     9 -> SomeBodyLength <$> fp
     10 -> SomeCheckSum <$> fp
@@ -1499,6 +1509,7 @@ anyFieldP = do
     13 -> SomeCommType <$> fp
     14 -> SomeCumQty <$> fp
     15 -> SomeCurrency <$> fp
+    16 -> SomeEndSeqNo <$> fp
     17 -> SomeExecID <$> fp
     18 -> SomeExecInst <$> fp
     19 -> SomeExecRefID <$> fp
@@ -1512,6 +1523,7 @@ anyFieldP = do
     33 -> SomeLinesOfText <$> fp
     34 -> SomeMsgSeqNum <$> fp
     35 -> SomeMsgType <$> fp
+    36 -> SomeNewSeqNo <$> fp
     37 -> SomeOrderID <$> fp
     38 -> SomeOrderQty <$> fp
     39 -> SomeOrdStatus <$> fp
@@ -1991,6 +2003,12 @@ instance IsAnyField AvgPx where
     SomeAvgPx f -> Just f
     _ -> Nothing
 
+instance IsAnyField BeginSeqNo where
+  packAnyField = SomeBeginSeqNo
+  unpackAnyField = \case
+    SomeBeginSeqNo f -> Just f
+    _ -> Nothing
+
 instance IsAnyField BeginString where
   packAnyField = SomeBeginString
   unpackAnyField = \case
@@ -2037,6 +2055,12 @@ instance IsAnyField Currency where
   packAnyField = SomeCurrency
   unpackAnyField = \case
     SomeCurrency f -> Just f
+    _ -> Nothing
+
+instance IsAnyField EndSeqNo where
+  packAnyField = SomeEndSeqNo
+  unpackAnyField = \case
+    SomeEndSeqNo f -> Just f
     _ -> Nothing
 
 instance IsAnyField ExecID where
@@ -2115,6 +2139,12 @@ instance IsAnyField MsgType where
   packAnyField = SomeMsgType
   unpackAnyField = \case
     SomeMsgType f -> Just f
+    _ -> Nothing
+
+instance IsAnyField NewSeqNo where
+  packAnyField = SomeNewSeqNo
+  unpackAnyField = \case
+    SomeNewSeqNo f -> Just f
     _ -> Nothing
 
 instance IsAnyField OrderID where

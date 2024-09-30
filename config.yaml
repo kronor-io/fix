@@ -2,16 +2,15 @@ messages:
   # System messages
   - Logon
   - Heartbeat
-  - Test
-  - Resend
+  - TestRequest
+  - ResendRequest
   - Reject
-  - Sequence
+  - SequenceReset
   - Logout
   # Business messages
   - News
   - QuoteRequest
   - QuoteRequestReject
-  - Business
   - BusinessMessageReject
   - Quote
   - QuoteCancel

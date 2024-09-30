@@ -35,15 +35,21 @@ import FIX.Messages.QuoteCancel as X
 import FIX.Messages.QuoteRequest as X
 import FIX.Messages.QuoteRequestReject as X
 import FIX.Messages.Reject as X
+import FIX.Messages.ResendRequest as X
 import FIX.Messages.SecurityDefinition as X
 import FIX.Messages.SecurityDefinitionRequest as X
+import FIX.Messages.SequenceReset as X
+import FIX.Messages.TestRequest as X
 import GHC.Generics (Generic)
 import Text.Megaparsec
 
 data AnyMessage
   = SomeLogon !Logon
   | SomeHeartbeat !Heartbeat
+  | SomeTestRequest !TestRequest
+  | SomeResendRequest !ResendRequest
   | SomeReject !Reject
+  | SomeSequenceReset !SequenceReset
   | SomeLogout !Logout
   | SomeNews !News
   | SomeQuoteRequest !QuoteRequest
@@ -63,7 +69,10 @@ anyMessageType :: AnyMessage -> MsgType
 anyMessageType = \case
   SomeLogon _ -> MsgTypeLogon
   SomeHeartbeat _ -> MsgTypeHeartbeat
+  SomeTestRequest _ -> MsgTypeTestRequest
+  SomeResendRequest _ -> MsgTypeResendRequest
   SomeReject _ -> MsgTypeReject
+  SomeSequenceReset _ -> MsgTypeSequenceReset
   SomeLogout _ -> MsgTypeLogout
   SomeNews _ -> MsgTypeNews
   SomeQuoteRequest _ -> MsgTypeQuoteRequest
@@ -87,7 +96,10 @@ anyMessageB ((Envelope {..})) =
    in case envelopeContents of
         SomeLogon f -> mb f
         SomeHeartbeat f -> mb f
+        SomeTestRequest f -> mb f
+        SomeResendRequest f -> mb f
         SomeReject f -> mb f
+        SomeSequenceReset f -> mb f
         SomeLogout f -> mb f
         SomeNews f -> mb f
         SomeQuoteRequest f -> mb f
@@ -113,7 +125,10 @@ anyMessageP = do
   case typ of
     MsgTypeLogon -> fmap SomeLogon <$> mp
     MsgTypeHeartbeat -> fmap SomeHeartbeat <$> mp
+    MsgTypeTestRequest -> fmap SomeTestRequest <$> mp
+    MsgTypeResendRequest -> fmap SomeResendRequest <$> mp
     MsgTypeReject -> fmap SomeReject <$> mp
+    MsgTypeSequenceReset -> fmap SomeSequenceReset <$> mp
     MsgTypeLogout -> fmap SomeLogout <$> mp
     MsgTypeNews -> fmap SomeNews <$> mp
     MsgTypeQuoteRequest -> fmap SomeQuoteRequest <$> mp
@@ -143,10 +158,28 @@ instance IsAnyMessage Heartbeat where
     SomeHeartbeat f -> Just f
     _ -> Nothing
 
+instance IsAnyMessage TestRequest where
+  packAnyMessage = SomeTestRequest
+  unpackAnyMessage = \case
+    SomeTestRequest f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage ResendRequest where
+  packAnyMessage = SomeResendRequest
+  unpackAnyMessage = \case
+    SomeResendRequest f -> Just f
+    _ -> Nothing
+
 instance IsAnyMessage Reject where
   packAnyMessage = SomeReject
   unpackAnyMessage = \case
     SomeReject f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage SequenceReset where
+  packAnyMessage = SomeSequenceReset
+  unpackAnyMessage = \case
+    SomeSequenceReset f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage Logout where

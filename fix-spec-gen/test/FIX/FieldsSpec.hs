@@ -23,6 +23,7 @@ import FIX.Fields.AvgPx
 import FIX.Fields.AvgPxPrecision
 import FIX.Fields.BasisFeatureDate
 import FIX.Fields.BasisFeaturePrice
+import FIX.Fields.BeginSeqNo
 import FIX.Fields.BeginString
 import FIX.Fields.BenchmarkCurveCurrency
 import FIX.Fields.BenchmarkCurveName
@@ -112,6 +113,7 @@ import FIX.Fields.EncryptMethod
 import FIX.Fields.EndAccruedInterestAmt
 import FIX.Fields.EndCash
 import FIX.Fields.EndDate
+import FIX.Fields.EndSeqNo
 import FIX.Fields.EventDate
 import FIX.Fields.EventPx
 import FIX.Fields.EventText
@@ -280,6 +282,7 @@ import FIX.Fields.NestedPartyRoleQualifier
 import FIX.Fields.NestedPartySubID
 import FIX.Fields.NestedPartySubIDType
 import FIX.Fields.NetMoney
+import FIX.Fields.NewSeqNo
 import FIX.Fields.NoAllocs
 import FIX.Fields.NoContAmts
 import FIX.Fields.NoContraBrokers
@@ -496,6 +499,7 @@ spec :: Spec
 spec = do
   fieldSpec @Account
   fieldSpec @AvgPx
+  fieldSpec @BeginSeqNo
   fieldSpec @BeginString
   fieldSpec @BodyLength
   fieldSpec @CheckSum
@@ -504,6 +508,7 @@ spec = do
   fieldSpec @CommType
   fieldSpec @CumQty
   fieldSpec @Currency
+  fieldSpec @EndSeqNo
   fieldSpec @ExecID
   fieldSpec @ExecInst
   fieldSpec @ExecRefID
@@ -517,6 +522,7 @@ spec = do
   fieldSpec @LinesOfText
   fieldSpec @MsgSeqNum
   fieldSpec @MsgType
+  fieldSpec @NewSeqNo
   fieldSpec @OrderID
   fieldSpec @OrderQty
   fieldSpec @OrdStatus
