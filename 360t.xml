@@ -264,7 +264,7 @@
             <field name="QuoteCancelType" required="Y"/>
             <field name="ProductType" required="N"/>
         </message>
-        <message name="OrderSingle" msgtype="D" msgcat="app">
+        <message name="NewOrderSingle" msgtype="D" msgcat="app">
             <field name="ClOrdID" required="Y"/>
             <field name="SecondaryClOrdID" required="N"/>
             <field name="ClOrdLinkID" required="N"/>
@@ -1164,7 +1164,7 @@
             <value enum="A" description="LOGON"/>
             <value enum="B" description="NEWS"/>
             <value enum="C" description="EMAIL"/>
-            <value enum="D" description="ORDER_SINGLE"/>
+            <value enum="D" description="NEW_ORDER_SINGLE"/>
             <value enum="E" description="ORDER_LIST"/>
             <value enum="F" description="ORDER_CANCEL_REQUEST"/>
             <value enum="G" description="ORDER_CANCEL_REPLACE_REQUEST"/>

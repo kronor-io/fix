@@ -153,7 +153,10 @@ library
       FIX.Fields.Factor
       FIX.Fields.FarLegRatePrecision
       FIX.Fields.Fiduciary
+      FIX.Fields.FixingCode
+      FIX.Fields.FixingDate
       FIX.Fields.FixingReference
+      FIX.Fields.FixingTime
       FIX.Fields.ForexReq
       FIX.Fields.ForwardPointsPrecision
       FIX.Fields.ForwardRatePrecision
@@ -544,6 +547,13 @@ library
       FIX.Groups.NewOrderMultilegPartiesPartySubIDsGroupElem
       FIX.Groups.NewOrderMultilegStipulationsGroupElem
       FIX.Groups.NewOrderMultilegTradingSessionsGroupElem
+      FIX.Groups.NewOrderSingleAllocsGroupElem
+      FIX.Groups.NewOrderSingleAllocsNestedPartiesGroupElem
+      FIX.Groups.NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem
+      FIX.Groups.NewOrderSinglePartiesGroupElem
+      FIX.Groups.NewOrderSinglePartiesPartySubIDsGroupElem
+      FIX.Groups.NewOrderSingleStipulationsGroupElem
+      FIX.Groups.NewOrderSingleTradingSessionsGroupElem
       FIX.Groups.NewsLinesOfTextGroupElem
       FIX.Groups.NewsRoutingIDsGroupElem
       FIX.Groups.QuoteLegsGroupElem
@@ -579,6 +589,7 @@ library
       FIX.Messages.Logon
       FIX.Messages.Logout
       FIX.Messages.NewOrderMultileg
+      FIX.Messages.NewOrderSingle
       FIX.Messages.News
       FIX.Messages.Quote
       FIX.Messages.QuoteCancel

@@ -29,6 +29,7 @@ import FIX.Messages.Heartbeat as X
 import FIX.Messages.Logon as X
 import FIX.Messages.Logout as X
 import FIX.Messages.NewOrderMultileg as X
+import FIX.Messages.NewOrderSingle as X
 import FIX.Messages.News as X
 import FIX.Messages.Quote as X
 import FIX.Messages.QuoteCancel as X
@@ -57,6 +58,7 @@ data AnyMessage
   | SomeBusinessMessageReject !BusinessMessageReject
   | SomeQuote !Quote
   | SomeQuoteCancel !QuoteCancel
+  | SomeNewOrderSingle !NewOrderSingle
   | SomeNewOrderMultileg !NewOrderMultileg
   | SomeExecutionReport !ExecutionReport
   | SomeSecurityDefinitionRequest !SecurityDefinitionRequest
@@ -80,6 +82,7 @@ anyMessageType = \case
   SomeBusinessMessageReject _ -> MsgTypeBusinessMessageReject
   SomeQuote _ -> MsgTypeQuote
   SomeQuoteCancel _ -> MsgTypeQuoteCancel
+  SomeNewOrderSingle _ -> MsgTypeNewOrderSingle
   SomeNewOrderMultileg _ -> MsgTypeNewOrderMultileg
   SomeExecutionReport _ -> MsgTypeExecutionReport
   SomeSecurityDefinitionRequest _ -> MsgTypeSecurityDefinitionRequest
@@ -107,6 +110,7 @@ anyMessageB ((Envelope {..})) =
         SomeBusinessMessageReject f -> mb f
         SomeQuote f -> mb f
         SomeQuoteCancel f -> mb f
+        SomeNewOrderSingle f -> mb f
         SomeNewOrderMultileg f -> mb f
         SomeExecutionReport f -> mb f
         SomeSecurityDefinitionRequest f -> mb f
@@ -136,6 +140,7 @@ anyMessageP = do
     MsgTypeBusinessMessageReject -> fmap SomeBusinessMessageReject <$> mp
     MsgTypeQuote -> fmap SomeQuote <$> mp
     MsgTypeQuoteCancel -> fmap SomeQuoteCancel <$> mp
+    MsgTypeNewOrderSingle -> fmap SomeNewOrderSingle <$> mp
     MsgTypeNewOrderMultileg -> fmap SomeNewOrderMultileg <$> mp
     MsgTypeExecutionReport -> fmap SomeExecutionReport <$> mp
     MsgTypeSecurityDefinitionRequest -> fmap SomeSecurityDefinitionRequest <$> mp
@@ -222,6 +227,12 @@ instance IsAnyMessage QuoteCancel where
   packAnyMessage = SomeQuoteCancel
   unpackAnyMessage = \case
     SomeQuoteCancel f -> Just f
+    _ -> Nothing
+
+instance IsAnyMessage NewOrderSingle where
+  packAnyMessage = SomeNewOrderSingle
+  unpackAnyMessage = \case
+    SomeNewOrderSingle f -> Just f
     _ -> Nothing
 
 instance IsAnyMessage NewOrderMultileg where

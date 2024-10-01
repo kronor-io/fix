@@ -55,7 +55,9 @@ import GHC.Generics (Generic)
 --       , FieldValueSpec
 --           { fieldValueEnum = "C" , fieldValueDescription = "EMAIL" }
 --       , FieldValueSpec
---           { fieldValueEnum = "D" , fieldValueDescription = "ORDER_SINGLE" }
+--           { fieldValueEnum = "D"
+--           , fieldValueDescription = "NEW_ORDER_SINGLE"
+--           }
 --       , FieldValueSpec
 --           { fieldValueEnum = "E" , fieldValueDescription = "ORDER_LIST" }
 --       , FieldValueSpec
@@ -356,7 +358,7 @@ data MsgType
   | MsgTypeLogon
   | MsgTypeNews
   | MsgTypeEmail
-  | MsgTypeOrderSingle
+  | MsgTypeNewOrderSingle
   | MsgTypeOrderList
   | MsgTypeOrderCancelRequest
   | MsgTypeOrderCancelReplaceRequest
@@ -457,7 +459,7 @@ instance IsField MsgType where
     MsgTypeLogon -> "A"
     MsgTypeNews -> "B"
     MsgTypeEmail -> "C"
-    MsgTypeOrderSingle -> "D"
+    MsgTypeNewOrderSingle -> "D"
     MsgTypeOrderList -> "E"
     MsgTypeOrderCancelRequest -> "F"
     MsgTypeOrderCancelReplaceRequest -> "G"
@@ -551,7 +553,7 @@ instance IsField MsgType where
     "A" -> Right MsgTypeLogon
     "B" -> Right MsgTypeNews
     "C" -> Right MsgTypeEmail
-    "D" -> Right MsgTypeOrderSingle
+    "D" -> Right MsgTypeNewOrderSingle
     "E" -> Right MsgTypeOrderList
     "F" -> Right MsgTypeOrderCancelRequest
     "G" -> Right MsgTypeOrderCancelReplaceRequest

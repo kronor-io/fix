@@ -51,6 +51,13 @@ import FIX.Groups.NewOrderMultilegPartiesGroupElem
 import FIX.Groups.NewOrderMultilegPartiesPartySubIDsGroupElem
 import FIX.Groups.NewOrderMultilegStipulationsGroupElem
 import FIX.Groups.NewOrderMultilegTradingSessionsGroupElem
+import FIX.Groups.NewOrderSingleAllocsGroupElem
+import FIX.Groups.NewOrderSingleAllocsNestedPartiesGroupElem
+import FIX.Groups.NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem
+import FIX.Groups.NewOrderSinglePartiesGroupElem
+import FIX.Groups.NewOrderSinglePartiesPartySubIDsGroupElem
+import FIX.Groups.NewOrderSingleStipulationsGroupElem
+import FIX.Groups.NewOrderSingleTradingSessionsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
 import FIX.Groups.QuoteLegsGroupElem
@@ -202,6 +209,34 @@ instance GenValid NewOrderMultilegStipulationsGroupElem where
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
 instance GenValid NewOrderMultilegTradingSessionsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSingleAllocsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSingleAllocsNestedPartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSinglePartiesGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSinglePartiesPartySubIDsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSingleStipulationsGroupElem where
+  genValid = genValidStructurallyWithoutExtraChecking
+  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
+
+instance GenValid NewOrderSingleTradingSessionsGroupElem where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 

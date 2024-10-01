@@ -134,7 +134,10 @@ import FIX.Fields.ExpireTime
 import FIX.Fields.Factor
 import FIX.Fields.FarLegRatePrecision
 import FIX.Fields.Fiduciary
+import FIX.Fields.FixingCode
+import FIX.Fields.FixingDate
 import FIX.Fields.FixingReference
+import FIX.Fields.FixingTime
 import FIX.Fields.ForexReq
 import FIX.Fields.ForwardPointsPrecision
 import FIX.Fields.ForwardRatePrecision
@@ -943,6 +946,9 @@ spec = do
   fieldSpec @BidInterestAtMaturity
   fieldSpec @OfferInterestAtMaturity
   fieldSpec @MaturityDate2
+  fieldSpec @FixingCode
+  fieldSpec @FixingDate
+  fieldSpec @FixingTime
   fieldSpec @NoCustomFields
   fieldSpec @CustomFieldsName
   fieldSpec @CustomFieldsValue
