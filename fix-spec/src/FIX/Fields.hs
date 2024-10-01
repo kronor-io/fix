@@ -148,10 +148,7 @@ import FIX.Fields.ExpireTime as X
 import FIX.Fields.Factor as X
 import FIX.Fields.FarLegRatePrecision as X
 import FIX.Fields.Fiduciary as X
-import FIX.Fields.FixingCode as X
-import FIX.Fields.FixingDate as X
 import FIX.Fields.FixingReference as X
-import FIX.Fields.FixingTime as X
 import FIX.Fields.ForexReq as X
 import FIX.Fields.ForwardPointsPrecision as X
 import FIX.Fields.ForwardRatePrecision as X
@@ -960,9 +957,6 @@ data AnyField
   | SomeBidInterestAtMaturity !BidInterestAtMaturity
   | SomeOfferInterestAtMaturity !OfferInterestAtMaturity
   | SomeMaturityDate2 !MaturityDate2
-  | SomeFixingCode !FixingCode
-  | SomeFixingDate !FixingDate
-  | SomeFixingTime !FixingTime
   | SomeNoCustomFields !NoCustomFields
   | SomeCustomFieldsName !CustomFieldsName
   | SomeCustomFieldsValue !CustomFieldsValue
@@ -1456,9 +1450,6 @@ anyFieldB = \case
   SomeBidInterestAtMaturity f -> fieldB f
   SomeOfferInterestAtMaturity f -> fieldB f
   SomeMaturityDate2 f -> fieldB f
-  SomeFixingCode f -> fieldB f
-  SomeFixingDate f -> fieldB f
-  SomeFixingTime f -> fieldB f
   SomeNoCustomFields f -> fieldB f
   SomeCustomFieldsName f -> fieldB f
   SomeCustomFieldsValue f -> fieldB f
@@ -1953,9 +1944,6 @@ anyFieldP = do
     7084 -> SomeBidInterestAtMaturity <$> fp
     7085 -> SomeOfferInterestAtMaturity <$> fp
     7541 -> SomeMaturityDate2 <$> fp
-    7542 -> SomeFixingCode <$> fp
-    7543 -> SomeFixingDate <$> fp
-    7544 -> SomeFixingTime <$> fp
     7546 -> SomeNoCustomFields <$> fp
     7547 -> SomeCustomFieldsName <$> fp
     7548 -> SomeCustomFieldsValue <$> fp
@@ -4677,24 +4665,6 @@ instance IsAnyField MaturityDate2 where
   packAnyField = SomeMaturityDate2
   unpackAnyField = \case
     SomeMaturityDate2 f -> Just f
-    _ -> Nothing
-
-instance IsAnyField FixingCode where
-  packAnyField = SomeFixingCode
-  unpackAnyField = \case
-    SomeFixingCode f -> Just f
-    _ -> Nothing
-
-instance IsAnyField FixingDate where
-  packAnyField = SomeFixingDate
-  unpackAnyField = \case
-    SomeFixingDate f -> Just f
-    _ -> Nothing
-
-instance IsAnyField FixingTime where
-  packAnyField = SomeFixingTime
-  unpackAnyField = \case
-    SomeFixingTime f -> Just f
     _ -> Nothing
 
 instance IsAnyField NoCustomFields where

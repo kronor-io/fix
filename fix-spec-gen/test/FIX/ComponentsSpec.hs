@@ -51,13 +51,6 @@ import FIX.Groups.NewOrderMultilegPartiesGroupElem
 import FIX.Groups.NewOrderMultilegPartiesPartySubIDsGroupElem
 import FIX.Groups.NewOrderMultilegStipulationsGroupElem
 import FIX.Groups.NewOrderMultilegTradingSessionsGroupElem
-import FIX.Groups.NewOrderSingleAllocsGroupElem
-import FIX.Groups.NewOrderSingleAllocsNestedPartiesGroupElem
-import FIX.Groups.NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem
-import FIX.Groups.NewOrderSinglePartiesGroupElem
-import FIX.Groups.NewOrderSinglePartiesPartySubIDsGroupElem
-import FIX.Groups.NewOrderSingleStipulationsGroupElem
-import FIX.Groups.NewOrderSingleTradingSessionsGroupElem
 import FIX.Groups.NewsLinesOfTextGroupElem
 import FIX.Groups.NewsRoutingIDsGroupElem
 import FIX.Groups.QuoteLegsGroupElem
@@ -312,55 +305,6 @@ spec = do
         genValidSpec @NewOrderMultilegTradingSessionsGroupElem
         componentSpec @NewOrderMultilegTradingSessionsGroupElem
         groupSpec @NewOrderMultilegTradingSessionsGroupElem
-    )
-  describe
-    "NewOrderSingleAllocs"
-    ( do
-        genValidSpec @NewOrderSingleAllocsGroupElem
-        componentSpec @NewOrderSingleAllocsGroupElem
-        groupSpec @NewOrderSingleAllocsGroupElem
-    )
-  describe
-    "NewOrderSingleAllocsNestedParties"
-    ( do
-        genValidSpec @NewOrderSingleAllocsNestedPartiesGroupElem
-        componentSpec @NewOrderSingleAllocsNestedPartiesGroupElem
-        groupSpec @NewOrderSingleAllocsNestedPartiesGroupElem
-    )
-  describe
-    "NewOrderSingleAllocsNestedPartiesNestedPartySubIDs"
-    ( do
-        genValidSpec @NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem
-        componentSpec @NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem
-        groupSpec @NewOrderSingleAllocsNestedPartiesNestedPartySubIDsGroupElem
-    )
-  describe
-    "NewOrderSingleParties"
-    ( do
-        genValidSpec @NewOrderSinglePartiesGroupElem
-        componentSpec @NewOrderSinglePartiesGroupElem
-        groupSpec @NewOrderSinglePartiesGroupElem
-    )
-  describe
-    "NewOrderSinglePartiesPartySubIDs"
-    ( do
-        genValidSpec @NewOrderSinglePartiesPartySubIDsGroupElem
-        componentSpec @NewOrderSinglePartiesPartySubIDsGroupElem
-        groupSpec @NewOrderSinglePartiesPartySubIDsGroupElem
-    )
-  describe
-    "NewOrderSingleStipulations"
-    ( do
-        genValidSpec @NewOrderSingleStipulationsGroupElem
-        componentSpec @NewOrderSingleStipulationsGroupElem
-        groupSpec @NewOrderSingleStipulationsGroupElem
-    )
-  describe
-    "NewOrderSingleTradingSessions"
-    ( do
-        genValidSpec @NewOrderSingleTradingSessionsGroupElem
-        componentSpec @NewOrderSingleTradingSessionsGroupElem
-        groupSpec @NewOrderSingleTradingSessionsGroupElem
     )
   describe
     "NewsLinesOfText"

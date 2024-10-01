@@ -1795,18 +1795,6 @@ instance GenValid MaturityDate2 where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
 
-instance GenValid FixingCode where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid FixingDate where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
-instance GenValid FixingTime where
-  genValid = genValidStructurallyWithoutExtraChecking
-  shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
-
 instance GenValid NoCustomFields where
   genValid = genValidStructurallyWithoutExtraChecking
   shrinkValid = shrinkValidStructurallyWithoutExtraFiltering
