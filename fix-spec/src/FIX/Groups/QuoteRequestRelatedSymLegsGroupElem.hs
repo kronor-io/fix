@@ -66,7 +66,7 @@ import GHC.Generics (Generic)
 --                     False
 --                 ]
 --             }
---           False
+--           True
 --       , MessagePieceField "LegRefID" True
 --       , MessagePieceField "LegSettlDate" True
 --       , MessagePieceField "LegSplitSettlDate" False
@@ -77,7 +77,7 @@ data QuoteRequestRelatedSymLegsGroupElem = QuoteRequestRelatedSymLegsGroupElem
     quoteRequestRelatedSymLegsGroupElemLegMaturityDate :: !(Maybe LegMaturityDate),
     quoteRequestRelatedSymLegsGroupElemLegSide :: !LegSide,
     quoteRequestRelatedSymLegsGroupElemLegQty :: !LegQty,
-    quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup :: ![QuoteRequestRelatedSymLegsLegAllocsGroupElem],
+    quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup :: !(NonEmpty QuoteRequestRelatedSymLegsLegAllocsGroupElem),
     quoteRequestRelatedSymLegsGroupElemLegRefID :: !LegRefID,
     quoteRequestRelatedSymLegsGroupElemLegSettlDate :: !LegSettlDate,
     quoteRequestRelatedSymLegsGroupElemLegSplitSettlDate :: !(Maybe LegSplitSettlDate)
@@ -93,7 +93,7 @@ instance IsComponent QuoteRequestRelatedSymLegsGroupElem where
         optionalFieldB quoteRequestRelatedSymLegsGroupElemLegMaturityDate,
         requiredFieldB quoteRequestRelatedSymLegsGroupElemLegSide,
         requiredFieldB quoteRequestRelatedSymLegsGroupElemLegQty,
-        optionalGroupB quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup,
+        requiredGroupB quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup,
         requiredFieldB quoteRequestRelatedSymLegsGroupElemLegRefID,
         requiredFieldB quoteRequestRelatedSymLegsGroupElemLegSettlDate,
         optionalFieldB quoteRequestRelatedSymLegsGroupElemLegSplitSettlDate
@@ -103,7 +103,7 @@ instance IsComponent QuoteRequestRelatedSymLegsGroupElem where
     quoteRequestRelatedSymLegsGroupElemLegMaturityDate <- optionalFieldP
     quoteRequestRelatedSymLegsGroupElemLegSide <- requiredFieldP
     quoteRequestRelatedSymLegsGroupElemLegQty <- requiredFieldP
-    quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup <- optionalGroupP
+    quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup <- requiredGroupP
     quoteRequestRelatedSymLegsGroupElemLegRefID <- requiredFieldP
     quoteRequestRelatedSymLegsGroupElemLegSettlDate <- requiredFieldP
     quoteRequestRelatedSymLegsGroupElemLegSplitSettlDate <- optionalFieldP
@@ -114,9 +114,8 @@ instance IsGroupElement QuoteRequestRelatedSymLegsGroupElem where
   mkGroupNum Proxy = NoLegs
   countGroupNum Proxy = unNoLegs
 
-makeQuoteRequestRelatedSymLegsGroupElem :: LegSymbol -> (LegSide -> (LegQty -> (LegRefID -> (LegSettlDate -> QuoteRequestRelatedSymLegsGroupElem))))
-makeQuoteRequestRelatedSymLegsGroupElem quoteRequestRelatedSymLegsGroupElemLegSymbol quoteRequestRelatedSymLegsGroupElemLegSide quoteRequestRelatedSymLegsGroupElemLegQty quoteRequestRelatedSymLegsGroupElemLegRefID quoteRequestRelatedSymLegsGroupElemLegSettlDate =
+makeQuoteRequestRelatedSymLegsGroupElem :: LegSymbol -> (LegSide -> (LegQty -> (NonEmpty QuoteRequestRelatedSymLegsLegAllocsGroupElem -> (LegRefID -> (LegSettlDate -> QuoteRequestRelatedSymLegsGroupElem)))))
+makeQuoteRequestRelatedSymLegsGroupElem quoteRequestRelatedSymLegsGroupElemLegSymbol quoteRequestRelatedSymLegsGroupElemLegSide quoteRequestRelatedSymLegsGroupElemLegQty quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup quoteRequestRelatedSymLegsGroupElemLegRefID quoteRequestRelatedSymLegsGroupElemLegSettlDate =
   let quoteRequestRelatedSymLegsGroupElemLegMaturityDate = Nothing
-      quoteRequestRelatedSymLegsGroupElemQuoteRequestRelatedSymLegsLegAllocsGroup = []
       quoteRequestRelatedSymLegsGroupElemLegSplitSettlDate = Nothing
    in (QuoteRequestRelatedSymLegsGroupElem {..})

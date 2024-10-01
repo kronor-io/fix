@@ -64,7 +64,7 @@
                 <component name="FinancingDetails" required="N"/>
                 <field name="PrevClosePx" required="N"/>
                 <field name="QuoteRequestType" required="N"/>
-                <field name="QuoteType" required="N"/>
+                <field name="QuoteType" required="Y"/>
                 <field name="TradingSessionID" required="N"/>
                 <field name="TradingSessionSubID" required="N"/>
                 <field name="TradeOriginationDate" required="N"/>
@@ -104,7 +104,7 @@
                     <field name="LegMaturityDate" required="N"/>
                     <field name="LegSide" required="Y"/>
                     <field name="LegQty" required="Y"/>
-                    <group name="NoLegAllocs" required="N">
+                    <group name="NoLegAllocs" required="Y">
                         <field name="LegAllocAccount" required="Y"/>
                         <field name="LegAllocQty" required="Y"/>
                         <component name="NestedParties" required="N"/>
@@ -131,7 +131,7 @@
             <field name="EncodedTextLen" required="N"/>
             <field name="EncodedText" required="N"/>
             <field name="RefSpotDate" required="N"/>
-            <field name="ProductType" required="N"/>
+            <field name="ProductType" required="Y"/>
             <field name="ExecutionVenueType" required="N"/>
             <field name="LastCapacity" required="N"/>
             <field name="DayCount" required="N"/>
@@ -842,7 +842,7 @@
             </group>
         </component>
         <component name="OrderQtyData">
-            <field name="OrderQty" required="N"/>
+            <field name="OrderQty" required="Y"/>
             <field name="CashOrderQty" required="N"/>
             <field name="OrderPercent" required="N"/>
             <field name="RoundingDirection" required="N"/>

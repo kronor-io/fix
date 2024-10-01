@@ -275,7 +275,7 @@ import GHC.Generics (Generic)
 --             }
 --           False
 --       , MessagePieceField "QtyType" False
---       , MessagePieceComponent "OrderQtyData" True
+--       , MessagePieceComponent "OrderQtyData" False
 --       , MessagePieceField "OrdType" False
 --       , MessagePieceField "PriceType" False
 --       , MessagePieceField "Price" False
@@ -564,7 +564,7 @@ data ExecutionReport = ExecutionReport
     executionReportSide :: !Side,
     executionReportExecutionReportStipulationsGroup :: ![ExecutionReportStipulationsGroupElem],
     executionReportQtyType :: !(Maybe QtyType),
-    executionReportOrderQtyData :: !OrderQtyData,
+    executionReportOrderQtyData :: !(Maybe OrderQtyData),
     executionReportOrdType :: !(Maybe OrdType),
     executionReportPriceType :: !(Maybe PriceType),
     executionReportPrice :: !(Maybe Price),
@@ -741,7 +741,7 @@ instance IsComponent ExecutionReport where
         requiredFieldB executionReportSide,
         optionalGroupB executionReportExecutionReportStipulationsGroup,
         optionalFieldB executionReportQtyType,
-        requiredComponentB executionReportOrderQtyData,
+        optionalComponentB executionReportOrderQtyData,
         optionalFieldB executionReportOrdType,
         optionalFieldB executionReportPriceType,
         optionalFieldB executionReportPrice,
@@ -912,7 +912,7 @@ instance IsComponent ExecutionReport where
     executionReportSide <- requiredFieldP
     executionReportExecutionReportStipulationsGroup <- optionalGroupP
     executionReportQtyType <- optionalFieldP
-    executionReportOrderQtyData <- requiredComponentP
+    executionReportOrderQtyData <- optionalComponentP
     executionReportOrdType <- optionalFieldP
     executionReportPriceType <- optionalFieldP
     executionReportPrice <- optionalFieldP
@@ -1044,8 +1044,8 @@ instance IsComponent ExecutionReport where
 instance IsMessage ExecutionReport where
   messageType Proxy = MsgTypeExecutionReport
 
-makeExecutionReport :: OrderID -> (ExecID -> (ExecType -> (OrdStatus -> (Instrument -> (FinancingDetails -> (Side -> (OrderQtyData -> (PegInstructions -> (DiscretionInstructions -> (LeavesQty -> (CumQty -> (AvgPx -> (CommissionData -> (SpreadOrBenchmarkCurveData -> (YieldData -> (ExAnteData -> ExecutionReport))))))))))))))))
-makeExecutionReport executionReportOrderID executionReportExecID executionReportExecType executionReportOrdStatus executionReportInstrument executionReportFinancingDetails executionReportSide executionReportOrderQtyData executionReportPegInstructions executionReportDiscretionInstructions executionReportLeavesQty executionReportCumQty executionReportAvgPx executionReportCommissionData executionReportSpreadOrBenchmarkCurveData executionReportYieldData executionReportExAnteData =
+makeExecutionReport :: OrderID -> (ExecID -> (ExecType -> (OrdStatus -> (Instrument -> (FinancingDetails -> (Side -> (PegInstructions -> (DiscretionInstructions -> (LeavesQty -> (CumQty -> (AvgPx -> (CommissionData -> (SpreadOrBenchmarkCurveData -> (YieldData -> (ExAnteData -> ExecutionReport)))))))))))))))
+makeExecutionReport executionReportOrderID executionReportExecID executionReportExecType executionReportOrdStatus executionReportInstrument executionReportFinancingDetails executionReportSide executionReportPegInstructions executionReportDiscretionInstructions executionReportLeavesQty executionReportCumQty executionReportAvgPx executionReportCommissionData executionReportSpreadOrBenchmarkCurveData executionReportYieldData executionReportExAnteData =
   let executionReportSecondaryOrderID = Nothing
       executionReportSecondaryClOrdID = Nothing
       executionReportSecondaryExecID = Nothing
@@ -1081,6 +1081,7 @@ makeExecutionReport executionReportOrderID executionReportExecID executionReport
       executionReportClearingFeeIndicator = Nothing
       executionReportExecutionReportStipulationsGroup = []
       executionReportQtyType = Nothing
+      executionReportOrderQtyData = Nothing
       executionReportOrdType = Nothing
       executionReportPriceType = Nothing
       executionReportPrice = Nothing

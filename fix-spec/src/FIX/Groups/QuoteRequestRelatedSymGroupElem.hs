@@ -61,13 +61,13 @@ import GHC.Generics (Generic)
 --       , MessagePieceComponent "FinancingDetails" True
 --       , MessagePieceField "PrevClosePx" False
 --       , MessagePieceField "QuoteRequestType" False
---       , MessagePieceField "QuoteType" False
+--       , MessagePieceField "QuoteType" True
 --       , MessagePieceField "TradingSessionID" False
 --       , MessagePieceField "TradingSessionSubID" False
 --       , MessagePieceField "TradeOriginationDate" False
 --       , MessagePieceField "Side" False
 --       , MessagePieceField "QtyType" False
---       , MessagePieceComponent "OrderQtyData" True
+--       , MessagePieceComponent "OrderQtyData" False
 --       , MessagePieceField "SettlType" False
 --       , MessagePieceField "SettlDate" False
 --       , MessagePieceField "SplitSettlDate" False
@@ -156,7 +156,7 @@ import GHC.Generics (Generic)
 --                               False
 --                           ]
 --                       }
---                     False
+--                     True
 --                 , MessagePieceField "LegRefID" True
 --                 , MessagePieceField "LegSettlDate" True
 --                 , MessagePieceField "LegSplitSettlDate" False
@@ -170,13 +170,13 @@ data QuoteRequestRelatedSymGroupElem = QuoteRequestRelatedSymGroupElem
     quoteRequestRelatedSymGroupElemFinancingDetails :: !FinancingDetails,
     quoteRequestRelatedSymGroupElemPrevClosePx :: !(Maybe PrevClosePx),
     quoteRequestRelatedSymGroupElemQuoteRequestType :: !(Maybe QuoteRequestType),
-    quoteRequestRelatedSymGroupElemQuoteType :: !(Maybe QuoteType),
+    quoteRequestRelatedSymGroupElemQuoteType :: !QuoteType,
     quoteRequestRelatedSymGroupElemTradingSessionID :: !(Maybe TradingSessionID),
     quoteRequestRelatedSymGroupElemTradingSessionSubID :: !(Maybe TradingSessionSubID),
     quoteRequestRelatedSymGroupElemTradeOriginationDate :: !(Maybe TradeOriginationDate),
     quoteRequestRelatedSymGroupElemSide :: !(Maybe Side),
     quoteRequestRelatedSymGroupElemQtyType :: !(Maybe QtyType),
-    quoteRequestRelatedSymGroupElemOrderQtyData :: !OrderQtyData,
+    quoteRequestRelatedSymGroupElemOrderQtyData :: !(Maybe OrderQtyData),
     quoteRequestRelatedSymGroupElemSettlType :: !(Maybe SettlType),
     quoteRequestRelatedSymGroupElemSettlDate :: !(Maybe SettlDate),
     quoteRequestRelatedSymGroupElemSplitSettlDate :: !(Maybe SplitSettlDate),
@@ -213,13 +213,13 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
         requiredComponentB quoteRequestRelatedSymGroupElemFinancingDetails,
         optionalFieldB quoteRequestRelatedSymGroupElemPrevClosePx,
         optionalFieldB quoteRequestRelatedSymGroupElemQuoteRequestType,
-        optionalFieldB quoteRequestRelatedSymGroupElemQuoteType,
+        requiredFieldB quoteRequestRelatedSymGroupElemQuoteType,
         optionalFieldB quoteRequestRelatedSymGroupElemTradingSessionID,
         optionalFieldB quoteRequestRelatedSymGroupElemTradingSessionSubID,
         optionalFieldB quoteRequestRelatedSymGroupElemTradeOriginationDate,
         optionalFieldB quoteRequestRelatedSymGroupElemSide,
         optionalFieldB quoteRequestRelatedSymGroupElemQtyType,
-        requiredComponentB quoteRequestRelatedSymGroupElemOrderQtyData,
+        optionalComponentB quoteRequestRelatedSymGroupElemOrderQtyData,
         optionalFieldB quoteRequestRelatedSymGroupElemSettlType,
         optionalFieldB quoteRequestRelatedSymGroupElemSettlDate,
         optionalFieldB quoteRequestRelatedSymGroupElemSplitSettlDate,
@@ -250,13 +250,13 @@ instance IsComponent QuoteRequestRelatedSymGroupElem where
     quoteRequestRelatedSymGroupElemFinancingDetails <- requiredComponentP
     quoteRequestRelatedSymGroupElemPrevClosePx <- optionalFieldP
     quoteRequestRelatedSymGroupElemQuoteRequestType <- optionalFieldP
-    quoteRequestRelatedSymGroupElemQuoteType <- optionalFieldP
+    quoteRequestRelatedSymGroupElemQuoteType <- requiredFieldP
     quoteRequestRelatedSymGroupElemTradingSessionID <- optionalFieldP
     quoteRequestRelatedSymGroupElemTradingSessionSubID <- optionalFieldP
     quoteRequestRelatedSymGroupElemTradeOriginationDate <- optionalFieldP
     quoteRequestRelatedSymGroupElemSide <- optionalFieldP
     quoteRequestRelatedSymGroupElemQtyType <- optionalFieldP
-    quoteRequestRelatedSymGroupElemOrderQtyData <- requiredComponentP
+    quoteRequestRelatedSymGroupElemOrderQtyData <- optionalComponentP
     quoteRequestRelatedSymGroupElemSettlType <- optionalFieldP
     quoteRequestRelatedSymGroupElemSettlDate <- optionalFieldP
     quoteRequestRelatedSymGroupElemSplitSettlDate <- optionalFieldP
@@ -288,16 +288,16 @@ instance IsGroupElement QuoteRequestRelatedSymGroupElem where
   mkGroupNum Proxy = NoRelatedSym
   countGroupNum Proxy = unNoRelatedSym
 
-makeQuoteRequestRelatedSymGroupElem :: Instrument -> (FinancingDetails -> (OrderQtyData -> (Account -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuoteRequestRelatedSymGroupElem)))))
-makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument quoteRequestRelatedSymGroupElemFinancingDetails quoteRequestRelatedSymGroupElemOrderQtyData quoteRequestRelatedSymGroupElemAccount quoteRequestRelatedSymGroupElemSpreadOrBenchmarkCurveData quoteRequestRelatedSymGroupElemYieldData =
+makeQuoteRequestRelatedSymGroupElem :: Instrument -> (FinancingDetails -> (QuoteType -> (Account -> (SpreadOrBenchmarkCurveData -> (YieldData -> QuoteRequestRelatedSymGroupElem)))))
+makeQuoteRequestRelatedSymGroupElem quoteRequestRelatedSymGroupElemInstrument quoteRequestRelatedSymGroupElemFinancingDetails quoteRequestRelatedSymGroupElemQuoteType quoteRequestRelatedSymGroupElemAccount quoteRequestRelatedSymGroupElemSpreadOrBenchmarkCurveData quoteRequestRelatedSymGroupElemYieldData =
   let quoteRequestRelatedSymGroupElemPrevClosePx = Nothing
       quoteRequestRelatedSymGroupElemQuoteRequestType = Nothing
-      quoteRequestRelatedSymGroupElemQuoteType = Nothing
       quoteRequestRelatedSymGroupElemTradingSessionID = Nothing
       quoteRequestRelatedSymGroupElemTradingSessionSubID = Nothing
       quoteRequestRelatedSymGroupElemTradeOriginationDate = Nothing
       quoteRequestRelatedSymGroupElemSide = Nothing
       quoteRequestRelatedSymGroupElemQtyType = Nothing
+      quoteRequestRelatedSymGroupElemOrderQtyData = Nothing
       quoteRequestRelatedSymGroupElemSettlType = Nothing
       quoteRequestRelatedSymGroupElemSettlDate = Nothing
       quoteRequestRelatedSymGroupElemSplitSettlDate = Nothing

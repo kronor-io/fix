@@ -131,7 +131,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceComponent "Instrument" True
 --       , MessagePieceComponent "FinancingDetails" True
 --       , MessagePieceField "Side" False
---       , MessagePieceComponent "OrderQtyData" True
+--       , MessagePieceComponent "OrderQtyData" False
 --       , MessagePieceField "SettlType" False
 --       , MessagePieceField "SettlDate" False
 --       , MessagePieceField "SplitSettlDate" False
@@ -264,7 +264,7 @@ data Quote = Quote
     quoteInstrument :: !Instrument,
     quoteFinancingDetails :: !FinancingDetails,
     quoteSide :: !(Maybe Side),
-    quoteOrderQtyData :: !OrderQtyData,
+    quoteOrderQtyData :: !(Maybe OrderQtyData),
     quoteSettlType :: !(Maybe SettlType),
     quoteSettlDate :: !(Maybe SettlDate),
     quoteSplitSettlDate :: !(Maybe SplitSettlDate),
@@ -342,7 +342,7 @@ instance IsComponent Quote where
         requiredComponentB quoteInstrument,
         requiredComponentB quoteFinancingDetails,
         optionalFieldB quoteSide,
-        requiredComponentB quoteOrderQtyData,
+        optionalComponentB quoteOrderQtyData,
         optionalFieldB quoteSettlType,
         optionalFieldB quoteSettlDate,
         optionalFieldB quoteSplitSettlDate,
@@ -414,7 +414,7 @@ instance IsComponent Quote where
     quoteInstrument <- requiredComponentP
     quoteFinancingDetails <- requiredComponentP
     quoteSide <- optionalFieldP
-    quoteOrderQtyData <- requiredComponentP
+    quoteOrderQtyData <- optionalComponentP
     quoteSettlType <- optionalFieldP
     quoteSettlDate <- optionalFieldP
     quoteSplitSettlDate <- optionalFieldP
@@ -477,8 +477,8 @@ instance IsComponent Quote where
 instance IsMessage Quote where
   messageType Proxy = MsgTypeQuote
 
-makeQuote :: QuoteID -> (Instrument -> (FinancingDetails -> (OrderQtyData -> (SpreadOrBenchmarkCurveData -> (YieldData -> (ExAnteData -> Quote))))))
-makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData quoteSpreadOrBenchmarkCurveData quoteYieldData quoteExAnteData =
+makeQuote :: QuoteID -> (Instrument -> (FinancingDetails -> (SpreadOrBenchmarkCurveData -> (YieldData -> (ExAnteData -> Quote)))))
+makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteSpreadOrBenchmarkCurveData quoteYieldData quoteExAnteData =
   let quoteQuoteReqID = Nothing
       quoteQuoteRespID = Nothing
       quoteQuoteType = Nothing
@@ -488,6 +488,7 @@ makeQuote quoteQuoteID quoteInstrument quoteFinancingDetails quoteOrderQtyData q
       quoteTradingSessionID = Nothing
       quoteTradingSessionSubID = Nothing
       quoteSide = Nothing
+      quoteOrderQtyData = Nothing
       quoteSettlType = Nothing
       quoteSettlDate = Nothing
       quoteSplitSettlDate = Nothing

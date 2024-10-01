@@ -24,7 +24,7 @@ import GHC.Generics (Generic)
 -- | ComponentSpec
 --   { componentName = "OrderQtyData"
 --   , componentPieces =
---       [ MessagePieceField "OrderQty" False
+--       [ MessagePieceField "OrderQty" True
 --       , MessagePieceField "CashOrderQty" False
 --       , MessagePieceField "OrderPercent" False
 --       , MessagePieceField "RoundingDirection" False
@@ -32,7 +32,7 @@ import GHC.Generics (Generic)
 --       ]
 --   }
 data OrderQtyData = OrderQtyData
-  { orderQtyDataOrderQty :: !(Maybe OrderQty),
+  { orderQtyDataOrderQty :: !OrderQty,
     orderQtyDataCashOrderQty :: !(Maybe CashOrderQty),
     orderQtyDataOrderPercent :: !(Maybe OrderPercent),
     orderQtyDataRoundingDirection :: !(Maybe RoundingDirection),
@@ -45,24 +45,23 @@ instance Validity OrderQtyData
 instance IsComponent OrderQtyData where
   toComponentFields ((OrderQtyData {..})) =
     mconcat
-      [ optionalFieldB orderQtyDataOrderQty,
+      [ requiredFieldB orderQtyDataOrderQty,
         optionalFieldB orderQtyDataCashOrderQty,
         optionalFieldB orderQtyDataOrderPercent,
         optionalFieldB orderQtyDataRoundingDirection,
         optionalFieldB orderQtyDataRoundingModulus
       ]
   fromComponentFields = do
-    orderQtyDataOrderQty <- optionalFieldP
+    orderQtyDataOrderQty <- requiredFieldP
     orderQtyDataCashOrderQty <- optionalFieldP
     orderQtyDataOrderPercent <- optionalFieldP
     orderQtyDataRoundingDirection <- optionalFieldP
     orderQtyDataRoundingModulus <- optionalFieldP
     pure (OrderQtyData {..})
 
-makeOrderQtyData :: OrderQtyData
-makeOrderQtyData =
-  let orderQtyDataOrderQty = Nothing
-      orderQtyDataCashOrderQty = Nothing
+makeOrderQtyData :: OrderQty -> OrderQtyData
+makeOrderQtyData orderQtyDataOrderQty =
+  let orderQtyDataCashOrderQty = Nothing
       orderQtyDataOrderPercent = Nothing
       orderQtyDataRoundingDirection = Nothing
       orderQtyDataRoundingModulus = Nothing

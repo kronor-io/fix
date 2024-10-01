@@ -60,13 +60,13 @@ import GHC.Generics (Generic)
 --                 , MessagePieceComponent "FinancingDetails" True
 --                 , MessagePieceField "PrevClosePx" False
 --                 , MessagePieceField "QuoteRequestType" False
---                 , MessagePieceField "QuoteType" False
+--                 , MessagePieceField "QuoteType" True
 --                 , MessagePieceField "TradingSessionID" False
 --                 , MessagePieceField "TradingSessionSubID" False
 --                 , MessagePieceField "TradeOriginationDate" False
 --                 , MessagePieceField "Side" False
 --                 , MessagePieceField "QtyType" False
---                 , MessagePieceComponent "OrderQtyData" True
+--                 , MessagePieceComponent "OrderQtyData" False
 --                 , MessagePieceField "SettlType" False
 --                 , MessagePieceField "SettlDate" False
 --                 , MessagePieceField "SplitSettlDate" False
@@ -157,7 +157,7 @@ import GHC.Generics (Generic)
 --                                         False
 --                                     ]
 --                                 }
---                               False
+--                               True
 --                           , MessagePieceField "LegRefID" True
 --                           , MessagePieceField "LegSettlDate" True
 --                           , MessagePieceField "LegSplitSettlDate" False
@@ -216,7 +216,7 @@ import GHC.Generics (Generic)
 --       , MessagePieceField "Text" False
 --       , MessagePieceField "EncodedText" False
 --       , MessagePieceField "RefSpotDate" False
---       , MessagePieceField "ProductType" False
+--       , MessagePieceField "ProductType" True
 --       , MessagePieceField "ExecutionVenueType" False
 --       , MessagePieceField "LastCapacity" False
 --       , MessagePieceField "DayCount" False
@@ -256,7 +256,7 @@ data QuoteRequest = QuoteRequest
     quoteRequestText :: !(Maybe Text),
     quoteRequestEncodedText :: !(Maybe EncodedText),
     quoteRequestRefSpotDate :: !(Maybe RefSpotDate),
-    quoteRequestProductType :: !(Maybe ProductType),
+    quoteRequestProductType :: !ProductType,
     quoteRequestExecutionVenueType :: !(Maybe ExecutionVenueType),
     quoteRequestLastCapacity :: !(Maybe LastCapacity),
     quoteRequestDayCount :: !(Maybe DayCount),
@@ -292,7 +292,7 @@ instance IsComponent QuoteRequest where
         optionalFieldB quoteRequestText,
         optionalFieldB quoteRequestEncodedText,
         optionalFieldB quoteRequestRefSpotDate,
-        optionalFieldB quoteRequestProductType,
+        requiredFieldB quoteRequestProductType,
         optionalFieldB quoteRequestExecutionVenueType,
         optionalFieldB quoteRequestLastCapacity,
         optionalFieldB quoteRequestDayCount,
@@ -322,7 +322,7 @@ instance IsComponent QuoteRequest where
     quoteRequestText <- optionalFieldP
     quoteRequestEncodedText <- optionalFieldP
     quoteRequestRefSpotDate <- optionalFieldP
-    quoteRequestProductType <- optionalFieldP
+    quoteRequestProductType <- requiredFieldP
     quoteRequestExecutionVenueType <- optionalFieldP
     quoteRequestLastCapacity <- optionalFieldP
     quoteRequestDayCount <- optionalFieldP
@@ -343,8 +343,8 @@ instance IsComponent QuoteRequest where
 instance IsMessage QuoteRequest where
   messageType Proxy = MsgTypeQuoteRequest
 
-makeQuoteRequest :: QuoteReqID -> (NonEmpty QuoteRequestRelatedSymGroupElem -> QuoteRequest)
-makeQuoteRequest quoteRequestQuoteReqID quoteRequestQuoteRequestRelatedSymGroup =
+makeQuoteRequest :: QuoteReqID -> (NonEmpty QuoteRequestRelatedSymGroupElem -> (ProductType -> QuoteRequest))
+makeQuoteRequest quoteRequestQuoteReqID quoteRequestQuoteRequestRelatedSymGroup quoteRequestProductType =
   let quoteRequestRFQReqID = Nothing
       quoteRequestClOrdID = Nothing
       quoteRequestOrderCapacity = Nothing
@@ -355,7 +355,6 @@ makeQuoteRequest quoteRequestQuoteReqID quoteRequestQuoteRequestRelatedSymGroup 
       quoteRequestText = Nothing
       quoteRequestEncodedText = Nothing
       quoteRequestRefSpotDate = Nothing
-      quoteRequestProductType = Nothing
       quoteRequestExecutionVenueType = Nothing
       quoteRequestLastCapacity = Nothing
       quoteRequestDayCount = Nothing
