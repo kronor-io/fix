@@ -66,9 +66,9 @@ import GHC.Generics (Generic)
 --                 , MessagePieceField "TradeOriginationDate" False
 --                 , MessagePieceField "Side" False
 --                 , MessagePieceField "QtyType" False
---                 , MessagePieceComponent "OrderQtyData" False
+--                 , MessagePieceComponent "OrderQtyData" True
 --                 , MessagePieceField "SettlType" False
---                 , MessagePieceField "SettlDate" False
+--                 , MessagePieceField "SettlDate" True
 --                 , MessagePieceField "SplitSettlDate" False
 --                 , MessagePieceField "SettlDate2" False
 --                 , MessagePieceField "SplitSettlDate2" False

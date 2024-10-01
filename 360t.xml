@@ -70,9 +70,9 @@
                 <field name="TradeOriginationDate" required="N"/>
                 <field name="Side" required="N"/>
                 <field name="QtyType" required="N"/>
-                <component name="OrderQtyData" required="N"/>
+                <component name="OrderQtyData" required="Y"/>
                 <field name="SettlType" required="N"/>
-                <field name="SettlDate" required="N"/>
+                <field name="SettlDate" required="Y"/>
                 <field name="SplitSettlDate" required="N"/>
                 <field name="SettlDate2" required="N"/>
                 <field name="SplitSettlDate2" required="N"/>
