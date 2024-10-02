@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype ExpireDate = ExpireDate {unExpireDate :: SimpleBytes}
+newtype ExpireDate = ExpireDate {unExpireDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity ExpireDate

@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype EndDate = EndDate {unEndDate :: SimpleBytes}
+newtype EndDate = EndDate {unEndDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity EndDate

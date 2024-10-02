@@ -100,6 +100,19 @@ instance IsFieldType Int where
           Nothing -> Left $ "Could not Read Int from String: " <> show s
           Just w -> Right w
 
+newtype LocalMktDate = LocalMktDate {unLocalMktDate :: Day}
+  deriving (Show, Eq, Generic)
+
+instance Validity LocalMktDate
+
+instance IsFieldType LocalMktDate where
+  toValue = TE.encodeUtf8 . T.pack . formatTime defaultTimeLocale "%Y%m%d" . unLocalMktDate
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case parseTimeM False defaultTimeLocale "%Y%m%d" s of
+          Nothing -> Left $ "Could not Read LocalMktDate from String: " <> show s
+          Just u -> Right (LocalMktDate u)
+
 newtype UTCTimestamp = UTCTimestamp {unUTCTimestamp :: UTCTime}
   deriving (Show, Eq, Generic)
 
@@ -116,7 +129,7 @@ instance IsFieldType UTCTimestamp where
     let s = T.unpack $ TE.decodeLatin1 sb
      in case parseTimeM False defaultTimeLocale utcTimeFormatExact s
           <|> parseTimeM False defaultTimeLocale utcTimeFormat s of
-          Nothing -> Left $ "Could not Read UTCTime from String: " <> show s
+          Nothing -> Left $ "Could not Read UTCTimestamp from String: " <> show s
           Just u -> Right (UTCTimestamp u)
 
 utcTimeFormat :: String

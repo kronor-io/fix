@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype LegSplitSettlDate = LegSplitSettlDate {unLegSplitSettlDate :: SimpleBytes}
+newtype LegSplitSettlDate = LegSplitSettlDate {unLegSplitSettlDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LegSplitSettlDate

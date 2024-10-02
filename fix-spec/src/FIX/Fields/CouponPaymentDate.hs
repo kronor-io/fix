@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype CouponPaymentDate = CouponPaymentDate {unCouponPaymentDate :: SimpleBytes}
+newtype CouponPaymentDate = CouponPaymentDate {unCouponPaymentDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity CouponPaymentDate

@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype YieldRedemptionDate = YieldRedemptionDate {unYieldRedemptionDate :: SimpleBytes}
+newtype YieldRedemptionDate = YieldRedemptionDate {unYieldRedemptionDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity YieldRedemptionDate

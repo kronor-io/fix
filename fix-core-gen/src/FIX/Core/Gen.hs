@@ -27,5 +27,7 @@ genDataValue = genValid `suchThat` (not . SB.null)
 instance GenValid DataBytes where
   genValid = DataBytes <$> genDataValue
 
+instance GenValid LocalMktDate
+
 instance GenValid UTCTimestamp where
   genValid = mkUTCTimestamp <$> genValid

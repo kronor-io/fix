@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype MaturityDate = MaturityDate {unMaturityDate :: SimpleBytes}
+newtype MaturityDate = MaturityDate {unMaturityDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MaturityDate

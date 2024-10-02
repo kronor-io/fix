@@ -396,6 +396,7 @@ fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
           FieldTypeData -> ConT (mkName "DataBytes")
           FieldTypeString -> ConT (mkName "SimpleBytes")
           FieldTypeUTCTimestamp -> ConT (mkName "UTCTimestamp")
+          FieldTypeLocalMktDate -> ConT (mkName "LocalMktDate")
           _ -> ConT (mkName "SimpleBytes")
         section =
           [ commentString $ ppShow f,

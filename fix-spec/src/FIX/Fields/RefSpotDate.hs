@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype RefSpotDate = RefSpotDate {unRefSpotDate :: SimpleBytes}
+newtype RefSpotDate = RefSpotDate {unRefSpotDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity RefSpotDate

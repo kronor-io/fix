@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeLocalMktDate
 --   , fieldValues = []
 --   }
-newtype AgreementDate = AgreementDate {unAgreementDate :: SimpleBytes}
+newtype AgreementDate = AgreementDate {unAgreementDate :: LocalMktDate}
   deriving stock (Show, Eq, Generic)
 
 instance Validity AgreementDate
