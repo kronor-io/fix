@@ -78,6 +78,44 @@ instance IsFieldType Qty where
           Nothing -> Left $ "Could not Read Qty from String: " <> show s
           Just w -> Right (Qty w)
 
+newtype Amount = Amount {unAmount :: Double}
+  deriving (Show, Eq, Generic)
+
+instance Validity Amount where
+  validate qty@(Amount d) =
+    mconcat
+      [ genericValidate qty,
+        validateNotNaN d,
+        validateNotInfinite d
+      ]
+
+instance IsFieldType Amount where
+  toValue = TE.encodeUtf8 . (\t -> fromMaybe t $ T.stripSuffix ".0" t) . T.pack . printf "%g" . unAmount
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Amount from String: " <> show s
+          Just w -> Right (Amount w)
+
+newtype PriceVal = PriceVal {unPriceVal :: Double}
+  deriving (Show, Eq, Generic)
+
+instance Validity PriceVal where
+  validate qty@(PriceVal d) =
+    mconcat
+      [ genericValidate qty,
+        validateNotNaN d,
+        validateNotInfinite d
+      ]
+
+instance IsFieldType PriceVal where
+  toValue = TE.encodeUtf8 . (\t -> fromMaybe t $ T.stripSuffix ".0" t) . T.pack . printf "%g" . unPriceVal
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read PriceVal from String: " <> show s
+          Just w -> Right (PriceVal w)
+
 instance IsFieldType ByteString where
   toValue = id
   fromValue = Right

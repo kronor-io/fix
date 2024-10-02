@@ -28,6 +28,22 @@ spec = do
     fieldTypeExampleSpec
       "0.5"
       (Qty 0.5)
+  describe "Amount" $ do
+    fieldTypeSpec @Amount
+    fieldTypeExampleSpec
+      "0"
+      (Amount 0)
+    fieldTypeExampleSpec
+      "0.5"
+      (Amount 0.5)
+  describe "PriceVal" $ do
+    fieldTypeSpec @PriceVal
+    fieldTypeExampleSpec
+      "0"
+      (PriceVal 0)
+    fieldTypeExampleSpec
+      "0.5"
+      (PriceVal 0.5)
   describe "LocalMktDate" $ do
     fieldTypeExampleSpec
       "20190605"

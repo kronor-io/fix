@@ -14,6 +14,10 @@ import Test.QuickCheck
 
 instance GenValid Qty
 
+instance GenValid Amount
+
+instance GenValid PriceVal
+
 instance GenValid LocalMktDate
 
 instance GenValid UTCTimestamp where
