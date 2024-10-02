@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype PeggedPrice = PeggedPrice {unPeggedPrice :: SimpleBytes}
+newtype PeggedPrice = PeggedPrice {unPeggedPrice :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity PeggedPrice

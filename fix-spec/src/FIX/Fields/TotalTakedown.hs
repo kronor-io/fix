@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype TotalTakedown = TotalTakedown {unTotalTakedown :: SimpleBytes}
+newtype TotalTakedown = TotalTakedown {unTotalTakedown :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity TotalTakedown

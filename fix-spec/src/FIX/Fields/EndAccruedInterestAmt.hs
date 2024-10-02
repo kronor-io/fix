@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype EndAccruedInterestAmt = EndAccruedInterestAmt {unEndAccruedInterestAmt :: SimpleBytes}
+newtype EndAccruedInterestAmt = EndAccruedInterestAmt {unEndAccruedInterestAmt :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity EndAccruedInterestAmt

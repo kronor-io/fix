@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype BidInterestAtMaturity = BidInterestAtMaturity {unBidInterestAtMaturity :: SimpleBytes}
+newtype BidInterestAtMaturity = BidInterestAtMaturity {unBidInterestAtMaturity :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity BidInterestAtMaturity

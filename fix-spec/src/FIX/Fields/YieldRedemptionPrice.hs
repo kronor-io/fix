@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype YieldRedemptionPrice = YieldRedemptionPrice {unYieldRedemptionPrice :: SimpleBytes}
+newtype YieldRedemptionPrice = YieldRedemptionPrice {unYieldRedemptionPrice :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity YieldRedemptionPrice

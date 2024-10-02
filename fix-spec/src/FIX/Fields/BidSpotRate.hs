@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype BidSpotRate = BidSpotRate {unBidSpotRate :: SimpleBytes}
+newtype BidSpotRate = BidSpotRate {unBidSpotRate :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity BidSpotRate

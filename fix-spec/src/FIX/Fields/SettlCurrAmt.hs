@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype SettlCurrAmt = SettlCurrAmt {unSettlCurrAmt :: SimpleBytes}
+newtype SettlCurrAmt = SettlCurrAmt {unSettlCurrAmt :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity SettlCurrAmt

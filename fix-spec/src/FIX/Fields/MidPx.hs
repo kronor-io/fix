@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype MidPx = MidPx {unMidPx :: SimpleBytes}
+newtype MidPx = MidPx {unMidPx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MidPx

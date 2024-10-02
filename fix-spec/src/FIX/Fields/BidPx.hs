@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype BidPx = BidPx {unBidPx :: SimpleBytes}
+newtype BidPx = BidPx {unBidPx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity BidPx

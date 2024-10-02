@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype DiscretionPrice = DiscretionPrice {unDiscretionPrice :: SimpleBytes}
+newtype DiscretionPrice = DiscretionPrice {unDiscretionPrice :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity DiscretionPrice

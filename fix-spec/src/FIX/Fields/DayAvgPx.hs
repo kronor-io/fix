@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype DayAvgPx = DayAvgPx {unDayAvgPx :: SimpleBytes}
+newtype DayAvgPx = DayAvgPx {unDayAvgPx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity DayAvgPx

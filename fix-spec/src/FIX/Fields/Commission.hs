@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype Commission = Commission {unCommission :: SimpleBytes}
+newtype Commission = Commission {unCommission :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity Commission

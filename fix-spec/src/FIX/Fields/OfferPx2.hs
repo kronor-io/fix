@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype OfferPx2 = OfferPx2 {unOfferPx2 :: SimpleBytes}
+newtype OfferPx2 = OfferPx2 {unOfferPx2 :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity OfferPx2

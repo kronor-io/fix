@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype MiscFeeAmt = MiscFeeAmt {unMiscFeeAmt :: SimpleBytes}
+newtype MiscFeeAmt = MiscFeeAmt {unMiscFeeAmt :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MiscFeeAmt

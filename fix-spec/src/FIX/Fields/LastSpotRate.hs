@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype LastSpotRate = LastSpotRate {unLastSpotRate :: SimpleBytes}
+newtype LastSpotRate = LastSpotRate {unLastSpotRate :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LastSpotRate

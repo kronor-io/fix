@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype PrevClosePx = PrevClosePx {unPrevClosePx :: SimpleBytes}
+newtype PrevClosePx = PrevClosePx {unPrevClosePx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity PrevClosePx

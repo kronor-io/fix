@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype GrossTradeAmt = GrossTradeAmt {unGrossTradeAmt :: SimpleBytes}
+newtype GrossTradeAmt = GrossTradeAmt {unGrossTradeAmt :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity GrossTradeAmt

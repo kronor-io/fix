@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype NetMoney = NetMoney {unNetMoney :: SimpleBytes}
+newtype NetMoney = NetMoney {unNetMoney :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity NetMoney

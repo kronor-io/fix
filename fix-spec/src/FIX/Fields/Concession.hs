@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype Concession = Concession {unConcession :: SimpleBytes}
+newtype Concession = Concession {unConcession :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity Concession

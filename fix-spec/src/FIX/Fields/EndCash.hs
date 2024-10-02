@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype EndCash = EndCash {unEndCash :: SimpleBytes}
+newtype EndCash = EndCash {unEndCash :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity EndCash

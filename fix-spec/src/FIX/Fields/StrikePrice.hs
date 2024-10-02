@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype StrikePrice = StrikePrice {unStrikePrice :: SimpleBytes}
+newtype StrikePrice = StrikePrice {unStrikePrice :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity StrikePrice

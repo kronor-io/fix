@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype EventPx = EventPx {unEventPx :: SimpleBytes}
+newtype EventPx = EventPx {unEventPx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity EventPx

@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeAMT
 --   , fieldValues = []
 --   }
-newtype StartCash = StartCash {unStartCash :: SimpleBytes}
+newtype StartCash = StartCash {unStartCash :: Amount}
   deriving stock (Show, Eq, Generic)
 
 instance Validity StartCash

@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype BenchmarkPrice = BenchmarkPrice {unBenchmarkPrice :: SimpleBytes}
+newtype BenchmarkPrice = BenchmarkPrice {unBenchmarkPrice :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity BenchmarkPrice

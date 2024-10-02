@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype UnderlyingLastPx = UnderlyingLastPx {unUnderlyingLastPx :: SimpleBytes}
+newtype UnderlyingLastPx = UnderlyingLastPx {unUnderlyingLastPx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity UnderlyingLastPx

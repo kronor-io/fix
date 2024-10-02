@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype LegBidExAnteCost = LegBidExAnteCost {unLegBidExAnteCost :: SimpleBytes}
+newtype LegBidExAnteCost = LegBidExAnteCost {unLegBidExAnteCost :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LegBidExAnteCost

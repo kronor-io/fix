@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype StopPx = StopPx {unStopPx :: SimpleBytes}
+newtype StopPx = StopPx {unStopPx :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity StopPx

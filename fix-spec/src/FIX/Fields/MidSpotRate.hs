@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePrice
 --   , fieldValues = []
 --   }
-newtype MidSpotRate = MidSpotRate {unMidSpotRate :: SimpleBytes}
+newtype MidSpotRate = MidSpotRate {unMidSpotRate :: PriceVal}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MidSpotRate
