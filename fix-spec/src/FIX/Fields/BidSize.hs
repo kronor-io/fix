@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype BidSize = BidSize {unBidSize :: SimpleBytes}
+newtype BidSize = BidSize {unBidSize :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity BidSize

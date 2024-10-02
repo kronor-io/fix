@@ -20,6 +20,22 @@ spec = do
     fieldTypeSpec @Int
   describe "Word" $ do
     fieldTypeSpec @Word
+  describe "Qty" $ do
+    fieldTypeSpec @Qty
+    fieldTypeExampleSpec
+      "0"
+      (Qty 0)
+    fieldTypeExampleSpec
+      "0.5"
+      (Qty 0.5)
+  describe "LocalMktDate" $ do
+    fieldTypeExampleSpec
+      "20190605"
+      (LocalMktDate (fromGregorian 2019 06 05))
+    fieldTypeExampleSpec
+      "20190607"
+      (LocalMktDate (fromGregorian 2019 06 07))
+    fieldTypeSpec @LocalMktDate
   describe "UTCTimestamp" $ do
     fieldTypeExampleSpec
       "20190605-11:57:29.363"

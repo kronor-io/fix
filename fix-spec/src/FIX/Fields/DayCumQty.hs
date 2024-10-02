@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype DayCumQty = DayCumQty {unDayCumQty :: SimpleBytes}
+newtype DayCumQty = DayCumQty {unDayCumQty :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity DayCumQty

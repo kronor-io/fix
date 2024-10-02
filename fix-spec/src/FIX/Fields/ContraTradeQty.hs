@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype ContraTradeQty = ContraTradeQty {unContraTradeQty :: SimpleBytes}
+newtype ContraTradeQty = ContraTradeQty {unContraTradeQty :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity ContraTradeQty

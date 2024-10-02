@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype MaxShow = MaxShow {unMaxShow :: SimpleBytes}
+newtype MaxShow = MaxShow {unMaxShow :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MaxShow

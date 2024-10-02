@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype LegQty = LegQty {unLegQty :: SimpleBytes}
+newtype LegQty = LegQty {unLegQty :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LegQty

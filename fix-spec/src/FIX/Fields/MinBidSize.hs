@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype MinBidSize = MinBidSize {unMinBidSize :: SimpleBytes}
+newtype MinBidSize = MinBidSize {unMinBidSize :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MinBidSize

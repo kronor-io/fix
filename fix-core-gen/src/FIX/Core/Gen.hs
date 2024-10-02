@@ -12,6 +12,13 @@ import Data.Word
 import FIX.Core
 import Test.QuickCheck
 
+instance GenValid Qty
+
+instance GenValid LocalMktDate
+
+instance GenValid UTCTimestamp where
+  genValid = mkUTCTimestamp <$> genValid
+
 genNonSOHWord8 :: Gen Word8
 genNonSOHWord8 = genValid `suchThat` (/= 1)
 
@@ -26,8 +33,3 @@ genDataValue = genValid `suchThat` (not . SB.null)
 
 instance GenValid DataBytes where
   genValid = DataBytes <$> genDataValue
-
-instance GenValid LocalMktDate
-
-instance GenValid UTCTimestamp where
-  genValid = mkUTCTimestamp <$> genValid

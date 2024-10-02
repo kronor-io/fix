@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype LastQty = LastQty {unLastQty :: SimpleBytes}
+newtype LastQty = LastQty {unLastQty :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LastQty

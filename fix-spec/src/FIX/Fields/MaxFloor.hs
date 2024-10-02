@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype MaxFloor = MaxFloor {unMaxFloor :: SimpleBytes}
+newtype MaxFloor = MaxFloor {unMaxFloor :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity MaxFloor

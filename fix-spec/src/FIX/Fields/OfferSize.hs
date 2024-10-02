@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype OfferSize = OfferSize {unOfferSize :: SimpleBytes}
+newtype OfferSize = OfferSize {unOfferSize :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity OfferSize

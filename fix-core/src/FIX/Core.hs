@@ -11,6 +11,7 @@ import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Builder as ByteString
+import Data.Maybe
 import Data.Proxy
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
@@ -24,6 +25,7 @@ import GHC.Generics (Generic)
 import Text.Megaparsec
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
+import Text.Printf
 import Text.Read (readMaybe)
 
 type Tag = Word
@@ -40,6 +42,41 @@ instance IsFieldType Bool where
     "Y" -> Right True
     "N" -> Right False
     s -> Left $ "Could not Read Bool: " <> show s
+
+instance IsFieldType Word where
+  toValue = TE.encodeUtf8 . T.pack . show
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Word from String: " <> show s
+          Just w -> Right w
+
+instance IsFieldType Int where
+  toValue = TE.encodeUtf8 . T.pack . show
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Int from String: " <> show s
+          Just w -> Right w
+
+newtype Qty = Qty {unQty :: Double}
+  deriving (Show, Eq, Generic)
+
+instance Validity Qty where
+  validate qty@(Qty d) =
+    mconcat
+      [ genericValidate qty,
+        validateNotNaN d,
+        validateNotInfinite d
+      ]
+
+instance IsFieldType Qty where
+  toValue = TE.encodeUtf8 . (\t -> fromMaybe t $ T.stripSuffix ".0" t) . T.pack . printf "%g" . unQty
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read Qty from String: " <> show s
+          Just w -> Right (Qty w)
 
 instance IsFieldType ByteString where
   toValue = id
@@ -83,22 +120,6 @@ instance Validity SimpleBytes where
 instance IsFieldType SimpleBytes where
   toValue = unSimpleBytes
   fromValue = prettyValidate . SimpleBytes
-
-instance IsFieldType Word where
-  toValue = TE.encodeUtf8 . T.pack . show
-  fromValue sb =
-    let s = T.unpack $ TE.decodeLatin1 sb
-     in case readMaybe s of
-          Nothing -> Left $ "Could not Read Word from String: " <> show s
-          Just w -> Right w
-
-instance IsFieldType Int where
-  toValue = TE.encodeUtf8 . T.pack . show
-  fromValue sb =
-    let s = T.unpack $ TE.decodeLatin1 sb
-     in case readMaybe s of
-          Nothing -> Left $ "Could not Read Int from String: " <> show s
-          Just w -> Right w
 
 newtype LocalMktDate = LocalMktDate {unLocalMktDate :: Day}
   deriving (Show, Eq, Generic)

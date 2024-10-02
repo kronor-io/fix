@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype OrigNotionalAmt = OrigNotionalAmt {unOrigNotionalAmt :: SimpleBytes}
+newtype OrigNotionalAmt = OrigNotionalAmt {unOrigNotionalAmt :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity OrigNotionalAmt

@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype LeavesQty = LeavesQty {unLeavesQty :: SimpleBytes}
+newtype LeavesQty = LeavesQty {unLeavesQty :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LeavesQty

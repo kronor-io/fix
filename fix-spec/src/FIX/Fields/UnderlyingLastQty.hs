@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypeQTY
 --   , fieldValues = []
 --   }
-newtype UnderlyingLastQty = UnderlyingLastQty {unUnderlyingLastQty :: SimpleBytes}
+newtype UnderlyingLastQty = UnderlyingLastQty {unUnderlyingLastQty :: Qty}
   deriving stock (Show, Eq, Generic)
 
 instance Validity UnderlyingLastQty
