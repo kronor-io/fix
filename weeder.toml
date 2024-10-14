@@ -5,7 +5,7 @@ roots = [
   "^Main.main$",
   # Generated
   "Paths_",
-  "FIX.Conduit",
+  "FIX.App",
   "FIX.Components",
   "FIX.Fields",
   "FIX.Groups",

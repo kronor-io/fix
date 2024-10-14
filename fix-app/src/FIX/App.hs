@@ -4,7 +4,7 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module FIX.Conduit
+module FIX.App
   ( FixSettings (..),
     runFIXApp,
     FixHandle (..),
@@ -29,7 +29,6 @@ import FIX.Messages.Envelope
 import FIX.Messages.Header
 import FIX.Messages.Trailer
 import Network.Socket as Network (Socket, close)
-import System.Exit
 import Text.Megaparsec as Megaparsec
 import Text.Show.Pretty
 import UnliftIO
@@ -62,6 +61,20 @@ data FixHandle m = FixHandle
     sendMessage :: AnyMessage -> m ()
   }
 
+data ProtocolException
+  = ProtocolExceptionDisconnected
+  | ProtocolExceptionUnparseableMessage (ParseErrorBundle ByteString Void)
+  deriving (Show)
+
+instance Exception ProtocolException where
+  displayException = \case
+    ProtocolExceptionDisconnected -> "Connection was broken early."
+    ProtocolExceptionUnparseableMessage err ->
+      unlines
+        [ "Failed to parse message:",
+          errorBundlePretty err
+        ]
+
 runFIXApp ::
   forall m.
   (MonadUnliftIO m) =>
@@ -83,13 +96,7 @@ runFIXApp FixSettings {..} userAppFunc = do
             .| anyMessageSource
             .| C.mapM
               ( \case
-                  Left err ->
-                    liftIO $
-                      die $
-                        unlines
-                          [ "Failed to parse message: ",
-                            errorBundlePretty err
-                          ]
+                  Left err -> throwIO $ ProtocolExceptionUnparseableMessage err
                   Right am -> do
                     logMessage Debug $ T.pack $ unlines ["Decoded message:", ppShow am]
                     pure am
@@ -207,7 +214,7 @@ runFIXApp FixSettings {..} userAppFunc = do
               go nextInSeqNum (incrementMsgSeqNum nextOutSeqNum)
             Left mMsgIn -> do
               case mMsgIn of
-                Nothing -> error "Connection was broken early."
+                Nothing -> throwIO ProtocolExceptionDisconnected
                 Just msgIn -> do
                   logMessage Debug "Got a message from the connection to send to the app."
                   -- TODO check msgSeqNum here

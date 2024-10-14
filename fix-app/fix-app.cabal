@@ -10,7 +10,7 @@ build-type:     Simple
 
 library
   exposed-modules:
-      FIX.Conduit
+      FIX.App
   other-modules:
       Paths_fix_app
   hs-source-dirs:
