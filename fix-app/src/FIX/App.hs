@@ -21,12 +21,17 @@ import qualified Data.ByteString.Lazy as LB
 import qualified Data.Conduit.Combinators as C
 import Data.Conduit.Network (sinkSocket, sourceSocket)
 import Data.Conduit.TQueue
+import Data.Map (Map)
+import qualified Data.Map as M
 import Data.Text (Text)
 import qualified Data.Text as T
+import Data.Time
+import FIX.Core
 import FIX.Fields.BeginSeqNo
 import FIX.Fields.EndSeqNo
 import FIX.Fields.HeartBtInt
 import FIX.Fields.MsgSeqNum
+import FIX.Fields.SendingTime
 import FIX.Messages
 import FIX.Messages.Envelope
 import FIX.Messages.Header
@@ -186,12 +191,12 @@ runFIXApp FixSettings {..} userAppFunc = do
       STM (Maybe AnyMessage) ->
       (Envelope AnyMessage -> m ()) ->
       m ()
-    systemHandler sendSystemMessage awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1) (MsgSeqNum 1)
+    systemHandler sendSystemMessage awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1) M.empty
       where
         -- Pass in the "next" message sequence number to use when sending a
         -- message or to expect when receiving a message.
-        go :: MsgSeqNum -> MsgSeqNum -> m ()
-        go nextInSeqNum nextOutSeqNum = do
+        go :: MsgSeqNum -> Map Word (Envelope AnyMessage) -> m ()
+        go nextInSeqNum outMessages = do
           inOrOut <-
             atomically $
               (Left <$> awaitOutsideMessage)
@@ -202,10 +207,13 @@ runFIXApp FixSettings {..} userAppFunc = do
             Right (Just msgOut) -> do
               logMessage Debug "Got a message from the user app to send out."
               let msgType = anyMessageType msgOut
+              let nextOutSeqNum = succ $ maybe 0 fst $ M.lookupMax outMessages
+              now <- liftIO getCurrentTime
               let header =
                     headerPrototype
-                      { headerMsgSeqNum = nextOutSeqNum,
-                        headerMsgType = msgType
+                      { headerMsgSeqNum = MsgSeqNum nextOutSeqNum,
+                        headerMsgType = msgType,
+                        headerSendingTime = SendingTime (UTCTimestamp now)
                       }
               let envelopeOut =
                     Envelope
@@ -216,8 +224,9 @@ runFIXApp FixSettings {..} userAppFunc = do
                           -- checksum will be fixed my by messageB
                           makeTrailer $ renderCheckSum 0
                       }
+              let newOutMessages = M.insert nextOutSeqNum envelopeOut outMessages
               sendMessageOut envelopeOut
-              go nextInSeqNum (incrementMsgSeqNum nextOutSeqNum)
+              go nextInSeqNum newOutMessages
             Left mMsgIn -> do
               case mMsgIn of
                 Nothing -> throwIO ProtocolExceptionDisconnected
@@ -226,7 +235,7 @@ runFIXApp FixSettings {..} userAppFunc = do
                   -- TODO check msgSeqNum here
                   let contents = envelopeContents msgIn
                   let pass = passMessageToApp contents
-                  let continue = go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
+                  let continue = go (incrementMsgSeqNum nextInSeqNum) outMessages
                   -- TODO handle system messages here
                   case contents of
                     SomeLogon logon ->
@@ -237,9 +246,6 @@ runFIXApp FixSettings {..} userAppFunc = do
                       sendSystemMessage $ packAnyMessage $ makeHeartbeat {heartbeatTestReqID = Just (testRequestTestReqID testRequest)}
                       -- No need to pass
                       continue
-                    SomeLogout _ -> do
-                      pass
-                      pure () -- Done, don't continue
                     SomeResendRequest resendRequest -> do
                       let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
                       let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
@@ -255,7 +261,24 @@ runFIXApp FixSettings {..} userAppFunc = do
                                     else unwords ["messages from", show begin, "to", show end],
                               "this is not implemented yet."
                             ]
-                      pure ()
+                      let selectedMessages
+                            | end == 0 = M.elems $ snd $ M.split (begin - 1) outMessages
+                            | begin == end = maybe [] pure $ M.lookup begin outMessages
+                            | otherwise =
+                                M.elems $
+                                  fst $
+                                    M.split (end + 1) $
+                                      snd $
+                                        M.split (begin - 1) outMessages
+                      -- We need to use 'sendMessageOut' instead of
+                      -- 'sendSystemMessage' because the original header (with
+                      -- sequence number and sending time) must be preserved.
+                      mapM_ sendMessageOut selectedMessages
+                      -- No need to pass
+                      continue
+                    SomeLogout _ -> do
+                      pass
+                      pure () -- Done, don't continue
                     _ -> do
                       pass
                       continue

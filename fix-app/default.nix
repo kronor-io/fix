@@ -1,14 +1,15 @@
-{ mkDerivation, base, bytestring, conduit, conduit-extra, fix-spec
-, lib, megaparsec, network, pretty-show, stm-chans, stm-conduit
-, text, unliftio
+{ mkDerivation, base, bytestring, conduit, conduit-extra
+, containers, fix-core, fix-spec, lib, megaparsec, network
+, pretty-show, stm-chans, stm-conduit, text, time, unliftio
 }:
 mkDerivation {
   pname = "fix-app";
   version = "0.0.0.0";
   src = ./.;
   libraryHaskellDepends = [
-    base bytestring conduit conduit-extra fix-spec megaparsec network
-    pretty-show stm-chans stm-conduit text unliftio
+    base bytestring conduit conduit-extra containers fix-core fix-spec
+    megaparsec network pretty-show stm-chans stm-conduit text time
+    unliftio
   ];
   license = "unknown";
 }

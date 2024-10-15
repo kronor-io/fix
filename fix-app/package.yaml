@@ -10,6 +10,8 @@ library:
   - bytestring
   - conduit
   - conduit-extra
+  - containers
+  - fix-core
   - fix-spec
   - megaparsec
   - network
@@ -17,4 +19,5 @@ library:
   - stm-chans
   - stm-conduit
   - text
+  - time
   - unliftio
