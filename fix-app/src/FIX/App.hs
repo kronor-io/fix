@@ -226,15 +226,20 @@ runFIXApp FixSettings {..} userAppFunc = do
                   -- TODO check msgSeqNum here
                   let contents = envelopeContents msgIn
                   let pass = passMessageToApp contents
+                  let continue = go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
                   -- TODO handle system messages here
                   case contents of
                     SomeLogon logon ->
                       withHeartbeatThread sendSystemMessage (logonHeartBtInt logon) $ do
                         pass
-                        go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
+                        continue
+                    SomeTestRequest testRequest -> do
+                      sendSystemMessage $ packAnyMessage $ makeHeartbeat {heartbeatTestReqID = Just (testRequestTestReqID testRequest)}
+                      -- No need to pass
+                      continue
                     SomeLogout _ -> do
                       pass
-                      pure () -- Done
+                      pure () -- Done, don't continue
                     SomeResendRequest resendRequest -> do
                       let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
                       let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
@@ -253,7 +258,7 @@ runFIXApp FixSettings {..} userAppFunc = do
                       pure ()
                     _ -> do
                       pass
-                      go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
+                      continue
 
 withHeartbeatThread :: (MonadUnliftIO m) => (AnyMessage -> m ()) -> HeartBtInt -> m () -> m ()
 withHeartbeatThread sendSystemMessage (HeartBtInt seconds) func =
