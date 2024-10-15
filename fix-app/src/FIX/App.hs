@@ -1,4 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -13,6 +14,7 @@ where
 
 import Conduit
 import Control.Concurrent.STM.TBMQueue
+import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Lazy as LB
@@ -23,6 +25,7 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import FIX.Fields.BeginSeqNo
 import FIX.Fields.EndSeqNo
+import FIX.Fields.HeartBtInt
 import FIX.Fields.MsgSeqNum
 import FIX.Messages
 import FIX.Messages.Envelope
@@ -32,6 +35,7 @@ import Network.Socket as Network (Socket, close)
 import Text.Megaparsec as Megaparsec
 import Text.Show.Pretty
 import UnliftIO
+import UnliftIO.Concurrent (threadDelay)
 
 -- TODO handle:
 
@@ -158,6 +162,7 @@ runFIXApp FixSettings {..} userAppFunc = do
       systemHandlerThread = do
         logMessage Debug "System handler starting."
         systemHandler
+          sendMessage
           awaitOutsideMessage
           passMessageToApp
           readMessageFromApp
@@ -175,12 +180,13 @@ runFIXApp FixSettings {..} userAppFunc = do
     `finally` liftIO (Network.close sock)
   where
     systemHandler ::
+      (AnyMessage -> m ()) ->
       STM (Maybe (Envelope AnyMessage)) ->
       (AnyMessage -> m ()) ->
       STM (Maybe AnyMessage) ->
       (Envelope AnyMessage -> m ()) ->
       m ()
-    systemHandler awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1) (MsgSeqNum 1)
+    systemHandler sendSystemMessage awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1) (MsgSeqNum 1)
       where
         -- Pass in the "next" message sequence number to use when sending a
         -- message or to expect when receiving a message.
@@ -222,6 +228,10 @@ runFIXApp FixSettings {..} userAppFunc = do
                   let pass = passMessageToApp contents
                   -- TODO handle system messages here
                   case contents of
+                    SomeLogon logon ->
+                      withHeartbeatThread sendSystemMessage (logonHeartBtInt logon) $ do
+                        pass
+                        go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
                     SomeLogout _ -> do
                       pass
                       pure () -- Done
@@ -244,6 +254,13 @@ runFIXApp FixSettings {..} userAppFunc = do
                     _ -> do
                       pass
                       go (incrementMsgSeqNum nextInSeqNum) nextOutSeqNum
+
+withHeartbeatThread :: (MonadUnliftIO m) => (AnyMessage -> m ()) -> HeartBtInt -> m () -> m ()
+withHeartbeatThread sendSystemMessage (HeartBtInt seconds) func =
+  let heartBeatThread = forever $ do
+        threadDelay (seconds * 1_000_000)
+        sendSystemMessage $ packAnyMessage makeHeartbeat
+   in race_ heartBeatThread func
 
 anyMessageSource ::
   forall m.
