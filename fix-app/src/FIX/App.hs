@@ -16,6 +16,7 @@ import Conduit
 import Control.Concurrent.STM.TBMQueue
 import Control.Monad
 import Data.ByteString (ByteString)
+import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
 import qualified Data.ByteString.Lazy as LB
 import qualified Data.Conduit.Combinators as C
@@ -37,20 +38,11 @@ import FIX.Messages.Envelope
 import FIX.Messages.Header
 import FIX.Messages.Trailer
 import Network.Socket as Network (Socket, close)
+import qualified Network.TLS as TLS
 import Text.Megaparsec as Megaparsec
 import Text.Show.Pretty
 import UnliftIO
 import UnliftIO.Concurrent (threadDelay)
-
--- TODO handle:
-
--- * Wrapping and unwrapping envelopes
-
--- * Heartbeat
-
---
--- Idea: We might need to wrap the inner conduit in channels for this to
--- work nicely.
 
 data LogLevel
   = Debug
@@ -60,7 +52,8 @@ data LogLevel
 data FixSettings m = FixSettings
   { sock :: Network.Socket,
     headerPrototype :: Header,
-    logMessage :: LogFunc m
+    logMessage :: LogFunc m,
+    tlsContext :: !(Maybe TLS.Context)
   }
 
 type LogFunc m = LogLevel -> Text -> m ()
@@ -84,6 +77,24 @@ instance Exception ProtocolException where
           errorBundlePretty err
         ]
 
+receiverSource :: (MonadUnliftIO m) => Network.Socket -> Maybe TLS.Context -> ConduitT void ByteString m ()
+receiverSource sock mContext = case mContext of
+  Nothing -> transPipe liftIO (sourceSocket sock)
+  Just ctx ->
+    let loop = do
+          bs <- lift $ TLS.recvData ctx
+          if SB.null bs
+            then return ()
+            else yield bs >> loop
+     in loop
+
+senderSink :: (MonadUnliftIO m) => Network.Socket -> Maybe TLS.Context -> ConduitT ByteString void m ()
+senderSink sock mContext = case mContext of
+  Nothing -> transPipe liftIO (sinkSocket sock)
+  Just ctx ->
+    let loop = await >>= maybe (return ()) (\bs -> lift (TLS.sendData ctx (LB.fromStrict bs)) >> loop)
+     in loop
+
 runFIXApp ::
   forall m.
   (MonadUnliftIO m) =>
@@ -96,7 +107,7 @@ runFIXApp FixSettings {..} userAppFunc = do
   let receiver = do
         logMessage Debug "Receiver starting."
         runConduit $
-          transPipe liftIO (sourceSocket sock)
+          receiverSource sock tlsContext
             .| C.mapM
               ( \bs -> do
                   logMessage Debug $ T.pack $ unlines ["Received message:", ppShow bs]
@@ -132,7 +143,7 @@ runFIXApp FixSettings {..} userAppFunc = do
                   logMessage Debug $ T.pack $ unlines ["Sending message:", ppShow bs]
                   pure bs
               )
-            .| transPipe liftIO (sinkSocket sock)
+            .| senderSink sock tlsContext
         logMessage Debug "Sender done."
       sendMessageOut :: Envelope AnyMessage -> m ()
       sendMessageOut eam = do
