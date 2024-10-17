@@ -243,56 +243,71 @@ runFIXApp FixSettings {..} userAppFunc = do
                 Nothing -> throwIO ProtocolExceptionDisconnected
                 Just msgIn -> do
                   logMessage Debug "Got a message from the connection to send to the app."
-                  -- TODO check msgSeqNum here
-                  let contents = envelopeContents msgIn
-                  let pass = passMessageToApp contents
-                  let continue = go (incrementMsgSeqNum nextInSeqNum) outMessages
-                  -- TODO handle system messages here
-                  case contents of
-                    SomeLogon logon ->
-                      withHeartbeatThread sendSystemMessage (logonHeartBtInt logon) $ do
-                        pass
-                        continue
-                    SomeTestRequest testRequest -> do
-                      sendSystemMessage $ packAnyMessage $ makeHeartbeat {heartbeatTestReqID = Just (testRequestTestReqID testRequest)}
-                      -- No need to pass
-                      continue
-                    SomeResendRequest resendRequest -> do
-                      let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
-                      let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
-                      logMessage Debug $
-                        T.pack $
-                          unlines
-                            [ "Got a resend request for",
-                              if end == 0
-                                then unwords ["all messages from", show begin, "onwards"]
-                                else
-                                  if begin == end
-                                    then unwords ["message", show begin]
-                                    else unwords ["messages from", show begin, "to", show end],
-                              "this is not implemented yet."
-                            ]
-                      let selectedMessages
-                            | end == 0 = M.elems $ snd $ M.split (begin - 1) outMessages
-                            | begin == end = maybe [] pure $ M.lookup begin outMessages
-                            | otherwise =
-                                M.elems $
-                                  fst $
-                                    M.split (end + 1) $
-                                      snd $
-                                        M.split (begin - 1) outMessages
-                      -- We need to use 'sendMessageOut' instead of
-                      -- 'sendSystemMessage' because the original header (with
-                      -- sequence number and sending time) must be preserved.
-                      mapM_ sendMessageOut selectedMessages
-                      -- No need to pass
-                      continue
-                    SomeLogout _ -> do
-                      pass
-                      pure () -- Done, don't continue
-                    _ -> do
-                      pass
-                      continue
+                  if headerMsgSeqNum (envelopeHeader msgIn) == nextInSeqNum
+                    then do
+                      let contents = envelopeContents msgIn
+                      let pass = passMessageToApp contents
+                      let continue = go (incrementMsgSeqNum nextInSeqNum) outMessages
+                      -- TODO handle system messages here
+                      case contents of
+                        SomeLogon logon ->
+                          withHeartbeatThread sendSystemMessage (logonHeartBtInt logon) $ do
+                            pass
+                            continue
+                        SomeTestRequest testRequest -> do
+                          sendSystemMessage $ packAnyMessage $ makeHeartbeat {heartbeatTestReqID = Just (testRequestTestReqID testRequest)}
+                          -- No need to pass
+                          continue
+                        SomeResendRequest resendRequest -> do
+                          let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
+                          let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
+                          logMessage Debug $
+                            T.pack $
+                              unlines
+                                [ "Got a resend request for",
+                                  if end == 0
+                                    then unwords ["all messages from", show begin, "onwards"]
+                                    else
+                                      if begin == end
+                                        then unwords ["message", show begin]
+                                        else unwords ["messages from", show begin, "to", show end],
+                                  "this is not implemented yet."
+                                ]
+                          let selectedMessages
+                                | end == 0 = M.elems $ snd $ M.split (begin - 1) outMessages
+                                | begin == end = maybe [] pure $ M.lookup begin outMessages
+                                | otherwise =
+                                    M.elems $
+                                      fst $
+                                        M.split (end + 1) $
+                                          snd $
+                                            M.split (begin - 1) outMessages
+                          -- We need to use 'sendMessageOut' instead of
+                          -- 'sendSystemMessage' because the original header (with
+                          -- sequence number and sending time) must be preserved.
+                          mapM_ sendMessageOut selectedMessages
+                          -- No need to pass
+                          continue
+                        SomeLogout _ -> do
+                          pass
+                          pure () -- Done, don't continue
+                        _ -> do
+                          pass
+                          continue
+                    else do
+                      -- Here we ignore messages that have the wrong (not the
+                      -- next) sequence number and ask the other party to
+                      -- resend it and all future messages.
+                      -- A more sophisticated approach would involve only
+                      -- asking for messages we missed, but this approach is
+                      -- "good enough" for now.
+                      sendSystemMessage $
+                        packAnyMessage $
+                          makeResendRequest
+                            (BeginSeqNo (unMsgSeqNum nextInSeqNum))
+                            -- 0 as the end means "all others after the begin"
+                            (EndSeqNo 0)
+                      go nextInSeqNum outMessages
 
 withHeartbeatThread :: (MonadUnliftIO m) => (AnyMessage -> m ()) -> HeartBtInt -> m () -> m ()
 withHeartbeatThread sendSystemMessage (HeartBtInt seconds) func =
