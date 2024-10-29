@@ -96,11 +96,11 @@ senderSink sock mContext = case mContext of
      in loop
 
 runFIXApp ::
-  forall m.
+  forall m a.
   (MonadUnliftIO m) =>
   FixSettings m ->
-  (FixHandle m -> m ()) ->
-  m ()
+  (FixHandle m -> m a) ->
+  m a
 runFIXApp FixSettings {..} userAppFunc = do
   -- Receive one message at a time
   receivingQueue <- liftIO $ newTBMQueueIO 1
@@ -167,24 +167,26 @@ runFIXApp FixSettings {..} userAppFunc = do
       readMessageFromApp :: STM (Maybe AnyMessage)
       readMessageFromApp = readTBMQueue appOutputQueue
   let fixHandle = FixHandle {..}
-  let userAppThread :: m ()
+  let userAppThread :: m a
       userAppThread = do
-        logMessage Debug "User app starting."
-        userAppFunc fixHandle
+        res <- userAppFunc fixHandle
         atomically $ closeTBMQueue appOutputQueue
-        logMessage Debug "User app done."
+        return res
 
   let systemHandlerThread :: m ()
       systemHandlerThread = do
         logMessage Debug "System handler starting."
+
         systemHandler
           sendMessage
           awaitOutsideMessage
           passMessageToApp
           readMessageFromApp
           sendMessageOut
-        atomically $ closeTBMQueue receivingQueue
-        atomically $ closeTBMQueue sendingQueue
+
+        atomically $ do
+            closeTBMQueue receivingQueue
+            closeTBMQueue sendingQueue
         logMessage Debug "System handler done."
 
   -- Concurently because the interacter stops (eventually) when the system
@@ -192,8 +194,11 @@ runFIXApp FixSettings {..} userAppFunc = do
   let systemThreads :: m ()
       systemThreads = concurrently_ interacter systemHandlerThread
 
-  concurrently_ systemThreads userAppThread
-    `finally` liftIO (Network.close sock)
+  res <- race systemThreads userAppThread
+  case res of
+    Left () -> throwIO ProtocolExceptionDisconnected
+    Right a -> return a
+
   where
     systemHandler ::
       (AnyMessage -> m ()) ->
