@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -16,6 +17,7 @@ where
 import Conduit
 import Control.Concurrent.STM.TBMQueue
 import Control.Monad
+import qualified Control.Monad.Combinators as PC
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as BB
@@ -24,7 +26,7 @@ import qualified Data.Conduit.Combinators as C
 import Data.Conduit.Network (sinkSocket, sourceSocket)
 import Data.Conduit.TQueue
 import Data.Map (Map)
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Time
@@ -48,8 +50,14 @@ import UnliftIO.Concurrent (threadDelay)
 
 data LogLevel
     = Debug
+    | VeryVerbose
     | Error
     deriving (Eq, Ord)
+
+
+data InOrOut
+    = In (Envelope AnyMessage)
+    | Out AnyMessage
 
 
 data FixSettings m = FixSettings
@@ -112,8 +120,7 @@ runFIXApp ::
     (FixHandle m -> m a) ->
     m a
 runFIXApp FixSettings{..} userAppFunc = do
-    -- Receive one message at a time
-    receivingQueue <- liftIO $ newTBMQueueIO 1
+    messagesQueue <- liftIO $ newTBMQueueIO 1000
     let receiver = do
             logMessage Debug "Receiver starting."
             runConduit $
@@ -128,23 +135,24 @@ runFIXApp FixSettings{..} userAppFunc = do
                         ( \case
                             Left err -> throwIO $ ProtocolExceptionUnparseableMessage err
                             Right am -> do
-                                logMessage Debug $ T.pack $ unlines ["Decoded message:", ppShow am]
+                                logMessage VeryVerbose $ T.pack $ unlines ["Decoded message:", ppShow am]
                                 pure am
                         )
-                    .| sinkTBMQueue receivingQueue
+                    .| concatC
+                    .| C.map In
+                    .| sinkTBMQueue messagesQueue
             logMessage Debug "Receiver done."
-        awaitOutsideMessage :: STM (Maybe (Envelope AnyMessage))
-        awaitOutsideMessage = readTBMQueue receivingQueue
 
     -- Send one message at a time
-    sendingQueue <- liftIO $ newTBMQueueIO 1
+    sendingQueue <- liftIO $ newTBMQueueIO 1000
+
     let sender = do
             logMessage Debug "Sender starting."
             runConduit $
                 transPipe liftIO (sourceTBMQueue sendingQueue)
                     .| C.mapM
                         ( \am -> do
-                            logMessage Debug $ T.pack $ unlines ["Encoding message:", ppShow am]
+                            logMessage VeryVerbose $ T.pack $ unlines ["Encoding message:", ppShow am]
                             pure am
                         )
                     .| transPipe liftIO anyMessageSink
@@ -155,6 +163,7 @@ runFIXApp FixSettings{..} userAppFunc = do
                         )
                     .| senderSink sock tlsContext
             logMessage Debug "Sender done."
+
         sendMessageOut :: Envelope AnyMessage -> m ()
         sendMessageOut eam = do
             logMessage Debug "Enqueueing message to send out."
@@ -166,21 +175,25 @@ runFIXApp FixSettings{..} userAppFunc = do
     -- that case we want the receiver to stop anyway.
     let interacter = race_ receiver sender
 
-    appInputQueue <- newTBQueueIO 1
+    appInputQueue <- newTBQueueIO 1000
     let passMessageToApp :: AnyMessage -> m ()
-        passMessageToApp = atomically . writeTBQueue appInputQueue
+        passMessageToApp x = atomically $ writeTBQueue appInputQueue x
+
         awaitMessage :: m AnyMessage
         awaitMessage = atomically $ readTBQueue appInputQueue
-    appOutputQueue <- liftIO $ newTBMQueueIO 1
+
     let sendMessage :: AnyMessage -> m ()
-        sendMessage = atomically . writeTBMQueue appOutputQueue
-        readMessageFromApp :: STM (Maybe AnyMessage)
-        readMessageFromApp = readTBMQueue appOutputQueue
+        sendMessage = atomically . writeTBMQueue messagesQueue . Out
+
+        readInOrOutMessage :: STM (Maybe InOrOut)
+        readInOrOutMessage = readTBMQueue messagesQueue
+
     let fixHandle = FixHandle{..}
+
     let userAppThread :: m a
         userAppThread = do
             res <- userAppFunc fixHandle
-            atomically $ closeTBMQueue appOutputQueue
+            atomically $ closeTBMQueue messagesQueue
             return res
 
     let systemHandlerThread :: m ()
@@ -189,13 +202,12 @@ runFIXApp FixSettings{..} userAppFunc = do
 
             systemHandler
                 sendMessage
-                awaitOutsideMessage
+                readInOrOutMessage
                 passMessageToApp
-                readMessageFromApp
                 sendMessageOut
 
             atomically $ do
-                closeTBMQueue receivingQueue
+                closeTBMQueue messagesQueue
                 closeTBMQueue sendingQueue
             logMessage Debug "System handler done."
 
@@ -211,28 +223,26 @@ runFIXApp FixSettings{..} userAppFunc = do
   where
     systemHandler ::
         (AnyMessage -> m ()) ->
-        STM (Maybe (Envelope AnyMessage)) ->
+        STM (Maybe InOrOut) ->
         (AnyMessage -> m ()) ->
-        STM (Maybe AnyMessage) ->
         (Envelope AnyMessage -> m ()) ->
         m ()
-    systemHandler sendSystemMessage awaitOutsideMessage passMessageToApp readMessageFromApp sendMessageOut = go (MsgSeqNum 1) M.empty
+    systemHandler sendSystemMessage readInOrOutMessage passMessageToApp sendMessageOut = go (MsgSeqNum 1) M.empty
       where
         -- Pass in the "next" message sequence number to use when sending a
         -- message or to expect when receiving a message.
         go :: MsgSeqNum -> Map Word (Envelope AnyMessage) -> m ()
-        go nextInSeqNum outMessages = do
-            inOrOut <-
-                atomically $
-                    (Left <$> awaitOutsideMessage)
-                        `orElse` (Right <$> readMessageFromApp)
+        go !nextInSeqNum !outMessages = do
+            inOrOut <- atomically readInOrOutMessage
+
             case inOrOut of
-                Right Nothing -> do
+                Nothing -> do
                     logMessage Debug "App finished early, without receiving a logout message."
-                Right (Just msgOut) -> do
+                    throwIO ProtocolExceptionDisconnected
+                (Just (Out msgOut)) -> do
                     logMessage Debug "Got a message from the user app to send out."
                     let msgType = anyMessageType msgOut
-                    let nextOutSeqNum = succ $ maybe 0 fst $ M.lookupMax outMessages
+                    let !nextOutSeqNum = succ $ maybe 0 fst $ M.lookupMax outMessages
                     now <- liftIO getCurrentTime
                     let header =
                             headerPrototype
@@ -252,76 +262,72 @@ runFIXApp FixSettings{..} userAppFunc = do
                     let newOutMessages = M.insert nextOutSeqNum envelopeOut outMessages
                     sendMessageOut envelopeOut
                     go nextInSeqNum newOutMessages
-                Left mMsgIn -> do
-                    case mMsgIn of
-                        Nothing -> throwIO ProtocolExceptionDisconnected
-                        Just msgIn -> do
-                            logMessage Debug "Got a message from the connection to send to the app."
-                            if headerMsgSeqNum (envelopeHeader msgIn) == nextInSeqNum
-                                then do
-                                    let contents = envelopeContents msgIn
-                                    let pass = passMessageToApp contents
-                                    let continue = go (incrementMsgSeqNum nextInSeqNum) outMessages
-                                    -- TODO handle system messages here
-                                    case contents of
-                                        SomeLogon logon ->
-                                            withHeartbeatThread sendSystemMessage (logonHeartBtInt logon) $ do
-                                                pass
-                                                continue
-                                        SomeTestRequest testRequest -> do
-                                            sendSystemMessage $ packAnyMessage $ makeHeartbeat{heartbeatTestReqID = Just (testRequestTestReqID testRequest)}
-                                            -- No need to pass
-                                            continue
-                                        SomeResendRequest resendRequest -> do
-                                            let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
-                                            let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
-                                            logMessage Debug $
-                                                T.pack $
-                                                    unlines
-                                                        [ "Got a resend request for"
-                                                        , if end == 0
-                                                            then unwords ["all messages from", show begin, "onwards"]
-                                                            else
-                                                                if begin == end
-                                                                    then unwords ["message", show begin]
-                                                                    else unwords ["messages from", show begin, "to", show end]
-                                                        , "this is not implemented yet."
-                                                        ]
-                                            let selectedMessages
-                                                    | end == 0 = M.elems $ snd $ M.split (begin - 1) outMessages
-                                                    | begin == end = maybe [] pure $ M.lookup begin outMessages
-                                                    | otherwise =
-                                                        M.elems $
-                                                            fst $
-                                                                M.split (end + 1) $
-                                                                    snd $
-                                                                        M.split (begin - 1) outMessages
-                                            -- We need to use 'sendMessageOut' instead of
-                                            -- 'sendSystemMessage' because the original header (with
-                                            -- sequence number and sending time) must be preserved.
-                                            mapM_ sendMessageOut selectedMessages
-                                            -- No need to pass
-                                            continue
-                                        SomeLogout _ -> do
-                                            pass
-                                            pure () -- Done, don't continue
-                                        _ -> do
-                                            pass
-                                            continue
-                                else do
-                                    -- Here we ignore messages that have the wrong (not the
-                                    -- next) sequence number and ask the other party to
-                                    -- resend it and all future messages.
-                                    -- A more sophisticated approach would involve only
-                                    -- asking for messages we missed, but this approach is
-                                    -- "good enough" for now.
-                                    sendSystemMessage $
-                                        packAnyMessage $
-                                            makeResendRequest
-                                                (BeginSeqNo (unMsgSeqNum nextInSeqNum))
-                                                -- 0 as the end means "all others after the begin"
-                                                (EndSeqNo 0)
-                                    go nextInSeqNum outMessages
+                (Just (In msgIn)) -> do
+                    if headerMsgSeqNum (envelopeHeader msgIn) == nextInSeqNum
+                        then do
+                            let contents = envelopeContents msgIn
+                            let pass = passMessageToApp contents
+                            let continue = go (incrementMsgSeqNum nextInSeqNum) outMessages
+                            -- TODO handle system messages here
+                            case contents of
+                                SomeLogon logon ->
+                                    withHeartbeatThread sendSystemMessage (logonHeartBtInt logon) $ do
+                                        pass
+                                        continue
+                                SomeTestRequest testRequest -> do
+                                    sendSystemMessage $ packAnyMessage $ makeHeartbeat{heartbeatTestReqID = Just (testRequestTestReqID testRequest)}
+                                    -- No need to pass
+                                    continue
+                                SomeResendRequest resendRequest -> do
+                                    let begin = unBeginSeqNo $ resendRequestBeginSeqNo resendRequest
+                                    let end = unEndSeqNo $ resendRequestEndSeqNo resendRequest
+                                    logMessage Debug $
+                                        T.pack $
+                                            unlines
+                                                [ "Got a resend request for"
+                                                , if end == 0
+                                                    then unwords ["all messages from", show begin, "onwards"]
+                                                    else
+                                                        if begin == end
+                                                            then unwords ["message", show begin]
+                                                            else unwords ["messages from", show begin, "to", show end]
+                                                , "this is not implemented yet."
+                                                ]
+                                    let selectedMessages
+                                            | end == 0 = M.elems $ snd $ M.split (begin - 1) outMessages
+                                            | begin == end = maybe [] pure $ M.lookup begin outMessages
+                                            | otherwise =
+                                                M.elems $
+                                                    fst $
+                                                        M.split (end + 1) $
+                                                            snd $
+                                                                M.split (begin - 1) outMessages
+                                    -- We need to use 'sendMessageOut' instead of
+                                    -- 'sendSystemMessage' because the original header (with
+                                    -- sequence number and sending time) must be preserved.
+                                    mapM_ sendMessageOut selectedMessages
+                                    -- No need to pass
+                                    continue
+                                SomeLogout _ -> do
+                                    pass
+                                    pure () -- Done, don't continue
+                                _ -> do
+                                    pass
+                                    continue
+                        else do
+                            -- Here we ignore messages that have the wrong (not the
+                            -- next) sequence number and ask the other party to
+                            -- resend it and all future messages.
+                            -- A more sophisticated approach would involve only
+                            -- asking for messages we missed, but this approach is
+                            -- "good enough" for now.
+                            sendSystemMessage $
+                                packAnyMessage $
+                                    makeResendRequest
+                                        (BeginSeqNo (unMsgSeqNum nextInSeqNum))
+                                        -- 0 as the end means "all others after the begin"
+                                        (EndSeqNo 0)
+                            go nextInSeqNum outMessages
 
 
 withHeartbeatThread :: MonadUnliftIO m => (AnyMessage -> m ()) -> HeartBtInt -> m () -> m ()
@@ -335,7 +341,7 @@ withHeartbeatThread sendSystemMessage (HeartBtInt seconds) func =
 anyMessageSource ::
     forall m.
     Monad m =>
-    ConduitT ByteString (Either (ParseErrorBundle ByteString Void) (Envelope AnyMessage)) m ()
+    ConduitT ByteString (Either (ParseErrorBundle ByteString Void) [Envelope AnyMessage]) m ()
 anyMessageSource = go initialState
   where
     initialState :: State ByteString e
@@ -353,7 +359,7 @@ anyMessageSource = go initialState
                     }
             , stateParseErrors = []
             }
-    go :: State ByteString Void -> ConduitT ByteString (Either (ParseErrorBundle ByteString Void) (Envelope AnyMessage)) m ()
+    go :: State ByteString Void -> ConduitT ByteString (Either (ParseErrorBundle ByteString Void) [Envelope AnyMessage]) m ()
 
     go beforeState = do
         mBs <- await
@@ -361,7 +367,7 @@ anyMessageSource = go initialState
             Nothing -> pure ()
             Just sb -> do
                 let stateWithInput = beforeState{stateInput = stateInput beforeState <> sb}
-                let (afterState, res) = runParser' anyMessageP stateWithInput
+                let (afterState, res) = runParser' (PC.many anyMessageP) stateWithInput
                 case res of
                     Right _ -> yield res
                     Left err -> do
