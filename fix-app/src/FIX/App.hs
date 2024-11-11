@@ -40,7 +40,7 @@ import FIX.Messages
 import FIX.Messages.Envelope
 import FIX.Messages.Header
 import FIX.Messages.Trailer
-import Network.Socket as Network (Socket, close)
+import Network.Socket as Network (Socket)
 import qualified Network.TLS as TLS
 import Text.Megaparsec as Megaparsec
 import Text.Show.Pretty
