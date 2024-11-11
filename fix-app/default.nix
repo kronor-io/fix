@@ -1,6 +1,6 @@
 { mkDerivation, base, bytestring, conduit, conduit-extra
 , containers, fix-core, fix-spec, lib, megaparsec, network
-, pretty-show, stm-chans, stm-conduit, text, time, tls, unliftio parser-combinators
+, pretty-show, stm-chans, stm-conduit, text, time, tls, unliftio, parser-combinators
 }:
 mkDerivation {
   pname = "fix-app";
