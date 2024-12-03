@@ -116,6 +116,25 @@ instance IsFieldType PriceVal where
           Nothing -> Left $ "Could not Read PriceVal from String: " <> show s
           Just w -> Right (PriceVal w)
 
+newtype PriceOffset = PriceOffset {unPriceOffset :: Double}
+  deriving (Show, Eq, Generic)
+
+instance Validity PriceOffset where
+  validate qty@(PriceOffset d) =
+    mconcat
+      [ genericValidate qty,
+        validateNotNaN d,
+        validateNotInfinite d
+      ]
+
+instance IsFieldType PriceOffset where
+  toValue = TE.encodeUtf8 . (\t -> fromMaybe t $ T.stripSuffix ".0" t) . T.pack . printf "%g" . unPriceOffset
+  fromValue sb =
+    let s = T.unpack $ TE.decodeLatin1 sb
+     in case readMaybe s of
+          Nothing -> Left $ "Could not Read PriceOffset from String: " <> show s
+          Just w -> Right (PriceOffset w)
+
 instance IsFieldType ByteString where
   toValue = id
   fromValue = Right

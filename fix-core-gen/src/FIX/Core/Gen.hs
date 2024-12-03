@@ -18,6 +18,8 @@ instance GenValid Amount
 
 instance GenValid PriceVal
 
+instance GenValid PriceOffset
+
 instance GenValid LocalMktDate
 
 instance GenValid UTCTimestamp where

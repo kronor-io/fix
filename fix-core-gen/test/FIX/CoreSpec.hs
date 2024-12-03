@@ -44,6 +44,14 @@ spec = do
     fieldTypeExampleSpec
       "0.5"
       (PriceVal 0.5)
+  describe "PriceOffset" $ do
+    fieldTypeSpec @PriceOffset
+    fieldTypeExampleSpec
+      "0"
+      (PriceOffset 0)
+    fieldTypeExampleSpec
+      "0.5"
+      (PriceOffset 0.5)
   describe "LocalMktDate" $ do
     fieldTypeExampleSpec
       "20190605"
