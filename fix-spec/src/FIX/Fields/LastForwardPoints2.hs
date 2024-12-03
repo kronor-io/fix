@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePriceOffset
 --   , fieldValues = []
 --   }
-newtype LastForwardPoints2 = LastForwardPoints2 {unLastForwardPoints2 :: SimpleBytes}
+newtype LastForwardPoints2 = LastForwardPoints2 {unLastForwardPoints2 :: PriceOffset}
   deriving stock (Show, Eq, Generic)
 
 instance Validity LastForwardPoints2

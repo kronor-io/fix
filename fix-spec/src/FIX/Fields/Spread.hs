@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePriceOffset
 --   , fieldValues = []
 --   }
-newtype Spread = Spread {unSpread :: SimpleBytes}
+newtype Spread = Spread {unSpread :: PriceOffset}
   deriving stock (Show, Eq, Generic)
 
 instance Validity Spread

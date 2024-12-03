@@ -399,6 +399,7 @@ fieldsDataFiles = foldMap $ \f@FieldSpec {..} ->
           FieldTypeLocalMktDate -> ConT (mkName "LocalMktDate")
           FieldTypeQTY -> ConT (mkName "Qty")
           FieldTypePrice -> ConT (mkName "PriceVal")
+          FieldTypePriceOffset -> ConT (mkName "PriceOffset")
           FieldTypeAMT -> ConT (mkName "Amount")
           _ -> ConT (mkName "SimpleBytes")
         section =

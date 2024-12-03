@@ -23,7 +23,7 @@ import GHC.Generics (Generic)
 --   , fieldType = FieldTypePriceOffset
 --   , fieldValues = []
 --   }
-newtype PriceImprovement = PriceImprovement {unPriceImprovement :: SimpleBytes}
+newtype PriceImprovement = PriceImprovement {unPriceImprovement :: PriceOffset}
   deriving stock (Show, Eq, Generic)
 
 instance Validity PriceImprovement
