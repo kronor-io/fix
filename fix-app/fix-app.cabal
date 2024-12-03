@@ -9,11 +9,14 @@ version:       0.0.0.0
 build-type:    Simple
 
 library
-  exposed-modules:  FIX.App
-  other-modules:    Paths_fix_app
-  hs-source-dirs:   src
+  exposed-modules:
+      FIX.App
+  other-modules:
+      Paths_fix_app
+  hs-source-dirs:
+      src
   build-depends:
-      base                >=4.7 && <5
+      base >=4.7 && <5
     , bytestring
     , conduit
     , conduit-extra
@@ -30,5 +33,4 @@ library
     , time
     , tls
     , unliftio
-
   default-language: Haskell2010
