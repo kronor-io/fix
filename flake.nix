@@ -36,7 +36,7 @@
     , weeder-nix
     }:
     let
-      system = "x86_64-linux";
+      system = "aarch64-linux";
       nixpkgsFor = nixpkgs: import nixpkgs {
         inherit system;
         overlays = [
